@@ -71,8 +71,8 @@ function smileToEasy(smile) {
  * @returns stack
  */
 function isoText(stack) {
-    var text = [];
-    var c = ']';
+    let text = [];
+    let c = ']';
     while (c != '[') {
         switch (c) {
             case '@':
@@ -126,7 +126,6 @@ function drawSmile() {
         // Draw to the canvas
         activateScreenMode();
         smilesDrawer.draw(tree, CANVAS_ID, DEFAULT_SCREEN_MODE, false);
-        document.getElementById(LBL_FORMULA).innerHTML = smilesDrawer.getMolecularFormula();
         document.getElementById(TXT_CANVAS_FLE).value = smilesDrawer.getMolecularFormula();
 
         // let edge = smilesDrawer.graph.edges[0];
@@ -146,28 +145,28 @@ function drawSmile() {
     });
 }
 
-function drawLine2(wr, line) {
-    let l = line.getLeftVector();
-    let r = line.getRightVector();
+// function drawLine2(wr, line) {
+//     let l = line.getLeftVector();
+//     let r = line.getRightVector();
+//
+//     l.x += wr.offsetX;
+//     l.y += wr.offsetY;
+//
+//     r.x += wr.offsetX;
+//     r.y += wr.offsetY;
+//
+//     wr.ctx.save();
+//     wr.ctx.beginPath();
+//     wr.ctx.moveTo(l.x, l.y);
+//     wr.ctx.lineTo(r.x, r.y);
+//     wr.ctx.lineCap = 'round';
+//     wr.ctx.lineWidth = wr.opts.bondThickness;
+//     wr.ctx.strokeStyle = "#FF0000";
+//     wr.ctx.stroke();
+//     wr.ctx.globalCompositeOperation = 'source-over';
+//     wr.ctx.restore();
+// }
 
-    l.x += wr.offsetX;
-    l.y += wr.offsetY;
+function disintegrate() {
 
-    r.x += wr.offsetX;
-    r.y += wr.offsetY;
-
-    wr.ctx.save();
-    wr.ctx.beginPath();
-    wr.ctx.moveTo(l.x, l.y);
-    wr.ctx.lineTo(r.x, r.y);
-    wr.ctx.lineCap = 'round';
-    wr.ctx.lineWidth = wr.opts.bondThickness;
-    wr.ctx.strokeStyle = "#FF0000";
-    wr.ctx.stroke();
-    wr.ctx.globalCompositeOperation = 'source-over';
-    wr.ctx.restore();
-}
-
-function disintegrate(dr) {
-    var stack = [];
 }
