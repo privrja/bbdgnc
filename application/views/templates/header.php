@@ -11,13 +11,14 @@
 
     <!-- Styles -->
     <link href="<?= AssetHelper::cssUrl() . "styles.css" ?>" rel="stylesheet"/>
+
 </head>
 <body>
 <header>
 
     <nav>
         <ul>
-            BBDGNC
+            <a class="a-menu" href="<?= site_url("land") ?>">BBDGNC</a>
             <li class="main-menu">
                 <i class="fa fa-database"></i> My Database
             </li>
@@ -30,7 +31,7 @@
         </ul>
         <ul class="main-menu-right">
             <li class="main-menu">
-                <i class="fa fa-cogs"></i> Settings
+                <a href="<?= site_url("settings") ?>" class="a-menu"><i class="fa fa-cogs"></i> Settings</a>
             </li>
             <li class="main-menu">
                 <i class="fa fa-sign-out"></i> Sign Out

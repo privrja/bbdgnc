@@ -3,12 +3,12 @@
 </div>
 <div id="div-right">
 
-    <?php echo validation_errors(); ?>
+    <?= validation_errors(); ?>
 
-    <?php echo form_open('land/index', array('class' => 'form')); ?>
+    <?= form_open('land/index', array('class' => 'form')); ?>
 
     <label for="search">Search in</label>
-    <select name="search" class="select">
+    <select name="search" class="select" title="Search">
         <option value="pubchem">PubChem</option>
         <option value="chemspider">ChemSpider</option>
         <option value="norine">Norine</option>
@@ -16,20 +16,20 @@
     </select>
 
     <label for="name">Name</label>
-    <input type="text" id="txt-canvas-name" class="txt-def" name="name"/>
-    <button class="btn-find" onclick="find()">Find</button>
+    <input type="text" id="txt-canvas-name" class="txt-def" name="name" title="Name"/>
+    <input type="submit" class="btn-find" name="findByName" value="Find"/>
 
     <label for="smile">SMILE</label>
-    <textarea id="txt-canvas-smile" class="txt-area" name="smile"></textarea>
-    <button class="btn-find" onclick="find()">Find</button>
+    <textarea id="txt-canvas-smile" class="txt-area" name="smile" title="Smile"></textarea>
+    <input type="submit" class="btn-find" name="findBySmile" value="Find"/>
 
     <label for="fle">Formula</label>
-    <input type="text" id="txt-canvas-fle" class="txt-def" name="fle"/>
-    <button class="btn-find" onclick="find()">Find</button>
+    <input type="text" id="txt-canvas-fle" class="txt-def" name="fle" title="Formula"/>
+    <input type="submit" class="btn-find" name="findByFle" value="Find"/>
 
-    <label for="id">ID</label>
-    <input type=text class="txt-def" name="id"/>
-    <button class="btn-find" onclick="find()">Find</button>
+    <label for="id">Id</label>
+    <input type=text class="txt-def" name="id" title="Id"/>
+    <input type="submit" class="btn-find" name="findById" value="Find"/>
 
     <label>&nbsp;</label>
     <button id="button-canvas-easy-smile" class="btn-same" onclick="easy()">Canonical SMILES</button>
@@ -45,3 +45,9 @@
     </form>
 
 </div>
+
+<!-- Smiles Drawer -->
+<script src="https://unpkg.com/smiles-drawer@1.0.10/dist/smiles-drawer.min.js"></script>
+<!--<script src="--><?//= AssetHelper::jsUrl() . "smiles-drawer.js" ?><!--"></script>-->
+
+<script src="<?= AssetHelper::jsUrl() . "canvas.js" ?>"></script>

@@ -13,8 +13,6 @@ class Land extends CI_Controller {
     public function index() {
         $this->load->library("form_validation");
 
-        $data['title'] = 'Block';
-
         $this->form_validation->set_rules('title', 'Title', 'required');
         $this->form_validation->set_rules('text', 'Text', 'required');
 

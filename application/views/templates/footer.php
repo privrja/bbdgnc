@@ -22,9 +22,5 @@
         </ul>
     </nav>
 </footer>
-<script src="https://unpkg.com/smiles-drawer@1.0.10/dist/smiles-drawer.min.js"></script>
-<!--<script src="--><?//= AssetHelper::jsUrl() . "smiles-drawer.js" ?><!--"></script>-->
-<script src="<?= AssetHelper::jsUrl() . "canvas.js" ?>"></script>
-<script src="<?= AssetHelper::jsUrl() . "forms.js" ?>"></script>
 </body>
 </html>
