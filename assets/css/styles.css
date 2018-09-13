@@ -1,0 +1,205 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Verdana, sans-serif;
+    background-color: #2B506F;
+    color: #fff;
+}
+
+header {
+    width: 100%;
+    height: 6vh;
+    background-color: #385B79;
+}
+
+footer {
+    width: 100%;
+    height: 4vh;
+    clear: both;
+    background-color: gray;
+}
+
+/** Drawing sketch div */
+#div-canvas {
+    width: 52%;
+    height: 90vh;
+    float: left;
+}
+
+/** Right menu */
+#div-right {
+    width: 48%;
+    height: 90vh;
+    float: right;
+    background-color: #2B506F;
+}
+
+/* Drawing sketch canvas */
+#canvas-main {
+    width: 100%;
+    height: 90vh;
+    background-color: #eeeeee;
+}
+
+nav {
+    padding-left: 2vh;
+    padding-right: 2vh;
+}
+
+ul {
+    display: inline-block;
+    margin: 0;
+    padding: 1vh;
+}
+
+/** main menu */
+.main-menu-right {
+    display: inline-block;
+    float: right;
+    margin: 0;
+    padding: 1vh;
+}
+
+.main-menu {
+    display: inline-block;
+    padding-right: 1vh;
+    padding-left: 1vh;
+    font-size: larger;
+}
+
+/** footer */
+ul .footer {
+    margin: 0;
+    /*padding: 0;*/
+    height: 1vh;
+}
+
+.footer {
+    display: inline-block;
+    font-size: 1.5vh;
+}
+
+.footer-right {
+    float: right;
+}
+
+/** links */
+.a-black {
+    color: #000;
+    text-decoration: none;
+}
+
+.a-black:visited, .a-black:active, a-black:link {
+    color: #000;
+}
+
+.a-black:hover {
+    color: #0000ff;
+}
+
+/** inputs */
+textarea {
+    vertical-align: top;
+}
+
+fieldset {
+    border: none;
+}
+
+button, input[type=submit] {
+    background-color: #0D2E4A;
+    color: #fff;
+    border-radius: 2px;
+    border: 1px solid black;
+    font-family: Verdana, sans-serif;
+    text-align: center;
+    transition: background-color 1s;
+    padding: 0.6vh 1vh 0.6vh 1vh;
+}
+
+button:hover {
+    background-color: #CDD9E3;
+    cursor: pointer;
+    color: #000;
+}
+
+label > span {
+    width: 18%;
+    float: left;
+}
+
+input.txt-def, .select-def {
+    width: 60%;
+    height: 22px;
+}
+
+input.txt, .select {
+    width: 25%;
+    height: 22px;
+}
+
+.txt-area {
+    width: 60%;
+    height: 20vh;
+}
+
+input.txt, input.txt-def, .select, .txt-area {
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+.btn-same {
+    width: 100px;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+.none {
+    display: none;
+}
+
+.block {
+    display: inline-block;
+}
+
+@media (max-device-width: 850px), (max-device-height: 575px) {
+
+    header {
+        height: 100%;
+        font-size: 5vh;
+    }
+
+    #div-right {
+        float: none;
+        width: 100%;
+        height: 100%;
+    }
+
+    #div-canvas {
+        width: 100%;
+        height: 100%;
+    }
+
+    footer {
+        height: 300%;
+    }
+
+    .main-menu {
+        display: block;
+    }
+
+    ul {
+        display: block;
+    }
+
+    .main-menu-right {
+        display: block;
+        float: none;
+    }
+
+    .footer-right {
+        float: none;
+    }
+}
