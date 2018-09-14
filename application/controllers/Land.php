@@ -11,20 +11,20 @@ class Land extends CI_Controller {
     }
 
     public function index() {
-        $this->load->library("form_validation");
+//        $this->load->library("form_validation");
 
-        $this->form_validation->set_rules('title', 'Title', 'required');
-        $this->form_validation->set_rules('text', 'Text', 'required');
+//        $this->form_validation->set_rules('title', 'Title', 'required');
+//        $this->form_validation->set_rules('text', 'Text', 'required');
 
-        if ($this->form_validation->run() === false) {
+//        if ($this->form_validation->run() === false) {
             $this->load->view('templates/header');
             $this->load->view('pages/main');
             $this->load->view('templates/footer');
 
-        } else {
-            $this->news_model->set_news();
-            $this->load->view('pages/block');
-        }
+//        } else {
+//            $this->news_model->set_news();
+//            $this->load->view('pages/block');
+//        }
     }
 
 

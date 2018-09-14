@@ -2,14 +2,14 @@ body {
     margin: 0;
     padding: 0;
     font-family: Verdana, sans-serif;
-    background-color: #2B506F;
-    color: #fff;
+    background-color: #6DC2C8;
+    color: #000;
 }
 
 header {
     width: 100%;
     height: 6vh;
-    background-color: #385B79;
+    background-color: #47a9ff;
 }
 
 footer {
@@ -31,20 +31,19 @@ footer {
     width: 38%;
     height: 90vh;
     float: right;
-    background-color: #2B506F;
+    background-color: #6DC2C8;
 }
 
 #div-full {
-    /*width: 38%;*/
     height: 90vh;
-    background-color: #2B506F;
+    background-color: #6DC2C8;
 }
 
 /* Drawing sketch canvas */
 #canvas-main {
     width: 100%;
     height: 90vh;
-    background-color: #eeeeee;
+    background-color: #fff;
 }
 
 article {
@@ -96,7 +95,6 @@ ul {
 /** footer */
 ul .footer {
     margin: 0;
-    /*padding: 0;*/
     height: 1vh;
 }
 
@@ -111,12 +109,13 @@ ul .footer {
 
 /** links */
 .a-menu {
-    color: #fff;
+    color: #000;
     text-decoration: none;
+    transition: color 0.3s;
 }
 
 .a-menu:hover {
-    color: gold;
+    color: #fff;
 }
 
 .a-black {
@@ -141,8 +140,7 @@ button, input[type=submit] {
     height: 3.5vh;
     margin-top: 1vh;
     padding: 0.6vh 1vh 0.6vh 1vh;
-    background-color: #0D2E4A;
-    color: #fff;
+    background-color: #47a9ff;
     border-radius: 2px;
     border: 1px solid black;
     font-family: Verdana, sans-serif;
@@ -151,9 +149,8 @@ button, input[type=submit] {
 }
 
 button:hover, input[type=submit]:hover {
-    background-color: #CDD9E3;
+    background-color: gray;
     cursor: pointer;
-    color: #000;
 }
 
 /** forms */

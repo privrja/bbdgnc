@@ -32,11 +32,11 @@
     <input type="submit" class="btn-find" name="findById" value="Find"/>
 
     <label>&nbsp;</label>
-    <button id="button-canvas-easy-smile" class="btn-same" onclick="easy()">Canonical SMILES</button>
+    <button type="button" id="button-canvas-easy-smile" class="btn-same" onclick="easy()">Canonical SMILES</button>
     <br />
 
     <label>&nbsp;</label>
-    <button id="btn-canvas-disintegrate" class="btn-same">Generate Building Blocks</button>
+    <button type="button" id="btn-canvas-disintegrate" class="btn-same">Generate Building Blocks</button>
     <br />
 
     <label>&nbsp;</label>
