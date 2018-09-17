@@ -60,7 +60,8 @@ function easy() {
 }
 
 /**
- * SMILEs to easy form
+ * SMILEs to easy
+ * TODO form !! [NH3+] not functional !!
  * @param smile string SMILEs
  * @returns {Array} SMILEs
  */
