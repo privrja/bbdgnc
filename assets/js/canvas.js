@@ -1,7 +1,6 @@
 /** constants HTML id */
 const CANVAS_ID = "canvas-main";
 const TXT_SMILE_ID = "txt-canvas-smile";
-const LBL_FORMULA = "label-formula";
 
 /** constants mode */
 const MODE_LIGHT = "light";
@@ -13,13 +12,28 @@ const COLOR_BLACK = "black";
 
 /** Initialize the drawer */
 
-let smilesDrawer = new SmilesDrawer.Drawer({width: getCanvasWidth(), height: getCanvasHeight()});
-/** Add event listener on input on change text*/
-let input = document.getElementById(TXT_SMILE_ID);
-input.addEventListener('input', drawSmile);
+let smilesDrawer = getSmilesDrawer();
+
+/** Resize event */
+window.addEventListener('resize', function(){
+    let canvas = document.getElementById(CANVAS_ID);
+    canvas.style.width = "100%";
+    canvas.style.height = "100%";
+    let context = canvas.getContext("2d");
+    context.clearRect(0, 0, canvas.width, canvas.height);
+    smilesDrawer = getSmilesDrawer();
+    drawSmile();
+});
 
 /** default screen mode (dark/light) def = light */
 let DEFAULT_SCREEN_MODE = MODE_LIGHT;
+
+/**
+ * Get SMILES Drawer instance with dimension of canvas
+ */
+function getSmilesDrawer() {
+    return new SmilesDrawer.Drawer({width: getCanvasWidth(), height: getCanvasHeight()});
+}
 
 /**
  * Get current width of canvas
@@ -122,7 +136,7 @@ function lightMode() {
 
 function drawSmile() {
     // Clean the input (remove unrecognized characters, such as spaces and tabs) and parse it
-    SmilesDrawer.parse(input.value, function(tree) {
+    SmilesDrawer.parse(document.getElementById(TXT_SMILE_ID).value, function(tree) {
         // Draw to the canvas
         activateScreenMode();
         smilesDrawer.draw(tree, CANVAS_ID, DEFAULT_SCREEN_MODE, false);
