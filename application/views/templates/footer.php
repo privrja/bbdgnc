@@ -6,10 +6,7 @@
                 <a class="a-black" href="https://github.com/reymond-group/smilesDrawer">SMILEs Drawer</a>
             </li>
             <li class="footer">
-                <a class="a-black" href="https://pubs.acs.org/doi/10.1021/acs.jcim.7b00425">Journal of Chemical Information and Modeling</a>
-            </li>
-            <li class="footer">
-                <a class="a-black" href="https://camo.githubusercontent.com/eab6d252ca1f03d237a2353b4d05fa605a5c7dff/687474703a2f2f646f632e6764622e746f6f6c732f736d696c65734472617765722f737472756374757265732e706e67">Image</a>
+                <a class="a-black" href="http://dx.doi.org/10.1021/acs.jcim.7b00425">JCIM</a>
             </li>
             <li class="footer">
                 <a class="a-black" href="https://www.codeigniter.com/">CodeIgniter</a>

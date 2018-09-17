@@ -41,8 +41,8 @@
     <label for="id">Identifier</label>
     <input type=text class="txt-def" name="id" title="Id"/>
 
-    <button type="button" id="button-canvas-find" class="btn-same" name="find">Find</button>
-    <br/>
+    <button type="button" id="btn-canvas-find" class="btn-same" name="find">Find</button>
+    <button type="button" id="btn-canvas-load" class="btn-same" name="load">Load</button>
     <button type="button" id="button-canvas-easy-smile" class="btn-same" onclick="easy()">Canonical SMILES</button>
     <button type="button" id="btn-canvas-disintegrate" class="btn-same">Building Blocks</button>
     <button type="button" id="btn-canvas-update" class="btn-same" onclick="drawSmile()">Update</button>
