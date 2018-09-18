@@ -15,7 +15,7 @@ const COLOR_BLACK = "black";
 let smilesDrawer = getSmilesDrawer();
 
 /** Resize event */
-window.addEventListener('resize', function(){
+window.addEventListener('resize', function () {
     let canvas = document.getElementById(CANVAS_ID);
     canvas.style.width = "100%";
     canvas.style.height = "100%";
@@ -71,6 +71,8 @@ function smileToEasy(smile) {
             case ']':
                 stack = isoText(stack);
                 break;
+            case '/':
+                break;
             default:
                 stack.push(c);
                 break;
@@ -91,14 +93,19 @@ function isoText(stack) {
         switch (c) {
             case '@':
             case 'H':
-            case ']':
                 break;
             default:
-                text.push(c);
+                text.unshift(c);
                 break;
         }
         c = stack.pop();
     }
+    text.unshift('[');
+
+    if (text.length === 3) {
+        text = text[1];
+    }
+
     stack = stack.concat(text);
     return stack;
 }
@@ -136,7 +143,7 @@ function lightMode() {
 
 function drawSmile() {
     // Clean the input (remove unrecognized characters, such as spaces and tabs) and parse it
-    SmilesDrawer.parse(document.getElementById(TXT_SMILE_ID).value, function(tree) {
+    SmilesDrawer.parse(document.getElementById(TXT_SMILE_ID).value, function (tree) {
         // Draw to the canvas
         activateScreenMode();
         smilesDrawer.draw(tree, CANVAS_ID, DEFAULT_SCREEN_MODE, false);
