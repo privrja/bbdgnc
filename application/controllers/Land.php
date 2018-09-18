@@ -2,6 +2,7 @@
 
 class Land extends CI_Controller {
 
+    const INPUT_DATABASE = "database";
     const INPUT_NAME = "name";
     const INPUT_SMILE = "smile";
     const INPUT_FORMULA = "formula";
@@ -11,6 +12,8 @@ class Land extends CI_Controller {
     const REPLY_NONE = 0;
     const REPLY_OK_ONE = 1;
     const REPLY_OK_MORE = 2;
+
+    private $data = array(Land::INPUT_NAME => "", Land::INPUT_SMILE => "", Land::INPUT_FORMULA => "", Land::INPUT_MASS => "", Land::INPUT_IDENTIFIER => "");
 
     /**
      * Land constructor.
@@ -25,14 +28,15 @@ class Land extends CI_Controller {
      * Index - default view
      */
     public function index() {
-        $data = array();
-        $data[Land::INPUT_NAME] = "";
-        $data[Land::INPUT_SMILE] = "";
-        $data[Land::INPUT_FORMULA] = "";
-        $data[Land::INPUT_MASS] = "";
-        $data[Land::INPUT_IDENTIFIER] = "";
+//        $data = array();
+//        $data[Land::INPUT_NAME] = "";
+//        $data[Land::INPUT_SMILE] = "";
+//        $data[Land::INPUT_FORMULA] = "";
+//        $data[Land::INPUT_MASS] = "";
+//        $data[Land::INPUT_IDENTIFIER] = "";
         $this->load->view('templates/header');
-        $this->load->view('pages/main', $data);
+        $this->load->view('pages/canvas');
+        $this->load->view('pages/main', $this->data);
         $this->load->view('templates/footer');
     }
 
@@ -46,12 +50,11 @@ class Land extends CI_Controller {
         $btnFind = $this->input->post("find");
         $btnSave = $this->input->post("save");
         $btnLoad = $this->input->post("load");
-        $intDatabase = $this->input->post("database");
+        $intDatabase = $this->input->post(Land::INPUT_DATABASE);
         $intFindBy = $this->input->post("search");
 
         if (isset($btnFind)) {
             /* Find */
-            $intResultCode = 0;
             $arResult = array();
             $intResultCode = $this->findBy($intDatabase, $intFindBy, $arResult);
             switch ($intResultCode) {
@@ -60,11 +63,17 @@ class Land extends CI_Controller {
                     break;
                 case Land::REPLY_OK_ONE:
                     $this->load->view('templates/header');
+                    $this->load->view('pages/canvas');
                     $this->load->view('pages/main', $arResult);
                     $this->load->view('templates/footer');
                     break;
                 case Land::REPLY_OK_MORE:
                     /* form with list view and select the right one, next find by id the right one */
+                    $data['molecules'] = $arResult;
+                    $this->load->view('templates/header');
+                    $this->load->view('pages/select', $data);
+                    $this->load->view('pages/main', $this->data);
+                    $this->load->view('templates/footer');
                     break;
             }
         } else if (isset($btnSave)) {
@@ -92,11 +101,27 @@ class Land extends CI_Controller {
                     return Land::REPLY_NONE;
                 }
 
-                $outMixResult = $finder->findByIdentifier($intDatabase, $this->input->post("identifier"));
+                $outMixResult = $finder->findByIdentifier($intDatabase, $this->input->post(Land::INPUT_IDENTIFIER));
                 if (isset($outMixResult)) {
                     $outMixResult = $this->transferMoleculeToFormData($outMixResult);
                     return Land::REPLY_OK_ONE;
                 } else return Land::REPLY_NONE;
+                break;
+            case FindByEnum::NAME:
+                $this->form_validation->set_rules(Land::INPUT_NAME, "Name", "required");
+
+                if ($this->form_validation->run() === false) {
+                    return Land::REPLY_NONE;
+                }
+
+                $outMixResult = $finder->findByName($intDatabase, $this->input->post(Land::INPUT_NAME));
+
+                if (isset($outMixResult)) {
+                    return Land::REPLY_OK_MORE;
+                } else {
+                    return Land::REPLY_NONE;
+                }
+                break;
         }
 
         if (sizeof($outMixResult) < 1) {

@@ -1,6 +1,3 @@
-<div id="div-canvas">
-    <canvas id="canvas-main"></canvas>
-</div>
 <div id="div-right">
 
     <?= form_open('land/form', array('class' => 'form')); ?>

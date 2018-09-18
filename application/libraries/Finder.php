@@ -40,4 +40,9 @@ class Finder {
         return $finder->findById($identifier);
     }
 
+    public function findByName($intDatabase, $strName) {
+        $finder = $this->getFinder($intDatabase);
+        return $finder->findByName($strName);
+    }
+
 }
