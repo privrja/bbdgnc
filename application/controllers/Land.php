@@ -8,6 +8,10 @@ class Land extends CI_Controller {
     const INPUT_MASS = "mass";
     const INPUT_IDENTIFIER = "identifier";
 
+    const REPLY_NONE = 0;
+    const REPLY_OK_ONE = 1;
+    const REPLY_OK_MORE = 2;
+
     /**
      * Land constructor.
      */
@@ -43,20 +47,16 @@ class Land extends CI_Controller {
             $intResultCode = $this->findBy($intDatabase, $intFindBy, $arResult);
         }
 
-        if ($this->form_validation->run() === false) {
-            /* wrong input */
-            $this->index();
-        } else {
-            /* ipnut OK */
-            if ($intResultCode == 1) {
+        switch ($intResultCode) {
+            case Land::REPLY_OK_ONE:
                 $this->load->view('templates/header');
                 $this->load->view('pages/main', $arResult);
                 $this->load->view('templates/footer');
-            } else {
-                echo $intResultCode;
-            }
+                break;
+            case Land::REPLY_NONE:
+                $this->index();
+                break;
         }
-
     }
 
     private function findBy($intDatabase, $intFindBy, &$outMixResult = array()) {
@@ -65,17 +65,25 @@ class Land extends CI_Controller {
         switch ($intFindBy) {
             case FindByEnum::IDENTIFIER:
                 $this->form_validation->set_rules(Land::INPUT_IDENTIFIER, "Identifier", "required");
+
+                if ($this->form_validation->run() === false) {
+                    return Land::REPLY_NONE;
+                }
+
                 /* TODO input check should be here */
-                $outMixResult = $this->transferMoleculeToFormData($finder->findByIdentifier($intDatabase, $this->input->post("identifier")));
-                return 1;
+                $outMixResult = $finder->findByIdentifier($intDatabase, $this->input->post("identifier"));
+                if (isset($outMixResult)) {
+                    $outMixResult = $this->transferMoleculeToFormData($outMixResult);
+                    return Land::REPLY_OK_ONE;
+                } else return Land::REPLY_NONE;
         }
 
         if (sizeof($outMixResult) < 1) {
-            return 0;
+            return Land::REPLY_NONE;
         } else if (sizeof($outMixResult) == 1) {
-            return 1;
+            return Land::REPLY_OK_ONE;
         } else {
-            return 2;
+            return Land::REPLY_OK_MORE;
         }
 
     }

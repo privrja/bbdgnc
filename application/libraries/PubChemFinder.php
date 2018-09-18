@@ -7,6 +7,9 @@ class PubChemFinder implements IFinder {
     const REST_DEF_URI = "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/";
     const REST_PROPERTIES = "IUPACName,MolecularFormula,MolecularWeight,CanonicalSmiles/";
     const REST_JSON_FORMAT = "json";
+    const REPLY_TABLE_PROPERTIES = "PropertyTable";
+    const REPLY_PROPERTIES = "Properties";
+    const REPLY_FAULT = "Fault";
 
     const IDENTIFIER = "CID";
     const IUPAC_NAME = "IUPACName";
@@ -62,39 +65,43 @@ class PubChemFinder implements IFinder {
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
         $curl_response = curl_exec($curl);
         if ($curl_response === false) {
-            $info = curl_getinfo($curl);
+//            $info = curl_getinfo($curl);
             curl_close($curl);
-            die('error occured during curl exec. Additioanl info: ' . var_export($info));
+            log_message("error", "Error occured during curl exec. Uri: " . $uri);
+            return null;
         }
         curl_close($curl);
 
         $decoded = json_decode($curl_response, true);
 
-        $molecule = new MoleculeTO();
-        foreach ($decoded['PropertyTable']['Properties'][0] as $property => $value) {
-            switch ($property) {
-                case PubChemFinder::IDENTIFIER:
-                    $molecule->mixIdentifier = $value;
-                    break;
-                case PubChemFinder::IUPAC_NAME:
-                    $molecule->strName = $value;
-                    break;
-                case PubChemFinder::FORMULA:
-                    $molecule->strFormula = $value;
-                    break;
-                case PubChemFinder::MASS:
-                    $molecule->decMass = $value;
-                    break;
-                case PubChemFinder::SMILE:
-                    $molecule->strSmile = $value;
-                    break;
-            }
-            $molecule->intServerEnum = ServerEnum::PUBCHEM;
+        if (isset($decoded[PubChemFinder::REPLY_FAULT])) {
+            log_message('error', "REST reply fault. Uri: " . $uri);
+            return null;
         }
 
-        /* TODO wrong connection */
+        $objMolecule = new MoleculeTO();
+        foreach ($decoded[PubChemFinder::REPLY_TABLE_PROPERTIES][PubChemFinder::REPLY_PROPERTIES][0] as $property => $value) {
+            switch ($property) {
+                case PubChemFinder::IDENTIFIER:
+                    $objMolecule->mixIdentifier = $value;
+                    break;
+                case PubChemFinder::IUPAC_NAME:
+                    $objMolecule->strName = $value;
+                    break;
+                case PubChemFinder::FORMULA:
+                    $objMolecule->strFormula = $value;
+                    break;
+                case PubChemFinder::MASS:
+                    $objMolecule->decMass = $value;
+                    break;
+                case PubChemFinder::SMILE:
+                    $objMolecule->strSmile = $value;
+                    break;
+            }
+            $objMolecule->intServerEnum = ServerEnum::PUBCHEM;
+        }
 
         log_message('info', "Response OK to URI: $uri");
-        return $molecule;
+        return $objMolecule;
     }
 }
