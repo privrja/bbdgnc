@@ -3,25 +3,23 @@
 </div>
 <div id="div-right">
 
-    <?= validation_errors(); ?>
-
-    <?= form_open('land/find', array('class' => 'form')); ?>
+    <?= form_open('land/form', array('class' => 'form')); ?>
 
     <label for="databse">Database</label>
     <select name="database" class="select" title="Search">
         <option value=<?= ServerEnum::PUBCHEM ?>>PubChem</option>
-        <option value="chemspider">ChemSpider</option>
-        <option value="norine">Norine</option>
-        <option value="pdb">PDB</option>
+        <option value=<?= ServerEnum::CHEMSPIDER ?>>ChemSpider</option>
+        <option value=<?= ServerEnum::NORINE ?>>Norine</option>
+        <option value=<?= ServerEnum::PDB ?>>PDB</option>
     </select>
 
     <label for="search">Search by</label>
     <select name="search" class="select" title="Search">
-        <option value="name">Name</option>
-        <option value="smile">SMILES</option>
-        <option value="fle">Molecular Formula</option>
-        <option value="mass">Monoisotopic Mass</option>
-        <option value="<?= FindByEnum::IDENTIFIER ?>">Identifier</option>
+        <option value=<?= FindByEnum::NAME ?>>Name</option>
+        <option value=<?= FindByEnum::SMILE ?>>SMILES</option>
+        <option value=<?= FindByEnum::FORMULA ?>>Molecular Formula</option>
+        <option value=<?= FindByEnum::MASS ?>>Monoisotopic Mass</option>
+        <option value=<?= FindByEnum::IDENTIFIER ?>>Identifier</option>
     </select>
 
     <label for="name">Name</label>
@@ -49,6 +47,8 @@
     <input type="submit" class="btn-same" value="Save"/>
 
     </form>
+
+    <?= validation_errors(); ?>
 
 </div>
 

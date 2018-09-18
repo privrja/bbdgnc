@@ -18,10 +18,12 @@ class Land extends CI_Controller {
     public function __construct() {
         parent::__construct();
         $this->load->helper(array("form", "url"));
-//        $this->load->library("ServerEnum");
         $this->load->library("Finder");
     }
 
+    /**
+     * Index - default view
+     */
     public function index() {
         $data = array();
         $data[Land::INPUT_NAME] = "";
@@ -34,31 +36,51 @@ class Land extends CI_Controller {
         $this->load->view('templates/footer');
     }
 
-    public function find() {
+    /**
+     * Form
+     * Find in specific database by specific param or save data to database
+     */
+    public function form() {
         $this->load->library("form_validation");
 
         $btnFind = $this->input->post("find");
+        $btnSave = $this->input->post("save");
+        $btnLoad = $this->input->post("load");
         $intDatabase = $this->input->post("database");
         $intFindBy = $this->input->post("search");
 
-        $intResultCode = 0;
-        $arResult = array();
         if (isset($btnFind)) {
+            /* Find */
+            $intResultCode = 0;
+            $arResult = array();
             $intResultCode = $this->findBy($intDatabase, $intFindBy, $arResult);
-        }
-
-        switch ($intResultCode) {
-            case Land::REPLY_OK_ONE:
-                $this->load->view('templates/header');
-                $this->load->view('pages/main', $arResult);
-                $this->load->view('templates/footer');
-                break;
-            case Land::REPLY_NONE:
-                $this->index();
-                break;
+            switch ($intResultCode) {
+                case Land::REPLY_NONE:
+                    $this->index();
+                    break;
+                case Land::REPLY_OK_ONE:
+                    $this->load->view('templates/header');
+                    $this->load->view('pages/main', $arResult);
+                    $this->load->view('templates/footer');
+                    break;
+                case Land::REPLY_OK_MORE:
+                    /* form with list view and select the right one, next find by id the right one */
+                    break;
+            }
+        } else if (isset($btnSave)) {
+            /* Save to database*/
+        } else if (isset($btnLoad)) {
+            /* Load from database */
         }
     }
 
+    /**
+     * Find by - specific param
+     * @param int $intDatabase where to search
+     * @param int $intFindBy find by this param
+     * @param array $outMixResult output param result
+     * @return int result code 0 => find none, 1 => find 1, 2 => find more than 1
+     */
     private function findBy($intDatabase, $intFindBy, &$outMixResult = array()) {
         $finder = new Finder();
         /* TODO other cases */
@@ -70,7 +92,6 @@ class Land extends CI_Controller {
                     return Land::REPLY_NONE;
                 }
 
-                /* TODO input check should be here */
                 $outMixResult = $finder->findByIdentifier($intDatabase, $this->input->post("identifier"));
                 if (isset($outMixResult)) {
                     $outMixResult = $this->transferMoleculeToFormData($outMixResult);
@@ -85,13 +106,12 @@ class Land extends CI_Controller {
         } else {
             return Land::REPLY_OK_MORE;
         }
-
     }
 
     /**
      * Transform MoleculeTO object to array for form data to set in view
      * @param MoleculeTO $objMolecule
-     * @return array
+     * @return array data for view
      */
     private function transferMoleculeToFormData($objMolecule) {
         $arData = array();

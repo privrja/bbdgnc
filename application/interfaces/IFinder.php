@@ -2,6 +2,9 @@
 
 interface IFinder {
 
+    /** FORMAT of REST API output */
+    const REST_FORMAT_JSON = "json";
+
     /**
      * Find data on some server by name
      * @param string $strName

@@ -2,8 +2,6 @@
 
 class Finder {
 
-    const REST_FOMRAT_JSON = "json";
-
     /**
      * Finder constructor.
      */
@@ -15,6 +13,11 @@ class Finder {
         $this->CI->load->library("MoleculeTO");
     }
 
+    /**
+     * Factory for finders, get right finder by database
+     * @param int $intDatabase
+     * @return IFinder
+     */
     public function getFinder($intDatabase) {
         switch ($intDatabase) {
             case ServerEnum::PUBCHEM:
@@ -26,6 +29,12 @@ class Finder {
         }
     }
 
+    /**
+     * Find by Identifier
+     * @param int $intDatabase
+     * @param mixed $identifier
+     * @return moleculeTO
+     */
     public function findByIdentifier($intDatabase, $identifier) {
         $finder = $this->getFinder($intDatabase);
         return $finder->findById($identifier);
