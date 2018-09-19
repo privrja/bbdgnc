@@ -9,6 +9,8 @@ interface IFinder {
 
     const FIRST_X_RESULTS = 10;
 
+    const FIND_NAMES = false;
+
     /**
      * Find data on some server by name
      * @param string $strName

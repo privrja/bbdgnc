@@ -193,14 +193,14 @@ class PubChemFinder implements IFinder {
         return $strDefaultName;
     }
 
-    private function resultOne($objItem, &$outArResult, $blFindName = false) {
+    private function resultOne($objItem, &$outArResult, $blFindName = IFinder::FIND_NAMES) {
         foreach ($objItem as $strProperty => $mixValue) {
             /* too slow */
             if ($strProperty == PubChemFinder::IUPAC_NAME) {
                 if ($blFindName) {
                     $mixValue = $this->getNames($outArResult[Constants::CANVAS_INPUT_IDENTIFIER]);
                 } else {
-                    $mixValue = "";
+//                    $mixValue = "";
                 }
             }
             $outArResult[$this->getArrayKeyFromReplyProperty($strProperty)] = $mixValue;

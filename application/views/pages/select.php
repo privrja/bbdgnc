@@ -6,28 +6,49 @@ use Bbdgnc\Finder\Enum\ServerEnum;
 ?>
 
 <div id="div-canvas">
-    <?php foreach ($molecules as $molecule): ?>
+    <div class="table t">
+        <div class="thead t">
+            <div class="tr t">
+                <div class="td">Name</div>
+                <div class="td">Formula</div>
+                <div class="td">Identifier</div>
+                <div class="td">Mass</div>
+                <div class="td">Database</div>
+                <div class="td">Action</div>
+            </div>
+        </div>
+        <div class="tbody">
+            <?php foreach ($molecules as $molecule): ?>
 
-        <?= form_open('land/select', array('class' => 'form')); ?>
+                <?= form_open('land/select', array('class' => 'tr')); ?>
+                <div class="td" title=<?= $molecule[Constants::CANVAS_INPUT_NAME] ?>><?= Constants::smallerText($molecule[Constants::CANVAS_INPUT_NAME]) ?></div>
+<!--                <div class="td">--><?//= $molecule[Constants::CANVAS_INPUT_NAME] ?><!--</div>-->
+                <div class="td"><?= $molecule[Constants::CANVAS_INPUT_FORMULA] ?></div>
+                <div class="td"><?= $molecule[Constants::CANVAS_INPUT_IDENTIFIER] ?></div>
+                <div class="td"><?= $molecule[Constants::CANVAS_INPUT_MASS] ?></div>
+                <div class="td">
+                    <a href=<?= ServerEnum::getLink($molecule[Constants::CANVAS_HIDDEN_DATABASE], $molecule[Constants::CANVAS_INPUT_IDENTIFIER]) ?>>
+                        <?= ServerEnum::$values[$molecule[Constants::CANVAS_HIDDEN_DATABASE]] ?></a>
+                </div>
+                <span class="td"><input type="submit" value="Select"/></span>
 
-<!--        <h3>--><?//= $molecule[Constants::CANVAS_INPUT_NAME] ?><!--</h3>-->
-        <p><?= Constants::formula($molecule[Constants::CANVAS_INPUT_FORMULA]) ?></p>
-        <p>Identificator: <?= $molecule[Constants::CANVAS_INPUT_IDENTIFIER] ?></p>
-        <p>Monoisotopic Mass: <?= $molecule[Constants::CANVAS_INPUT_MASS] ?></p>
-        <p><a href=<?= ServerEnum::getLink($molecule[Constants::CANVAS_HIDDEN_DATABASE], $molecule[Constants::CANVAS_INPUT_IDENTIFIER]) ?>>
-                <?= ServerEnum::$values[$molecule[Constants::CANVAS_HIDDEN_DATABASE]] ?></a></p>
+                <input type="hidden"
+                       name=<?= Constants::CANVAS_HIDDEN_DATABASE ?> value="<?= $molecule[Constants::CANVAS_HIDDEN_DATABASE] ?>"/>
+                <input type="hidden"
+                       name=<?= Constants::CANVAS_INPUT_NAME ?> value="<?= $molecule[Constants::CANVAS_INPUT_NAME] ?>"/>
+                <input type="hidden"
+                       name=<?= Constants::CANVAS_INPUT_SMILE ?> value="<?= $molecule[Constants::CANVAS_INPUT_SMILE] ?>"/>
+                <input type="hidden"
+                       name=<?= Constants::CANVAS_INPUT_FORMULA ?> value="<?= $molecule[Constants::CANVAS_INPUT_FORMULA] ?>"/>
+                <input type="hidden"
+                       name=<?= Constants::CANVAS_INPUT_MASS ?> value="<?= $molecule[Constants::CANVAS_INPUT_MASS] ?>"/>
+                <input type="hidden"
+                       name=<?= Constants::CANVAS_INPUT_IDENTIFIER ?> value="<?= $molecule[Constants::CANVAS_INPUT_IDENTIFIER] ?>"/>
+                <input type="hidden" name=<?= Constants::CANVAS_HIDDEN_NAME ?> value="<?= $hdname ?>"/>
+                </form>
 
-        <input type="hidden" name=<?= Constants::CANVAS_HIDDEN_DATABASE ?> value="<?= $molecule[Constants::CANVAS_HIDDEN_DATABASE] ?>" />
-        <input type="hidden" name=<?= Constants::CANVAS_INPUT_NAME ?> value="<?= $molecule[Constants::CANVAS_INPUT_NAME] ?>" />
-        <input type="hidden" name=<?= Constants::CANVAS_INPUT_SMILE ?> value="<?= $molecule[Constants::CANVAS_INPUT_SMILE] ?>" />
-        <input type="hidden" name=<?= Constants::CANVAS_INPUT_FORMULA ?> value="<?= $molecule[Constants::CANVAS_INPUT_FORMULA] ?>" />
-        <input type="hidden" name=<?= Constants::CANVAS_INPUT_MASS ?> value="<?= $molecule[Constants::CANVAS_INPUT_MASS] ?>" />
-        <input type="hidden" name=<?= Constants::CANVAS_INPUT_IDENTIFIER ?> value="<?= $molecule[Constants::CANVAS_INPUT_IDENTIFIER] ?>" />
-        <input type="hidden" name=<?= Constants::CANVAS_HIDDEN_NAME ?> value="<?= $hdname ?>" />
-
-        <input type="submit" value="Select"/>
-
-        </form>
-    <?php endforeach; ?>
+            <?php endforeach; ?>
+        </div>
+    </div>
 
 </div>
