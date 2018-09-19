@@ -15,7 +15,14 @@ abstract class ServerEnum {
         self::PDB => "PDB"
     );
 
-    public static function getLink($intServerEnum) {
-
+    public static function getLink($intServerEnum, $strIdentifier) {
+        switch ($intServerEnum) {
+            case self::PUBCHEM:
+                return "https://pubchem.ncbi.nlm.nih.gov/compound/" . $strIdentifier;
+                break;
+            case self::CHEMSPIDER:
+                return "http://www.chemspider.com/Chemical-Structure." . $strIdentifier . ".html";
+                break;
+        }
     }
 }

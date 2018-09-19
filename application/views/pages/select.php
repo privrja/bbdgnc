@@ -1,4 +1,9 @@
-<?php use Bbdgnc\Enum\Constants; ?>
+<?php
+
+use Bbdgnc\Enum\Constants;
+use Bbdgnc\Finder\Enum\ServerEnum;
+
+?>
 
 <div id="div-canvas">
     <?php foreach ($molecules as $molecule): ?>
@@ -7,7 +12,8 @@
         <div class="main">
             <?= $molecule[Constants::CANVAS_INPUT_SMILE] ?>
         </div>
-        <a href=""><?= $molecule[Constants::CANVAS_INPUT_DATABASE] ?></a>
+        <a href=<?= ServerEnum::getLink($molecule[Constants::CANVAS_INPUT_DATABASE], $molecule[Constants::CANVAS_INPUT_IDENTIFIER]) ?>>
+            <?= ServerEnum::$values[$molecule[Constants::CANVAS_INPUT_DATABASE]] ?></a>
 
     <?php endforeach; ?>
 </div>
