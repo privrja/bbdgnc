@@ -31,5 +31,4 @@ user_guide_src/cilexer/pycilexer.egg-info/*
 /tests/tests/
 /tests/results/
 
-
-/assets/js/smiles-drawer.js
+assets/js/smiles-drawer.js
