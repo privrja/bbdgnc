@@ -10,17 +10,19 @@ class PubChemFinder implements IFinder {
 
     /** Components of uri */
     const REST_DEF_URI = "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/";
-    const REST_PROPERTY_VALUES = "IUPACName,MolecularFormula,MolecularWeight,CanonicalSmiles/";
+    const REST_PROPERTY_VALUES = "IUPACName,MolecularFormula,MonoisotopicMass,CanonicalSmiles/";
     const REST_PROPERTY = "/property/";
 
     /** Properties in JSON reply */
     const REPLY_TABLE_PROPERTIES = "PropertyTable";
     const REPLY_PROPERTIES = "Properties";
     const REPLY_FAULT = "Fault";
+    const REPLY_IDENTIFIER_LIST = "IdentifierList";
+    const REPLY_CID = "CID";
     const IDENTIFIER = "CID";
     const IUPAC_NAME = "IUPACName";
     const FORMULA = "MolecularFormula";
-    const MASS = "MolecularWeight";
+    const MASS = "MonoisotopicMass";
     const SMILE = "CanonicalSMILES";
 
     /**
@@ -30,21 +32,18 @@ class PubChemFinder implements IFinder {
      * @return int result code
      */
     public function findByName($strName, &$outArResult = array()) {
-        $uri = PubChemFinder::REST_DEF_URI . "name/" . $strName . PubChemFinder::REST_PROPERTY . PubChemFinder::REST_PROPERTY_VALUES . IFinder::REST_FORMAT_JSON;
+        $uri = PubChemFinder::REST_DEF_URI . "name/" . Constants::urlText($strName) . PubChemFinder::REST_PROPERTY . PubChemFinder::REST_PROPERTY_VALUES . IFinder::REST_FORMAT_JSON;
         $decoded = $this->getJsonFromUri($uri);
         if ($decoded === false) {
             return ResultEnum::REPLY_NONE;
         }
 
         if (sizeof($decoded[PubChemFinder::REPLY_TABLE_PROPERTIES][PubChemFinder::REPLY_PROPERTIES]) == 1) {
-            return  $this->resultOne($decoded, $outArResult);
+            return $this->resultOne($decoded[PubChemFinder::REPLY_TABLE_PROPERTIES][PubChemFinder::REPLY_PROPERTIES][0], $outArResult);
         } else {
             foreach ($decoded[PubChemFinder::REPLY_TABLE_PROPERTIES][PubChemFinder::REPLY_PROPERTIES] as $intKey => $objItem) {
                 $arMolecule = array();
-                foreach ($objItem as $strProperty => $mixValue) {
-                    $arMolecule[$this->getArrayKeyFromReplyProperty($strProperty)] = $mixValue;
-                }
-                $arMolecule[Constants::CANVAS_HIDDEN_DATABASE] = ServerEnum::PUBCHEM;
+                $this->resultOne($objItem, $arMolecule);
                 $outArResult[$intKey] = $arMolecule;
             }
             return ResultEnum::REPLY_OK_MORE;
@@ -56,7 +55,7 @@ class PubChemFinder implements IFinder {
      * @param string $strSmile
      * @return mixed
      */
-    public function findBySmile($strSmile) {
+    public function findBySmile($strSmile, &$outArResult) {
         // TODO: Implement findBySmiles() method.
     }
 
@@ -65,8 +64,60 @@ class PubChemFinder implements IFinder {
      * @param string $strFormula
      * @return mixed
      */
-    public function findByFormula($strFormula) {
-        // TODO: Implement findByFormula() method.
+    public function findByFormula($strFormula, &$outArResult, &$outArNextResults) {
+        $uri = PubChemFinder::REST_DEF_URI . "fastformula/" . $strFormula . "/cids/" . IFinder::REST_FORMAT_JSON;
+        $decoded = $this->getJsonFromUri($uri);
+        if ($decoded === false) {
+            return ResultEnum::REPLY_NONE;
+        }
+
+        $intCounter = 1;
+        $strIds = "";
+        $blNextResults = false;
+        foreach ($decoded[PubChemFinder::REPLY_IDENTIFIER_LIST][PubChemFinder::REPLY_CID] as $intCid) {
+            if ($blNextResults) {
+                $outArNextResults[$intCounter] = $intCid;
+            } else {
+                $strIds .= $intCid . ",";
+                if ($intCounter == IFinder::FIRST_X_RESULTS) {
+                    $strIds = rtrim($strIds, ",");
+                    $this->findByIds($strIds, $outArResult);
+                    $intCounter = 0;
+                    $blNextResults = true;
+                }
+            }
+            $intCounter++;
+        }
+
+        if (!$blNextResults) {
+            $strIds = rtrim($strIds, ",");
+            $this->findByIds($strIds, $outArResult);
+        }
+
+        if (!$blNextResults && $intCounter == 2) {
+            return ResultEnum::REPLY_OK_ONE;
+        } else {
+            return ResultEnum::REPLY_OK_MORE;
+        }
+    }
+
+    private function findByIds($strIds, &$outArResult) {
+        $uri = PubChemFinder::REST_DEF_URI . "cid/" . $strIds . PubChemFinder::REST_PROPERTY . PubChemFinder::REST_PROPERTY_VALUES . IFinder::REST_FORMAT_JSON;
+        $decoded = $this->getJsonFromUri($uri);
+        if ($decoded === false) {
+            return ResultEnum::REPLY_NONE;
+        }
+
+        if (sizeof($decoded[PubChemFinder::REPLY_TABLE_PROPERTIES][PubChemFinder::REPLY_PROPERTIES]) == 1) {
+            return $this->resultOne($decoded[PubChemFinder::REPLY_TABLE_PROPERTIES][PubChemFinder::REPLY_PROPERTIES][0], $outArResult);
+        } else {
+            foreach ($decoded[PubChemFinder::REPLY_TABLE_PROPERTIES][PubChemFinder::REPLY_PROPERTIES] as $intKey => $objItem) {
+                $arMolecule = array();
+                $this->resultOne($objItem, $arMolecule);
+                $outArResult[$intKey] = $arMolecule;
+            }
+            return ResultEnum::REPLY_OK_MORE;
+        }
     }
 
     /**
@@ -75,7 +126,7 @@ class PubChemFinder implements IFinder {
      * @param $decTolerance
      * @return mixed
      */
-    public function findByMass($decMass, $decTolerance) {
+    public function findByMass($decMass, $decTolerance, &$outArResult) {
         // TODO: Implement findByMass() method.
     }
 
@@ -91,7 +142,7 @@ class PubChemFinder implements IFinder {
         if ($decoded === false) {
             return ResultEnum::REPLY_NONE;
         }
-        return $this->resultOne($decoded, $outArResult);
+        return $this->resultOne($decoded[PubChemFinder::REPLY_TABLE_PROPERTIES][PubChemFinder::REPLY_PROPERTIES][0], $outArResult, true);
     }
 
     private function getJsonFromUri($strUri) {
@@ -129,8 +180,29 @@ class PubChemFinder implements IFinder {
         }
     }
 
-    private function resultOne($decoded, &$outArResult) {
-        foreach ($decoded[PubChemFinder::REPLY_TABLE_PROPERTIES][PubChemFinder::REPLY_PROPERTIES][0] as $strProperty => $mixValue) {
+    /* too slow !!! get all names and than get only first */
+    private function getNames($strId, $strDefaultName = "") {
+        $uri = PubChemFinder::REST_DEF_URI . "cid/" . $strId . "/synonyms/" . IFinder::REST_FORMAT_JSON;
+        $decoded = $this->getJsonFromUri($uri);
+        if ($decoded === false) {
+            return ResultEnum::REPLY_NONE;
+        }
+        foreach ($decoded['InformationList']['Information'][0]['Synonym'] as $synonym) {
+            return $synonym;
+        }
+        return $strDefaultName;
+    }
+
+    private function resultOne($objItem, &$outArResult, $blFindName = false) {
+        foreach ($objItem as $strProperty => $mixValue) {
+            /* too slow */
+            if ($strProperty == PubChemFinder::IUPAC_NAME) {
+                if ($blFindName) {
+                    $mixValue = $this->getNames($outArResult[Constants::CANVAS_INPUT_IDENTIFIER]);
+                } else {
+                    $mixValue = "";
+                }
+            }
             $outArResult[$this->getArrayKeyFromReplyProperty($strProperty)] = $mixValue;
         }
         $outArResult[Constants::CANVAS_HIDDEN_DATABASE] = ServerEnum::PUBCHEM;

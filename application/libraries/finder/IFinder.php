@@ -7,6 +7,8 @@ interface IFinder {
     /** FORMAT of REST API output */
     const REST_FORMAT_JSON = "json";
 
+    const FIRST_X_RESULTS = 10;
+
     /**
      * Find data on some server by name
      * @param string $strName
@@ -20,14 +22,14 @@ interface IFinder {
      * @param string $strSmile
      * @return mixed
      */
-    public function findBySmile($strSmile);
+    public function findBySmile($strSmile, &$outArResult);
 
     /**
      * Find data by Molecular Formula
      * @param string $strFormula
      * @return mixed
      */
-    public function findByFormula($strFormula);
+    public function findByFormula($strFormula, &$outArResult, &$outArNextResults);
 
     /**
      * Find data by Monoisotopic Mass
@@ -35,7 +37,7 @@ interface IFinder {
      * @param $decTolerance
      * @return mixed
      */
-    public function findByMass($decMass, $decTolerance);
+    public function findByMass($decMass, $decTolerance, &$outArResult);
 
     /**
      * Find data by Identificator

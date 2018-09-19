@@ -38,4 +38,9 @@ class Finder {
         return $finder->findByName($strName, $outArResult);
     }
 
+    public function findByFormula($intDatabase, $strFormula, &$outArResult, &$outArNextResult) {
+        $finder = $this->getFinder($intDatabase);
+        return $finder->findByFormula($strFormula, $outArResult, $outArNextResult);
+    }
+
 }

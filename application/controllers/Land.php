@@ -7,16 +7,19 @@ use Bbdgnc\Finder\Enum\ResultEnum;
 
 class Land extends CI_Controller {
 
-    private $data = array(
-        Constants::CANVAS_INPUT_NAME => "", Constants::CANVAS_INPUT_SMILE => "",
-        Constants::CANVAS_INPUT_FORMULA => "", Constants::CANVAS_INPUT_MASS => "",
-        Constants::CANVAS_INPUT_IDENTIFIER => "", Constants::CANVAS_HIDDEN_DATABASE => ""
-    );
+    private function getData() {
+        return array(
+            Constants::CANVAS_INPUT_NAME => "", Constants::CANVAS_INPUT_SMILE => "",
+            Constants::CANVAS_INPUT_FORMULA => "", Constants::CANVAS_INPUT_MASS => "",
+            Constants::CANVAS_INPUT_IDENTIFIER => "", Constants::CANVAS_HIDDEN_DATABASE => ""
+        );
+    }
 
     /**
      * Land constructor.
      */
-    public function __construct() {
+    public
+    function __construct() {
         parent::__construct();
         $this->load->helper(array("form", "url"));
     }
@@ -24,10 +27,11 @@ class Land extends CI_Controller {
     /**
      * Index - default view
      */
-    public function index() {
+    public
+    function index() {
         $this->load->view('templates/header');
         $this->load->view('pages/canvas');
-        $this->load->view('pages/main', $this->data);
+        $this->load->view('pages/main', $this->getData());
         $this->load->view('templates/footer');
     }
 
@@ -35,7 +39,8 @@ class Land extends CI_Controller {
      * Form
      * Find in specific database by specific param or save data to database
      */
-    public function form() {
+    public
+    function form() {
         $this->load->library("form_validation");
 
         $btnFind = $this->input->post("find");
@@ -55,15 +60,21 @@ class Land extends CI_Controller {
                 case ResultEnum::REPLY_OK_ONE:
                     $this->load->view('templates/header');
                     $this->load->view('pages/canvas');
+                    if (empty($arResult[Constants::CANVAS_INPUT_NAME])) {
+                        $arResult[Constants::CANVAS_INPUT_NAME] = $this->input->post(Constants::CANVAS_INPUT_NAME);
+                    }
                     $this->load->view('pages/main', $arResult);
                     $this->load->view('templates/footer');
                     break;
                 case ResultEnum::REPLY_OK_MORE:
                     /* form with list view and select the right one, next find by id the right one */
                     $data['molecules'] = $arResult;
+                    $rightData = $this->getData();
+                    $data[Constants::CANVAS_HIDDEN_NAME] = $this->input->post(Constants::CANVAS_INPUT_NAME);
+                    $rightData[Constants::CANVAS_INPUT_NAME] = $this->input->post(Constants::CANVAS_INPUT_NAME);
                     $this->load->view('templates/header');
                     $this->load->view('pages/select', $data);
-                    $this->load->view('pages/main', $this->data);
+                    $this->load->view('pages/main', $rightData);
                     $this->load->view('templates/footer');
                     break;
             }
@@ -77,10 +88,16 @@ class Land extends CI_Controller {
     /**
      * Render default view with canvas and form. Select data from list and set them to form
      */
-    public function select() {
+    public
+    function select() {
         $data = array();
         $data[Constants::CANVAS_HIDDEN_DATABASE] = $this->input->post(Constants::CANVAS_HIDDEN_DATABASE);
-        $data[Constants::CANVAS_INPUT_NAME] = $this->input->post(Constants::CANVAS_INPUT_NAME);
+        $strName = $this->input->post(Constants::CANVAS_INPUT_NAME);
+        if (!empty($strName)) {
+            $data[Constants::CANVAS_INPUT_NAME] = $strName;
+        } else {
+            $data[Constants::CANVAS_INPUT_NAME] = $this->input->post(Constants::CANVAS_HIDDEN_NAME);
+        }
         $data[Constants::CANVAS_INPUT_SMILE] = $this->input->post(Constants::CANVAS_INPUT_SMILE);
         $data[Constants::CANVAS_INPUT_FORMULA] = $this->input->post(Constants::CANVAS_INPUT_FORMULA);
         $data[Constants::CANVAS_INPUT_MASS] = $this->input->post(Constants::CANVAS_INPUT_MASS);
@@ -98,7 +115,8 @@ class Land extends CI_Controller {
      * @param array $outMixResult output param result
      * @return int result code 0 => find none, 1 => find 1, 2 => find more than 1
      */
-    private function findBy($intDatabase, $intFindBy, &$outMixResult = array()) {
+    private
+    function findBy($intDatabase, $intFindBy, &$outMixResult = array(), &$outArNextResult = array()) {
         $finder = new Finder();
         /* TODO other cases */
         switch ($intFindBy) {
@@ -114,6 +132,12 @@ class Land extends CI_Controller {
                     return ResultEnum::REPLY_NONE;
                 }
                 return $finder->findByName($intDatabase, $this->input->post(Constants::CANVAS_INPUT_NAME), $outMixResult);
+            case FindByEnum::FORMULA:
+                $this->form_validation->set_rules(Constants::CANVAS_INPUT_FORMULA, "Formula", "required");
+                if ($this->form_validation->run() === false) {
+                    return ResultEnum::REPLY_NONE;
+                }
+                return $finder->findByFormula($intDatabase, $this->input->post(Constants::CANVAS_INPUT_FORMULA), $outMixResult, $outArNextResult);
         }
     }
 
