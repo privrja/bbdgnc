@@ -10,4 +10,5 @@ abstract class Constants {
     const CANVAS_INPUT_FORMULA = "formula";
     const CANVAS_INPUT_MASS = "mass";
     const CANVAS_INPUT_IDENTIFIER = "identifier";
+    const CANVAS_HIDDEN_DATABASE = "db";
 }

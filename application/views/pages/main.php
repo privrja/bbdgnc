@@ -9,7 +9,7 @@ use Bbdgnc\Finder\Enum\FindByEnum;
 
     <?= form_open('land/form', array('class' => 'form')); ?>
 
-    <label for="databse">Database</label>
+    <label for="database">Database</label>
     <select name="database" class="select" title="Search">
         <option value=<?= ServerEnum::PUBCHEM ?>>PubChem</option>
         <option value=<?= ServerEnum::CHEMSPIDER ?>>ChemSpider</option>
@@ -43,6 +43,8 @@ use Bbdgnc\Finder\Enum\FindByEnum;
 
     <label for="identifier">Identifier</label>
     <input type=text class="txt-def" name="identifier" title="Id" value="<?= $identifier ?>"/>
+
+    <input type="hidden" name="db" value="<?= $db ?>"/>
 
     <input type="submit" id="btn-canvas-find" class="btn-same" name="find" value="Find"/>
     <button type="button" id="btn-canvas-load" class="btn-same" name="load">Load</button>

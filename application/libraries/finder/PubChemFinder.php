@@ -44,7 +44,7 @@ class PubChemFinder implements IFinder {
                 foreach ($objItem as $strProperty => $mixValue) {
                     $arMolecule[$this->getArrayKeyFromReplyProperty($strProperty)] = $mixValue;
                 }
-                $arMolecule[Constants::CANVAS_INPUT_DATABASE] = ServerEnum::PUBCHEM;
+                $arMolecule[Constants::CANVAS_HIDDEN_DATABASE] = ServerEnum::PUBCHEM;
                 $outArResult[$intKey] = $arMolecule;
             }
             return ResultEnum::REPLY_OK_MORE;
@@ -133,7 +133,7 @@ class PubChemFinder implements IFinder {
         foreach ($decoded[PubChemFinder::REPLY_TABLE_PROPERTIES][PubChemFinder::REPLY_PROPERTIES][0] as $strProperty => $mixValue) {
             $outArResult[$this->getArrayKeyFromReplyProperty($strProperty)] = $mixValue;
         }
-        $outArResult[Constants::CANVAS_INPUT_DATABASE] = ServerEnum::PUBCHEM;
+        $outArResult[Constants::CANVAS_HIDDEN_DATABASE] = ServerEnum::PUBCHEM;
         return ResultEnum::REPLY_OK_ONE;
     }
 }

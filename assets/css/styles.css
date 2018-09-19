@@ -194,6 +194,10 @@ input[type=number] {
     box-sizing: border-box;
 }
 
+.p-smile {
+    word-wrap: break-word;
+}
+
 /** mobiles */
 @media (max-device-width: 850px), (max-device-height: 575px) {
 

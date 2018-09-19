@@ -7,8 +7,11 @@ use Bbdgnc\Finder\Enum\ResultEnum;
 
 class Land extends CI_Controller {
 
-    private $data = array(Constants::CANVAS_INPUT_NAME => "", Constants::CANVAS_INPUT_SMILE => "",
-        Constants::CANVAS_INPUT_FORMULA => "", Constants::CANVAS_INPUT_MASS => "", Constants::CANVAS_INPUT_IDENTIFIER => "");
+    private $data = array(
+        Constants::CANVAS_INPUT_NAME => "", Constants::CANVAS_INPUT_SMILE => "",
+        Constants::CANVAS_INPUT_FORMULA => "", Constants::CANVAS_INPUT_MASS => "",
+        Constants::CANVAS_INPUT_IDENTIFIER => "", Constants::CANVAS_HIDDEN_DATABASE => ""
+    );
 
     /**
      * Land constructor.
@@ -72,6 +75,23 @@ class Land extends CI_Controller {
     }
 
     /**
+     * Render default view with canvas and form. Select data from list and set them to form
+     */
+    public function select() {
+        $data = array();
+        $data[Constants::CANVAS_HIDDEN_DATABASE] = $this->input->post(Constants::CANVAS_HIDDEN_DATABASE);
+        $data[Constants::CANVAS_INPUT_NAME] = $this->input->post(Constants::CANVAS_INPUT_NAME);
+        $data[Constants::CANVAS_INPUT_SMILE] = $this->input->post(Constants::CANVAS_INPUT_SMILE);
+        $data[Constants::CANVAS_INPUT_FORMULA] = $this->input->post(Constants::CANVAS_INPUT_FORMULA);
+        $data[Constants::CANVAS_INPUT_MASS] = $this->input->post(Constants::CANVAS_INPUT_MASS);
+        $data[Constants::CANVAS_INPUT_IDENTIFIER] = $this->input->post(Constants::CANVAS_INPUT_IDENTIFIER);
+        $this->load->view('templates/header');
+        $this->load->view('pages/canvas');
+        $this->load->view('pages/main', $data);
+        $this->load->view('templates/footer');
+    }
+
+    /**
      * Find by - specific param
      * @param int $intDatabase where to search
      * @param int $intFindBy find by this param
@@ -95,21 +115,6 @@ class Land extends CI_Controller {
                 }
                 return $finder->findByName($intDatabase, $this->input->post(Constants::CANVAS_INPUT_NAME), $outMixResult);
         }
-    }
-
-    /**
-     * Transform MoleculeTO object to array for form data to set in view
-     * @param \Bbdgnc\Finder\MoleculeTO $objMolecule
-     * @return array data for view
-     */
-    private function transferMoleculeToFormData($objMolecule) {
-        $arData = array();
-        $arData[Constants::CANVAS_INPUT_NAME] = $objMolecule->strName;
-        $arData[Constants::CANVAS_INPUT_SMILE] = $objMolecule->strSmile;
-        $arData[Constants::CANVAS_INPUT_FORMULA] = $objMolecule->strFormula;
-        $arData[Constants::CANVAS_INPUT_MASS] = $objMolecule->decMass;
-        $arData[Constants::CANVAS_INPUT_IDENTIFIER] = $objMolecule->mixIdentifier;
-        return $arData;
     }
 
 }
