@@ -1,9 +1,13 @@
+<?php use Bbdgnc\Enum\Constants; ?>
+
 <div id="div-canvas">
     <?php foreach ($molecules as $molecule): ?>
-        <h3><?php echo $molecule['name']; ?></h3>
+
+        <h3><?= $molecule[Constants::CANVAS_INPUT_FORMULA] ?></h3>
         <div class="main">
-            <?php echo $molecule['smile']; ?>
+            <?= $molecule[Constants::CANVAS_INPUT_SMILE] ?>
         </div>
+        <a href=""><?= $molecule[Constants::CANVAS_INPUT_DATABASE] ?></a>
 
     <?php endforeach; ?>
 </div>

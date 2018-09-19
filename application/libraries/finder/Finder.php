@@ -1,17 +1,10 @@
 <?php
 
-class Finder {
+namespace Bbdgnc\Finder;
 
-    /**
-     * Finder constructor.
-     */
-    public function __construct() {
-        $this->CI =& get_instance();
-        $this->CI->load->library("ServerEnum");
-        $this->CI->load->library("FindByEnum");
-        $this->CI->load->library("PubChemFinder");
-        $this->CI->load->library("MoleculeTO");
-    }
+use Bbdgnc\Finder\Enum\ServerEnum;
+
+class Finder {
 
     /**
      * Factory for finders, get right finder by database

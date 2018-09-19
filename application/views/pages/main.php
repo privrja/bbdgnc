@@ -1,3 +1,10 @@
+<?php
+
+use Bbdgnc\Finder\Enum\ServerEnum;
+use Bbdgnc\Finder\Enum\FindByEnum;
+
+?>
+
 <div id="div-right">
 
     <?= form_open('land/form', array('class' => 'form')); ?>
@@ -29,7 +36,8 @@
     <input type="text" id="txt-canvas-fle" class="txt-def" name="formula" title="Formula" value="<?= $formula ?>"/>
 
     <label for="mass">Monoisotopic Mass</label>
-    <input type="number" id="txt-canvas-mass" class="txt-def" name="mass" title="Monoisotopic Mass" value="<?= $mass ?>"/>
+    <input type="number" id="txt-canvas-mass" class="txt-def" name="mass" title="Monoisotopic Mass"
+           value="<?= $mass ?>"/>
     <label for="deflection" class="lbl-block">+/-</label>
     <input type="number" id="txt-canvas-mass-deflection" class="txt-def" name="deflection" title="Deflection"/>
 

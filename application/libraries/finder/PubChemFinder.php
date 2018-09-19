@@ -1,6 +1,9 @@
 <?php
 
-get_instance()->load->iface('IFinder'); // interface file name
+namespace Bbdgnc\Finder;
+
+use Bbdgnc\Finder\Enum\ServerEnum;
+use Bbdgnc\Enum\Constants;
 
 class PubChemFinder implements IFinder {
 
@@ -38,8 +41,8 @@ class PubChemFinder implements IFinder {
             foreach ($objItem as $strProperty => $mixValue) {
                 $arMolecule[$this->getArrayKeyFromReplyProperty($strProperty)] = $mixValue;
             }
+            $arMolecule[Constants::CANVAS_INPUT_DATABASE] = ServerEnum::$values[ServerEnum::PUBCHEM];
             $arResult[$intKey] = $arMolecule;
-            $arMolecule[Land::INPUT_DATABASE] = ServerEnum::PUBCHEM;
         }
         return $arResult;
     }
@@ -47,15 +50,15 @@ class PubChemFinder implements IFinder {
     private function getArrayKeyFromReplyProperty($strProperty) {
         switch ($strProperty) {
             case PubChemFinder::IDENTIFIER:
-                return Land::INPUT_IDENTIFIER;
+                return Constants::CANVAS_INPUT_IDENTIFIER;
             case PubChemFinder::IUPAC_NAME:
-                return Land::INPUT_NAME;
+                return Constants::CANVAS_INPUT_NAME;
             case PubChemFinder::FORMULA:
-                return Land::INPUT_FORMULA;
+                return Constants::CANVAS_INPUT_FORMULA;
             case PubChemFinder::MASS:
-                return Land::INPUT_MASS;
+                return Constants::CANVAS_INPUT_MASS;
             case PubChemFinder::SMILE:
-                return Land::INPUT_SMILE;
+                return Constants::CANVAS_INPUT_SMILE;
         }
     }
 

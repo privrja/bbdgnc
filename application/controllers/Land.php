@@ -1,19 +1,17 @@
 <?php
 
-class Land extends CI_Controller {
+use Bbdgnc\Finder\Finder;
+use Bbdgnc\Finder\Enum\FindByEnum;
+use Bbdgnc\Enum\Constants;
 
-    const INPUT_DATABASE = "database";
-    const INPUT_NAME = "name";
-    const INPUT_SMILE = "smile";
-    const INPUT_FORMULA = "formula";
-    const INPUT_MASS = "mass";
-    const INPUT_IDENTIFIER = "identifier";
+class Land extends CI_Controller {
 
     const REPLY_NONE = 0;
     const REPLY_OK_ONE = 1;
     const REPLY_OK_MORE = 2;
 
-    private $data = array(Land::INPUT_NAME => "", Land::INPUT_SMILE => "", Land::INPUT_FORMULA => "", Land::INPUT_MASS => "", Land::INPUT_IDENTIFIER => "");
+    private $data = array(Constants::CANVAS_INPUT_NAME => "", Constants::CANVAS_INPUT_SMILE => "",
+        Constants::CANVAS_INPUT_FORMULA => "", Constants::CANVAS_INPUT_MASS => "", Constants::CANVAS_INPUT_IDENTIFIER => "");
 
     /**
      * Land constructor.
@@ -21,19 +19,12 @@ class Land extends CI_Controller {
     public function __construct() {
         parent::__construct();
         $this->load->helper(array("form", "url"));
-        $this->load->library("Finder");
     }
 
     /**
      * Index - default view
      */
     public function index() {
-//        $data = array();
-//        $data[Land::INPUT_NAME] = "";
-//        $data[Land::INPUT_SMILE] = "";
-//        $data[Land::INPUT_FORMULA] = "";
-//        $data[Land::INPUT_MASS] = "";
-//        $data[Land::INPUT_IDENTIFIER] = "";
         $this->load->view('templates/header');
         $this->load->view('pages/canvas');
         $this->load->view('pages/main', $this->data);
@@ -50,7 +41,7 @@ class Land extends CI_Controller {
         $btnFind = $this->input->post("find");
         $btnSave = $this->input->post("save");
         $btnLoad = $this->input->post("load");
-        $intDatabase = $this->input->post(Land::INPUT_DATABASE);
+        $intDatabase = $this->input->post(Constants::CANVAS_INPUT_DATABASE);
         $intFindBy = $this->input->post("search");
 
         if (isset($btnFind)) {
@@ -95,26 +86,26 @@ class Land extends CI_Controller {
         /* TODO other cases */
         switch ($intFindBy) {
             case FindByEnum::IDENTIFIER:
-                $this->form_validation->set_rules(Land::INPUT_IDENTIFIER, "Identifier", "required");
+                $this->form_validation->set_rules(Constants::CANVAS_INPUT_IDENTIFIER, "Identifier", "required");
 
                 if ($this->form_validation->run() === false) {
                     return Land::REPLY_NONE;
                 }
 
-                $outMixResult = $finder->findByIdentifier($intDatabase, $this->input->post(Land::INPUT_IDENTIFIER));
+                $outMixResult = $finder->findByIdentifier($intDatabase, $this->input->post(Constants::CANVAS_INPUT_IDENTIFIER));
                 if (isset($outMixResult)) {
                     $outMixResult = $this->transferMoleculeToFormData($outMixResult);
                     return Land::REPLY_OK_ONE;
                 } else return Land::REPLY_NONE;
                 break;
             case FindByEnum::NAME:
-                $this->form_validation->set_rules(Land::INPUT_NAME, "Name", "required");
+                $this->form_validation->set_rules(Constants::CANVAS_INPUT_NAME, "Name", "required");
 
                 if ($this->form_validation->run() === false) {
                     return Land::REPLY_NONE;
                 }
 
-                $outMixResult = $finder->findByName($intDatabase, $this->input->post(Land::INPUT_NAME));
+                $outMixResult = $finder->findByName($intDatabase, $this->input->post(Constants::CANVAS_INPUT_NAME));
 
                 if (isset($outMixResult)) {
                     return Land::REPLY_OK_MORE;
@@ -135,16 +126,16 @@ class Land extends CI_Controller {
 
     /**
      * Transform MoleculeTO object to array for form data to set in view
-     * @param MoleculeTO $objMolecule
+     * @param \Bbdgnc\Finder\MoleculeTO $objMolecule
      * @return array data for view
      */
     private function transferMoleculeToFormData($objMolecule) {
         $arData = array();
-        $arData[Land::INPUT_NAME] = $objMolecule->strName;
-        $arData[Land::INPUT_SMILE] = $objMolecule->strSmile;
-        $arData[Land::INPUT_FORMULA] = $objMolecule->strFormula;
-        $arData[Land::INPUT_MASS] = $objMolecule->decMass;
-        $arData[Land::INPUT_IDENTIFIER] = $objMolecule->mixIdentifier;
+        $arData[Constants::CANVAS_INPUT_NAME] = $objMolecule->strName;
+        $arData[Constants::CANVAS_INPUT_SMILE] = $objMolecule->strSmile;
+        $arData[Constants::CANVAS_INPUT_FORMULA] = $objMolecule->strFormula;
+        $arData[Constants::CANVAS_INPUT_MASS] = $objMolecule->decMass;
+        $arData[Constants::CANVAS_INPUT_IDENTIFIER] = $objMolecule->mixIdentifier;
         return $arData;
     }
 }

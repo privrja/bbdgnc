@@ -1,5 +1,7 @@
 <?php
 
+namespace Bbdgnc\Finder;
+
 class MoleculeTO {
 
     public $mixIdentifier;

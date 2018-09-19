@@ -1,5 +1,7 @@
 <?php
 
+namespace Bbdgnc\Finder;
+
 interface IFinder {
 
     /** FORMAT of REST API output */

@@ -1,5 +1,7 @@
 <?php
 
+namespace Bbdgnc\Finder\Enum;
+
 class FindByEnum {
     const NAME = 0;
     const SMILE = 1;

@@ -13,6 +13,13 @@
 	"require": {
 		"php": ">=5.3.7"
 	},
+	"autoload": {
+		"psr-4": {
+			"Bbdgnc\\Finder\\" : "application/libraries/finder",
+			"Bbdgnc\\Finder\\Enum\\" : "application/libraries/finder/enums",
+			"Bbdgnc\\Enum\\" : "application/libraries/enums"
+		}
+	},
 	"suggest": {
 		"paragonie/random_compat": "Provides better randomness in PHP 5.x"
 	},
