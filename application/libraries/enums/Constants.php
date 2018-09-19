@@ -2,7 +2,8 @@
 
 namespace Bbdgnc\Enum;
 
-class Constants {
+abstract class Constants {
+
     const CANVAS_INPUT_DATABASE = "database";
     const CANVAS_INPUT_NAME = "name";
     const CANVAS_INPUT_SMILE = "smile";

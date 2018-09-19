@@ -2,7 +2,7 @@
 
 namespace Bbdgnc\Finder\Enum;
 
-class FindByEnum {
+abstract class FindByEnum {
     const NAME = 0;
     const SMILE = 1;
     const FORMULA = 2;

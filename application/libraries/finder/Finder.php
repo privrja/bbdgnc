@@ -26,16 +26,16 @@ class Finder {
      * Find by Identifier
      * @param int $intDatabase
      * @param mixed $identifier
-     * @return moleculeTO
+     * @return int
      */
-    public function findByIdentifier($intDatabase, $identifier) {
+    public function findByIdentifier($intDatabase, $identifier, &$outArResult) {
         $finder = $this->getFinder($intDatabase);
-        return $finder->findById($identifier);
+        return $finder->findById($identifier, $outArResult);
     }
 
-    public function findByName($intDatabase, $strName) {
+    public function findByName($intDatabase, $strName, &$outArResult) {
         $finder = $this->getFinder($intDatabase);
-        return $finder->findByName($strName);
+        return $finder->findByName($strName, $outArResult);
     }
 
 }

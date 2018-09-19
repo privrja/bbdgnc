@@ -10,9 +10,10 @@ interface IFinder {
     /**
      * Find data on some server by name
      * @param string $strName
-     * @return mixed
+     * @param array $outArResult
+     * @return int
      */
-    public function findByName($strName);
+    public function findByName($strName, &$outArResult);
 
     /**
      * Find data by SMILES
@@ -39,8 +40,9 @@ interface IFinder {
     /**
      * Find data by Identificator
      * @param string $strId
-     * @return mixed
+     * @param array $outArResult
+     * @return int
      */
-    public function findById($strId);
+    public function findById($strId, &$outArResult);
 
 }

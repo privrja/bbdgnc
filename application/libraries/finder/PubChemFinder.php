@@ -4,6 +4,7 @@ namespace Bbdgnc\Finder;
 
 use Bbdgnc\Finder\Enum\ServerEnum;
 use Bbdgnc\Enum\Constants;
+use Bbdgnc\Finder\Enum\ResultEnum;
 
 class PubChemFinder implements IFinder {
 
@@ -23,42 +24,30 @@ class PubChemFinder implements IFinder {
     const SMILE = "CanonicalSMILES";
 
     /**
-     * Find data on some server by name
+     * Find data on PubChem by name
      * @param string $strName
-     * @return mixed
+     * @param array $outArResult
+     * @return int result code
      */
-    public function findByName($strName) {
-        // TODO: Implement findByName() method.
+    public function findByName($strName, &$outArResult = array()) {
         $uri = PubChemFinder::REST_DEF_URI . "name/" . $strName . PubChemFinder::REST_PROPERTY . PubChemFinder::REST_PROPERTY_VALUES . IFinder::REST_FORMAT_JSON;
         $decoded = $this->getJsonFromUri($uri);
         if ($decoded === false) {
-            return null;
+            return ResultEnum::REPLY_NONE;
         }
 
-        $arResult = array();
-        foreach ($decoded[PubChemFinder::REPLY_TABLE_PROPERTIES][PubChemFinder::REPLY_PROPERTIES] as $intKey => $objItem) {
-            $arMolecule = array();
-            foreach ($objItem as $strProperty => $mixValue) {
-                $arMolecule[$this->getArrayKeyFromReplyProperty($strProperty)] = $mixValue;
+        if (sizeof($decoded[PubChemFinder::REPLY_TABLE_PROPERTIES][PubChemFinder::REPLY_PROPERTIES]) == 1) {
+            return  $this->resultOne($decoded, $outArResult);
+        } else {
+            foreach ($decoded[PubChemFinder::REPLY_TABLE_PROPERTIES][PubChemFinder::REPLY_PROPERTIES] as $intKey => $objItem) {
+                $arMolecule = array();
+                foreach ($objItem as $strProperty => $mixValue) {
+                    $arMolecule[$this->getArrayKeyFromReplyProperty($strProperty)] = $mixValue;
+                }
+                $arMolecule[Constants::CANVAS_INPUT_DATABASE] = ServerEnum::$values[ServerEnum::PUBCHEM];
+                $outArResult[$intKey] = $arMolecule;
             }
-            $arMolecule[Constants::CANVAS_INPUT_DATABASE] = ServerEnum::$values[ServerEnum::PUBCHEM];
-            $arResult[$intKey] = $arMolecule;
-        }
-        return $arResult;
-    }
-
-    private function getArrayKeyFromReplyProperty($strProperty) {
-        switch ($strProperty) {
-            case PubChemFinder::IDENTIFIER:
-                return Constants::CANVAS_INPUT_IDENTIFIER;
-            case PubChemFinder::IUPAC_NAME:
-                return Constants::CANVAS_INPUT_NAME;
-            case PubChemFinder::FORMULA:
-                return Constants::CANVAS_INPUT_FORMULA;
-            case PubChemFinder::MASS:
-                return Constants::CANVAS_INPUT_MASS;
-            case PubChemFinder::SMILE:
-                return Constants::CANVAS_INPUT_SMILE;
+            return ResultEnum::REPLY_OK_MORE;
         }
     }
 
@@ -93,27 +82,17 @@ class PubChemFinder implements IFinder {
     /**
      * Find data by Identifier
      * @param string $strId
-     * @return mixed
+     * @param array $outArResult
+     * @return int
      */
-    public function findById($strId) {
+    public function findById($strId, &$outArResult) {
         $uri = PubChemFinder::REST_DEF_URI . "cid/" . $strId . PubChemFinder::REST_PROPERTY . PubChemFinder::REST_PROPERTY_VALUES . IFinder::REST_FORMAT_JSON;
-
         $decoded = $this->getJsonFromUri($uri);
-
         if ($decoded === false) {
-            return null;
+            return ResultEnum::REPLY_NONE;
         }
-
-        /* setup moleculeTo object from reply */
-        $objMolecule = new MoleculeTO();
-        foreach ($decoded[PubChemFinder::REPLY_TABLE_PROPERTIES][PubChemFinder::REPLY_PROPERTIES][0] as $property => $value) {
-            $this->setMolecule($property, $value, $objMolecule);
-        }
-        $objMolecule->intServerEnum = ServerEnum::PUBCHEM;
-
-        return $objMolecule;
+        return $this->resultOne($decoded, $outArResult);
     }
-
 
     private function getJsonFromUri($strUri) {
         $objJson = @file_get_contents($strUri);
@@ -135,23 +114,26 @@ class PubChemFinder implements IFinder {
         return $decoded;
     }
 
-    private function setMolecule($strProperty, $mixValue, $objMolecule) {
+    private function getArrayKeyFromReplyProperty($strProperty) {
         switch ($strProperty) {
             case PubChemFinder::IDENTIFIER:
-                $objMolecule->mixIdentifier = $mixValue;
-                break;
+                return Constants::CANVAS_INPUT_IDENTIFIER;
             case PubChemFinder::IUPAC_NAME:
-                $objMolecule->strName = $mixValue;
-                break;
+                return Constants::CANVAS_INPUT_NAME;
             case PubChemFinder::FORMULA:
-                $objMolecule->strFormula = $mixValue;
-                break;
+                return Constants::CANVAS_INPUT_FORMULA;
             case PubChemFinder::MASS:
-                $objMolecule->decMass = $mixValue;
-                break;
+                return Constants::CANVAS_INPUT_MASS;
             case PubChemFinder::SMILE:
-                $objMolecule->strSmile = $mixValue;
-                break;
+                return Constants::CANVAS_INPUT_SMILE;
         }
+    }
+
+    private function resultOne($decoded, &$outArResult) {
+        foreach ($decoded[PubChemFinder::REPLY_TABLE_PROPERTIES][PubChemFinder::REPLY_PROPERTIES][0] as $strProperty => $mixValue) {
+            $outArResult[$this->getArrayKeyFromReplyProperty($strProperty)] = $mixValue;
+        }
+        $outArResult[Constants::CANVAS_INPUT_DATABASE] = ServerEnum::$values[ServerEnum::PUBCHEM];
+        return ResultEnum::REPLY_OK_ONE;
     }
 }
