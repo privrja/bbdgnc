@@ -10,9 +10,9 @@ use Bbdgnc\Finder\Enum\ServerEnum;
 
         <?= form_open('land/select', array('class' => 'form')); ?>
 
-        <h3><?= $molecule[Constants::CANVAS_INPUT_FORMULA] ?></h3>
-        <p class="p-smile"><?= $molecule[Constants::CANVAS_INPUT_SMILE] ?></p>
-
+        <h3><?= $molecule[Constants::CANVAS_INPUT_NAME] ?></h3>
+        <p><?= $molecule[Constants::CANVAS_INPUT_MASS] ?></p>
+        <p><?= $molecule[Constants::CANVAS_INPUT_FORMULA] ?></p>
         <a href=<?= ServerEnum::getLink($molecule[Constants::CANVAS_HIDDEN_DATABASE], $molecule[Constants::CANVAS_INPUT_IDENTIFIER]) ?>>
             <?= ServerEnum::$values[$molecule[Constants::CANVAS_HIDDEN_DATABASE]] ?></a>
 
