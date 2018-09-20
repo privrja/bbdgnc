@@ -6,6 +6,10 @@ interface IFinder {
 
     /** FORMAT of REST API output */
     const REST_FORMAT_JSON = "json";
+    const REST_QUESTION_MARK = "?";
+    const REST_AMPERSAND = "&";
+    const REST_SLASH = "/";
+    const REST_EQUALS = "=";
 
     const FIRST_X_RESULTS = 10;
 
@@ -18,7 +22,7 @@ interface IFinder {
      * @param array $outArResult
      * @return int
      */
-    public function findByName($strName, &$outArResult);
+    public function findByName($strName, &$outArResult, &$outArNextResult);
 
     /**
      * Find data by SMILES

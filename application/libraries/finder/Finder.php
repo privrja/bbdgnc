@@ -33,9 +33,9 @@ class Finder {
         return $finder->findById($identifier, $outArResult);
     }
 
-    public function findByName($intDatabase, $strName, &$outArResult) {
+    public function findByName($intDatabase, $strName, &$outArResult, &$outArNextResult) {
         $finder = $this->getFinder($intDatabase);
-        return $finder->findByName($strName, $outArResult);
+        return $finder->findByName($strName, $outArResult, $outArNextResult);
     }
 
     public function findByFormula($intDatabase, $strFormula, &$outArResult, &$outArNextResult) {

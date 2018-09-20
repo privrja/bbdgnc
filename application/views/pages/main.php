@@ -2,7 +2,7 @@
 
 use Bbdgnc\Finder\Enum\ServerEnum;
 use Bbdgnc\Finder\Enum\FindByEnum;
-use Bbdgnc\Enum\Constants;
+use Bbdgnc\Enum\Front;
 
 ?>
 
@@ -45,7 +45,7 @@ use Bbdgnc\Enum\Constants;
     <label for="identifier">Identifier</label>
     <input type=text class="txt-def" name="identifier" title="Id" value="<?= $identifier ?>"/>
 
-    <input type="hidden" name=<?= Constants::CANVAS_HIDDEN_DATABASE ?> value="<?= $hddatabase ?>"/>
+    <input type="hidden" name=<?= Front::CANVAS_HIDDEN_DATABASE ?> value="<?= $hddatabase ?>"/>
 
     <input type="submit" id="btn-canvas-find" class="btn-same" name="find" value="Find"/>
     <button type="button" id="btn-canvas-load" class="btn-same" name="load">Load</button>

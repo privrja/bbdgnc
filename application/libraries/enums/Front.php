@@ -2,7 +2,7 @@
 
 namespace Bbdgnc\Enum;
 
-abstract class Constants {
+abstract class Front {
 
     const CANVAS_INPUT_DATABASE = "database";
     const CANVAS_INPUT_NAME = "name";
