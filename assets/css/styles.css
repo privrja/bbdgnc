@@ -176,6 +176,15 @@ label {
     width: 90%;
 }
 
+label.chk {
+    width: 35%;
+    float: right;
+}
+
+input[type=checkbox] {
+    float: right;
+}
+
 .lbl-block {
     width: auto;
 }
@@ -226,7 +235,6 @@ input[type=number] {
 
 .td {
     display: table-cell;
-    /*border: 1px solid;*/
     padding: 1vh;
     vertical-align: middle;
     text-align: center;

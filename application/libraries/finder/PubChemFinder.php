@@ -33,7 +33,29 @@ class PubChemFinder implements IFinder {
     const MASS = "MonoisotopicMass";
     const SMILE = "CanonicalSMILES";
 
-    const WITH_NAME_SPECIFICATION = true;
+    const OPTION_EXACT_MATCH = true;
+
+    private $blExactMatch;
+
+    /**
+     * PubChemFinder constructor.
+     * @param bool $blExactMatch find exact match when find by name
+     */
+    public function __construct($blExactMatch = self::OPTION_EXACT_MATCH) {
+        $this->blExactMatch = $blExactMatch == null ? $blExactMatch : self::OPTION_EXACT_MATCH;
+    }
+
+    /**
+     * Url value for exact match
+     * @return string url value for exact match
+     */
+    private function exactMatchUrlValue() {
+        if ($this->blExactMatch) {
+            return IFinder::REST_QUESTION_MARK;
+        } else {
+            return IFinder::REST_QUESTION_MARK . PubChemFinder::REST_NAME_SPECIFICATION . PubChemFinder::REST_AMPERSAND;
+        }
+    }
 
     /**
      * Find data on PubChem by name
@@ -43,9 +65,8 @@ class PubChemFinder implements IFinder {
      */
     public function findByName($strName, &$outArResult, &$outArNextResult) {
         $strBaseUri = PubChemFinder::REST_DEF_URI . "name/" . Front::urlText($strName) .
-            PubChemFinder::REST_CIDS . IFinder::REST_FORMAT_JSON . IFinder::REST_QUESTION_MARK.
-            PubChemFinder::REST_NAME_SPECIFICATION;
-        $strUri = $strBaseUri . IFinder::REST_AMPERSAND . PubChemFinder::REST_LIST_RETURN .
+            PubChemFinder::REST_CIDS . IFinder::REST_FORMAT_JSON . $this->exactMatchUrlValue();
+        $strUri = $strBaseUri . PubChemFinder::REST_LIST_RETURN .
             PubChemFinder::REST_LIST_KEY;
 
         $mixDecoded = $this->getJsonFromUri($strUri);
@@ -55,13 +76,13 @@ class PubChemFinder implements IFinder {
 
         /* get list key */
         $listKey = $mixDecoded[PubChemFinder::REPLY_IDENTIFIER_LIST][PubChemFinder::REPLY_LIST_KEY];
-        $strBaseUri .= PubChemFinder::REST_AMPERSAND . PubChemFinder::REST_LIST_KEY .
+        $strBaseUri .= PubChemFinder::REST_LIST_KEY .
             PubChemFinder::REST_EQUALS . $listKey . IFinder::REST_AMPERSAND .
             PubChemFinder::REST_LIST_KEY_START . "0" . IFinder::REST_AMPERSAND .
             PubChemFinder::REST_LIST_KEY_COUNT . PubChemFinder::REST_COUNT;
 
         /* request list key and get data of first molecules */
-        return $this->getMoleculesFromListKey($strBaseUri, $outArResult,$outArNextResult);
+        return $this->getMoleculesFromListKey($strBaseUri, $outArResult, $outArNextResult);
     }
 
     /**
@@ -119,7 +140,6 @@ class PubChemFinder implements IFinder {
             return ResultEnum::REPLY_OK_MORE;
         }
     }
-
 
     /**
      * Get string input of ids and get info about them from PubChem

@@ -2,9 +2,20 @@
 
 namespace Bbdgnc\Finder;
 
+use Bbdgnc\Enum\Front;
 use Bbdgnc\Finder\Enum\ServerEnum;
 
 class Finder {
+
+    const OPTION_EXACT_MATCH = 'exact';
+
+    private $arOptions;
+
+    private function isOptionSet($strOption) {
+        if (isset($this->arOptions[$strOption])) {
+            return $this->arOptions[$strOption];
+        } else return null;
+    }
 
     /**
      * Factory for finders, get right finder by database
@@ -14,12 +25,16 @@ class Finder {
     public function getFinder($intDatabase) {
         switch ($intDatabase) {
             case ServerEnum::PUBCHEM:
-                return new PubChemFinder();
-                /* TODO */
+                return new PubChemFinder($this->isOptionSet(self::OPTION_EXACT_MATCH));
+            /* TODO */
 //            case ServerEnum::CHEMSPIDER:
 //            case ServerEnum::NORINE:
 //            case ServerEnum::PDB:
         }
+    }
+
+    public function setOptions($arOptions) {
+        $this->arOptions = $arOptions;
     }
 
     /**

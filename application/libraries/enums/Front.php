@@ -12,6 +12,7 @@ abstract class Front {
     const CANVAS_INPUT_IDENTIFIER = "identifier";
     const CANVAS_HIDDEN_DATABASE = "hddatabase";
     const CANVAS_HIDDEN_NAME = "hdname";
+    const CANVAS_INPUT_MATCH = "match";
 
     const MAX_LENGTH_TEXT = 20;
     const STRING_TREE_DOTS = "...";

@@ -47,11 +47,18 @@ class Land extends CI_Controller {
         $btnLoad = $this->input->post("load");
         $intDatabase = $this->input->post(Front::CANVAS_INPUT_DATABASE);
         $intFindBy = $this->input->post("search");
+        $arSearchOptions = array();
+        $blMatch = $this->input->post(Front::CANVAS_INPUT_MATCH);
+        if (isset($blMatch)) {
+            $arSearchOptions[Finder::OPTION_EXACT_MATCH] = true;
+        } else {
+            $arSearchOptions[Finder::OPTION_EXACT_MATCH] = false;
+        }
 
         if (isset($btnFind)) {
             /* Find */
             $arResult = array();
-            $intResultCode = $this->findBy($intDatabase, $intFindBy, $arResult);
+            $intResultCode = $this->findBy($intDatabase, $intFindBy, $arResult, $outArNExtResult, $arSearchOptions);
             switch ($intResultCode) {
                 case ResultEnum::REPLY_NONE:
                     $this->index();
@@ -124,8 +131,9 @@ class Land extends CI_Controller {
      * @param array $outArNextResult next results identifiers
      * @return int result code 0 => find none, 1 => find 1, 2 => find more than 1
      */
-    private function findBy($intDatabase, $intFindBy, &$outMixResult = array(), &$outArNextResult = array()) {
+    private function findBy($intDatabase, $intFindBy, &$outMixResult = array(), &$outArNextResult = array(), $arSearchOptions = array()) {
         $finder = new Finder();
+        $finder->setOptions($arSearchOptions);
         /* TODO other cases */
         switch ($intFindBy) {
             case FindByEnum::IDENTIFIER:

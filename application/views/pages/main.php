@@ -30,6 +30,9 @@ use Bbdgnc\Enum\Front;
     <label for="name">Name</label>
     <input type="text" id="txt-canvas-name" class="txt-def" name="name" title="Name" value="<?= $name ?>"/>
 
+    <label for="chk-match" class="chk">Exact match</label>
+    <input type="checkbox" id="chk-match" name=<?= Front::CANVAS_INPUT_MATCH ?> value="1" checked="checked" />
+
     <label for="smile">SMILES</label>
     <textarea id="txt-canvas-smile" class="txt-area" name="smile" title="SMILES"><?= $smile ?></textarea>
 
