@@ -12,6 +12,7 @@ class PubChemFinder implements IFinder {
     const REST_DEF_URI = "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/";
     const REST_PROPERTY_VALUES = "IUPACName,MolecularFormula,MonoisotopicMass,CanonicalSmiles/";
     const REST_PROPERTY = "/property/";
+    const REST_NAME_SPECIFICATION = "?name_type=word";
 
     /** Properties in JSON reply */
     const REPLY_TABLE_PROPERTIES = "PropertyTable";
@@ -29,18 +30,17 @@ class PubChemFinder implements IFinder {
      * Find data on PubChem by name
      * @param string $strName find by this name
      * @param array $outArResult output param result, only first X results
-     * @param array $outArNextResults next results as array of identifiers
      * @return int result code
      */
     public function findByName($strName, &$outArResult) {
-        $uri = PubChemFinder::REST_DEF_URI . "name/" . Constants::urlText($strName) . PubChemFinder::REST_PROPERTY . PubChemFinder::REST_PROPERTY_VALUES . IFinder::REST_FORMAT_JSON;
+        $uri = PubChemFinder::REST_DEF_URI . "name/" . Constants::urlText($strName) . PubChemFinder::REST_PROPERTY . PubChemFinder::REST_PROPERTY_VALUES . IFinder::REST_FORMAT_JSON . PubChemFinder::REST_NAME_SPECIFICATION;
         $decoded = $this->getJsonFromUri($uri);
         if ($decoded === false) {
             return ResultEnum::REPLY_NONE;
         }
 
         if (sizeof($decoded[PubChemFinder::REPLY_TABLE_PROPERTIES][PubChemFinder::REPLY_PROPERTIES]) == 1) {
-            return $this->resultOne($decoded[PubChemFinder::REPLY_TABLE_PROPERTIES][PubChemFinder::REPLY_PROPERTIES][0], $outArResult);
+            return $this->resultOne($decoded[PubChemFinder::REPLY_TABLE_PROPERTIES][PubChemFinder::REPLY_PROPERTIES][0], $outArResult, true);
         } else {
             foreach ($decoded[PubChemFinder::REPLY_TABLE_PROPERTIES][PubChemFinder::REPLY_PROPERTIES] as $intKey => $objItem) {
                 $arMolecule = array();

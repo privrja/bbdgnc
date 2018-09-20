@@ -21,8 +21,7 @@ use Bbdgnc\Finder\Enum\ServerEnum;
             <?php foreach ($molecules as $molecule): ?>
 
                 <?= form_open('land/select', array('class' => 'tr')); ?>
-                <div class="td" title=<?= $molecule[Constants::CANVAS_INPUT_NAME] ?>><?= Constants::smallerText($molecule[Constants::CANVAS_INPUT_NAME]) ?></div>
-<!--                <div class="td">--><?//= $molecule[Constants::CANVAS_INPUT_NAME] ?><!--</div>-->
+                <div class="td" title=<?= Constants::defIndex($molecule, Constants::CANVAS_INPUT_NAME) ?>><?= Constants::smallerText(Constants::defIndex($molecule, Constants::CANVAS_INPUT_NAME)) ?></div>
                 <div class="td"><?= $molecule[Constants::CANVAS_INPUT_FORMULA] ?></div>
                 <div class="td"><?= $molecule[Constants::CANVAS_INPUT_IDENTIFIER] ?></div>
                 <div class="td"><?= $molecule[Constants::CANVAS_INPUT_MASS] ?></div>
@@ -35,7 +34,7 @@ use Bbdgnc\Finder\Enum\ServerEnum;
                 <input type="hidden"
                        name=<?= Constants::CANVAS_HIDDEN_DATABASE ?> value="<?= $molecule[Constants::CANVAS_HIDDEN_DATABASE] ?>"/>
                 <input type="hidden"
-                       name=<?= Constants::CANVAS_INPUT_NAME ?> value="<?= $molecule[Constants::CANVAS_INPUT_NAME] ?>"/>
+                       name=<?= Constants::CANVAS_INPUT_NAME ?> value="<?= Constants::defIndex($molecule, Constants::CANVAS_INPUT_NAME) ?>"/>
                 <input type="hidden"
                        name=<?= Constants::CANVAS_INPUT_SMILE ?> value="<?= $molecule[Constants::CANVAS_INPUT_SMILE] ?>"/>
                 <input type="hidden"
