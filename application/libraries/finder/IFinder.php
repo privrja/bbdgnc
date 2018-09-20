@@ -9,6 +9,7 @@ interface IFinder {
 
     const FIRST_X_RESULTS = 10;
 
+    /* better false, with true is too slow */
     const FIND_NAMES = false;
 
     /**

@@ -145,6 +145,14 @@ class PubChemFinder implements IFinder {
         return $this->resultOne($decoded[PubChemFinder::REPLY_TABLE_PROPERTIES][PubChemFinder::REPLY_PROPERTIES][0], $outArResult, true);
     }
 
+    public function findName($strId, &$outStrName) {
+        $outStrName = $this->getNames($strId);
+        if (isset($outStrName)) {
+            return ResultEnum::REPLY_OK_ONE;
+        }
+        return ResultEnum::REPLY_NONE;
+    }
+
     private function getJsonFromUri($strUri) {
         $objJson = @file_get_contents($strUri);
 
@@ -199,7 +207,7 @@ class PubChemFinder implements IFinder {
             if ($strProperty == PubChemFinder::IUPAC_NAME) {
                 if ($blFindName) {
                     $mixValue = $this->getNames($outArResult[Constants::CANVAS_INPUT_IDENTIFIER]);
-                } else {
+//                } else {
 //                    $mixValue = "";
                 }
             }

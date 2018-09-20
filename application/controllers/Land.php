@@ -4,6 +4,8 @@ use Bbdgnc\Finder\Finder;
 use Bbdgnc\Finder\Enum\FindByEnum;
 use Bbdgnc\Enum\Constants;
 use Bbdgnc\Finder\Enum\ResultEnum;
+use Bbdgnc\Finder\Enum\ServerEnum;
+use Bbdgnc\Finder\PubChemFinder;
 
 class Land extends CI_Controller {
 
@@ -92,12 +94,22 @@ class Land extends CI_Controller {
     function select() {
         $data = array();
         $data[Constants::CANVAS_HIDDEN_DATABASE] = $this->input->post(Constants::CANVAS_HIDDEN_DATABASE);
+
+        /* Problem with name */
         $strName = $this->input->post(Constants::CANVAS_INPUT_NAME);
-        if (!empty($strName)) {
+        if ($this->input->post(Constants::CANVAS_HIDDEN_DATABASE) == ServerEnum::PUBCHEM) {
+            $pubChemFinder = new PubChemFinder();
+            $pubChemFinder->findName($this->input->post(Constants::CANVAS_INPUT_IDENTIFIER), $strName);
             $data[Constants::CANVAS_INPUT_NAME] = $strName;
         } else {
-            $data[Constants::CANVAS_INPUT_NAME] = $this->input->post(Constants::CANVAS_HIDDEN_NAME);
+            if (!empty($strName)) {
+                $data[Constants::CANVAS_INPUT_NAME] = $strName;
+            } else {
+                /* TODO maybe can be deleted with the hidden input */
+                $data[Constants::CANVAS_INPUT_NAME] = $this->input->post(Constants::CANVAS_HIDDEN_NAME);
+            }
         }
+
         $data[Constants::CANVAS_INPUT_SMILE] = $this->input->post(Constants::CANVAS_INPUT_SMILE);
         $data[Constants::CANVAS_INPUT_FORMULA] = $this->input->post(Constants::CANVAS_INPUT_FORMULA);
         $data[Constants::CANVAS_INPUT_MASS] = $this->input->post(Constants::CANVAS_INPUT_MASS);
