@@ -113,6 +113,7 @@ class PubChemFinder implements IFinder {
             $this->findByIds($strIds, $outArResult);
         }
         if (!$blNextResults && $intCounter == 2) {
+            $outArResult[Front::CANVAS_INPUT_NAME] = $this->getNames($outArResult[Front::CANVAS_INPUT_IDENTIFIER], $outArResult[Front::CANVAS_INPUT_NAME]);
             return ResultEnum::REPLY_OK_ONE;
         } else {
             return ResultEnum::REPLY_OK_MORE;
