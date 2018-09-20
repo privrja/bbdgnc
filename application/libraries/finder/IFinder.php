@@ -43,7 +43,7 @@ interface IFinder {
     public function findByMass($decMass, $decTolerance, &$outArResult);
 
     /**
-     * Find data by Identificator
+     * Find data by Identifier
      * @param string $strId
      * @param array $outArResult
      * @return int

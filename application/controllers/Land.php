@@ -20,8 +20,7 @@ class Land extends CI_Controller {
     /**
      * Land constructor.
      */
-    public
-    function __construct() {
+    public function __construct() {
         parent::__construct();
         $this->load->helper(array("form", "url"));
     }
@@ -29,8 +28,7 @@ class Land extends CI_Controller {
     /**
      * Index - default view
      */
-    public
-    function index() {
+    public function index() {
         $this->load->view('templates/header');
         $this->load->view('pages/canvas');
         $this->load->view('pages/main', $this->getData());
@@ -41,8 +39,7 @@ class Land extends CI_Controller {
      * Form
      * Find in specific database by specific param or save data to database
      */
-    public
-    function form() {
+    public function form() {
         $this->load->library("form_validation");
 
         $btnFind = $this->input->post("find");
@@ -90,8 +87,7 @@ class Land extends CI_Controller {
     /**
      * Render default view with canvas and form. Select data from list and set them to form
      */
-    public
-    function select() {
+    public function select() {
         $data = array();
         $data[Constants::CANVAS_HIDDEN_DATABASE] = $this->input->post(Constants::CANVAS_HIDDEN_DATABASE);
 
@@ -124,11 +120,11 @@ class Land extends CI_Controller {
      * Find by - specific param
      * @param int $intDatabase where to search
      * @param int $intFindBy find by this param
-     * @param array $outMixResult output param result
+     * @param array $outMixResult output param result only first X resutls, can be influenced by param IFinder::FIRST_X_RESULTS
+     * @param array $outArNextResult next results identifiers
      * @return int result code 0 => find none, 1 => find 1, 2 => find more than 1
      */
-    private
-    function findBy($intDatabase, $intFindBy, &$outMixResult = array(), &$outArNextResult = array()) {
+    private function findBy($intDatabase, $intFindBy, &$outMixResult = array(), &$outArNextResult = array()) {
         $finder = new Finder();
         /* TODO other cases */
         switch ($intFindBy) {
@@ -152,5 +148,4 @@ class Land extends CI_Controller {
                 return $finder->findByFormula($intDatabase, $this->input->post(Constants::CANVAS_INPUT_FORMULA), $outMixResult, $outArNextResult);
         }
     }
-
 }

@@ -27,11 +27,12 @@ class PubChemFinder implements IFinder {
 
     /**
      * Find data on PubChem by name
-     * @param string $strName
-     * @param array $outArResult
+     * @param string $strName find by this name
+     * @param array $outArResult output param result, only first X results
+     * @param array $outArNextResults next results as array of identifiers
      * @return int result code
      */
-    public function findByName($strName, &$outArResult = array()) {
+    public function findByName($strName, &$outArResult) {
         $uri = PubChemFinder::REST_DEF_URI . "name/" . Constants::urlText($strName) . PubChemFinder::REST_PROPERTY . PubChemFinder::REST_PROPERTY_VALUES . IFinder::REST_FORMAT_JSON;
         $decoded = $this->getJsonFromUri($uri);
         if ($decoded === false) {
@@ -62,7 +63,9 @@ class PubChemFinder implements IFinder {
     /**
      * Find data by Molecular Formula
      * @param string $strFormula
-     * @return mixed
+     * @param array $outArResult output param result, only first X results
+     * @param array $outArNextResults next results as array of identifiers
+     * @return int ResultEnum
      */
     public function findByFormula($strFormula, &$outArResult, &$outArNextResults) {
         $uri = PubChemFinder::REST_DEF_URI . "fastformula/" . $strFormula . "/cids/" . IFinder::REST_FORMAT_JSON;
@@ -101,6 +104,13 @@ class PubChemFinder implements IFinder {
         }
     }
 
+
+    /**
+     * Get string input of ids and get info about them from PubChem
+     * @param string $strIds example: 45545,46546,8945 beware of too long for HTTTP GET request
+     * @param array $outArResult output param info about molecules
+     * @return int ResultEnum
+     */
     private function findByIds($strIds, &$outArResult) {
         $uri = PubChemFinder::REST_DEF_URI . "cid/" . $strIds . PubChemFinder::REST_PROPERTY . PubChemFinder::REST_PROPERTY_VALUES . IFinder::REST_FORMAT_JSON;
         $decoded = $this->getJsonFromUri($uri);
@@ -119,7 +129,6 @@ class PubChemFinder implements IFinder {
             return ResultEnum::REPLY_OK_MORE;
         }
     }
-
     /**
      * Find data by Monoisotopic Mass
      * @param $decMass
@@ -145,14 +154,25 @@ class PubChemFinder implements IFinder {
         return $this->resultOne($decoded[PubChemFinder::REPLY_TABLE_PROPERTIES][PubChemFinder::REPLY_PROPERTIES][0], $outArResult, true);
     }
 
+    /**
+     * Find name in synonyms on PubChem
+     * @param string $strId identifier
+     * @param string $outStrName output param find name
+     * @return int ResultEnum
+     */
     public function findName($strId, &$outStrName) {
         $outStrName = $this->getNames($strId);
-        if (isset($outStrName)) {
-            return ResultEnum::REPLY_OK_ONE;
+        if (empty($outStrName)) {
+            return ResultEnum::REPLY_NONE;
         }
-        return ResultEnum::REPLY_NONE;
+        return ResultEnum::REPLY_OK_ONE;
     }
 
+    /**
+     * Get decoded JSON from URI to array
+     * @param string $strUri url address to call
+     * @return bool|mixed something goes wrong => false, elsewhere the result
+     */
     private function getJsonFromUri($strUri) {
         $objJson = @file_get_contents($strUri);
 
@@ -173,6 +193,11 @@ class PubChemFinder implements IFinder {
         return $decoded;
     }
 
+    /**
+     * From PubChem keys in array to keys used in view
+     * @param string $strProperty PubChem key
+     * @return string key used in view
+     */
     private function getArrayKeyFromReplyProperty($strProperty) {
         switch ($strProperty) {
             case PubChemFinder::IDENTIFIER:
@@ -188,27 +213,39 @@ class PubChemFinder implements IFinder {
         }
     }
 
-    /* too slow !!! get all names and than get only first */
+    /**
+     * Get name from identifier on PubChem synonyms
+     * !!! too slow !!! when call to many request
+     * get all names and than get only the first name
+     * @param string $strId identifier
+     * @param string $strDefaultName default name if name not found on PubChem
+     * @return string name from PubChem or default name
+     */
     private function getNames($strId, $strDefaultName = "") {
-        $uri = PubChemFinder::REST_DEF_URI . "cid/" . $strId . "/synonyms/" . IFinder::REST_FORMAT_JSON;
-        $decoded = $this->getJsonFromUri($uri);
+        $strUri = PubChemFinder::REST_DEF_URI . "cid/" . $strId . "/synonyms/" . IFinder::REST_FORMAT_JSON;
+        $decoded = $this->getJsonFromUri($strUri);
         if ($decoded === false) {
-            return ResultEnum::REPLY_NONE;
+            return $strDefaultName;
         }
-        foreach ($decoded['InformationList']['Information'][0]['Synonym'] as $synonym) {
-            return $synonym;
+        foreach ($decoded['InformationList']['Information'][0]['Synonym'] as $strSynonym) {
+            return $strSynonym;
         }
         return $strDefaultName;
     }
 
+    /**
+     * Transform PubChem object in array to array used in view with right keys
+     * @param array $objItem PubChem object in array
+     * @param array $outArResult output param array used in view
+     * @param bool $blFindName true => find name on PubChem (new request to REST API), false => don't find name
+     * @return int ResultEnum
+     */
     private function resultOne($objItem, &$outArResult, $blFindName = IFinder::FIND_NAMES) {
         foreach ($objItem as $strProperty => $mixValue) {
-            /* too slow */
             if ($strProperty == PubChemFinder::IUPAC_NAME) {
+                /* too slow with true */
                 if ($blFindName) {
                     $mixValue = $this->getNames($outArResult[Constants::CANVAS_INPUT_IDENTIFIER]);
-//                } else {
-//                    $mixValue = "";
                 }
             }
             $outArResult[$this->getArrayKeyFromReplyProperty($strProperty)] = $mixValue;
