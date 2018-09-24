@@ -36,7 +36,7 @@ interface IFinder {
      * @param string $strFormula
      * @return mixed
      */
-    public function findByFormula($strFormula, &$outArResult, &$outArNextResults);
+    public function findByFormula($strFormula, &$outArResult, &$outArNextResult);
 
     /**
      * Find data by Monoisotopic Mass
@@ -53,5 +53,7 @@ interface IFinder {
      * @return int
      */
     public function findById($strId, &$outArResult);
+
+    public function findByIdentifiers($arIds, &$outArResult);
 
 }

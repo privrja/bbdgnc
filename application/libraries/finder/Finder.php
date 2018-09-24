@@ -2,7 +2,6 @@
 
 namespace Bbdgnc\Finder;
 
-use Bbdgnc\Enum\Front;
 use Bbdgnc\Finder\Enum\ServerEnum;
 
 class Finder {
@@ -56,6 +55,11 @@ class Finder {
     public function findByFormula($intDatabase, $strFormula, &$outArResult, &$outArNextResult) {
         $finder = $this->getFinder($intDatabase);
         return $finder->findByFormula($strFormula, $outArResult, $outArNextResult);
+    }
+
+    public function findByIdentifiers($intDatabase, $arIds, &$outArResult) {
+        $finder = $this->getFinder($intDatabase);
+        return $finder->findByIdentifiers($arIds, $outArResult);
     }
 
 }

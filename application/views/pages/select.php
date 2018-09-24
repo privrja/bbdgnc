@@ -21,7 +21,8 @@ use Bbdgnc\Finder\Enum\ServerEnum;
             <?php foreach ($molecules as $molecule): ?>
 
                 <?= form_open('land/select', array('class' => 'tr')); ?>
-                <div class="td" title=<?= Front::defIndex($molecule, Front::CANVAS_INPUT_NAME) ?>><?= Front::smallerText(Front::defIndex($molecule, Front::CANVAS_INPUT_NAME)) ?></div>
+                <div class="td"
+                     title=<?= Front::defIndex($molecule, Front::CANVAS_INPUT_NAME) ?>><?= Front::smallerText(Front::defIndex($molecule, Front::CANVAS_INPUT_NAME)) ?></div>
                 <div class="td"><?= $molecule[Front::CANVAS_INPUT_FORMULA] ?></div>
                 <div class="td"><?= $molecule[Front::CANVAS_INPUT_IDENTIFIER] ?></div>
                 <div class="td"><?= $molecule[Front::CANVAS_INPUT_MASS] ?></div>
@@ -29,7 +30,7 @@ use Bbdgnc\Finder\Enum\ServerEnum;
                     <a href=<?= ServerEnum::getLink($molecule[Front::CANVAS_HIDDEN_DATABASE], $molecule[Front::CANVAS_INPUT_IDENTIFIER]) ?>>
                         <?= ServerEnum::$values[$molecule[Front::CANVAS_HIDDEN_DATABASE]] ?></a>
                 </div>
-                <span class="td"><input type="submit" value="Select"/></span>
+                <div class="td"><input type="submit" value="Select"/></div>
 
                 <input type="hidden"
                        name=<?= Front::CANVAS_HIDDEN_DATABASE ?> value="<?= $molecule[Front::CANVAS_HIDDEN_DATABASE] ?>"/>
@@ -48,6 +49,13 @@ use Bbdgnc\Finder\Enum\ServerEnum;
 
             <?php endforeach; ?>
         </div>
+    </div>
+
+    <div>
+        <?= form_open('land/next', array('class' => 'form')); ?>
+        <input type="hidden" name=<?= Front::CANVAS_HIDDEN_DATABASE ?> value="<?= $molecules[0][Front::CANVAS_HIDDEN_DATABASE] ?>"/>
+        <input type="submit" value="Next results" />
+        </form>
     </div>
 
 </div>

@@ -9,6 +9,11 @@ use Bbdgnc\Finder\PubChemFinder;
 
 class Land extends CI_Controller {
 
+    const COOKIE_NEXT_RESULTS = 'find-next-results';
+
+    /** @var int expire time of cookie 1 hour */
+    const COOKIE_EXPIRE_HOUR = 3600;
+
     private function getData() {
         return array(
             Front::CANVAS_INPUT_NAME => "", Front::CANVAS_INPUT_SMILE => "",
@@ -41,6 +46,7 @@ class Land extends CI_Controller {
      */
     public function form() {
         $this->load->library("form_validation");
+        $this->input->set_cookie(self::COOKIE_NEXT_RESULTS, "", 0);
 
         $btnFind = $this->input->post("find");
         $btnSave = $this->input->post("save");
@@ -57,8 +63,8 @@ class Land extends CI_Controller {
 
         if (isset($btnFind)) {
             /* Find */
-            $arResult = array();
-            $intResultCode = $this->findBy($intDatabase, $intFindBy, $arResult, $outArNExtResult, $arSearchOptions);
+            $outArResult = array();
+            $intResultCode = $this->findBy($intDatabase, $intFindBy, $outArResult, $outArNextResult, $arSearchOptions);
             switch ($intResultCode) {
                 case ResultEnum::REPLY_NONE:
                     $this->index();
@@ -66,17 +72,21 @@ class Land extends CI_Controller {
                 case ResultEnum::REPLY_OK_ONE:
                     $this->load->view('templates/header');
                     $this->load->view('pages/canvas');
-                    if (empty($arResult[Front::CANVAS_INPUT_NAME])) {
-                        $arResult[Front::CANVAS_INPUT_NAME] = $this->input->post(Front::CANVAS_INPUT_NAME);
+                    if (empty($outArResult[Front::CANVAS_INPUT_NAME])) {
+                        $outArResult[Front::CANVAS_INPUT_NAME] = $this->input->post(Front::CANVAS_INPUT_NAME);
                     }
-                    $this->load->view('pages/main', $arResult);
+                    $this->load->view('pages/main', $outArResult);
                     $this->load->view('templates/footer');
                     break;
                 case ResultEnum::REPLY_OK_MORE:
                     /* form with list view and select the right one, next find by id the right one */
-                    $data['molecules'] = $arResult;
+                    $data['molecules'] = $outArResult;
                     $rightData = $this->getData();
                     $data[Front::CANVAS_HIDDEN_NAME] = $this->input->post(Front::CANVAS_INPUT_NAME);
+                    if (!empty($outArNextResult)) {
+                        // save next results to cookie
+                        $this->input->set_cookie(self::COOKIE_NEXT_RESULTS, serialize($outArNextResult), self::COOKIE_EXPIRE_HOUR);
+                    }
                     $rightData[Front::CANVAS_INPUT_NAME] = $this->input->post(Front::CANVAS_INPUT_NAME);
                     $this->load->view('templates/header');
                     $this->load->view('pages/select', $data);
@@ -123,15 +133,46 @@ class Land extends CI_Controller {
         $this->load->view('templates/footer');
     }
 
+    public function next() {
+        $arNext = unserialize($this->input->cookie(self::COOKIE_NEXT_RESULTS, true));
+        $this->input->set_cookie(self::COOKIE_NEXT_RESULTS, "", 0);
+        $intDatabase = $this->input->post(Front::CANVAS_HIDDEN_DATABASE);
+
+        if (isset($arNext) && !empty($arNext)) {
+            $arResult = array_splice($arNext, 0, \Bbdgnc\Finder\IFinder::FIRST_X_RESULTS);
+
+            $finder = new Finder();
+            $finder->findByIdentifiers($intDatabase, $arResult, $outArResult);
+
+            $data['molecules'] = $outArResult;
+            $rightData = $this->getData();
+            $data[Front::CANVAS_HIDDEN_NAME] = $this->input->post(Front::CANVAS_INPUT_NAME);
+            if (!empty($arNext)) {
+                // save next results to cookie
+                $this->input->set_cookie(self::COOKIE_NEXT_RESULTS, serialize($arNext), self::COOKIE_EXPIRE_HOUR);
+            }
+            $rightData[Front::CANVAS_INPUT_NAME] = $this->input->post(Front::CANVAS_INPUT_NAME);
+            $this->load->view('templates/header');
+            $this->load->view('pages/select', $data);
+            $this->load->view('pages/main', $rightData);
+            $this->load->view('templates/footer');
+        } else {
+            $this->load->view('templates/header');
+            $this->load->view('pages/canvas');
+            $this->load->view('pages/main', $this->getData());
+            $this->load->view('templates/footer');
+        }
+    }
+
     /**
      * Find by - specific param
      * @param int $intDatabase where to search
      * @param int $intFindBy find by this param
-     * @param array $outMixResult output param result only first X resutls, can be influenced by param IFinder::FIRST_X_RESULTS
+     * @param array $outArResult output param result only first X resutls, can be influenced by param IFinder::FIRST_X_RESULTS
      * @param array $outArNextResult next results identifiers
      * @return int result code 0 => find none, 1 => find 1, 2 => find more than 1
      */
-    private function findBy($intDatabase, $intFindBy, &$outMixResult = array(), &$outArNextResult = array(), $arSearchOptions = array()) {
+    private function findBy($intDatabase, $intFindBy, &$outArResult = array(), &$outArNextResult = array(), $arSearchOptions = array()) {
         $finder = new Finder();
         $finder->setOptions($arSearchOptions);
         /* TODO other cases */
@@ -141,19 +182,20 @@ class Land extends CI_Controller {
                 if ($this->form_validation->run() === false) {
                     return ResultEnum::REPLY_NONE;
                 }
-                return $finder->findByIdentifier($intDatabase, $this->input->post(Front::CANVAS_INPUT_IDENTIFIER), $outMixResult);
+                return $finder->findByIdentifier($intDatabase, $this->input->post(Front::CANVAS_INPUT_IDENTIFIER), $outArResult);
             case FindByEnum::NAME:
                 $this->form_validation->set_rules(Front::CANVAS_INPUT_NAME, "Name", "required");
                 if ($this->form_validation->run() === false) {
                     return ResultEnum::REPLY_NONE;
                 }
-                return $finder->findByName($intDatabase, $this->input->post(Front::CANVAS_INPUT_NAME), $outMixResult, $outArNextResult);
+                return $finder->findByName($intDatabase, $this->input->post(Front::CANVAS_INPUT_NAME), $outArResult, $outArNextResult);
             case FindByEnum::FORMULA:
                 $this->form_validation->set_rules(Front::CANVAS_INPUT_FORMULA, "Formula", "required");
                 if ($this->form_validation->run() === false) {
                     return ResultEnum::REPLY_NONE;
                 }
-                return $finder->findByFormula($intDatabase, $this->input->post(Front::CANVAS_INPUT_FORMULA), $outMixResult, $outArNextResult);
+                return $finder->findByFormula($intDatabase, $this->input->post(Front::CANVAS_INPUT_FORMULA), $outArResult, $outArNextResult);
         }
     }
+
 }
