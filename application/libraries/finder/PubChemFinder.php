@@ -18,7 +18,7 @@ class PubChemFinder implements IFinder {
     const REST_LIST_KEY_START = "listkey_start=";
     const REST_LIST_KEY_COUNT = "listkey_count=";
     const REST_NAME_SPECIFICATION = "name_type=word";
-    const REST_COUNT = 1000;
+    const REST_COUNT = 200;
 
     /** Properties in JSON reply */
     const REPLY_TABLE_PROPERTIES = "PropertyTable";
@@ -216,15 +216,27 @@ class PubChemFinder implements IFinder {
      */
     private
     function getJsonFromUri($strUri) {
-        $objJson = @file_get_contents($strUri);
-
-        /* Bad URI*/
-        if ($objJson === false) {
-            log_message('error', "REST Bad uri. Uri: " . $strUri);
-            return false;
+        $curl = curl_init($strUri);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        $curl_response = curl_exec($curl);
+        if ($curl_response === false) {
+//            $info = curl_getinfo($curl);
+            curl_close($curl);
+            log_message("error", "Error occured during curl exec. Uri: " . $strUri);
+            return null;
         }
+        curl_close($curl);
+        $decoded = json_decode($curl_response, true);
 
-        $decoded = json_decode($objJson, true);
+//        $objJson = @file_get_contents($strUri);
+//
+//        /* Bad URI*/
+//        if ($objJson === false) {
+//            log_message('error', "REST Bad uri. Uri: " . $strUri);
+//            return false;
+//        }
+//
+//        $decoded = json_decode($objJson, true);
         /* Bad reply */
         if (isset($decoded[PubChemFinder::REPLY_FAULT])) {
             log_message('error', "REST reply fault. Uri: " . $strUri);

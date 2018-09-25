@@ -46,7 +46,6 @@ class Land extends CI_Controller {
      */
     public function form() {
         $this->load->library("form_validation");
-        $this->input->set_cookie(self::COOKIE_NEXT_RESULTS, "", 0);
 
         $btnFind = $this->input->post("find");
         $btnSave = $this->input->post("save");
@@ -67,9 +66,11 @@ class Land extends CI_Controller {
             $intResultCode = $this->findBy($intDatabase, $intFindBy, $outArResult, $outArNextResult, $arSearchOptions);
             switch ($intResultCode) {
                 case ResultEnum::REPLY_NONE:
+                    $this->input->set_cookie(self::COOKIE_NEXT_RESULTS, "", 0);
                     $this->index();
                     break;
                 case ResultEnum::REPLY_OK_ONE:
+                    $this->input->set_cookie(self::COOKIE_NEXT_RESULTS, "", 0);
                     $this->load->view('templates/header');
                     $this->load->view('pages/canvas');
                     if (empty($outArResult[Front::CANVAS_INPUT_NAME])) {
@@ -84,10 +85,12 @@ class Land extends CI_Controller {
                     $rightData = $this->getData();
                     $data[Front::CANVAS_HIDDEN_NAME] = $this->input->post(Front::CANVAS_INPUT_NAME);
                     if (!empty($outArNextResult)) {
-                        // get only first 500 ids, max value to cookie can be overhead, maybe better store to database
-                        array_splice($outArNextResult, 500);
+                        // get only first 160 ids, max value to cookie can be overhead, maybe better store to database
+                        array_splice($outArNextResult, 160);
                         // save next results to cookie
                         $this->input->set_cookie(self::COOKIE_NEXT_RESULTS, serialize($outArNextResult), self::COOKIE_EXPIRE_HOUR);
+                    } else {
+                        $this->input->set_cookie(self::COOKIE_NEXT_RESULTS, "", 0);
                     }
                     $rightData[Front::CANVAS_INPUT_NAME] = $this->input->post(Front::CANVAS_INPUT_NAME);
                     $this->load->view('templates/header');
@@ -136,9 +139,11 @@ class Land extends CI_Controller {
     }
 
     public function next() {
-        $arNext = unserialize($this->input->cookie(self::COOKIE_NEXT_RESULTS, true));
-        $this->input->set_cookie(self::COOKIE_NEXT_RESULTS, "", 0);
+        $arNext = unserialize($this->input->cookie(self::COOKIE_NEXT_RESULTS));
+//        $this->input->set_cookie(self::COOKIE_NEXT_RESULTS, "", 0);
         $intDatabase = $this->input->post(Front::CANVAS_HIDDEN_DATABASE);
+
+        var_dump($arNext);
 
         if (isset($arNext) && !empty($arNext)) {
             $arResult = array_splice($arNext, 0, \Bbdgnc\Finder\IFinder::FIRST_X_RESULTS);
