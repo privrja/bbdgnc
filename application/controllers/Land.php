@@ -84,6 +84,8 @@ class Land extends CI_Controller {
                     $rightData = $this->getData();
                     $data[Front::CANVAS_HIDDEN_NAME] = $this->input->post(Front::CANVAS_INPUT_NAME);
                     if (!empty($outArNextResult)) {
+                        // get only first 500 ids, max value to cookie can be overhead, maybe better store to database
+                        array_splice($outArNextResult, 500);
                         // save next results to cookie
                         $this->input->set_cookie(self::COOKIE_NEXT_RESULTS, serialize($outArNextResult), self::COOKIE_EXPIRE_HOUR);
                     }
