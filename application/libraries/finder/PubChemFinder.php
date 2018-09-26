@@ -242,15 +242,6 @@ class PubChemFinder implements IFinder {
         curl_close($curl);
         $decoded = json_decode($curl_response, true);
 
-//        $objJson = @file_get_contents($strUri);
-//
-//        /* Bad URI*/
-//        if ($objJson === false) {
-//            log_message('error', "REST Bad uri. Uri: " . $strUri);
-//            return false;
-//        }
-//
-//        $decoded = json_decode($objJson, true);
         /* Bad reply */
         if (isset($decoded[PubChemFinder::REPLY_FAULT])) {
             log_message('error', "REST reply fault. Uri: " . $strUri);
@@ -316,7 +307,7 @@ class PubChemFinder implements IFinder {
             if ($strProperty == PubChemFinder::IUPAC_NAME) {
                 /* too slow with true */
                 if ($blFindName) {
-                    $mixValue = $this->getNames($outArResult[Front::CANVAS_INPUT_IDENTIFIER]);
+                    $mixValue = $this->getNames($outArResult[Front::CANVAS_INPUT_IDENTIFIER], $mixValue);
                 }
             }
             $outArResult[$this->getArrayKeyFromReplyProperty($strProperty)] = $mixValue;

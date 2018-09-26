@@ -117,8 +117,13 @@ class Land extends CI_Controller {
         $strName = $this->input->post(Front::CANVAS_INPUT_NAME);
         if ($this->input->post(Front::CANVAS_HIDDEN_DATABASE) == ServerEnum::PUBCHEM) {
             $pubChemFinder = new PubChemFinder();
-            $pubChemFinder->findName($this->input->post(Front::CANVAS_INPUT_IDENTIFIER), $strName);
-            $data[Front::CANVAS_INPUT_NAME] = $strName;
+            $strIupacName = $strName;
+            $intResultCode = $pubChemFinder->findName($this->input->post(Front::CANVAS_INPUT_IDENTIFIER), $strName);
+            if ($intResultCode == ResultEnum::REPLY_NONE) {
+                $data[Front::CANVAS_INPUT_NAME] = $strIupacName;
+            } else {
+                $data[Front::CANVAS_INPUT_NAME] = $strName;
+            }
         } else {
             if (!empty($strName)) {
                 $data[Front::CANVAS_INPUT_NAME] = $strName;
