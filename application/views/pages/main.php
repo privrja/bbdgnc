@@ -10,16 +10,16 @@ use Bbdgnc\Enum\Front;
 
     <?= form_open('land/form', array('class' => 'form')); ?>
 
-    <label for="database">Database</label>
-    <select name="database" class="select" title="Search">
+    <label for="sel-canvas-database">Database</label>
+    <select id="sel-canvas-database" name="<?= Front::CANVAS_INPUT_DATABASE ?>" class="select" title="Search">
         <option value=<?= ServerEnum::PUBCHEM ?>>PubChem</option>
         <option value=<?= ServerEnum::CHEMSPIDER ?>>ChemSpider</option>
         <option value=<?= ServerEnum::NORINE ?>>Norine</option>
         <option value=<?= ServerEnum::PDB ?>>PDB</option>
     </select>
 
-    <label for="search">Search by</label>
-    <select name="search" class="select" title="Search">
+    <label for="sel-canvas-search">Search by</label>
+    <select id="sel-canvas-search" name="<?= Front::CANVAS_INPUT_SEARCH_BY ?>" class="select" title="Search">
         <option value=<?= FindByEnum::NAME ?>>Name</option>
         <option value=<?= FindByEnum::SMILE ?>>SMILES</option>
         <option value=<?= FindByEnum::FORMULA ?>>Molecular Formula</option>
@@ -27,28 +27,33 @@ use Bbdgnc\Enum\Front;
         <option value=<?= FindByEnum::IDENTIFIER ?>>Identifier</option>
     </select>
 
-    <label for="name">Name</label>
-    <input type="text" id="txt-canvas-name" class="txt-def" name="name" title="Name" value="<?= $name ?>"/>
+    <label for="txt-canvas-name">Name</label>
+    <input type="text" id="txt-canvas-name" class="txt-def" name="<?= Front::CANVAS_INPUT_NAME ?>" title="Name"
+           value="<?= $name ?>"/>
 
     <label for="chk-match" class="chk">Exact match</label>
-    <input type="checkbox" id="chk-match" name=<?= Front::CANVAS_INPUT_MATCH ?> value="1" checked="checked" />
+    <input type="checkbox" id="chk-match" name="<?= Front::CANVAS_INPUT_MATCH ?>" value="1" checked="checked"/>
 
-    <label for="smile">SMILES</label>
-    <textarea id="txt-canvas-smile" class="txt-area" name="smile" title="SMILES"><?= $smile ?></textarea>
+    <label for="txt-canvas-smile">SMILES</label>
+    <textarea id="txt-canvas-smile" class="txt-area" name="<?= Front::CANVAS_INPUT_SMILE ?>"
+              title="SMILES"><?= $smile ?></textarea>
 
-    <label for="formula">Molecular Formula</label>
-    <input type="text" id="txt-canvas-fle" class="txt-def" name="formula" title="Formula" value="<?= $formula ?>"/>
+    <label for="txt-canvas-fle">Molecular Formula</label>
+    <input type="text" id="txt-canvas-fle" class="txt-def" name="<?= Front::CANVAS_INPUT_FORMULA ?>" title="Formula"
+           value="<?= $formula ?>"/>
 
-    <label for="mass">Monoisotopic Mass</label>
-    <input type="number" id="txt-canvas-mass" class="txt-def" name="mass" title="Monoisotopic Mass"
-           value="<?= $mass ?>"/>
-    <label for="deflection" class="lbl-block">+/-</label>
-    <input type="number" id="txt-canvas-mass-deflection" class="txt-def" name="deflection" title="Deflection"/>
+    <label for="txt-canvas-mass">Monoisotopic Mass</label>
+    <input type="number" id="txt-canvas-mass" class="txt-def" name="<?= Front::CANVAS_INPUT_MASS ?>"
+           title="Monoisotopic Mass" value="<?= $mass ?>"/>
+    <label for="txt-canvas-mass-deflection" class="lbl-block">+/-</label>
+    <input type="number" id="txt-canvas-mass-deflection" class="txt-def" name="<?= Front::CANVAS_INPUT_DEFLECTION ?>"
+           title="Deflection" value="<?= $deflection ?>"/>
 
-    <label for="identifier">Identifier</label>
-    <input type=text class="txt-def" name="identifier" title="Id" value="<?= $identifier ?>"/>
+    <label for="txt-canvas-identifier">Identifier</label>
+    <input type=text id="txt-canvas-identifier" class="txt-def" name="<?= Front::CANVAS_INPUT_IDENTIFIER ?>" title="Id"
+           value="<?= $identifier ?>"/>
 
-    <input type="hidden" name=<?= Front::CANVAS_HIDDEN_DATABASE ?> value="<?= $hddatabase ?>"/>
+    <input type="hidden" name="<?= Front::CANVAS_HIDDEN_DATABASE ?>" value="<?= $hdDatabase ?>"/>
 
     <input type="submit" id="btn-canvas-find" class="btn-same" name="find" value="Find"/>
     <button type="button" id="btn-canvas-load" class="btn-same" name="load">Load</button>

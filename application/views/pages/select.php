@@ -44,7 +44,6 @@ use Bbdgnc\Finder\Enum\ServerEnum;
                        name=<?= Front::CANVAS_INPUT_MASS ?> value="<?= $molecule[Front::CANVAS_INPUT_MASS] ?>"/>
                 <input type="hidden"
                        name=<?= Front::CANVAS_INPUT_IDENTIFIER ?> value="<?= $molecule[Front::CANVAS_INPUT_IDENTIFIER] ?>"/>
-                <input type="hidden" name=<?= Front::CANVAS_HIDDEN_NAME ?> value="<?= $hdname ?>"/>
                 </form>
 
             <?php endforeach; ?>
@@ -54,6 +53,12 @@ use Bbdgnc\Finder\Enum\ServerEnum;
     <div>
         <?= form_open('land/next', array('class' => 'form')); ?>
         <input type="hidden" name=<?= Front::CANVAS_HIDDEN_DATABASE ?> value="<?= $molecules[0][Front::CANVAS_HIDDEN_DATABASE] ?>"/>
+        <input type="hidden" name=<?= Front::CANVAS_HIDDEN_NAME ?> value="<?= $hdName ?>"/>
+        <input type="hidden" name=<?= Front::CANVAS_HIDDEN_SMILE ?> value="<?= $hdSmile ?>"/>
+        <input type="hidden" name=<?= Front::CANVAS_HIDDEN_FORMULA ?> value="<?= $hdFormula ?>"/>
+        <input type="hidden" name=<?= Front::CANVAS_HIDDEN_MASS ?> value="<?= $hdMass ?>"/>
+        <input type="hidden" name=<?= Front::CANVAS_HIDDEN_DEFLECTION ?> value="<?= $hdDeflection ?>"/>
+        <input type="hidden" name=<?= Front::CANVAS_HIDDEN_IDENTIFIER ?> value="<?= $hdIdentifier ?>"/>
         <input type="submit" value="Next results" />
         </form>
     </div>

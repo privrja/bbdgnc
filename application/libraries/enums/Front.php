@@ -4,15 +4,23 @@ namespace Bbdgnc\Enum;
 
 abstract class Front {
 
+    const CANVAS_INPUT_SEARCH_BY = "search";
     const CANVAS_INPUT_DATABASE = "database";
     const CANVAS_INPUT_NAME = "name";
+    const CANVAS_INPUT_MATCH = "match";
     const CANVAS_INPUT_SMILE = "smile";
     const CANVAS_INPUT_FORMULA = "formula";
     const CANVAS_INPUT_MASS = "mass";
+    const CANVAS_INPUT_DEFLECTION = "deflection";
     const CANVAS_INPUT_IDENTIFIER = "identifier";
-    const CANVAS_HIDDEN_DATABASE = "hddatabase";
-    const CANVAS_HIDDEN_NAME = "hdname";
-    const CANVAS_INPUT_MATCH = "match";
+
+    const CANVAS_HIDDEN_DATABASE = "hdDatabase";
+    const CANVAS_HIDDEN_NAME = "hdName";
+    const CANVAS_HIDDEN_SMILE = "hdSmile";
+    const CANVAS_HIDDEN_FORMULA = "hdFormula";
+    const CANVAS_HIDDEN_MASS = "hdMass";
+    const CANVAS_HIDDEN_DEFLECTION = "hdDeflection";
+    const CANVAS_HIDDEN_IDENTIFIER = "hdIdentifier";
 
     const MAX_LENGTH_TEXT = 20;
     const STRING_TREE_DOTS = "...";
