@@ -90,8 +90,22 @@ class PubChemFinder implements IFinder {
      * @param string $strSmile
      * @return mixed
      */
-    public function findBySmile($strSmile, &$outArResult) {
-        // TODO: Implement findBySmiles() method.
+    public function findBySmile($strSmile, &$outArResult, &$outArNextResult) {
+        $strBaseUri = self::REST_DEF_URI . "smiles/" . $strSmile . self::REST_CIDS . IFinder::REST_FORMAT_JSON . IFinder::REST_QUESTION_MARK;
+        $strUri = $strBaseUri . self::REST_LIST_RETURN . self::REST_LIST_KEY;
+
+        $mixDecoded = $this->getJsonFromUri($strUri);
+        if ($mixDecoded === false) {
+            return ResultEnum::REPLY_NONE;
+        }
+
+        $listKey = $mixDecoded[PubChemFinder::REPLY_IDENTIFIER_LIST][PubChemFinder::REPLY_LIST_KEY];
+        $strBaseUri .= PubChemFinder::REST_LIST_KEY .
+            PubChemFinder::REST_EQUALS . $listKey . IFinder::REST_AMPERSAND .
+            PubChemFinder::REST_LIST_KEY_START . "0" . IFinder::REST_AMPERSAND .
+            PubChemFinder::REST_LIST_KEY_COUNT . PubChemFinder::REST_COUNT;
+        return $this->getMoleculesFromListKey($strBaseUri, $outArResult, $outArNextResult);
+
     }
 
     /**

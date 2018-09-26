@@ -52,6 +52,11 @@ class Finder {
         return $finder->findByName($strName, $outArResult, $outArNextResult);
     }
 
+    public function findBySmile($intDatabase, $strSmile, &$outArResult, &$outArNextResult) {
+        $finder = $this->getFinder($intDatabase);
+        return $finder->findBySmile($strSmile, $outArResult, $outArNextResult);
+    }
+
     public function findByFormula($intDatabase, $strFormula, &$outArResult, &$outArNextResult) {
         $finder = $this->getFinder($intDatabase);
         return $finder->findByFormula($strFormula, $outArResult, $outArNextResult);

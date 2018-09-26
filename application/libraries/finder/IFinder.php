@@ -29,7 +29,7 @@ interface IFinder {
      * @param string $strSmile
      * @return mixed
      */
-    public function findBySmile($strSmile, &$outArResult);
+    public function findBySmile($strSmile, &$outArResult, &$outArNextResult);
 
     /**
      * Find data by Molecular Formula

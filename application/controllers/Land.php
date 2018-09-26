@@ -202,6 +202,12 @@ class Land extends CI_Controller {
                     return ResultEnum::REPLY_NONE;
                 }
                 return $finder->findByFormula($intDatabase, $this->input->post(Front::CANVAS_INPUT_FORMULA), $outArResult, $outArNextResult);
+            case FindByEnum::SMILE:
+                $this->form_validation->set_rules(Front::CANVAS_INPUT_SMILE, "SMILES", "required");
+                if ($this->form_validation->run() === false) {
+                    return ResultEnum::REPLY_NONE;
+                }
+                return $finder->findBySmile($intDatabase, $this->input->post(Front::CANVAS_INPUT_SMILE), $outArResult, $outArNextResult);
         }
     }
 
