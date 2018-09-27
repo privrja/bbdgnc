@@ -4,6 +4,7 @@ namespace Bbdgnc\Enum;
 
 abstract class Front {
 
+    /** @var string name of inputs */
     const CANVAS_INPUT_SEARCH_BY = "search";
     const CANVAS_INPUT_DATABASE = "database";
     const CANVAS_INPUT_NAME = "name";
@@ -14,6 +15,7 @@ abstract class Front {
     const CANVAS_INPUT_DEFLECTION = "deflection";
     const CANVAS_INPUT_IDENTIFIER = "identifier";
 
+    /** @var string name of hidden inputs */
     const CANVAS_HIDDEN_DATABASE = "hdDatabase";
     const CANVAS_HIDDEN_NAME = "hdName";
     const CANVAS_HIDDEN_SMILE = "hdSmile";

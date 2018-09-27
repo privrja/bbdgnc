@@ -33,6 +33,8 @@ class PubChemFinder implements IFinder {
     const MASS = "MonoisotopicMass";
     const SMILE = "CanonicalSMILES";
 
+    /** Search options */
+    /** @var bool when find by name, find exact the same word? */
     const OPTION_EXACT_MATCH = true;
 
     private $blExactMatch;

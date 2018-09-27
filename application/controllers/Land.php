@@ -164,10 +164,12 @@ class Land extends CI_Controller {
                 $data[Front::CANVAS_INPUT_NAME] = $this->input->post(Front::CANVAS_HIDDEN_NAME);
             }
         }
-
         $this->index($data);
     }
 
+    /**
+     * Render view for next values from finding
+     */
     public function next() {
         $arNext = unserialize($this->input->cookie(self::COOKIE_NEXT_RESULTS));
         $intDatabase = $this->input->post(Front::CANVAS_HIDDEN_DATABASE);
@@ -190,6 +192,10 @@ class Land extends CI_Controller {
         }
     }
 
+    /**
+     * Get last data from hidden input and set it to array for view hidden
+     * @return array data for view
+     */
     private function getLastHiddenData() {
         $arViewData = array();
         $arViewData[Front::CANVAS_HIDDEN_DATABASE] = $this->input->post(Front::CANVAS_HIDDEN_DATABASE);
@@ -202,6 +208,10 @@ class Land extends CI_Controller {
         return $arViewData;
     }
 
+    /**
+     * Get last data from hidden input and set it to array for view
+     * @return array data for view
+     */
     private function getLastHiddenDataToInput() {
         $arViewData = array();
         $arViewData[Front::CANVAS_HIDDEN_DATABASE] = $this->input->post(Front::CANVAS_HIDDEN_DATABASE);
@@ -214,6 +224,10 @@ class Land extends CI_Controller {
         return $arViewData;
     }
 
+    /**
+     * Get last data from input and set it to array for view hidden
+     * @return array data for view
+     */
     private function getLastDataToHidden() {
         $arViewData = array();
         $arViewData[Front::CANVAS_HIDDEN_DATABASE] = $this->input->post(Front::CANVAS_INPUT_DATABASE);
@@ -226,6 +240,10 @@ class Land extends CI_Controller {
         return $arViewData;
     }
 
+    /**
+     * Get last data from input and set it to array for view
+     * @return array data for view
+     */
     private function getLastData() {
         $arViewData = array();
         $arViewData[Front::CANVAS_HIDDEN_DATABASE] = $this->input->post(Front::CANVAS_INPUT_DATABASE);
