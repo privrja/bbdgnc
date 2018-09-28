@@ -27,7 +27,8 @@ class Finder {
                 return new PubChemFinder($this->isOptionSet(self::OPTION_EXACT_MATCH));
             /* TODO */
 //            case ServerEnum::CHEMSPIDER:
-//            case ServerEnum::NORINE:
+            case ServerEnum::NORINE:
+                return new NorineFinder();
 //            case ServerEnum::PDB:
         }
     }

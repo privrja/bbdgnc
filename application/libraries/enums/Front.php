@@ -36,11 +36,11 @@ abstract class Front {
     }
 
     public static function smallerText($strText) {
-//        if (strlen($strText) > self::MAX_LENGTH_TEXT) {
+        if (strlen($strText) > self::MAX_LENGTH_TEXT) {
             return substr($strText, 0, self::MAX_LENGTH_TEXT) . self::STRING_TREE_DOTS;
-//        } else {
-//            return $strText;
-//        }
+        } else {
+            return $strText;
+        }
     }
 
     public static function defIndex($array, $strKey) {
