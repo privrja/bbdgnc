@@ -20,6 +20,7 @@ interface IFinder {
      * Find data on some server by name
      * @param string $strName
      * @param array $outArResult
+     * @param array $outArNextResult id with next results
      * @return int
      */
     public function findByName($strName, &$outArResult, &$outArNextResult);
@@ -27,6 +28,8 @@ interface IFinder {
     /**
      * Find data by SMILES
      * @param string $strSmile
+     * @param array $outArResult
+     * @param array $outArNextResult id with next results
      * @return int
      */
     public function findBySmile($strSmile, &$outArResult, &$outArNextResult);
@@ -34,6 +37,8 @@ interface IFinder {
     /**
      * Find data by Molecular Formula
      * @param string $strFormula
+     * @param array $outArResult
+     * @param array $outArNextResult id with next results
      * @return int
      */
     public function findByFormula($strFormula, &$outArResult, &$outArNextResult);
@@ -42,6 +47,7 @@ interface IFinder {
      * Find data by Monoisotopic Mass
      * @param $decMass
      * @param $decTolerance
+     * @param array $outArResult
      * @return int
      */
     public function findByMass($decMass, $decTolerance, &$outArResult);
