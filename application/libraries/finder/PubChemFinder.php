@@ -34,7 +34,7 @@ class PubChemFinder implements IFinder {
     const SMILE = "CanonicalSMILES";
 
     /** Search options */
-    /** @var bool when find by name, find exact the same word? */
+    /** @var bool when find by name, find exact the same word? default value */
     const OPTION_EXACT_MATCH = true;
 
     private $blExactMatch;
@@ -71,7 +71,7 @@ class PubChemFinder implements IFinder {
         $strUri = $strBaseUri . PubChemFinder::REST_LIST_RETURN .
             PubChemFinder::REST_LIST_KEY;
 
-        $mixDecoded = $this->getJsonFromUri($strUri);
+        $mixDecoded = JsonDownloader::getJsonFromUri($strUri);
         if ($mixDecoded === false) {
             return ResultEnum::REPLY_NONE;
         }
@@ -96,7 +96,7 @@ class PubChemFinder implements IFinder {
         $strBaseUri = self::REST_DEF_URI . "smiles/" . $strSmile . self::REST_CIDS . IFinder::REST_FORMAT_JSON . IFinder::REST_QUESTION_MARK;
         $strUri = $strBaseUri . self::REST_LIST_RETURN . self::REST_LIST_KEY;
 
-        $mixDecoded = $this->getJsonFromUri($strUri);
+        $mixDecoded = JsonDownloader::getJsonFromUri($strUri);
         if ($mixDecoded === false) {
             return ResultEnum::REPLY_NONE;
         }
@@ -123,7 +123,7 @@ class PubChemFinder implements IFinder {
     }
 
     private function getMoleculesFromListKey($strUri, &$outArResult, &$outArNextResult) {
-        $mixDecoded = $this->getJsonFromUri($strUri);
+        $mixDecoded = JsonDownloader::getJsonFromUri($strUri);
         if ($mixDecoded === false) {
             return ResultEnum::REPLY_NONE;
         }
@@ -151,14 +151,14 @@ class PubChemFinder implements IFinder {
 
     /**
      * Get string input of ids and get info about them from PubChem
-     * @param string $arIds example: 45545,46546,8945 beware of too long for HTTTP GET request
+     * @param array $arIds beware of too long for HTTTP GET request
      * @param array $outArResult output param info about molecules
      * @return int ResultEnum
      */
     public function findByIdentifiers($arIds, &$outArResult) {
         $strIds = $this->getStringIdsFromArray($arIds);
         $uri = PubChemFinder::REST_DEF_URI . "cid/" . $strIds . PubChemFinder::REST_PROPERTY . PubChemFinder::REST_PROPERTY_VALUES . IFinder::REST_FORMAT_JSON;
-        $decoded = $this->getJsonFromUri($uri);
+        $decoded = JsonDownloader::getJsonFromUri($uri);
         if ($decoded === false) {
             return ResultEnum::REPLY_NONE;
         }
@@ -203,7 +203,7 @@ class PubChemFinder implements IFinder {
     public
     function findById($strId, &$outArResult) {
         $uri = PubChemFinder::REST_DEF_URI . "cid/" . $strId . PubChemFinder::REST_PROPERTY . PubChemFinder::REST_PROPERTY_VALUES . IFinder::REST_FORMAT_JSON;
-        $decoded = $this->getJsonFromUri($uri);
+        $decoded = JsonDownloader::getJsonFromUri($uri);
         if ($decoded === false) {
             return ResultEnum::REPLY_NONE;
         }
@@ -223,35 +223,6 @@ class PubChemFinder implements IFinder {
             return ResultEnum::REPLY_NONE;
         }
         return ResultEnum::REPLY_OK_ONE;
-    }
-
-    /**
-     * Get decoded JSON from URI to array
-     * @param string $strUri url address to call
-     * @return bool|mixed something goes wrong => false, elsewhere the result
-     */
-    private
-    function getJsonFromUri($strUri) {
-        $curl = curl_init($strUri);
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-        $curl_response = curl_exec($curl);
-        if ($curl_response === false) {
-//            $info = curl_getinfo($curl);
-            curl_close($curl);
-            log_message("error", "Error occured during curl exec. Uri: " . $strUri);
-            return null;
-        }
-        curl_close($curl);
-        $decoded = json_decode($curl_response, true);
-
-        /* Bad reply */
-        if (isset($decoded[PubChemFinder::REPLY_FAULT])) {
-            log_message('error', "REST reply fault. Uri: " . $strUri);
-            return false;
-        }
-
-        log_message('info', "Response OK to URI: $strUri");
-        return $decoded;
     }
 
     /**
@@ -286,7 +257,7 @@ class PubChemFinder implements IFinder {
     private
     function getNames($strId, $strDefaultName = "") {
         $strUri = PubChemFinder::REST_DEF_URI . "cid/" . $strId . "/synonyms/" . IFinder::REST_FORMAT_JSON;
-        $decoded = $this->getJsonFromUri($strUri);
+        $decoded = JsonDownloader::getJsonFromUri($strUri);
         if ($decoded === false) {
             return $strDefaultName;
         }
