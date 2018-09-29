@@ -9,10 +9,12 @@ use Bbdgnc\Finder\Enum\ServerEnum;
 class NorineFinder implements IFinder {
 
     const REST_BASE_URI = "http://bioinfo.lifl.fr/norine/rest/";
+    const REST_SMILES = "smiles";
+    const REST_PEPTIDES = "peptides";
 
     const REPLY_NORINE = "norine";
     const REPLY_PEPTIDE = "peptide";
-    const REPLY_PEPTIDES = "peptides";
+    const REPLY_PEPTIDES = self::REST_PEPTIDES;
     const REPLY_GENERAL = "general";
     const REPLY_ID = "id";
     const REPLY_NAME = "name";
@@ -45,14 +47,7 @@ class NorineFinder implements IFinder {
             $intCounter++;
         }
 
-        switch ($intCounter) {
-            case 0:
-                return ResultEnum::REPLY_NONE;
-            case 1:
-                return ResultEnum::REPLY_OK_ONE;
-            default:
-                return ResultEnum::REPLY_OK_MORE;
-        }
+        return $this->returnCode($intCounter, $outArResult);
     }
 
     /**
@@ -74,7 +69,25 @@ class NorineFinder implements IFinder {
      * @return int
      */
     public function findByFormula($strFormula, &$outArResult, &$outArNextResult) {
-        // TODO: Implement findByFormula() method.
+        // !!! too slow
+        $strUri = self::REST_BASE_URI . self::REPLY_PEPTIDES . IFinder::REST_SLASH . IFinder::REST_FORMAT_JSON  . "/smiles";
+        $mixDecoded = JsonDownloader::getJsonFromUri($strUri);
+        if ($mixDecoded === false) {
+            return ResultEnum::REPLY_NONE;
+        }
+
+        $intCounter = 0;
+        foreach ($mixDecoded[self::REPLY_PEPTIDES] as $arPeptide) {
+            if (isset($arPeptide[self::REPLY_GENERAL][self::REPLY_FORMULA])
+                    && $arPeptide[self::REPLY_GENERAL][self::REPLY_FORMULA] == $strFormula) {
+                $arMolecule = array();
+                $this->setDataFromReplyToResult($arPeptide, $arMolecule);
+                $outArResult[$intCounter] = $arMolecule;
+                $intCounter++;
+            }
+        }
+
+        return $this->returnCode($intCounter, $outArResult);
     }
 
     /**
@@ -125,6 +138,19 @@ class NorineFinder implements IFinder {
         $outArResult[Front::CANVAS_INPUT_MASS] = @$arPeptide[self::REPLY_GENERAL][self::REPLY_MOLECULAR_WEIGHT];
         $outArResult[Front::CANVAS_INPUT_SMILE] = @$arPeptide[self::REPLY_STRUCTURE][self::REPLY_SMILES];
         $outArResult[Front::CANVAS_HIDDEN_DATABASE] = ServerEnum::NORINE;
+    }
+
+    private function returnCode($intCounter, &$outArResult) {
+        switch ($intCounter) {
+            case 0:
+                unset($outArResult);
+                return ResultEnum::REPLY_NONE;
+            case 1:
+                $outArResult = $outArResult[0];
+                return ResultEnum::REPLY_OK_ONE;
+            default:
+                return ResultEnum::REPLY_OK_MORE;
+        }
     }
 
 }
