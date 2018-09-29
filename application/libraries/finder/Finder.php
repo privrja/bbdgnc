@@ -29,7 +29,8 @@ class Finder {
 //            case ServerEnum::CHEMSPIDER:
             case ServerEnum::NORINE:
                 return new NorineFinder();
-//            case ServerEnum::PDB:
+            case ServerEnum::PDB:
+                return new PdbFinder();
         }
     }
 
