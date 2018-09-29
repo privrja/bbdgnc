@@ -17,7 +17,8 @@
 		"psr-4": {
 			"Bbdgnc\\Finder\\" : "application/libraries/finder",
 			"Bbdgnc\\Finder\\Enum\\" : "application/libraries/finder/enums",
-			"Bbdgnc\\Enum\\" : "application/libraries/enums"
+			"Bbdgnc\\Enum\\" : "application/libraries/enums",
+			"Bbdgnc\\Smiles\\" : "application/libraries/smiles"
 		}
 	},
 	"suggest": {
