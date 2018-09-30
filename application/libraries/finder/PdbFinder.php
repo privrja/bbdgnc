@@ -87,11 +87,22 @@ class PdbFinder implements IFinder {
         // TODO: Implement findByIdentifiers() method.
     }
 
+    /**
+     * Setup all values to result array, only when one result
+     * @param array $arItems
+     * @param array $outArResult
+     * @return int ResultEnum
+     */
     private function resultOne($arItems, &$outArResult) {
         $this->setDataFromReplyToResult($arItems, $outArResult);
         return ResultEnum::REPLY_OK_ONE;
     }
 
+    /**
+     * Set values to result array
+     * @param array $arPeptide
+     * @param array $outArResult
+     */
     private function setDataFromReplyToResult($arPeptide, &$outArResult) {
         $outArResult[Front::CANVAS_INPUT_NAME] = @$arPeptide[self::REPLY_NAME];
         $outArResult[Front::CANVAS_INPUT_FORMULA] = Front::urlText(@$arPeptide[self::REPLY_FORMULA]);

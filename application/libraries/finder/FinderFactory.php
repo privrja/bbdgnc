@@ -17,6 +17,7 @@ abstract class FinderFactory {
     /**
      * Factory for finders, get right finder by database
      * @param int $intDatabase
+     * @param array $arOptions options for finder, default empty array
      * @return IFinder
      */
     public static function getFinder($intDatabase, $arOptions = array()) {

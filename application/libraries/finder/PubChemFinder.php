@@ -175,6 +175,11 @@ class PubChemFinder implements IFinder {
         }
     }
 
+    /**
+     * Set ids in array to string with commas
+     * @param array $arIds
+     * @return string ids separetad by commas
+     */
     private function getStringIdsFromArray($arIds) {
         $strIds = "";
         foreach ($arIds as $intId) {

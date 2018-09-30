@@ -126,11 +126,22 @@ class NorineFinder implements IFinder {
         // TODO: Implement findByIdentifiers() method.
     }
 
+    /**
+     * Setup all values to result array, only when one result
+     * @param array $arItems
+     * @param array $outArResult
+     * @return int ResultEnum
+     */
     private function resultOne($arItems, &$outArResult) {
         $this->setDataFromReplyToResult($arItems[0], $outArResult);
         return ResultEnum::REPLY_OK_ONE;
     }
 
+    /**
+     * Set values to result array
+     * @param array $arPeptide
+     * @param array $outArResult
+     */
     private function setDataFromReplyToResult($arPeptide, &$outArResult) {
         $outArResult[Front::CANVAS_INPUT_IDENTIFIER] = @$arPeptide[self::REPLY_GENERAL][self::REPLY_ID];
         $outArResult[Front::CANVAS_INPUT_NAME] = @$arPeptide[self::REPLY_GENERAL][self::REPLY_NAME];
@@ -140,6 +151,12 @@ class NorineFinder implements IFinder {
         $outArResult[Front::CANVAS_HIDDEN_DATABASE] = ServerEnum::NORINE;
     }
 
+    /**
+     * Set result code define by counter value
+     * @param int $intCounter
+     * @param array $outArResult
+     * @return int ResultEnum
+     */
     private function returnCode($intCounter, &$outArResult) {
         switch ($intCounter) {
             case 0:
