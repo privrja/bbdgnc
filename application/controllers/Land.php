@@ -1,6 +1,6 @@
 <?php
 
-use Bbdgnc\Finder\Finder;
+use Bbdgnc\Finder\FinderFactory;
 use Bbdgnc\Finder\Enum\FindByEnum;
 use Bbdgnc\Enum\Front;
 use Bbdgnc\Finder\Enum\ResultEnum;
@@ -102,9 +102,9 @@ class Land extends CI_Controller {
         /* search options */
         $arSearchOptions = array();
         if (isset($blMatch)) {
-            $arSearchOptions[Finder::OPTION_EXACT_MATCH] = true;
+            $arSearchOptions[FinderFactory::OPTION_EXACT_MATCH] = true;
         } else {
-            $arSearchOptions[Finder::OPTION_EXACT_MATCH] = false;
+            $arSearchOptions[FinderFactory::OPTION_EXACT_MATCH] = false;
         }
 
         $intResultCode = $this->findBy($intDatabase, $intFindBy, $outArResult, $outArNextResult, $arSearchOptions);
@@ -178,8 +178,8 @@ class Land extends CI_Controller {
         if (isset($arNext) && !empty($arNext)) {
             $arResult = array_splice($arNext, 0, \Bbdgnc\Finder\IFinder::FIRST_X_RESULTS);
 
-            $finder = new Finder();
-            $finder->findByIdentifiers($intDatabase, $arResult, $outArResult);
+            $finder = FinderFactory::getFinder($intDatabase);
+            $finder->findByIdentifiers($arResult, $outArResult);
 
             $data['molecules'] = $outArResult;
             if (!empty($arNext)) {
@@ -265,33 +265,32 @@ class Land extends CI_Controller {
      * @return int result code 0 => find none, 1 => find 1, 2 => find more than 1
      */
     private function findBy($intDatabase, $intFindBy, &$outArResult = array(), &$outArNextResult = array(), $arSearchOptions = array()) {
-        $finder = new Finder();
-        $finder->setOptions($arSearchOptions);
+        $finder = FinderFactory::getFinder($intDatabase, $arSearchOptions);
         switch ($intFindBy) {
             case FindByEnum::IDENTIFIER:
                 $this->form_validation->set_rules(Front::CANVAS_INPUT_IDENTIFIER, "Identifier", "required");
                 if ($this->form_validation->run() === false) {
                     return ResultEnum::REPLY_NONE;
                 }
-                return $finder->findByIdentifier($intDatabase, $this->input->post(Front::CANVAS_INPUT_IDENTIFIER), $outArResult);
+                return $finder->findByIdentifier($this->input->post(Front::CANVAS_INPUT_IDENTIFIER), $outArResult);
             case FindByEnum::NAME:
                 $this->form_validation->set_rules(Front::CANVAS_INPUT_NAME, "Name", "required");
                 if ($this->form_validation->run() === false) {
                     return ResultEnum::REPLY_NONE;
                 }
-                return $finder->findByName($intDatabase, $this->input->post(Front::CANVAS_INPUT_NAME), $outArResult, $outArNextResult);
+                return $finder->findByName($this->input->post(Front::CANVAS_INPUT_NAME), $outArResult, $outArNextResult);
             case FindByEnum::FORMULA:
                 $this->form_validation->set_rules(Front::CANVAS_INPUT_FORMULA, "Formula", "required");
                 if ($this->form_validation->run() === false) {
                     return ResultEnum::REPLY_NONE;
                 }
-                return $finder->findByFormula($intDatabase, $this->input->post(Front::CANVAS_INPUT_FORMULA), $outArResult, $outArNextResult);
+                return $finder->findByFormula($this->input->post(Front::CANVAS_INPUT_FORMULA), $outArResult, $outArNextResult);
             case FindByEnum::SMILE:
                 $this->form_validation->set_rules(Front::CANVAS_INPUT_SMILE, "SMILES", "required");
                 if ($this->form_validation->run() === false) {
                     return ResultEnum::REPLY_NONE;
                 }
-                return $finder->findBySmile($intDatabase, $this->input->post(Front::CANVAS_INPUT_SMILE), $outArResult, $outArNextResult);
+                return $finder->findBySmile($this->input->post(Front::CANVAS_INPUT_SMILE), $outArResult, $outArNextResult);
             case FindByEnum::MASS:
                 return ResultEnum::REPLY_NONE;
         }

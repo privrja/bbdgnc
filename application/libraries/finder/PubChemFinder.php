@@ -201,7 +201,7 @@ class PubChemFinder implements IFinder {
      * @return int
      */
     public
-    function findById($strId, &$outArResult) {
+    function findByIdentifier($strId, &$outArResult) {
         $uri = PubChemFinder::REST_DEF_URI . "cid/" . $strId . PubChemFinder::REST_PROPERTY . PubChemFinder::REST_PROPERTY_VALUES . IFinder::REST_FORMAT_JSON;
         $decoded = JsonDownloader::getJsonFromUri($uri);
         if ($decoded === false) {

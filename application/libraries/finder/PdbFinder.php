@@ -66,7 +66,7 @@ class PdbFinder implements IFinder {
      * @param array $outArResult
      * @return int
      */
-    public function findById($strId, &$outArResult) {
+    public function findByIdentifier($strId, &$outArResult) {
         $strUri = self::REST_BASE_URI . self::REST_SUMMARY . $strId;
         $mixDecoded = JsonDownloader::getJsonFromUri($strUri);
         if ($mixDecoded === false) {

@@ -58,7 +58,7 @@ interface IFinder {
      * @param array $outArResult
      * @return int
      */
-    public function findById($strId, &$outArResult);
+    public function findByIdentifier($strId, &$outArResult);
 
     /**
      * Find by identifiers

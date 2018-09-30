@@ -107,7 +107,7 @@ class NorineFinder implements IFinder {
      * @param array $outArResult
      * @return int
      */
-    public function findById($strId, &$outArResult) {
+    public function findByIdentifier($strId, &$outArResult) {
         $strUri = self::REST_BASE_URI . "id/" . IFinder::REST_FORMAT_JSON . IFinder::REST_SLASH . $strId;
         $mixDecoded = JsonDownloader::getJsonFromUri($strUri);
         if ($mixDecoded === false) {
