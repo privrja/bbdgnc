@@ -7,12 +7,14 @@ abstract class ServerEnum {
     const CHEMSPIDER = 1;
     const NORINE = 2;
     const PDB = 3;
+    const CHEBI = 4;
 
     public static $values = array(
         self::PUBCHEM => "PubChem",
         self::CHEMSPIDER => "ChemSpider",
         self::NORINE => "Norine",
-        self::PDB => "PDB"
+        self::PDB => "PDB",
+        self::CHEBI => "ChEBI"
     );
 
     public static function getLink($intServerEnum, $strIdentifier) {

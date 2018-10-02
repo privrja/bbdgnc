@@ -124,7 +124,7 @@ class PubChemFinder implements IFinder {
 
     private function getMoleculesFromListKey($strUri, &$outArResult, &$outArNextResult) {
         $mixDecoded = JsonDownloader::getJsonFromUri($strUri);
-        if ($mixDecoded === false) {
+        if ($mixDecoded === false or !isset($mixDecoded)) {
             return ResultEnum::REPLY_NONE;
         }
         $intCounter = 0;
@@ -208,11 +208,11 @@ class PubChemFinder implements IFinder {
     public
     function findByIdentifier($strId, &$outArResult) {
         $uri = PubChemFinder::REST_DEF_URI . "cid/" . $strId . PubChemFinder::REST_PROPERTY . PubChemFinder::REST_PROPERTY_VALUES . IFinder::REST_FORMAT_JSON;
-        $decoded = JsonDownloader::getJsonFromUri($uri);
-        if ($decoded === false) {
+        $mixDecoded = JsonDownloader::getJsonFromUri($uri);
+        if ($mixDecoded === false or !isset($mixDecoded)) {
             return ResultEnum::REPLY_NONE;
         }
-        return $this->resultOne($decoded[PubChemFinder::REPLY_TABLE_PROPERTIES][PubChemFinder::REPLY_PROPERTIES][0], $outArResult, true);
+        return $this->resultOne($mixDecoded[PubChemFinder::REPLY_TABLE_PROPERTIES][PubChemFinder::REPLY_PROPERTIES][0], $outArResult, true);
     }
 
     /**
@@ -262,11 +262,11 @@ class PubChemFinder implements IFinder {
     private
     function getNames($strId, $strDefaultName = "") {
         $strUri = PubChemFinder::REST_DEF_URI . "cid/" . $strId . "/synonyms/" . IFinder::REST_FORMAT_JSON;
-        $decoded = JsonDownloader::getJsonFromUri($strUri);
-        if ($decoded === false) {
+        $mixDecoded = JsonDownloader::getJsonFromUri($strUri);
+        if ($mixDecoded === false or !isset($mixDecoded)) {
             return $strDefaultName;
         }
-        foreach ($decoded['InformationList']['Information'][0]['Synonym'] as $strSynonym) {
+        foreach ($mixDecoded['InformationList']['Information'][0]['Synonym'] as $strSynonym) {
             return $strSynonym;
         }
         return $strDefaultName;

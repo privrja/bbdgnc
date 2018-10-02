@@ -1,6 +1,9 @@
 /** constants HTML id */
 const CANVAS_ID = "canvas-main";
 const TXT_SMILE_ID = "txt-canvas-smile";
+const HIDDEN_SMILE_ID = "hidden-canvas-small-";
+const CANVAS_SMALL_ID = "canvas-small-";
+const CANVAS_LARGE_ID = "canvas-large";
 
 /** constants mode */
 const MODE_LIGHT = "light";
@@ -13,9 +16,13 @@ const COLOR_BLACK = "black";
 /** Initialize the drawer */
 
 let smilesDrawer = getSmilesDrawer();
+let smallSmilesDrawer = getSmallSmilesDrawer();
+let largeSmilesDrawer = getLargeSmilesDrawer();
 
 /** Resize event */
-window.addEventListener('resize', function(){
+window.addEventListener('resize', resize);
+
+function resize() {
     let canvas = document.getElementById(CANVAS_ID);
     canvas.style.width = "100%";
     canvas.style.height = "100%";
@@ -23,7 +30,19 @@ window.addEventListener('resize', function(){
     context.clearRect(0, 0, canvas.width, canvas.height);
     smilesDrawer = getSmilesDrawer();
     drawSmile();
-});
+}
+
+window.onload = function () {
+    var smallCanvases = document.querySelectorAll('[data-canvas-small-id]');
+    for (let i = 0; i < smallCanvases.length; i++) {
+        let elem = smallCanvases[i];
+        drawSmallSmile(elem.getAttribute("data-canvas-small-id"));
+        if (i === 0) {
+            document.location.href = "#h-results";
+        }
+    }
+    resize();
+}
 
 /** default screen mode (dark/light) def = light */
 let DEFAULT_SCREEN_MODE = MODE_LIGHT;
@@ -32,7 +51,15 @@ let DEFAULT_SCREEN_MODE = MODE_LIGHT;
  * Get SMILES Drawer instance with dimension of canvas
  */
 function getSmilesDrawer() {
-    return new SmilesDrawer.Drawer({width: getCanvasWidth(), height: getCanvasHeight()});
+    return new SmilesDrawer.Drawer({width: getCanvasWidth(), height: getCanvasHeight(), padding: 5});
+}
+
+function getSmallSmilesDrawer() {
+    return new SmilesDrawer.Drawer({width: 300, height: 300});
+}
+
+function getLargeSmilesDrawer() {
+    return new SmilesDrawer.Drawer({width: 1000, height: 1000});
 }
 
 /**
@@ -137,7 +164,7 @@ function lightMode() {
 
 function drawSmile() {
     // Clean the input (remove unrecognized characters, such as spaces and tabs) and parse it
-    SmilesDrawer.parse(document.getElementById(TXT_SMILE_ID).value, function(tree) {
+    SmilesDrawer.parse(document.getElementById(TXT_SMILE_ID).value, function (tree) {
         // Draw to the canvas
         activateScreenMode();
         smilesDrawer.draw(tree, CANVAS_ID, DEFAULT_SCREEN_MODE, false);
@@ -157,6 +184,40 @@ function drawSmile() {
         // smilesDrawer.canvasWrapper.scale(smilesDrawer.graph.vertices);
         // drawLine2(smilesDrawer.canvasWrapper, line);
         // smilesDrawer.reset();
+    });
+}
+
+function drawSmallSmile(canvasId) {
+    drawSmall(canvasId);
+}
+
+function clearLargeCanvas() {
+    console.log("clear");
+    let canvas = document.getElementById(CANVAS_LARGE_ID);
+    canvas.style.display = "none";
+}
+
+function drawLargeSmile(canvasId) {
+    let canvas = document.getElementById(CANVAS_LARGE_ID);
+    canvas.style.display = "block";
+    drawLarge(canvasId);
+}
+
+function drawSmall(canvasId) {
+    SmilesDrawer.parse(document.getElementById(HIDDEN_SMILE_ID + canvasId).value, function (tree) {
+        activateScreenMode();
+        smallSmilesDrawer.draw(tree, CANVAS_SMALL_ID + canvasId, DEFAULT_SCREEN_MODE, false);
+    });
+}
+
+function drawLarge(canvasId) {
+    console.log("large");
+    let canvas = document.getElementById(CANVAS_LARGE_ID);
+    let context = canvas.getContext("2d");
+    context.clearRect(0, 0, canvas.width, canvas.height);
+    SmilesDrawer.parse(document.getElementById(HIDDEN_SMILE_ID + canvasId).value, function (tree) {
+        activateScreenMode();
+        largeSmilesDrawer.draw(tree, CANVAS_LARGE_ID, DEFAULT_SCREEN_MODE, false);
     });
 }
 

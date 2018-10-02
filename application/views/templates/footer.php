@@ -15,9 +15,9 @@
             <li class="footer">
                 <a class="a-black" href="https://pubchem.ncbi.nlm.nih.gov">PubChem</a>
             </li>
-            <li class="footer">
-                <a class="a-black" href="http://bioinfo.lifl.fr/norine" title="Norine, the knowledgebase dedicated to non-ribosomal peptides, is now open to crowdsourcing">Norine</a>
-            </li>
+<!--            <li class="footer">-->
+<!--                <a class="a-black" href="http://bioinfo.lifl.fr/norine" title="Norine, the knowledgebase dedicated to non-ribosomal peptides, is now open to crowdsourcing">Norine</a>-->
+<!--            </li>-->
         </ul>
         <ul class="footer footer-right">
             <li class="footer">

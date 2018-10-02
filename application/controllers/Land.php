@@ -53,8 +53,9 @@ class Land extends CI_Controller {
 
     private function renderSelect($viewSelectData, $viewData) {
         $this->load->view('templates/header');
-        $this->load->view('pages/select', $viewSelectData);
+        $this->load->view('pages/canvas');
         $this->load->view('pages/main', $viewData);
+        $this->load->view('pages/select', $viewSelectData);
         $this->load->view('templates/footer');
     }
 

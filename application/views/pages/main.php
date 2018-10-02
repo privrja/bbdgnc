@@ -14,8 +14,9 @@ use Bbdgnc\Enum\Front;
     <select id="sel-canvas-database" name="<?= Front::CANVAS_INPUT_DATABASE ?>" class="select" title="Search">
         <option value=<?= ServerEnum::PUBCHEM ?>>PubChem</option>
         <option value=<?= ServerEnum::CHEMSPIDER ?>>ChemSpider</option>
-        <option value=<?= ServerEnum::NORINE ?>>Norine</option>
-        <option value=<?= ServerEnum::PDB ?>>PDB</option>
+<!--        <option value=--><?//= ServerEnum::NORINE ?><!-->Norine</option>-->
+<!--        <option value=--><?//= ServerEnum::PDB ?><!-->PDB</option>-->
+        <option value="<?= ServerEnum::CHEBI ?>">ChEBI</option>
     </select>
 
     <label for="sel-canvas-search">Search by</label>
@@ -59,7 +60,7 @@ use Bbdgnc\Enum\Front;
     <button type="button" id="btn-canvas-load" class="btn-same" name="load">Load</button>
     <button type="button" id="button-canvas-easy-smile" class="btn-same" onclick="easy()">Canonical SMILES</button>
     <button type="button" id="btn-canvas-disintegrate" class="btn-same">Building Blocks</button>
-    <button type="button" id="btn-canvas-update" class="btn-same" onclick="drawSmile()">Update</button>
+    <button type="button" id="btn-canvas-update" class="btn-same" onclick="resize()">Update</button>
     <input type="submit" class="btn-same" value="Save"/>
 
     </form>
