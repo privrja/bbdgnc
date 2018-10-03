@@ -66,6 +66,7 @@ use Bbdgnc\Enum\Front;
     </form>
 
     <?= validation_errors(); ?>
+    <?php if (isset($errors)) echo $errors; ?>
 
 </div>
 

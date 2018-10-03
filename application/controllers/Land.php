@@ -15,6 +15,10 @@ class Land extends CI_Controller {
     /** @var int expire time of cookie 1 hour */
     const COOKIE_EXPIRE_HOUR = 3600;
 
+    const ERRORS = "errors";
+
+    private $errors = "";
+
     /**
      * Get Default data for view
      * @return array
@@ -24,7 +28,7 @@ class Land extends CI_Controller {
             Front::CANVAS_INPUT_NAME => "", Front::CANVAS_INPUT_SMILE => "",
             Front::CANVAS_INPUT_FORMULA => "", Front::CANVAS_INPUT_MASS => "",
             Front::CANVAS_INPUT_DEFLECTION => "", Front::CANVAS_INPUT_IDENTIFIER => "",
-            Front::CANVAS_HIDDEN_DATABASE => ""
+            Front::CANVAS_HIDDEN_DATABASE => "", self::ERRORS => ""
         );
     }
 
@@ -108,10 +112,18 @@ class Land extends CI_Controller {
             $arSearchOptions[FinderFactory::OPTION_EXACT_MATCH] = false;
         }
 
-        $intResultCode = $this->findBy($intDatabase, $intFindBy, $outArResult, $outArNextResult, $arSearchOptions);
+        try {
+            $intResultCode = $this->findBy($intDatabase, $intFindBy, $outArResult, $outArNextResult, $arSearchOptions);
+        } catch (Exception $ex) {
+            $this->errors = $ex->getMessage();
+            $this->index($this->getLastData());
+            return;
+        }
+
         switch ($intResultCode) {
             case ResultEnum::REPLY_NONE:
                 $this->input->set_cookie(self::COOKIE_NEXT_RESULTS, "", 0);
+                $this->errors = "Not Found";
                 $this->index($this->getLastData());
                 break;
             case ResultEnum::REPLY_OK_ONE:
@@ -254,6 +266,7 @@ class Land extends CI_Controller {
         $arViewData[Front::CANVAS_INPUT_MASS] = $this->input->post(Front::CANVAS_INPUT_MASS);
         $arViewData[Front::CANVAS_INPUT_DEFLECTION] = $this->input->post(Front::CANVAS_INPUT_DEFLECTION);
         $arViewData[Front::CANVAS_INPUT_IDENTIFIER] = $this->input->post(Front::CANVAS_INPUT_IDENTIFIER);
+        $arViewData[self::ERRORS] = $this->errors;
         return $arViewData;
     }
 

@@ -51,7 +51,7 @@ let DEFAULT_SCREEN_MODE = MODE_LIGHT;
  * Get SMILES Drawer instance with dimension of canvas
  */
 function getSmilesDrawer() {
-    return new SmilesDrawer.Drawer({width: getCanvasWidth(), height: getCanvasHeight(), padding: 5});
+    return new SmilesDrawer.Drawer({width: getCanvasWidth(), height: getCanvasHeight(), padding: 10});
 }
 
 function getSmallSmilesDrawer() {
