@@ -42,7 +42,7 @@ window.onload = function () {
         }
     }
     resize();
-}
+};
 
 /** default screen mode (dark/light) def = light */
 let DEFAULT_SCREEN_MODE = MODE_LIGHT;
