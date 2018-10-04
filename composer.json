@@ -22,11 +22,7 @@
 			"Bbdgnc\\Smiles\\" : "application/libraries/smiles"
 		}
 	},
-	"suggest": {
-		"paragonie/random_compat": "Provides better randomness in PHP 5.x"
-	},
 	"require-dev": {
-		"mikey179/vfsStream": "1.1.*",
 		"phpunit/phpunit": "4.* || 5.*"
 	}
 }
