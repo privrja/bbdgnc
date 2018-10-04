@@ -13,11 +13,16 @@
 	"require": {
 		"php": ">=5.3.7"
 	},
-	"suggest": {
-		"paragonie/random_compat": "Provides better randomness in PHP 5.x"
+	"autoload": {
+		"psr-4": {
+			"Bbdgnc\\Finder\\" : "application/libraries/finder",
+			"Bbdgnc\\Finder\\Enum\\" : "application/libraries/finder/enums",
+			"Bbdgnc\\Finder\\Exception\\" : "application/libraries/finder/exceptions",
+			"Bbdgnc\\Enum\\" : "application/libraries/enums",
+			"Bbdgnc\\Smiles\\" : "application/libraries/smiles"
+		}
 	},
 	"require-dev": {
-		"mikey179/vfsStream": "1.1.*",
 		"phpunit/phpunit": "4.* || 5.*"
 	}
 }
