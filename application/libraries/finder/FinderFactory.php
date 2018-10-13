@@ -24,12 +24,10 @@ abstract class FinderFactory {
         switch ($intDatabase) {
             case ServerEnum::PUBCHEM:
                 return new PubChemFinder(self::isOptionSet(self::OPTION_EXACT_MATCH, $arOptions));
-            /* TODO */
+            /* TODO ChemSpider */
 //            case ServerEnum::CHEMSPIDER:
-            case ServerEnum::NORINE:
-                return new NorineFinder();
-            case ServerEnum::PDB:
-                return new PdbFinder();
+            case ServerEnum::CHEBI:
+                return new ChebiFinder();
         }
     }
 

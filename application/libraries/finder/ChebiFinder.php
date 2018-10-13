@@ -3,18 +3,12 @@
 namespace Bbdgnc\Finder;
 
 use Bbdgnc\Enum\Front;
-use Bbdgnc\Finder\Enum\ResultEnum;
-use Bbdgnc\Finder\Enum\ServerEnum;
 
-class PdbFinder implements IFinder {
+class ChebiFinder implements IFinder {
 
-    const REST_BASE_URI = "http://www.ebi.ac.uk/pdbe/api/pdb/compound/";
-    const REST_SUMMARY = "summary/";
+    const WSDL = 'https://www.ebi.ac.uk/webservices/chebi/2.0/webservice?wsdl';
+    const NAME_SPACE = 'https://www.ebi.ac.uk/webservices/chebi';
 
-    const REPLY_NAME = "name";
-    const REPLY_WEIGHT = "weight";
-    const REPLY_FORMULA = "formula";
-    const REPLY_SMILES = "smiles";
 
     /**
      * Find data on some server by name
@@ -65,17 +59,18 @@ class PdbFinder implements IFinder {
      * @param string $strId
      * @param array $outArResult
      * @return int
-     * @throws \Exception
      */
     public function findByIdentifier($strId, &$outArResult) {
-        $strUri = self::REST_BASE_URI . self::REST_SUMMARY . $strId;
-        $mixDecoded = JsonDownloader::getJsonFromUri($strUri);
-        if ($mixDecoded === false) {
-            return ResultEnum::REPLY_NONE;
+        $client = new \SoapClient(self::WSDL, array('exceptions' => true));
+        $arInput['chebiId'] = $strId;
+        $response = $client->GetCompleteEntity($arInput);
+        foreach ($response as $value) {
+            $outArResult[Front::CANVAS_INPUT_NAME] = $value->chebiAsciiName;
+            $outArResult[Front::CANVAS_INPUT_SMILE] = $value->smiles;
+            $outArResult[Front::CANVAS_INPUT_MASS] = $value->monoisotopicMass;
+            $this->getFormulaFromFormulae($value->Formulae, $outArResult);
         }
-
-        $outArResult[Front::CANVAS_INPUT_IDENTIFIER] = $strId;
-        return $this->resultOne($mixDecoded[$strId][0], $outArResult);
+        echo var_dump($outArResult);
     }
 
     /**
@@ -88,27 +83,12 @@ class PdbFinder implements IFinder {
         // TODO: Implement findByIdentifiers() method.
     }
 
-    /**
-     * Setup all values to result array, only when one result
-     * @param array $arItems
-     * @param array $outArResult
-     * @return int ResultEnum
-     */
-    private function resultOne($arItems, &$outArResult) {
-        $this->setDataFromReplyToResult($arItems, $outArResult);
-        return ResultEnum::REPLY_OK_ONE;
+    private function getFormulaFromFormulae($formulae, &$outArResult) {
+        foreach ($formulae as $key => $value) {
+            if ($key == "data") {
+                $outArResult[Front::CANVAS_INPUT_FORMULA] = $value;
+            }
+        }
     }
 
-    /**
-     * Set values to result array
-     * @param array $arPeptide
-     * @param array $outArResult
-     */
-    private function setDataFromReplyToResult($arPeptide, &$outArResult) {
-        $outArResult[Front::CANVAS_INPUT_NAME] = @$arPeptide[self::REPLY_NAME];
-        $outArResult[Front::CANVAS_INPUT_FORMULA] = Front::urlText(@$arPeptide[self::REPLY_FORMULA]);
-        $outArResult[Front::CANVAS_INPUT_MASS] = @$arPeptide[self::REPLY_WEIGHT];
-        $outArResult[Front::CANVAS_INPUT_SMILE] = @$arPeptide[self::REPLY_SMILES][0][self::REPLY_NAME];
-        $outArResult[Front::CANVAS_HIDDEN_DATABASE] = ServerEnum::PDB;
-    }
 }
