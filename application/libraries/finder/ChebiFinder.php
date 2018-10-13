@@ -3,6 +3,8 @@
 namespace Bbdgnc\Finder;
 
 use Bbdgnc\Enum\Front;
+use Bbdgnc\Finder\Enum\ResultEnum;
+use Bbdgnc\Finder\Enum\ServerEnum;
 
 class ChebiFinder implements IFinder {
 
@@ -63,14 +65,20 @@ class ChebiFinder implements IFinder {
     public function findByIdentifier($strId, &$outArResult) {
         $client = new \SoapClient(self::WSDL, array('exceptions' => true));
         $arInput['chebiId'] = $strId;
-        $response = $client->GetCompleteEntity($arInput);
-        foreach ($response as $value) {
-            $outArResult[Front::CANVAS_INPUT_NAME] = $value->chebiAsciiName;
-            $outArResult[Front::CANVAS_INPUT_SMILE] = $value->smiles;
-            $outArResult[Front::CANVAS_INPUT_MASS] = $value->monoisotopicMass;
-            $this->getFormulaFromFormulae($value->Formulae, $outArResult);
+        $outArResult[Front::CANVAS_INPUT_IDENTIFIER] = $strId;
+        $outArResult[Front::CANVAS_HIDDEN_DATABASE] = ServerEnum::CHEBI;
+        try {
+            $response = $client->GetCompleteEntity($arInput);
+            foreach ($response as $value) {
+                $outArResult[Front::CANVAS_INPUT_NAME] = $value->chebiAsciiName;
+                $outArResult[Front::CANVAS_INPUT_SMILE] = $value->smiles;
+                $outArResult[Front::CANVAS_INPUT_MASS] = $value->monoisotopicMass;
+                $this->getFormulaFromFormulae($value->Formulae, $outArResult);
+            }
+        } catch (\Exception $ex) {
+            return ResultEnum::REPLY_NONE;
         }
-        echo var_dump($outArResult);
+        return ResultEnum::REPLY_OK_ONE;
     }
 
     /**

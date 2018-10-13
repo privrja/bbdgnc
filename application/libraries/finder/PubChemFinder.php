@@ -64,6 +64,7 @@ class PubChemFinder implements IFinder {
      * @param string $strName find by this name
      * @param array $outArResult output param result, only first X results
      * @return int result code
+     * @throws \Exception
      */
     public function findByName($strName, &$outArResult, &$outArNextResult) {
         $strBaseUri = PubChemFinder::REST_DEF_URI . "name/" . Front::urlText($strName) .
@@ -91,6 +92,7 @@ class PubChemFinder implements IFinder {
      * Find data by SMILES
      * @param string $strSmile
      * @return mixed
+     * @throws \Exception
      */
     public function findBySmile($strSmile, &$outArResult, &$outArNextResult) {
         $strBaseUri = self::REST_DEF_URI . "smiles/" . $strSmile . self::REST_CIDS . IFinder::REST_FORMAT_JSON . IFinder::REST_QUESTION_MARK;
@@ -116,12 +118,20 @@ class PubChemFinder implements IFinder {
      * @param array $outArResult output param result, only first X results
      * @param array $outArNextResult next results as array of identifiers
      * @return int ResultEnum
+     * @throws \Exception
      */
     public function findByFormula($strFormula, &$outArResult, &$outArNextResult) {
         $uri = PubChemFinder::REST_DEF_URI . "fastformula/" . $strFormula . PubChemFinder::REST_CIDS . IFinder::REST_FORMAT_JSON;
         return $this->getMoleculesFromListKey($uri, $outArResult, $outArNextResult);
     }
 
+    /**
+     * @param $strUri
+     * @param $outArResult
+     * @param $outArNextResult
+     * @return int
+     * @throws \Exception
+     */
     private function getMoleculesFromListKey($strUri, &$outArResult, &$outArNextResult) {
         $mixDecoded = JsonDownloader::getJsonFromUri($strUri);
         if ($mixDecoded === false or !isset($mixDecoded)) {
@@ -154,6 +164,7 @@ class PubChemFinder implements IFinder {
      * @param array $arIds beware of too long for HTTTP GET request
      * @param array $outArResult output param info about molecules
      * @return int ResultEnum
+     * @throws \Exception
      */
     public function findByIdentifiers($arIds, &$outArResult) {
         $strIds = $this->getStringIdsFromArray($arIds);
@@ -204,6 +215,7 @@ class PubChemFinder implements IFinder {
      * @param string $strId
      * @param array $outArResult
      * @return int
+     * @throws \Exception
      */
     public
     function findByIdentifier($strId, &$outArResult) {
@@ -258,6 +270,7 @@ class PubChemFinder implements IFinder {
      * @param string $strId identifier
      * @param string $strDefaultName default name if name not found on PubChem
      * @return string name from PubChem or default name
+     * @throws \Exception
      */
     private
     function getNames($strId, $strDefaultName = "") {
