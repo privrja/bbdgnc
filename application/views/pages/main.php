@@ -57,10 +57,10 @@ use Bbdgnc\Enum\Front;
     <input type="hidden" name="<?= Front::CANVAS_HIDDEN_DATABASE ?>" value="<?= $hdDatabase ?>"/>
 
     <input type="submit" id="btn-canvas-find" class="btn-same" name="find" value="Find"/>
-    <button type="button" id="btn-canvas-load" class="btn-same" name="load">Load</button>
+    <button type="button" id="btn-canvas-update" class="btn-same" onclick="resize()">Update</button>
     <button type="button" id="button-canvas-easy-smile" class="btn-same" onclick="easy()">Canonical SMILES</button>
     <button type="button" id="btn-canvas-disintegrate" class="btn-same">Building Blocks</button>
-    <button type="button" id="btn-canvas-update" class="btn-same" onclick="resize()">Update</button>
+    <button type="button" id="btn-canvas-load" class="btn-same" name="load">Load</button>
     <input type="submit" class="btn-same" value="Save"/>
 
     </form>
