@@ -232,6 +232,7 @@ class PubChemFinder implements IFinder {
      * @param string $strId identifier
      * @param string $outStrName output param find name
      * @return int ResultEnum
+     * @throws \Exception
      */
     public
     function findName($strId, &$outStrName) {
@@ -291,6 +292,7 @@ class PubChemFinder implements IFinder {
      * @param array $outArResult output param array used in view
      * @param bool $blFindName true => find name on PubChem (new request to REST API), false => don't find name
      * @return int ResultEnum
+     * @throws \Exception
      */
     private
     function resultOne($objItem, &$outArResult, $blFindName = IFinder::FIND_NAMES) {

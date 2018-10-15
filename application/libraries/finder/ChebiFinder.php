@@ -9,7 +9,7 @@ use Bbdgnc\Finder\Enum\ServerEnum;
 class ChebiFinder implements IFinder {
 
     const WSDL = 'https://www.ebi.ac.uk/webservices/chebi/2.0/webservice?wsdl';
-    const NAME_SPACE = 'https://www.ebi.ac.uk/webservices/chebi';
+//    const NAME_SPACE = 'https://www.ebi.ac.uk/webservices/chebi';
 
 
     /**
@@ -91,6 +91,10 @@ class ChebiFinder implements IFinder {
         // TODO: Implement findByIdentifiers() method.
     }
 
+    /**
+     * @param $formulae object holds formula and source
+     * @param array $outArResult output param for results
+     */
     private function getFormulaFromFormulae($formulae, &$outArResult) {
         foreach ($formulae as $key => $value) {
             if ($key == "data") {

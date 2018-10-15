@@ -8,9 +8,11 @@ use Bbdgnc\Finder\Enum\ServerEnum;
 
 class PdbFinder implements IFinder {
 
+    /** @var string base uri for pdb REST API */
     const REST_BASE_URI = "http://www.ebi.ac.uk/pdbe/api/pdb/compound/";
     const REST_SUMMARY = "summary/";
 
+    /** @var string json attributes in reply */
     const REPLY_NAME = "name";
     const REPLY_WEIGHT = "weight";
     const REPLY_FORMULA = "formula";

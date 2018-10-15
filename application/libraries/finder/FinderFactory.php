@@ -8,6 +8,11 @@ abstract class FinderFactory {
 
     const OPTION_EXACT_MATCH = 'exact';
 
+    /**
+     * @param string $strOption
+     * @param array $arOptions
+     * @return string|null
+     */
     private static function isOptionSet($strOption, $arOptions) {
         if (isset($arOptions[$strOption])) {
             return $arOptions[$strOption];
