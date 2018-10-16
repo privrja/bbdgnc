@@ -12,11 +12,8 @@ class ChebiFinder implements IFinder {
     /** @var string URI for wsdl file */
     const WSDL = 'https://www.ebi.ac.uk/webservices/chebi/2.0/webservice?wsdl';
 
-    /** @var int max results in one query */
-    const MAX_RESULTS = 50;
-
-    /** @var string search category option */
-    const CATEGORY_ALL = "ALL";
+    /** @var int max results in one query max 5000 */
+    const MAX_RESULTS = 200;
 
     /** @var int CHEBI:12151 length of CHEBI: */
     const IDENTIFIER_PREFIX_SIZE = 6;
@@ -32,10 +29,20 @@ class ChebiFinder implements IFinder {
     const SOAP_TOTAL_RESULTS = "totalResults";
     const SOAP_TANIMOTO_CUTOFF = "tanimotoCutoff";
 
+    /** @var int max value of GetCompleteEntity */
     const TOTAL_RESULTS_VALUE = 50;
+
+    /** @var float similarity cut off between 0 and 1 */
     const TANIMOTO_CUTOFF_VALUE = 0.25;
+
+    /** @var string type of structure search SIMILARITY|IDENTITY|SUBSTRUCTURE */
     const STRUCTURE_SEARCH_CATEGORY_VALUE = "SIMILARITY";
+
+    /** @var string type of search mol|smiles|spieces */
     const TYPE_VALUE = "SMILES";
+
+    /** @var string star option */
+    const STARS_ALL = "ALL";
 
     /** @var array default options for query */
     private $options = array('exceptions' => true);
@@ -172,7 +179,7 @@ class ChebiFinder implements IFinder {
                     $intCounter++;
                 }
                 if ($intCounter >= IFinder::FIRST_X_RESULTS) {
-                    $outArNextResult = array_splice($arIds, IFinder::FIRST_X_RESULTS + 1);
+                    $outArNextResult = array_splice($arIds, IFinder::FIRST_X_RESULTS);
                 } else {
                     $outArNextResult = array();
                 }
@@ -196,7 +203,7 @@ class ChebiFinder implements IFinder {
         $outArInput[self::SOAP_SEARCH] = $strSearchParam;
         $outArInput[self::SOAP_SEARCH_CATEGORY] = $strSearchCategory;
         $outArInput[self::SOAP_MAX_RESULTS] = self::MAX_RESULTS;
-        $outArInput[self::SOAP_STARS] = self::CATEGORY_ALL;
+        $outArInput[self::SOAP_STARS] = self::STARS_ALL;
     }
 
     /**
