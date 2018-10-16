@@ -14,6 +14,18 @@ class ChebiFinder implements IFinder {
     /** @var int max results in one query */
     const MAX_RESULTS = 200;
 
+    /** @var string search category option */
+    const CATEGORY_ALL = "ALL";
+
+    /** @var int CHEBI:12151 length of CHEBI: */
+    const IDENTIFIER_PREFIX_SIZE = 6;
+
+    /** @var string input keys for SOAP */
+    const SOAP_SEARCH = "search";
+    const SOAP_SEARCH_CATEGORY = "searchCategory";
+    const SOAP_MAX_RESULTS = "maximumResults";
+    const SOAP_STARS = "stars";
+
     /** @var array default options for query */
     private $options = array('exceptions' => true);
 
@@ -26,10 +38,7 @@ class ChebiFinder implements IFinder {
      */
     public function findByName($strName, &$outArResult, &$outArNextResult) {
         $client = new \SoapClient(self::WSDL, $this->options);
-        $arInput['search'] = $strName;
-        $arInput['searchCategory'] = "ALL";
-        $arInput['maximumResults'] = self::MAX_RESULTS;
-        $arInput['stars'] = "ALL";
+        $this->setInput($strName, $arInput);
         // TODO next results
         try {
             $arIds = array();
@@ -126,27 +135,77 @@ class ChebiFinder implements IFinder {
         return ResultEnum::REPLY_OK_MORE;
     }
 
+    /**
+     * Set up input for SOAP
+     * @param string $strName
+     * @param array $arInput
+     */
+    private function setInput($strName, &$arInput) {
+        $arInput[self::SOAP_SEARCH] = $strName;
+        $arInput[self::SOAP_SEARCH_CATEGORY] = self::CATEGORY_ALL;
+        $arInput[self::SOAP_MAX_RESULTS] = self::MAX_RESULTS;
+        $arInput[self::SOAP_STARS] = self::CATEGORY_ALL;
+    }
+
+    /**
+     * Setup data from result to right structure
+     * @param array $arData
+     * @param array $outArMolecule output param
+     */
     private function getDataFromResult($arData, &$outArMolecule) {
-        $outArMolecule[Front::CANVAS_INPUT_IDENTIFIER] = substr($arData->chebiId, 6);
+        $outArMolecule[Front::CANVAS_INPUT_IDENTIFIER] = substr($arData->chebiId, self::IDENTIFIER_PREFIX_SIZE);
+        $this->getName($arData, $outArMolecule);
+        $this->getSmiles($arData, $outArMolecule);
+        $this->getMass($arData, $outArMolecule);
+        $this->getFormula($arData, $outArMolecule);
+        $outArMolecule[Front::CANVAS_HIDDEN_DATABASE] = ServerEnum::CHEBI;
+    }
+
+    /**
+     * Get name from result and set it to right structure
+     * @param array $arData
+     * @param array $outArMolecule
+     */
+    private function getName($arData, &$outArMolecule) {
         if (isset($arData->chebiAsciiName)) {
             $outArMolecule[Front::CANVAS_INPUT_NAME] = $arData->chebiAsciiName;
         } else {
             $outArMolecule[Front::CANVAS_INPUT_NAME] = "";
         }
+    }
 
+    /**
+     * Get SMILES from result and set it to right structure
+     * @param array $arData
+     * @param array $outArMolecule
+     */
+    private function getSmiles($arData, &$outArMolecule) {
         if (isset($arData->smiles)) {
             $outArMolecule[Front::CANVAS_INPUT_SMILE] = $arData->smiles;
         } else {
             $outArMolecule[Front::CANVAS_INPUT_SMILE] = "";
         }
+    }
 
+    /**
+     * Get monoisotopic mass from result and set it to right structure
+     * @param array $arData
+     * @param array $outArMolecule
+     */
+    private function getMass($arData, &$outArMolecule) {
         if (isset($arData->monoisotopicMass)) {
             $outArMolecule[Front::CANVAS_INPUT_MASS] = $arData->monoisotopicMass;
         } else {
             $outArMolecule[Front::CANVAS_INPUT_MASS] = "";
         }
-        $outArMolecule[Front::CANVAS_HIDDEN_DATABASE] = ServerEnum::CHEBI;
+    }
 
+    /**
+     * Get formula from result and set it to right structure
+     * @param array $arData
+     * @param array $outArMolecule
+     */
+    private function getFormula($arData, &$outArMolecule) {
         if (isset($arData->Formulae)) {
             $this->getFormulaFromFormulae($arData->Formulae, $outArMolecule);
         } else {
