@@ -203,10 +203,12 @@ class PubChemFinder implements IFinder {
      * Find data by Monoisotopic Mass
      * @param $decMass
      * @param $decTolerance
+     * @param $outArResult
+     * @param $outArNextResult
      * @return mixed
      */
     public
-    function findByMass($decMass, $decTolerance, &$outArResult) {
+    function findByMass($decMass, $decTolerance, &$outArResult, &$outArNextResult) {
         // TODO: Implement findByMass() method.
     }
 

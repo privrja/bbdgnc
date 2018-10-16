@@ -56,9 +56,10 @@ class PdbFinder implements IFinder {
      * @param $decMass
      * @param $decTolerance
      * @param array $outArResult
-     * @return int
+     * @param $outArNextResult
+     * @return void
      */
-    public function findByMass($decMass, $decTolerance, &$outArResult) {
+    public function findByMass($decMass, $decTolerance, &$outArResult, &$outArNextResult) {
         // TODO: Implement findByMass() method.
     }
 

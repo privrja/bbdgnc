@@ -61,12 +61,17 @@ class ChebiFinder implements IFinder {
     public function findBySmile($strSmile, &$outArResult, &$outArNextResult) {
         $client = new \SoapClient(self::WSDL, $this->options);
         $this->setInputWithSmiles($strSmile, $arInput);
-        // TODO next results
         try {
-            $arIds = array();
+            $intCounter = 0;
             $response = $client->GetStructureSearch($arInput);
             foreach ($response->return->ListElement as $ar) {
                 $arIds[] = $ar->chebiId;
+                $intCounter++;
+            }
+            if ($intCounter >= IFinder::FIRST_X_RESULTS) {
+                $outArNextResult = array_splice($arIds, IFinder::FIRST_X_RESULTS + 1);
+            } else {
+                $outArNextResult = array();
             }
             $this->findByIdentifiers($arIds, $outArResult);
         } catch (\Exception $ex) {
@@ -86,35 +91,16 @@ class ChebiFinder implements IFinder {
         return $this->getLiteEntity($strFormula, ChebiSearchCategoryEnum::FORMULA, $outArResult, $outArNextResult);
     }
 
-    private function getLiteEntity($strSearchParam, $strSearchCategory, &$outArResult, &$outArNextResult) {
-        $client = new \SoapClient(self::WSDL, $this->options);
-        $this->setInput($strSearchParam, $strSearchCategory, $arInput);
-        // TODO next results
-        try {
-            $response = $client->GetLiteEntity($arInput);
-            if (is_array($response->return->ListElement)) {
-                foreach ($response->return->ListElement as $ar) {
-                    $arIds[] = $ar->chebiId;
-                }
-            } else {
-                return $this->findByIdentifier(substr($response->return->ListElement->chebiId, self::IDENTIFIER_PREFIX_SIZE), $outArResult, $outArNextResult);
-            }
-            $this->findByIdentifiers($arIds, $outArResult);
-        } catch (\Exception $ex) {
-            return ResultEnum::REPLY_NONE;
-        }
-        return ResultEnum::REPLY_OK_MORE;
-    }
-
     /**
      * Find data by Monoisotopic Mass
      * @param $decMass
      * @param $decTolerance
      * @param array $outArResult
+     * @param $outArNextResult
      * @return int
      */
-    public function findByMass($decMass, $decTolerance, &$outArResult) {
-        // TODO: Implement findByMass() method.
+    public function findByMass($decMass, $decTolerance, &$outArResult, &$outArNextResult) {
+        return $this->getLiteEntity($decMass, ChebiSearchCategoryEnum::MONOISOTOPIC_MASS, $outArResult, $outArNextResult);
     }
 
     /**
@@ -160,6 +146,40 @@ class ChebiFinder implements IFinder {
                 $outArResult[$intCounter] = $arMolecule;
                 $intCounter++;
             }
+        } catch (\Exception $ex) {
+            return ResultEnum::REPLY_NONE;
+        }
+        return ResultEnum::REPLY_OK_MORE;
+    }
+
+    /**
+     * Find using GetLiteEntity from SOAP
+     * @param string $strSearchParam which to find (name, formula) ex.: "Cyclosporin" or "CH4"
+     * @param string $strSearchCategory ChebiSearchCategoryEnum which to find category
+     * @param array $outArResult
+     * @param array $outArNextResult
+     * @return int
+     */
+    private function getLiteEntity($strSearchParam, $strSearchCategory, &$outArResult, &$outArNextResult) {
+        $client = new \SoapClient(self::WSDL, $this->options);
+        $this->setInput($strSearchParam, $strSearchCategory, $arInput);
+        try {
+            $intCounter = 0;
+            $response = $client->GetLiteEntity($arInput);
+            if (is_array($response->return->ListElement)) {
+                foreach ($response->return->ListElement as $ar) {
+                    $arIds[] = $ar->chebiId;
+                    $intCounter++;
+                }
+                if ($intCounter >= IFinder::FIRST_X_RESULTS) {
+                    $outArNextResult = array_splice($arIds, IFinder::FIRST_X_RESULTS + 1);
+                } else {
+                    $outArNextResult = array();
+                }
+            } else {
+                return $this->findByIdentifier(substr($response->return->ListElement->chebiId, self::IDENTIFIER_PREFIX_SIZE), $outArResult, $outArNextResult);
+            }
+            $this->findByIdentifiers($arIds, $outArResult);
         } catch (\Exception $ex) {
             return ResultEnum::REPLY_NONE;
         }

@@ -306,6 +306,7 @@ class Land extends CI_Controller {
                 }
                 return $finder->findBySmile($this->input->post(Front::CANVAS_INPUT_SMILE), $outArResult, $outArNextResult);
             case FindByEnum::MASS:
+                return $finder->findByMass($this->input->post(Front::CANVAS_INPUT_MASS), $this->input->post(Front::CANVAS_INPUT_DEFLECTION),$outArResult, $outArNextResult);
                 return ResultEnum::REPLY_NONE;
         }
     }
