@@ -25,6 +25,16 @@ class ChebiFinder implements IFinder {
     const SOAP_SEARCH_CATEGORY = "searchCategory";
     const SOAP_MAX_RESULTS = "maximumResults";
     const SOAP_STARS = "stars";
+    const SOAP_STRUCTURE = "structure";
+    const SOAP_TYPE = "type";
+    const SOAP_STRUCTURE_SEARCH_CATEGORY = "structureSearchCategory";
+    const SOAP_TOTAL_RESULTS = "totalResults";
+    const SOAP_TANIMOTO_CUTOFF = "tanimotoCutoff";
+
+    const TOTAL_RESULTS_VALUE = 50;
+    const TANIMOTO_CUTOFF_VALUE = 0.25;
+    const STRUCTURE_SEARCH_CATEGORY_VALUE = "SIMILARITY";
+    const TYPE_VALUE = "SMILES";
 
     /** @var array default options for query */
     private $options = array('exceptions' => true);
@@ -38,7 +48,7 @@ class ChebiFinder implements IFinder {
      */
     public function findByName($strName, &$outArResult, &$outArNextResult) {
         $client = new \SoapClient(self::WSDL, $this->options);
-        $this->setInput($strName, $arInput);
+        $this->setInputWithName($strName, $arInput);
         // TODO next results
         try {
             $arIds = array();
@@ -61,7 +71,20 @@ class ChebiFinder implements IFinder {
      * @return int
      */
     public function findBySmile($strSmile, &$outArResult, &$outArNextResult) {
-        // TODO: Implement findBySmile() method.
+        $client = new \SoapClient(self::WSDL, $this->options);
+        $this->setInputWithSmiles($strSmile, $arInput);
+        // TODO next results
+        try {
+            $arIds = array();
+            $response = $client->GetStructureSearch($arInput);
+            foreach ($response->return->ListElement as $ar) {
+                $arIds[] = $ar->chebiId;
+            }
+            $this->findByIdentifiers($arIds, $outArResult);
+        } catch (\Exception $ex) {
+            return ResultEnum::REPLY_NONE;
+        }
+        return ResultEnum::REPLY_OK_MORE;
     }
 
     /**
@@ -136,15 +159,28 @@ class ChebiFinder implements IFinder {
     }
 
     /**
-     * Set up input for SOAP
+     * Setup input for SOAP find by name
      * @param string $strName
      * @param array $arInput
      */
-    private function setInput($strName, &$arInput) {
+    private function setInputWithName($strName, &$arInput) {
         $arInput[self::SOAP_SEARCH] = $strName;
         $arInput[self::SOAP_SEARCH_CATEGORY] = self::CATEGORY_ALL;
         $arInput[self::SOAP_MAX_RESULTS] = self::MAX_RESULTS;
         $arInput[self::SOAP_STARS] = self::CATEGORY_ALL;
+    }
+
+    /**
+     * Setup input for SOAP find by SMILES
+     * @param string $strSmiles
+     * @param array $arInput
+     */
+    private function setInputWithSmiles($strSmiles, &$arInput) {
+        $arInput[self::SOAP_STRUCTURE] = $strSmiles;
+        $arInput[self::SOAP_TYPE] = self::TYPE_VALUE;
+        $arInput[self::SOAP_STRUCTURE_SEARCH_CATEGORY] = self::STRUCTURE_SEARCH_CATEGORY_VALUE;
+        $arInput[self::SOAP_TOTAL_RESULTS] = self::TOTAL_RESULTS_VALUE;
+        $arInput[self::SOAP_TANIMOTO_CUTOFF] = self::TANIMOTO_CUTOFF_VALUE;
     }
 
     /**
