@@ -3,6 +3,7 @@
 namespace Bbdgnc\Finder;
 
 use Bbdgnc\Enum\Front;
+use Bbdgnc\Finder\Enum\ChebiSearchCategoryEnum;
 use Bbdgnc\Finder\Enum\ResultEnum;
 use Bbdgnc\Finder\Enum\ServerEnum;
 
@@ -12,7 +13,7 @@ class ChebiFinder implements IFinder {
     const WSDL = 'https://www.ebi.ac.uk/webservices/chebi/2.0/webservice?wsdl';
 
     /** @var int max results in one query */
-    const MAX_RESULTS = 200;
+    const MAX_RESULTS = 50;
 
     /** @var string search category option */
     const CATEGORY_ALL = "ALL";
@@ -47,20 +48,7 @@ class ChebiFinder implements IFinder {
      * @return int
      */
     public function findByName($strName, &$outArResult, &$outArNextResult) {
-        $client = new \SoapClient(self::WSDL, $this->options);
-        $this->setInputWithName($strName, $arInput);
-        // TODO next results
-        try {
-            $arIds = array();
-            $response = $client->GetLiteEntity($arInput);
-            foreach ($response->return->ListElement as $ar) {
-               $arIds[] = $ar->chebiId;
-            }
-            $this->findByIdentifiers($arIds, $outArResult);
-        } catch (\Exception $ex) {
-            return ResultEnum::REPLY_NONE;
-        }
-        return ResultEnum::REPLY_OK_MORE;
+        return $this->getLiteEntity($strName, ChebiSearchCategoryEnum::ALL, $outArResult, $outArNextResult);
     }
 
     /**
@@ -95,7 +83,27 @@ class ChebiFinder implements IFinder {
      * @return int
      */
     public function findByFormula($strFormula, &$outArResult, &$outArNextResult) {
-        // TODO: Implement findByFormula() method.
+        return $this->getLiteEntity($strFormula, ChebiSearchCategoryEnum::FORMULA, $outArResult, $outArNextResult);
+    }
+
+    private function getLiteEntity($strSearchParam, $strSearchCategory, &$outArResult, &$outArNextResult) {
+        $client = new \SoapClient(self::WSDL, $this->options);
+        $this->setInput($strSearchParam, $strSearchCategory, $arInput);
+        // TODO next results
+        try {
+            $response = $client->GetLiteEntity($arInput);
+            if (is_array($response->return->ListElement)) {
+                foreach ($response->return->ListElement as $ar) {
+                    $arIds[] = $ar->chebiId;
+                }
+            } else {
+                return $this->findByIdentifier(substr($response->return->ListElement->chebiId, self::IDENTIFIER_PREFIX_SIZE), $outArResult, $outArNextResult);
+            }
+            $this->findByIdentifiers($arIds, $outArResult);
+        } catch (\Exception $ex) {
+            return ResultEnum::REPLY_NONE;
+        }
+        return ResultEnum::REPLY_OK_MORE;
     }
 
     /**
@@ -159,15 +167,16 @@ class ChebiFinder implements IFinder {
     }
 
     /**
-     * Setup input for SOAP find by name
-     * @param string $strName
-     * @param array $arInput
+     * Setup input for SOAP
+     * @param string $strSearchParam
+     * @param string $strSearchCategory
+     * @param array $outArInput
      */
-    private function setInputWithName($strName, &$arInput) {
-        $arInput[self::SOAP_SEARCH] = $strName;
-        $arInput[self::SOAP_SEARCH_CATEGORY] = self::CATEGORY_ALL;
-        $arInput[self::SOAP_MAX_RESULTS] = self::MAX_RESULTS;
-        $arInput[self::SOAP_STARS] = self::CATEGORY_ALL;
+    private function setInput($strSearchParam, $strSearchCategory, &$outArInput) {
+        $outArInput[self::SOAP_SEARCH] = $strSearchParam;
+        $outArInput[self::SOAP_SEARCH_CATEGORY] = $strSearchCategory;
+        $outArInput[self::SOAP_MAX_RESULTS] = self::MAX_RESULTS;
+        $outArInput[self::SOAP_STARS] = self::CATEGORY_ALL;
     }
 
     /**
@@ -256,8 +265,13 @@ class ChebiFinder implements IFinder {
     private function getFormulaFromFormulae($formulae, &$outArResult) {
         $outArResult[Front::CANVAS_INPUT_FORMULA] = "";
         foreach ($formulae as $key => $value) {
-            if ($key == "data") {
+            if (is_numeric($key)) {
+                $outArResult[Front::CANVAS_INPUT_FORMULA] = $value->data;
+                break;
+            }
+            if ($key === "data") {
                 $outArResult[Front::CANVAS_INPUT_FORMULA] = $value;
+                break;
             }
         }
     }
