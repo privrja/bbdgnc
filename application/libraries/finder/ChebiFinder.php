@@ -9,8 +9,8 @@ use Bbdgnc\Finder\Enum\ServerEnum;
 class ChebiFinder implements IFinder {
 
     const WSDL = 'https://www.ebi.ac.uk/webservices/chebi/2.0/webservice?wsdl';
-//    const NAME_SPACE = 'https://www.ebi.ac.uk/webservices/chebi';
-
+    const MAX_RESULTS = 200;
+    private $options = array('exceptions' => true);
 
     /**
      * Find data on some server by name
@@ -20,7 +20,26 @@ class ChebiFinder implements IFinder {
      * @return int
      */
     public function findByName($strName, &$outArResult, &$outArNextResult) {
-        // TODO: Implement findByName() method.
+        $client = new \SoapClient(self::WSDL, $this->options);
+        $arInput['search'] = $strName;
+        $arInput['searchCategory'] = "ALL";
+        $arInput['maximumResults'] = self::MAX_RESULTS;
+        $arInput['stars'] = "ALL";
+        try {
+            $arIds = array();
+            $response = $client->GetLiteEntity($arInput);
+            foreach ($response->return->ListElement as $ar) {
+//                var_dump($ar->chebiId);
+               $arIds[] = $ar->chebiId;
+//                $outArResult[Front::CANVAS_INPUT_IDENTIFIER] = $ar->chebiId;
+//                $outArResult[Front::CANVAS_INPUT_NAME] = $ar->chebiAsciiName;
+            }
+            $this->findByIdentifiers($arIds, $outArResult);
+        } catch (\Exception $ex) {
+            return ResultEnum::REPLY_NONE;
+        }
+
+        return ResultEnum::REPLY_OK_MORE;
     }
 
     /**
@@ -63,7 +82,7 @@ class ChebiFinder implements IFinder {
      * @return int
      */
     public function findByIdentifier($strId, &$outArResult) {
-        $client = new \SoapClient(self::WSDL, array('exceptions' => true));
+        $client = new \SoapClient(self::WSDL, $this->options);
         $arInput['chebiId'] = $strId;
         $outArResult[Front::CANVAS_INPUT_IDENTIFIER] = $strId;
         $outArResult[Front::CANVAS_HIDDEN_DATABASE] = ServerEnum::CHEBI;
@@ -88,7 +107,51 @@ class ChebiFinder implements IFinder {
      * @return int
      */
     public function findByIdentifiers($arIds, &$outArResult) {
-        // TODO: Implement findByIdentifiers() method.
+        $client = new \SoapClient(self::WSDL, $this->options);
+        $arInput['ListOfChEBIIds'] = $arIds;
+        try {
+            $intCounter = 0;
+            $response = $client->GetCompleteEntityByList($arInput);
+            foreach ($response->return as $arData) {
+                $arMolecule = array();
+                $this->getDataFromResult($arData, $arMolecule);
+                $outArResult[$intCounter] = $arMolecule;
+                $intCounter++;
+            }
+//            var_dump($outArResult);
+//            var_dump($response);
+        } catch (\Exception $ex) {
+            return ResultEnum::REPLY_NONE;
+        }
+        return ResultEnum::REPLY_OK_MORE;
+    }
+
+    private function getDataFromResult($arData, &$outArMolecule) {
+        $outArMolecule[Front::CANVAS_INPUT_IDENTIFIER] = substr($arData->chebiId, 6);
+        if (isset($arData->chebiAsciiName)) {
+            $outArMolecule[Front::CANVAS_INPUT_NAME] = $arData->chebiAsciiName;
+        } else {
+            $outArMolecule[Front::CANVAS_INPUT_NAME] = "";
+        }
+
+        if (isset($arData->smiles)) {
+            $outArMolecule[Front::CANVAS_INPUT_SMILE] = $arData->smiles;
+        } else {
+            $outArMolecule[Front::CANVAS_INPUT_SMILE] = "";
+        }
+
+        if (isset($arData->monoisotopicMass)) {
+            $outArMolecule[Front::CANVAS_INPUT_MASS] = $arData->monoisotopicMass;
+        } else {
+            $outArMolecule[Front::CANVAS_INPUT_MASS] = "";
+        }
+        $outArMolecule[Front::CANVAS_HIDDEN_DATABASE] = ServerEnum::CHEBI;
+
+        if (isset($arData->Formulae)) {
+            $this->getFormulaFromFormulae($arData->Formulae, $outArMolecule);
+        } else {
+            $outArMolecule[Front::CANVAS_INPUT_FORMULA] = "";
+        }
     }
 
     /**
@@ -96,11 +159,13 @@ class ChebiFinder implements IFinder {
      * @param array $outArResult output param for results
      */
     private function getFormulaFromFormulae($formulae, &$outArResult) {
+        $outArResult[Front::CANVAS_INPUT_FORMULA] = "";
         foreach ($formulae as $key => $value) {
             if ($key == "data") {
                 $outArResult[Front::CANVAS_INPUT_FORMULA] = $value;
             }
         }
     }
+
 
 }
