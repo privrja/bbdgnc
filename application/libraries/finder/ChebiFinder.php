@@ -71,6 +71,9 @@ class ChebiFinder implements IFinder {
         try {
             $intCounter = 0;
             $response = $client->GetStructureSearch($arInput);
+            if (!isset($response->return->ListElement)) {
+                return ResultEnum::REPLY_NONE;
+            }
             foreach ($response->return->ListElement as $ar) {
                 $arIds[] = $ar->chebiId;
                 $intCounter++;
@@ -173,6 +176,9 @@ class ChebiFinder implements IFinder {
         try {
             $intCounter = 0;
             $response = $client->GetLiteEntity($arInput);
+            if (!isset($response->return->ListElement)) {
+                return ResultEnum::REPLY_NONE;
+            }
             if (is_array($response->return->ListElement)) {
                 foreach ($response->return->ListElement as $ar) {
                     $arIds[] = $ar->chebiId;

@@ -126,9 +126,9 @@ class PubChemFinder implements IFinder {
     }
 
     /**
-     * @param $strUri
-     * @param $outArResult
-     * @param $outArNextResult
+     * @param string $strUri
+     * @param array $outArResult
+     * @param array $outArNextResult
      * @return int
      * @throws \Exception
      */
