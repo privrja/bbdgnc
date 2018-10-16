@@ -8,8 +8,13 @@ use Bbdgnc\Finder\Enum\ServerEnum;
 
 class ChebiFinder implements IFinder {
 
+    /** @var string URI for wsdl file */
     const WSDL = 'https://www.ebi.ac.uk/webservices/chebi/2.0/webservice?wsdl';
+
+    /** @var int max results in one query */
     const MAX_RESULTS = 200;
+
+    /** @var array default options for query */
     private $options = array('exceptions' => true);
 
     /**
@@ -25,20 +30,17 @@ class ChebiFinder implements IFinder {
         $arInput['searchCategory'] = "ALL";
         $arInput['maximumResults'] = self::MAX_RESULTS;
         $arInput['stars'] = "ALL";
+        // TODO next results
         try {
             $arIds = array();
             $response = $client->GetLiteEntity($arInput);
             foreach ($response->return->ListElement as $ar) {
-//                var_dump($ar->chebiId);
                $arIds[] = $ar->chebiId;
-//                $outArResult[Front::CANVAS_INPUT_IDENTIFIER] = $ar->chebiId;
-//                $outArResult[Front::CANVAS_INPUT_NAME] = $ar->chebiAsciiName;
             }
             $this->findByIdentifiers($arIds, $outArResult);
         } catch (\Exception $ex) {
             return ResultEnum::REPLY_NONE;
         }
-
         return ResultEnum::REPLY_OK_MORE;
     }
 
@@ -118,8 +120,6 @@ class ChebiFinder implements IFinder {
                 $outArResult[$intCounter] = $arMolecule;
                 $intCounter++;
             }
-//            var_dump($outArResult);
-//            var_dump($response);
         } catch (\Exception $ex) {
             return ResultEnum::REPLY_NONE;
         }
@@ -166,6 +166,5 @@ class ChebiFinder implements IFinder {
             }
         }
     }
-
 
 }

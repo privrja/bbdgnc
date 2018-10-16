@@ -30,10 +30,10 @@ abstract class ServerEnum {
         switch ($intServerEnum) {
             case self::PUBCHEM:
                 return "https://pubchem.ncbi.nlm.nih.gov/compound/" . $strIdentifier;
-                break;
             case self::CHEMSPIDER:
                 return "http://www.chemspider.com/Chemical-Structure." . $strIdentifier . ".html";
-                break;
+            case self::CHEBI:
+                return "https://www.ebi.ac.uk/chebi/searchId.do?chebiId=" . $strIdentifier;
         }
     }
 }
