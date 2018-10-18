@@ -16,9 +16,10 @@ abstract class JsonDownloader {
         $curl_response = curl_exec($curl);
         if ($curl_response === false) {
             /** TODO Bad transfer -> maybe can try it again? */
-//            $cInfo = curl_getinfo($curl);
+            $error = curl_error($curl);
             curl_close($curl);
-            log_message("error", "Error occured during curl exec. Uri: " . $strUri);
+            log_message("error", "Error in cURL on URI: " . $strUri);
+            log_message("error", "Error in cURL: " . $error);
             throw new \Exception("Error during cURL");
         }
         curl_close($curl);
