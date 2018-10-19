@@ -39,5 +39,15 @@ Download CA certificates form [here](https://curl.haxx.se/docs/caextract.html)
 Add a path to certificate in php.ini
 
     curl.cainfo="<path to certificate>\cacert.pem"
+    
+Tested on DEVSERVER 17.0 
+
+##XAMPP Windows configuration
+In php.ini only need to uncomment one line:
+
+    extension=php_soap.dll
+    
+Tested on XAMPP 5.6.38 / PHP 5.6.38
+
 
     
