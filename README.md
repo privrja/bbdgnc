@@ -5,6 +5,7 @@ Building Blocks Database Generator of Natural Compounds
 Apache or other similar server
 
 PHP 5.3.7 or higher
+PHP componets need: libcurl, libxml
 
 [Composer](https://getcomposer.org/download/)
 
@@ -26,3 +27,17 @@ Configure base url in application/config/config.php
 Default value is http://localhost/ already set
 
     $config['base_url'] = 'http://localhost/';
+    
+##EasyPHP Windows configuration
+In php.ini uncomment two lines:
+    
+    extension=php_curl.dll
+    extension=php_soap.dll
+
+Download CA certificates form [here](https://curl.haxx.se/docs/caextract.html)     
+
+Add a path to certificate in php.ini
+
+    curl.cainfo="<path to certificate>\cacert.pem"
+
+    
