@@ -65,12 +65,13 @@ footer {
 #canvas-large {
     position: fixed;
     top: 50%;
-    left: 50%;
+    left: 70%;
     margin-top: -500px;
     margin-left: -500px;
     background-color: #fff;
     display: none;
     cursor: pointer;
+    border: 1px solid black;
 }
 
 article {

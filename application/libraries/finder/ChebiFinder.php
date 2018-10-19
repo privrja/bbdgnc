@@ -153,13 +153,24 @@ class ChebiFinder implements IFinder {
             foreach ($response->return as $arData) {
                 $arMolecule = array();
                 $this->getDataFromResult($arData, $arMolecule);
-                $outArResult[$intCounter] = $arMolecule;
-                $intCounter++;
+                if (!$this->isMoleculeJunk($arMolecule)) {
+                    $outArResult[$intCounter] = $arMolecule;
+                    $intCounter++;
+                }
             }
         } catch (\Exception $ex) {
             return ResultEnum::REPLY_NONE;
         }
         return ResultEnum::REPLY_OK_MORE;
+    }
+
+    /**
+     * Is molecule data set? return true when data is not set
+     * @param array $arMolecule
+     * @return bool
+     */
+    private function isMoleculeJunk($arMolecule) {
+       return empty($arMolecule[Front::CANVAS_INPUT_SMILE]) && empty($arMolecule[Front::CANVAS_INPUT_FORMULA]) && empty($arMolecule[Front::CANVAS_INPUT_MASS]);
     }
 
     /**

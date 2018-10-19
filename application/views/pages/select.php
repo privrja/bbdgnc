@@ -11,7 +11,6 @@ use Bbdgnc\Finder\Enum\ServerEnum;
         <div class="thead t">
             <div class="tr t">
                 <div class="td"></div>
-<!--                <div class="td">Name</div>-->
                 <div class="td">Formula</div>
                 <div class="td">Identifier</div>
                 <div class="td">Mass</div>
@@ -27,15 +26,15 @@ use Bbdgnc\Finder\Enum\ServerEnum;
                     <canvas id="canvas-small-<?= $molecule[Front::CANVAS_INPUT_IDENTIFIER] ?>"
                             data-canvas-small-id="<?= $molecule[Front::CANVAS_INPUT_IDENTIFIER] ?>"
                             class="canvas-small"
-                            onclick="drawLargeSmile(<?= $molecule[Front::CANVAS_INPUT_IDENTIFIER] ?>)"></canvas>
+                            onclick="drawLargeSmile(<?= $molecule[Front::CANVAS_INPUT_IDENTIFIER] ?>)"
+                            title="<?= $molecule[Front::CANVAS_INPUT_FORMULA] ?>"
+                    ></canvas>
                 </div>
-<!--                <div class="td"-->
-<!--                     title=<?//= Front::defIndex($molecule, Front::CANVAS_INPUT_NAME) ?><?//= Front::smallerText(Front::defIndex($molecule, Front::CANVAS_INPUT_NAME)) ?></div>-->
                 <div class="td"><?= Front::formula($molecule[Front::CANVAS_INPUT_FORMULA]) ?></div>
                 <div class="td"><?= $molecule[Front::CANVAS_INPUT_IDENTIFIER] ?></div>
                 <div class="td"><?= $molecule[Front::CANVAS_INPUT_MASS] ?></div>
                 <div class="td">
-                    <a href=<?= ServerEnum::getLink($molecule[Front::CANVAS_HIDDEN_DATABASE], $molecule[Front::CANVAS_INPUT_IDENTIFIER]) ?>>
+                    <a target="_blank" href=<?= ServerEnum::getLink($molecule[Front::CANVAS_HIDDEN_DATABASE], $molecule[Front::CANVAS_INPUT_IDENTIFIER]) ?>>
                         <?= ServerEnum::$values[$molecule[Front::CANVAS_HIDDEN_DATABASE]] ?></a>
                 </div>
                 <div class="td"><input type="submit" value="Select"/></div>

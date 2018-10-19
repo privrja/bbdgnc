@@ -14,8 +14,6 @@ use Bbdgnc\Enum\Front;
     <select id="sel-canvas-database" name="<?= Front::CANVAS_INPUT_DATABASE ?>" class="select" title="Search">
         <option value=<?= ServerEnum::PUBCHEM ?>>PubChem</option>
         <option value=<?= ServerEnum::CHEMSPIDER ?>>ChemSpider</option>
-<!--        <option value=--><?//= ServerEnum::NORINE ?><!-->Norine</option>-->
-<!--        <option value=--><?//= ServerEnum::PDB ?><!-->PDB</option>-->
         <option value="<?= ServerEnum::CHEBI ?>">ChEBI</option>
     </select>
 
