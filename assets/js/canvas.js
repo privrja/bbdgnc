@@ -5,6 +5,13 @@ const HIDDEN_SMILE_ID = "hidden-canvas-small-";
 const CANVAS_SMALL_ID = "canvas-small-";
 const CANVAS_LARGE_ID = "canvas-large";
 
+const WINDOW_MIN_WIDTH = 850;
+const WINDOW_MIN_HEIGHT = 575;
+const CANVAS_SMALL_WIDTH = 300;
+
+const PIXEL_TWO = 2;
+const PROCENT_SIXTY = 0.6;
+
 /** constants mode */
 const MODE_LIGHT = "light";
 const MODE_DARK = "dark";
@@ -13,8 +20,13 @@ const MODE_DARK = "dark";
 const COLOR_WHITE = "white";
 const COLOR_BLACK = "black";
 
-/** Initialize the drawer */
+/** boolean is mobile version? */
+let mobile = false;
 
+/** int last show last preview of SMILES */
+let lastLargeSmilesId;
+
+/** Initialize the drawer */
 let smilesDrawer = getSmilesDrawer();
 let smallSmilesDrawer = getSmallSmilesDrawer();
 let largeSmilesDrawer = getLargeSmilesDrawer();
@@ -41,6 +53,7 @@ window.onload = function () {
             document.location.href = "#h-results";
         }
     }
+    mobileVersion();
     resize();
 };
 
@@ -51,15 +64,31 @@ let DEFAULT_SCREEN_MODE = MODE_LIGHT;
  * Get SMILES Drawer instance with dimension of canvas
  */
 function getSmilesDrawer() {
-    return new SmilesDrawer.Drawer({width: getCanvasWidth(), height: getCanvasHeight(), padding: 10});
+    return new SmilesDrawer.Drawer({width: getCanvasWidth(), height: getCanvasHeight() });
 }
 
 function getSmallSmilesDrawer() {
-    return new SmilesDrawer.Drawer({width: 300, height: 300});
+    return new SmilesDrawer.Drawer({width: CANVAS_SMALL_WIDTH, height: CANVAS_SMALL_WIDTH });
 }
 
 function getLargeSmilesDrawer() {
-    return new SmilesDrawer.Drawer({width: 1000, height: 1000});
+    return new SmilesDrawer.Drawer({width: getWindowWidth() * PROCENT_SIXTY, height: getWindowHeight() + PIXEL_TWO });
+}
+
+/**
+ * Mobile version?
+ * set mobile to true if window is too small
+ */
+function mobileVersion() {
+    mobile = getWindowWidth() <= WINDOW_MIN_WIDTH || getWindowHeight() <= WINDOW_MIN_HEIGHT;
+}
+
+function getWindowWidth() {
+    return window.innerWidth;
+}
+
+function getWindowHeight() {
+    return window.innerHeight;
 }
 
 /**
@@ -192,15 +221,20 @@ function drawSmallSmile(canvasId) {
 }
 
 function clearLargeCanvas() {
-    console.log("clear");
-    let canvas = document.getElementById(CANVAS_LARGE_ID);
-    canvas.style.display = "none";
+    document.getElementById(CANVAS_LARGE_ID).style.display = "none";
 }
 
-function drawLargeSmile(canvasId) {
-    let canvas = document.getElementById(CANVAS_LARGE_ID);
-    canvas.style.display = "block";
-    drawLarge(canvasId);
+function drawOrClearLargeSmile(canvasId) {
+    if (mobile) return;
+    if (lastLargeSmilesId === canvasId) {
+        clearLargeCanvas();
+        lastLargeSmilesId = null;
+    } else {
+        let canvas = document.getElementById(CANVAS_LARGE_ID);
+        canvas.style.display = "block";
+        drawLarge(canvasId);
+        lastLargeSmilesId = canvasId;
+    }
 }
 
 function drawSmall(canvasId) {
@@ -211,7 +245,6 @@ function drawSmall(canvasId) {
 }
 
 function drawLarge(canvasId) {
-    console.log("large");
     let canvas = document.getElementById(CANVAS_LARGE_ID);
     let context = canvas.getContext("2d");
     context.clearRect(0, 0, canvas.width, canvas.height);

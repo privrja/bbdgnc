@@ -26,7 +26,7 @@ use Bbdgnc\Finder\Enum\ServerEnum;
                     <canvas id="canvas-small-<?= $molecule[Front::CANVAS_INPUT_IDENTIFIER] ?>"
                             data-canvas-small-id="<?= $molecule[Front::CANVAS_INPUT_IDENTIFIER] ?>"
                             class="canvas-small"
-                            onclick="drawLargeSmile(<?= $molecule[Front::CANVAS_INPUT_IDENTIFIER] ?>)"
+                            onclick="drawOrClearLargeSmile(<?= $molecule[Front::CANVAS_INPUT_IDENTIFIER] ?>)"
                             title="<?= $molecule[Front::CANVAS_INPUT_FORMULA] ?>"
                     ></canvas>
                 </div>

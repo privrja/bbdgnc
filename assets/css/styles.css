@@ -64,10 +64,9 @@ footer {
 
 #canvas-large {
     position: fixed;
-    top: 50%;
-    left: 70%;
-    margin-top: -500px;
-    margin-left: -500px;
+    top: 0;
+    left: 40%;
+    margin-top: -1px;
     background-color: #fff;
     display: none;
     cursor: pointer;
