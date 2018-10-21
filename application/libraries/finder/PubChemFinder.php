@@ -308,7 +308,6 @@ class PubChemFinder implements IFinder {
             }
             $outArResult[$this->getArrayKeyFromReplyProperty($strProperty)] = $mixValue;
         }
-        $outArResult[Front::CANVAS_INPUT_DATABASE] = ServerEnum::PUBCHEM;
         return ResultEnum::REPLY_OK_ONE;
     }
 

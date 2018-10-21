@@ -123,7 +123,6 @@ class ChebiFinder implements IFinder {
         $client = new \SoapClient(self::WSDL, $this->options);
         $arInput['chebiId'] = $strId;
         $outArResult[Front::CANVAS_INPUT_IDENTIFIER] = $strId;
-        $outArResult[Front::CANVAS_INPUT_DATABASE] = ServerEnum::CHEBI;
         try {
             $response = $client->GetCompleteEntity($arInput);
             $intCounter = 0;
@@ -257,7 +256,6 @@ class ChebiFinder implements IFinder {
         $this->getSmiles($arData, $outArMolecule);
         $this->getMass($arData, $outArMolecule);
         $this->getFormula($arData, $outArMolecule);
-        $outArMolecule[Front::CANVAS_INPUT_DATABASE] = ServerEnum::CHEBI;
     }
 
     /**

@@ -28,7 +28,7 @@ class Land extends CI_Controller {
             Front::CANVAS_INPUT_NAME => "", Front::CANVAS_INPUT_SMILE => "",
             Front::CANVAS_INPUT_FORMULA => "", Front::CANVAS_INPUT_MASS => "",
             Front::CANVAS_INPUT_DEFLECTION => "", Front::CANVAS_INPUT_IDENTIFIER => "",
-            Front::CANVAS_INPUT_DATABASE => "", self::ERRORS => ""
+            self::ERRORS => ""
         );
     }
 
@@ -136,7 +136,7 @@ class Land extends CI_Controller {
                 break;
             case ResultEnum::REPLY_OK_MORE:
                 /* form with list view and select the right one, next find by id the right one */
-                $data = $this->getLastDataToHidden();
+                $data = $this->getLastData();
                 $data['molecules'] = $outArResult;
                 if (!empty($outArNextResult)) {
                     // TODO get only first 160 ids, max value to cookie can be overhead, maybe better store to database
@@ -169,13 +169,6 @@ class Land extends CI_Controller {
             } else {
                 $data[Front::CANVAS_INPUT_NAME] = $strName;
             }
-        } else {
-            if (!empty($strName)) {
-                $data[Front::CANVAS_INPUT_NAME] = $strName;
-            } else {
-                /* TODO maybe can be deleted with the hidden input */
-                $data[Front::CANVAS_INPUT_NAME] = $this->input->post(Front::CANVAS_INPUT_NAME);
-            }
         }
         $this->index($data);
     }
@@ -186,7 +179,7 @@ class Land extends CI_Controller {
     public function next() {
         $arNext = unserialize($this->input->cookie(self::COOKIE_NEXT_RESULTS));
         $intDatabase = $this->input->post(Front::CANVAS_INPUT_DATABASE);
-        $data = $this->getLastHiddenData();
+        $data = $this->getLastData();
 
         if (isset($arNext) && !empty($arNext)) {
             $arResult = array_splice($arNext, 0, \Bbdgnc\Finder\IFinder::FIRST_X_RESULTS);
@@ -199,58 +192,11 @@ class Land extends CI_Controller {
                 // save next results to cookie
                 $this->input->set_cookie(self::COOKIE_NEXT_RESULTS, serialize($arNext), self::COOKIE_EXPIRE_HOUR);
             }
-            $this->renderSelect($data, $this->getLastHiddenDataToInput());
+            $this->renderSelect($data, $this->getLastData());
         } else {
+            log_message('info', "Last page of results");
             $this->index($this->getLastData());
         }
-    }
-
-    /**
-     * Get last data from hidden input and set it to array for view hidden
-     * @return array data for view
-     */
-    private function getLastHiddenData() {
-        $arViewData = array();
-        $arViewData[Front::CANVAS_INPUT_DATABASE] = $this->input->post(Front::CANVAS_INPUT_DATABASE);
-        $arViewData[Front::CANVAS_INPUT_NAME] = $this->input->post(Front::CANVAS_INPUT_NAME);
-        $arViewData[Front::CANVAS_INPUT_SMILE] = $this->input->post(Front::CANVAS_INPUT_SMILE);
-        $arViewData[Front::CANVAS_INPUT_FORMULA] = $this->input->post(Front::CANVAS_INPUT_FORMULA);
-        $arViewData[Front::CANVAS_INPUT_MASS] = $this->input->post(Front::CANVAS_INPUT_MASS);
-        $arViewData[Front::CANVAS_INPUT_DEFLECTION] = $this->input->post(Front::CANVAS_INPUT_DEFLECTION);
-        $arViewData[Front::CANVAS_INPUT_IDENTIFIER] = $this->input->post(Front::CANVAS_INPUT_IDENTIFIER);
-        return $arViewData;
-    }
-
-    /**
-     * Get last data from hidden input and set it to array for view
-     * @return array data for view
-     */
-    private function getLastHiddenDataToInput() {
-        $arViewData = array();
-        $arViewData[Front::CANVAS_INPUT_DATABASE] = $this->input->post(Front::CANVAS_INPUT_DATABASE);
-        $arViewData[Front::CANVAS_INPUT_NAME] = $this->input->post(Front::CANVAS_INPUT_NAME);
-        $arViewData[Front::CANVAS_INPUT_SMILE] = $this->input->post(Front::CANVAS_INPUT_SMILE);
-        $arViewData[Front::CANVAS_INPUT_FORMULA] = $this->input->post(Front::CANVAS_INPUT_FORMULA);
-        $arViewData[Front::CANVAS_INPUT_MASS] = $this->input->post(Front::CANVAS_INPUT_MASS);
-        $arViewData[Front::CANVAS_INPUT_DEFLECTION] = $this->input->post(Front::CANVAS_INPUT_DEFLECTION);
-        $arViewData[Front::CANVAS_INPUT_IDENTIFIER] = $this->input->post(Front::CANVAS_INPUT_IDENTIFIER);
-        return $arViewData;
-    }
-
-    /**
-     * Get last data from input and set it to array for view hidden
-     * @return array data for view
-     */
-    private function getLastDataToHidden() {
-        $arViewData = array();
-        $arViewData[Front::CANVAS_INPUT_DATABASE] = $this->input->post(Front::CANVAS_INPUT_DATABASE);
-        $arViewData[Front::CANVAS_INPUT_NAME] = $this->input->post(Front::CANVAS_INPUT_NAME);
-        $arViewData[Front::CANVAS_INPUT_SMILE] = $this->input->post(Front::CANVAS_INPUT_SMILE);
-        $arViewData[Front::CANVAS_INPUT_FORMULA] = $this->input->post(Front::CANVAS_INPUT_FORMULA);
-        $arViewData[Front::CANVAS_INPUT_MASS] = $this->input->post(Front::CANVAS_INPUT_MASS);
-        $arViewData[Front::CANVAS_INPUT_DEFLECTION] = $this->input->post(Front::CANVAS_INPUT_DEFLECTION);
-        $arViewData[Front::CANVAS_INPUT_IDENTIFIER] = $this->input->post(Front::CANVAS_INPUT_IDENTIFIER);
-        return $arViewData;
     }
 
     /**
@@ -260,6 +206,7 @@ class Land extends CI_Controller {
     private function getLastData() {
         $arViewData = array();
         $arViewData[Front::CANVAS_INPUT_DATABASE] = $this->input->post(Front::CANVAS_INPUT_DATABASE);
+        $arViewData[Front::CANVAS_INPUT_SEARCH_BY] = $this->input->post(Front::CANVAS_INPUT_SEARCH_BY);
         $arViewData[Front::CANVAS_INPUT_NAME] = $this->input->post(Front::CANVAS_INPUT_NAME);
         $arViewData[Front::CANVAS_INPUT_SMILE] = $this->input->post(Front::CANVAS_INPUT_SMILE);
         $arViewData[Front::CANVAS_INPUT_FORMULA] = $this->input->post(Front::CANVAS_INPUT_FORMULA);
@@ -306,7 +253,12 @@ class Land extends CI_Controller {
                 }
                 return $finder->findBySmile($this->input->post(Front::CANVAS_INPUT_SMILE), $outArResult, $outArNextResult);
             case FindByEnum::MASS:
+                $this->form_validation->set_rules(Front::CANVAS_INPUT_MASS, "Mass", "required");
+                if ($this->form_validation->run() === false) {
+                    return ResultEnum::REPLY_NONE;
+                }
                 return $finder->findByMass($this->input->post(Front::CANVAS_INPUT_MASS), $this->input->post(Front::CANVAS_INPUT_DEFLECTION),$outArResult, $outArNextResult);
+            default:
                 return ResultEnum::REPLY_NONE;
         }
     }
