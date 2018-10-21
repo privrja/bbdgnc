@@ -60,19 +60,22 @@ use Bbdgnc\Finder\Enum\ServerEnum;
     </div>
 
     <div>
-        <?= form_open('land/next', array('class' => 'form')); ?>
-        <input type="hidden"
-               name=<?= Front::CANVAS_INPUT_DATABASE ?> value="<?= $database ?>"/>
-        <input type="hidden" name="<?= Front::CANVAS_INPUT_SEARCH_BY ?>" value="<?= $search ?>"/>
-        <input type="hidden" name=<?= Front::CANVAS_INPUT_NAME ?> value="<?= $name ?>"/>
-        <input type="hidden" name=<?= Front::CANVAS_INPUT_SMILE ?> value="<?= $smile ?>"/>
-        <input type="hidden" name=<?= Front::CANVAS_INPUT_FORMULA ?> value="<?= $formula ?>"/>
-        <input type="hidden" name=<?= Front::CANVAS_INPUT_MASS ?> value="<?= $mass ?>"/>
-        <input type="hidden" name=<?= Front::CANVAS_INPUT_DEFLECTION ?> value="<?= $deflection ?>"/>
-        <input type="hidden" name=<?= Front::CANVAS_INPUT_IDENTIFIER ?> value="<?= $identifier ?>"/>
-        <input type="hidden" name="<?= Front::CANVAS_HIDDEN_NEXT_RESULTS ?>" value='<?= $nextResults ?>'/>
-        <input type="submit" value="Next results"/>
-        </form>
+
+        <?php if ($showNextResults): ?>
+            <?= form_open('land/next', array('class' => 'form')); ?>
+            <input type="hidden"
+                   name=<?= Front::CANVAS_INPUT_DATABASE ?> value="<?= $database ?>"/>
+            <input type="hidden" name="<?= Front::CANVAS_INPUT_SEARCH_BY ?>" value="<?= $search ?>"/>
+            <input type="hidden" name=<?= Front::CANVAS_INPUT_NAME ?> value="<?= $name ?>"/>
+            <input type="hidden" name=<?= Front::CANVAS_INPUT_SMILE ?> value="<?= $smile ?>"/>
+            <input type="hidden" name=<?= Front::CANVAS_INPUT_FORMULA ?> value="<?= $formula ?>"/>
+            <input type="hidden" name=<?= Front::CANVAS_INPUT_MASS ?> value="<?= $mass ?>"/>
+            <input type="hidden" name=<?= Front::CANVAS_INPUT_DEFLECTION ?> value="<?= $deflection ?>"/>
+            <input type="hidden" name=<?= Front::CANVAS_INPUT_IDENTIFIER ?> value="<?= $identifier ?>"/>
+            <input type="hidden" name="<?= Front::CANVAS_HIDDEN_NEXT_RESULTS ?>" value='<?= $nextResults ?>'/>
+            <input type="submit" value="Next results"/>
+            </form>
+        <?php endif; ?>
     </div>
 
 </div>

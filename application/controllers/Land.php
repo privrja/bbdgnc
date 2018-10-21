@@ -138,7 +138,9 @@ class Land extends CI_Controller {
                 $data['molecules'] = $outArResult;
                 if (!empty($outArNextResult)) {
                     $data[Front::CANVAS_HIDDEN_NEXT_RESULTS] = serialize($outArNextResult);
+                    $data[Front::CANVAS_HIDDEN_SHOW_NEXT_RESULTS] = true;
                 } else {
+                    $data[Front::CANVAS_HIDDEN_SHOW_NEXT_RESULTS] = false;
                     log_message('debug', "Last page of results");
                 }
                 $this->renderSelect($data, $this->getLastData());
@@ -171,7 +173,7 @@ class Land extends CI_Controller {
      * Render view for next values from finding
      */
     public function next() {
-        $arNext = unserialize($this->input->post(Front::CANVAS_HIDDEN_NEXT_RESULTS));
+        $arNext = @unserialize($this->input->post(Front::CANVAS_HIDDEN_NEXT_RESULTS));
         $intDatabase = $this->input->post(Front::CANVAS_INPUT_DATABASE);
         $data = $this->getLastData();
 
@@ -184,8 +186,10 @@ class Land extends CI_Controller {
             $data['molecules'] = $outArResult;
             if (!empty($arNext)) {
                 $data[Front::CANVAS_HIDDEN_NEXT_RESULTS] = serialize($arNext);
+                $data[Front::CANVAS_HIDDEN_SHOW_NEXT_RESULTS] = true;
             } else {
                 log_message('debug', "Last page of results");
+                $data[Front::CANVAS_HIDDEN_SHOW_NEXT_RESULTS] = false;
                 // last page -> not show next results button
             }
             $this->renderSelect($data, $this->getLastData());
