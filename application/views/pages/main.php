@@ -11,20 +11,12 @@ use Bbdgnc\Enum\Front;
     <?= form_open('land/form', array('class' => 'form')); ?>
 
     <label for="sel-canvas-database">Database</label>
-    <select id="sel-canvas-database" name="<?= Front::CANVAS_INPUT_DATABASE ?>" class="select" title="Search">
-        <option value=<?= ServerEnum::PUBCHEM ?>>PubChem</option>
-        <option value=<?= ServerEnum::CHEMSPIDER ?>>ChemSpider</option>
-        <option value="<?= ServerEnum::CHEBI ?>">ChEBI</option>
-    </select>
+    <?= form_dropdown(Front::CANVAS_INPUT_DATABASE, ServerEnum::$values, set_value(Front::CANVAS_INPUT_DATABASE),
+        'id="sel-canvas-database" class="select" title="Search"'); ?>
 
     <label for="sel-canvas-search">Search by</label>
-    <select id="sel-canvas-search" name="<?= Front::CANVAS_INPUT_SEARCH_BY ?>" class="select" title="Search">
-        <option value=<?= FindByEnum::NAME ?>>Name</option>
-        <option value=<?= FindByEnum::SMILE ?>>SMILES</option>
-        <option value=<?= FindByEnum::FORMULA ?>>Molecular Formula</option>
-        <option value=<?= FindByEnum::MASS ?>>Monoisotopic Mass</option>
-        <option value=<?= FindByEnum::IDENTIFIER ?>>Identifier</option>
-    </select>
+    <?= form_dropdown(Front::CANVAS_INPUT_SEARCH_BY, FindByEnum::$values, set_value(Front::CANVAS_INPUT_SEARCH_BY),
+        'id="sel-canvas-search" class="select" title="Search"') ?>
 
     <label for="txt-canvas-name">Name</label>
     <input type="text" id="txt-canvas-name" class="txt-def" name="<?= Front::CANVAS_INPUT_NAME ?>" title="Name"
