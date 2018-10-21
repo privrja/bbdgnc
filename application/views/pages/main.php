@@ -44,8 +44,6 @@ use Bbdgnc\Enum\Front;
     <input type=text id="txt-canvas-identifier" class="txt-def" name="<?= Front::CANVAS_INPUT_IDENTIFIER ?>" title="Id"
            value="<?= $identifier ?>"/>
 
-    <input type="hidden" name="<?= Front::CANVAS_HIDDEN_DATABASE ?>" value="<?= $hdDatabase ?>"/>
-
     <input type="submit" id="btn-canvas-find" class="btn-same" name="find" value="Find"/>
     <button type="button" id="btn-canvas-update" class="btn-same" onclick="resize()">Update</button>
     <button type="button" id="button-canvas-easy-smile" class="btn-same" onclick="easy()">Canonical SMILES</button>

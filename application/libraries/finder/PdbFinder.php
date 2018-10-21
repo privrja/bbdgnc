@@ -112,6 +112,6 @@ class PdbFinder implements IFinder {
         $outArResult[Front::CANVAS_INPUT_FORMULA] = Front::urlText(@$arPeptide[self::REPLY_FORMULA]);
         $outArResult[Front::CANVAS_INPUT_MASS] = @$arPeptide[self::REPLY_WEIGHT];
         $outArResult[Front::CANVAS_INPUT_SMILE] = @$arPeptide[self::REPLY_SMILES][0][self::REPLY_NAME];
-        $outArResult[Front::CANVAS_HIDDEN_DATABASE] = ServerEnum::PDB;
+        $outArResult[Front::CANVAS_INPUT_DATABASE] = ServerEnum::PDB;
     }
 }

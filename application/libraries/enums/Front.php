@@ -15,15 +15,6 @@ abstract class Front {
     const CANVAS_INPUT_DEFLECTION = "deflection";
     const CANVAS_INPUT_IDENTIFIER = "identifier";
 
-    /** @var string name of hidden inputs */
-    const CANVAS_HIDDEN_DATABASE = "hdDatabase";
-    const CANVAS_HIDDEN_NAME = "hdName";
-    const CANVAS_HIDDEN_SMILE = "hdSmile";
-    const CANVAS_HIDDEN_FORMULA = "hdFormula";
-    const CANVAS_HIDDEN_MASS = "hdMass";
-    const CANVAS_HIDDEN_DEFLECTION = "hdDeflection";
-    const CANVAS_HIDDEN_IDENTIFIER = "hdIdentifier";
-
     const MAX_LENGTH_TEXT = 20;
     const STRING_TREE_DOTS = "...";
 

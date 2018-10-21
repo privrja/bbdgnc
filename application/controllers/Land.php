@@ -28,7 +28,7 @@ class Land extends CI_Controller {
             Front::CANVAS_INPUT_NAME => "", Front::CANVAS_INPUT_SMILE => "",
             Front::CANVAS_INPUT_FORMULA => "", Front::CANVAS_INPUT_MASS => "",
             Front::CANVAS_INPUT_DEFLECTION => "", Front::CANVAS_INPUT_IDENTIFIER => "",
-            Front::CANVAS_HIDDEN_DATABASE => "", self::ERRORS => ""
+            Front::CANVAS_INPUT_DATABASE => "", self::ERRORS => ""
         );
     }
 
@@ -156,11 +156,11 @@ class Land extends CI_Controller {
      */
     public function select() {
         $data = $this->getLastData();
-        $data[Front::CANVAS_HIDDEN_DATABASE] = $this->input->post(Front::CANVAS_HIDDEN_DATABASE);
+        $data[Front::CANVAS_INPUT_DATABASE] = $this->input->post(Front::CANVAS_INPUT_DATABASE);
 
         /* Problem with name */
         $strName = $this->input->post(Front::CANVAS_INPUT_NAME);
-        if ($this->input->post(Front::CANVAS_HIDDEN_DATABASE) == ServerEnum::PUBCHEM) {
+        if ($this->input->post(Front::CANVAS_INPUT_DATABASE) == ServerEnum::PUBCHEM) {
             $pubChemFinder = new PubChemFinder();
             $strIupacName = $strName;
             $intResultCode = $pubChemFinder->findName($this->input->post(Front::CANVAS_INPUT_IDENTIFIER), $strName);
@@ -174,7 +174,7 @@ class Land extends CI_Controller {
                 $data[Front::CANVAS_INPUT_NAME] = $strName;
             } else {
                 /* TODO maybe can be deleted with the hidden input */
-                $data[Front::CANVAS_INPUT_NAME] = $this->input->post(Front::CANVAS_HIDDEN_NAME);
+                $data[Front::CANVAS_INPUT_NAME] = $this->input->post(Front::CANVAS_INPUT_NAME);
             }
         }
         $this->index($data);
@@ -185,7 +185,7 @@ class Land extends CI_Controller {
      */
     public function next() {
         $arNext = unserialize($this->input->cookie(self::COOKIE_NEXT_RESULTS));
-        $intDatabase = $this->input->post(Front::CANVAS_HIDDEN_DATABASE);
+        $intDatabase = $this->input->post(Front::CANVAS_INPUT_DATABASE);
         $data = $this->getLastHiddenData();
 
         if (isset($arNext) && !empty($arNext)) {
@@ -211,13 +211,13 @@ class Land extends CI_Controller {
      */
     private function getLastHiddenData() {
         $arViewData = array();
-        $arViewData[Front::CANVAS_HIDDEN_DATABASE] = $this->input->post(Front::CANVAS_HIDDEN_DATABASE);
-        $arViewData[Front::CANVAS_HIDDEN_NAME] = $this->input->post(Front::CANVAS_HIDDEN_NAME);
-        $arViewData[Front::CANVAS_HIDDEN_SMILE] = $this->input->post(Front::CANVAS_HIDDEN_SMILE);
-        $arViewData[Front::CANVAS_HIDDEN_FORMULA] = $this->input->post(Front::CANVAS_HIDDEN_FORMULA);
-        $arViewData[Front::CANVAS_HIDDEN_MASS] = $this->input->post(Front::CANVAS_HIDDEN_MASS);
-        $arViewData[Front::CANVAS_HIDDEN_DEFLECTION] = $this->input->post(Front::CANVAS_HIDDEN_DEFLECTION);
-        $arViewData[Front::CANVAS_HIDDEN_IDENTIFIER] = $this->input->post(Front::CANVAS_HIDDEN_IDENTIFIER);
+        $arViewData[Front::CANVAS_INPUT_DATABASE] = $this->input->post(Front::CANVAS_INPUT_DATABASE);
+        $arViewData[Front::CANVAS_INPUT_NAME] = $this->input->post(Front::CANVAS_INPUT_NAME);
+        $arViewData[Front::CANVAS_INPUT_SMILE] = $this->input->post(Front::CANVAS_INPUT_SMILE);
+        $arViewData[Front::CANVAS_INPUT_FORMULA] = $this->input->post(Front::CANVAS_INPUT_FORMULA);
+        $arViewData[Front::CANVAS_INPUT_MASS] = $this->input->post(Front::CANVAS_INPUT_MASS);
+        $arViewData[Front::CANVAS_INPUT_DEFLECTION] = $this->input->post(Front::CANVAS_INPUT_DEFLECTION);
+        $arViewData[Front::CANVAS_INPUT_IDENTIFIER] = $this->input->post(Front::CANVAS_INPUT_IDENTIFIER);
         return $arViewData;
     }
 
@@ -227,13 +227,13 @@ class Land extends CI_Controller {
      */
     private function getLastHiddenDataToInput() {
         $arViewData = array();
-        $arViewData[Front::CANVAS_HIDDEN_DATABASE] = $this->input->post(Front::CANVAS_HIDDEN_DATABASE);
-        $arViewData[Front::CANVAS_INPUT_NAME] = $this->input->post(Front::CANVAS_HIDDEN_NAME);
-        $arViewData[Front::CANVAS_INPUT_SMILE] = $this->input->post(Front::CANVAS_HIDDEN_SMILE);
-        $arViewData[Front::CANVAS_INPUT_FORMULA] = $this->input->post(Front::CANVAS_HIDDEN_FORMULA);
-        $arViewData[Front::CANVAS_INPUT_MASS] = $this->input->post(Front::CANVAS_HIDDEN_MASS);
-        $arViewData[Front::CANVAS_INPUT_DEFLECTION] = $this->input->post(Front::CANVAS_HIDDEN_DEFLECTION);
-        $arViewData[Front::CANVAS_INPUT_IDENTIFIER] = $this->input->post(Front::CANVAS_HIDDEN_IDENTIFIER);
+        $arViewData[Front::CANVAS_INPUT_DATABASE] = $this->input->post(Front::CANVAS_INPUT_DATABASE);
+        $arViewData[Front::CANVAS_INPUT_NAME] = $this->input->post(Front::CANVAS_INPUT_NAME);
+        $arViewData[Front::CANVAS_INPUT_SMILE] = $this->input->post(Front::CANVAS_INPUT_SMILE);
+        $arViewData[Front::CANVAS_INPUT_FORMULA] = $this->input->post(Front::CANVAS_INPUT_FORMULA);
+        $arViewData[Front::CANVAS_INPUT_MASS] = $this->input->post(Front::CANVAS_INPUT_MASS);
+        $arViewData[Front::CANVAS_INPUT_DEFLECTION] = $this->input->post(Front::CANVAS_INPUT_DEFLECTION);
+        $arViewData[Front::CANVAS_INPUT_IDENTIFIER] = $this->input->post(Front::CANVAS_INPUT_IDENTIFIER);
         return $arViewData;
     }
 
@@ -243,13 +243,13 @@ class Land extends CI_Controller {
      */
     private function getLastDataToHidden() {
         $arViewData = array();
-        $arViewData[Front::CANVAS_HIDDEN_DATABASE] = $this->input->post(Front::CANVAS_INPUT_DATABASE);
-        $arViewData[Front::CANVAS_HIDDEN_NAME] = $this->input->post(Front::CANVAS_INPUT_NAME);
-        $arViewData[Front::CANVAS_HIDDEN_SMILE] = $this->input->post(Front::CANVAS_INPUT_SMILE);
-        $arViewData[Front::CANVAS_HIDDEN_FORMULA] = $this->input->post(Front::CANVAS_INPUT_FORMULA);
-        $arViewData[Front::CANVAS_HIDDEN_MASS] = $this->input->post(Front::CANVAS_INPUT_MASS);
-        $arViewData[Front::CANVAS_HIDDEN_DEFLECTION] = $this->input->post(Front::CANVAS_INPUT_DEFLECTION);
-        $arViewData[Front::CANVAS_HIDDEN_IDENTIFIER] = $this->input->post(Front::CANVAS_INPUT_IDENTIFIER);
+        $arViewData[Front::CANVAS_INPUT_DATABASE] = $this->input->post(Front::CANVAS_INPUT_DATABASE);
+        $arViewData[Front::CANVAS_INPUT_NAME] = $this->input->post(Front::CANVAS_INPUT_NAME);
+        $arViewData[Front::CANVAS_INPUT_SMILE] = $this->input->post(Front::CANVAS_INPUT_SMILE);
+        $arViewData[Front::CANVAS_INPUT_FORMULA] = $this->input->post(Front::CANVAS_INPUT_FORMULA);
+        $arViewData[Front::CANVAS_INPUT_MASS] = $this->input->post(Front::CANVAS_INPUT_MASS);
+        $arViewData[Front::CANVAS_INPUT_DEFLECTION] = $this->input->post(Front::CANVAS_INPUT_DEFLECTION);
+        $arViewData[Front::CANVAS_INPUT_IDENTIFIER] = $this->input->post(Front::CANVAS_INPUT_IDENTIFIER);
         return $arViewData;
     }
 
@@ -259,7 +259,7 @@ class Land extends CI_Controller {
      */
     private function getLastData() {
         $arViewData = array();
-        $arViewData[Front::CANVAS_HIDDEN_DATABASE] = $this->input->post(Front::CANVAS_INPUT_DATABASE);
+        $arViewData[Front::CANVAS_INPUT_DATABASE] = $this->input->post(Front::CANVAS_INPUT_DATABASE);
         $arViewData[Front::CANVAS_INPUT_NAME] = $this->input->post(Front::CANVAS_INPUT_NAME);
         $arViewData[Front::CANVAS_INPUT_SMILE] = $this->input->post(Front::CANVAS_INPUT_SMILE);
         $arViewData[Front::CANVAS_INPUT_FORMULA] = $this->input->post(Front::CANVAS_INPUT_FORMULA);

@@ -123,18 +123,28 @@ class ChebiFinder implements IFinder {
         $client = new \SoapClient(self::WSDL, $this->options);
         $arInput['chebiId'] = $strId;
         $outArResult[Front::CANVAS_INPUT_IDENTIFIER] = $strId;
-        $outArResult[Front::CANVAS_HIDDEN_DATABASE] = ServerEnum::CHEBI;
+        $outArResult[Front::CANVAS_INPUT_DATABASE] = ServerEnum::CHEBI;
         try {
             $response = $client->GetCompleteEntity($arInput);
+            $intCounter = 0;
             foreach ($response as $value) {
                 $outArResult[Front::CANVAS_INPUT_NAME] = $value->chebiAsciiName;
                 $outArResult[Front::CANVAS_INPUT_SMILE] = $value->smiles;
                 $outArResult[Front::CANVAS_INPUT_MASS] = $value->monoisotopicMass;
                 $this->getFormulaFromFormulae($value->Formulae, $outArResult);
+                $intCounter++;
+            }
+            if ($intCounter == 0) {
+                $outArResult[Front::CANVAS_INPUT_NAME] = "";
+                $outArResult[Front::CANVAS_INPUT_SMILE] = "";
+                $outArResult[Front::CANVAS_INPUT_MASS] = "";
+                $outArResult[Front::CANVAS_INPUT_FORMULA] = "";
+                return ResultEnum::REPLY_NONE;
             }
         } catch (\Exception $ex) {
             return ResultEnum::REPLY_NONE;
         }
+        log_message('info', "Response OK to SOAP query.");
         return ResultEnum::REPLY_OK_ONE;
     }
 
@@ -170,7 +180,7 @@ class ChebiFinder implements IFinder {
      * @return bool
      */
     private function isMoleculeJunk($arMolecule) {
-       return empty($arMolecule[Front::CANVAS_INPUT_SMILE]) && empty($arMolecule[Front::CANVAS_INPUT_FORMULA]) && empty($arMolecule[Front::CANVAS_INPUT_MASS]);
+        return empty($arMolecule[Front::CANVAS_INPUT_SMILE]) && empty($arMolecule[Front::CANVAS_INPUT_FORMULA]) && empty($arMolecule[Front::CANVAS_INPUT_MASS]);
     }
 
     /**
@@ -247,7 +257,7 @@ class ChebiFinder implements IFinder {
         $this->getSmiles($arData, $outArMolecule);
         $this->getMass($arData, $outArMolecule);
         $this->getFormula($arData, $outArMolecule);
-        $outArMolecule[Front::CANVAS_HIDDEN_DATABASE] = ServerEnum::CHEBI;
+        $outArMolecule[Front::CANVAS_INPUT_DATABASE] = ServerEnum::CHEBI;
     }
 
     /**
