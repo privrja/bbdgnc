@@ -34,14 +34,15 @@ use Bbdgnc\Finder\Enum\ServerEnum;
                 <div class="td"><?= $molecule[Front::CANVAS_INPUT_IDENTIFIER] ?></div>
                 <div class="td"><?= $molecule[Front::CANVAS_INPUT_MASS] ?></div>
                 <div class="td">
-                    <a target="_blank" href=<?= ServerEnum::getLink($database, $molecule[Front::CANVAS_INPUT_IDENTIFIER]) ?>>
+                    <a target="_blank"
+                       href=<?= ServerEnum::getLink($database, $molecule[Front::CANVAS_INPUT_IDENTIFIER]) ?>>
                         <?= ServerEnum::$values[$database]; ?></a>
                 </div>
                 <div class="td"><input type="submit" value="Select"/></div>
 
                 <input type="hidden"
                        name=<?= Front::CANVAS_INPUT_DATABASE ?> value="<?= $database ?>"/>
-                <input type="hidden" name="<?= Front::CANVAS_INPUT_SEARCH_BY ?>" value="<?= $search ?>" />
+                <input type="hidden" name="<?= Front::CANVAS_INPUT_SEARCH_BY ?>" value="<?= $search ?>"/>
                 <input type="hidden"
                        name=<?= Front::CANVAS_INPUT_NAME ?> value="<?= Front::defIndex($molecule, Front::CANVAS_INPUT_NAME) ?>"/>
                 <input type="hidden" id="hidden-canvas-small-<?= $molecule[Front::CANVAS_INPUT_IDENTIFIER] ?>"
@@ -62,13 +63,14 @@ use Bbdgnc\Finder\Enum\ServerEnum;
         <?= form_open('land/next', array('class' => 'form')); ?>
         <input type="hidden"
                name=<?= Front::CANVAS_INPUT_DATABASE ?> value="<?= $database ?>"/>
-        <input type="hidden" name="<?= Front::CANVAS_INPUT_SEARCH_BY ?>" value="<?= $search ?>" />
+        <input type="hidden" name="<?= Front::CANVAS_INPUT_SEARCH_BY ?>" value="<?= $search ?>"/>
         <input type="hidden" name=<?= Front::CANVAS_INPUT_NAME ?> value="<?= $name ?>"/>
         <input type="hidden" name=<?= Front::CANVAS_INPUT_SMILE ?> value="<?= $smile ?>"/>
         <input type="hidden" name=<?= Front::CANVAS_INPUT_FORMULA ?> value="<?= $formula ?>"/>
         <input type="hidden" name=<?= Front::CANVAS_INPUT_MASS ?> value="<?= $mass ?>"/>
         <input type="hidden" name=<?= Front::CANVAS_INPUT_DEFLECTION ?> value="<?= $deflection ?>"/>
         <input type="hidden" name=<?= Front::CANVAS_INPUT_IDENTIFIER ?> value="<?= $identifier ?>"/>
+        <input type="hidden" name="<?= Front::CANVAS_HIDDEN_NEXT_RESULTS ?>" value='<?= $nextResults ?>'/>
         <input type="submit" value="Next results"/>
         </form>
     </div>

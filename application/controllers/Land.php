@@ -122,12 +122,10 @@ class Land extends CI_Controller {
 
         switch ($intResultCode) {
             case ResultEnum::REPLY_NONE:
-                $this->input->set_cookie(self::COOKIE_NEXT_RESULTS, "", 0);
                 $this->errors = "Not Found";
                 $this->index($this->getLastData());
                 break;
             case ResultEnum::REPLY_OK_ONE:
-                $this->input->set_cookie(self::COOKIE_NEXT_RESULTS, "", 0);
                 if (empty($outArResult[Front::CANVAS_INPUT_NAME])) {
                     $outArResult[Front::CANVAS_INPUT_NAME] = $this->input->post(Front::CANVAS_INPUT_NAME);
                 }
@@ -139,12 +137,9 @@ class Land extends CI_Controller {
                 $data = $this->getLastData();
                 $data['molecules'] = $outArResult;
                 if (!empty($outArNextResult)) {
-                    // TODO get only first 160 ids, max value to cookie can be overhead, maybe better store to database
-                    array_splice($outArNextResult, 160);
-                    // save next results to cookie
-                    $this->input->set_cookie(self::COOKIE_NEXT_RESULTS, serialize($outArNextResult), self::COOKIE_EXPIRE_HOUR);
+                    $data[Front::CANVAS_HIDDEN_NEXT_RESULTS] = serialize($outArNextResult);
                 } else {
-                    $this->input->set_cookie(self::COOKIE_NEXT_RESULTS, "", 0);
+                    log_message('debug', "Last page of results");
                 }
                 $this->renderSelect($data, $this->getLastData());
                 break;
@@ -156,7 +151,6 @@ class Land extends CI_Controller {
      */
     public function select() {
         $data = $this->getLastData();
-        $data[Front::CANVAS_INPUT_DATABASE] = $this->input->post(Front::CANVAS_INPUT_DATABASE);
 
         /* Problem with name */
         $strName = $this->input->post(Front::CANVAS_INPUT_NAME);
@@ -177,7 +171,7 @@ class Land extends CI_Controller {
      * Render view for next values from finding
      */
     public function next() {
-        $arNext = unserialize($this->input->cookie(self::COOKIE_NEXT_RESULTS));
+        $arNext = unserialize($this->input->post(Front::CANVAS_HIDDEN_NEXT_RESULTS));
         $intDatabase = $this->input->post(Front::CANVAS_INPUT_DATABASE);
         $data = $this->getLastData();
 
@@ -189,12 +183,13 @@ class Land extends CI_Controller {
 
             $data['molecules'] = $outArResult;
             if (!empty($arNext)) {
-                // save next results to cookie
-                $this->input->set_cookie(self::COOKIE_NEXT_RESULTS, serialize($arNext), self::COOKIE_EXPIRE_HOUR);
+                $data[Front::CANVAS_HIDDEN_NEXT_RESULTS] = serialize($arNext);
+            } else {
+                log_message('debug', "Last page of results");
+                // last page -> not show next results button
             }
             $this->renderSelect($data, $this->getLastData());
         } else {
-            log_message('info', "Last page of results");
             $this->index($this->getLastData());
         }
     }

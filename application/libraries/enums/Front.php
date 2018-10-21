@@ -14,6 +14,7 @@ abstract class Front {
     const CANVAS_INPUT_MASS = "mass";
     const CANVAS_INPUT_DEFLECTION = "deflection";
     const CANVAS_INPUT_IDENTIFIER = "identifier";
+    const CANVAS_HIDDEN_NEXT_RESULTS = "nextResults";
 
     const MAX_LENGTH_TEXT = 20;
     const STRING_TREE_DOTS = "...";
