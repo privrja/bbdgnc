@@ -23,7 +23,7 @@ use Bbdgnc\Enum\Front;
            value="<?= $name ?>"/>
 
     <label for="chk-match" class="chk">Exact match</label>
-    <input type="checkbox" id="chk-match" name="<?= Front::CANVAS_INPUT_MATCH ?>" value="1" checked="checked"/>
+    <input type="checkbox" id="chk-match" name="<?= Front::CANVAS_INPUT_MATCH ?>" value="1" <?= set_checkbox(Front::CANVAS_INPUT_MATCH, '1',true); ?>/>
 
     <label for="txt-canvas-smile">SMILES</label>
     <textarea id="txt-canvas-smile" class="txt-area" name="<?= Front::CANVAS_INPUT_SMILE ?>"
