@@ -28,6 +28,7 @@ abstract class ServerEnum {
      */
     public static function getLink($intServerEnum, $strIdentifier) {
         switch ($intServerEnum) {
+            default:
             case self::PUBCHEM:
                 return "https://pubchem.ncbi.nlm.nih.gov/compound/" . $strIdentifier;
 //            case self::CHEMSPIDER:

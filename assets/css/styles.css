@@ -120,14 +120,14 @@ ul {
 }
 
 /** footer */
-ul .footer {
-    margin: 0;
-    height: 1vh;
-}
-
 .footer {
     display: inline-block;
     font-size: 1.5vh;
+}
+
+ul .footer {
+    margin: 0;
+    height: 1vh;
 }
 
 .footer-right {

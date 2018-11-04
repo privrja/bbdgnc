@@ -1,9 +1,13 @@
-/** create DB */
+/**
+ * Create DB
+ */
 DROP DATABASE IF EXISTS bbdgnc;
 CREATE DATABASE bbdgnc CHARACTER SET utf8 COLLATE utf8_czech_ci;
 USE bbdgnc;
 
-/* create user to use */
+/**
+ * Create user to use
+ */
 CREATE USER IF NOT EXISTS 'hedgehog'@'*' IDENTIFIED BY 'vqnp7f1r';
 GRANT SELECT, UPDATE, DELETE, INSERT ON bbdgnc.* TO 'hedgehog'@'*';
 
@@ -88,7 +92,9 @@ CREATE TABLE b2s (
     CONSTRAINT FK_B2S_SEQUENCEID FOREIGN KEY (sequence_id) REFERENCES sequence(id)
 );
 
-/** create indexes */
+/**
+ * Create indexes
+ */
 CREATE INDEX IX_BLOCK_ACRONYM ON block (acronym);
 CREATE INDEX IX_BLOCK_NAME ON block (name);
 CREATE INDEX IX_SEQUENCE_NAME ON sequence (name);
