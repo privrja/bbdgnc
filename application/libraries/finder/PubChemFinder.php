@@ -2,7 +2,6 @@
 
 namespace Bbdgnc\Finder;
 
-use Bbdgnc\Finder\Enum\ServerEnum;
 use Bbdgnc\Enum\Front;
 use Bbdgnc\Finder\Enum\ResultEnum;
 
@@ -134,7 +133,7 @@ class PubChemFinder implements IFinder {
      */
     private function getMoleculesFromListKey($strUri, &$outArResult, &$outArNextResult) {
         $mixDecoded = JsonDownloader::getJsonFromUri($strUri);
-        if ($mixDecoded === false or !isset($mixDecoded)) {
+        if ($mixDecoded === false || !isset($mixDecoded)) {
             return ResultEnum::REPLY_NONE;
         }
         $intCounter = 0;
@@ -224,7 +223,7 @@ class PubChemFinder implements IFinder {
     function findByIdentifier($strId, &$outArResult) {
         $uri = PubChemFinder::REST_DEF_URI . "cid/" . $strId . PubChemFinder::REST_PROPERTY . PubChemFinder::REST_PROPERTY_VALUES . IFinder::REST_FORMAT_JSON;
         $mixDecoded = JsonDownloader::getJsonFromUri($uri);
-        if ($mixDecoded === false or !isset($mixDecoded)) {
+        if ($mixDecoded === false || !isset($mixDecoded)) {
             return ResultEnum::REPLY_NONE;
         }
         return $this->resultOne($mixDecoded[PubChemFinder::REPLY_TABLE_PROPERTIES][PubChemFinder::REPLY_PROPERTIES][0], $outArResult, true);
@@ -256,6 +255,7 @@ class PubChemFinder implements IFinder {
         switch ($strProperty) {
             case PubChemFinder::IDENTIFIER:
                 return Front::CANVAS_INPUT_IDENTIFIER;
+            default:
             case PubChemFinder::IUPAC_NAME:
                 return Front::CANVAS_INPUT_NAME;
             case PubChemFinder::FORMULA:
@@ -280,7 +280,7 @@ class PubChemFinder implements IFinder {
     function getNames($strId, $strDefaultName = "") {
         $strUri = PubChemFinder::REST_DEF_URI . "cid/" . $strId . "/synonyms/" . IFinder::REST_FORMAT_JSON;
         $mixDecoded = JsonDownloader::getJsonFromUri($strUri);
-        if ($mixDecoded === false or !isset($mixDecoded)) {
+        if ($mixDecoded === false || !isset($mixDecoded)) {
             return $strDefaultName;
         }
         foreach ($mixDecoded['InformationList']['Information'][0]['Synonym'] as $strSynonym) {
@@ -300,11 +300,9 @@ class PubChemFinder implements IFinder {
     private
     function resultOne($objItem, &$outArResult, $blFindName = IFinder::FIND_NAMES) {
         foreach ($objItem as $strProperty => $mixValue) {
-            if ($strProperty == PubChemFinder::IUPAC_NAME) {
-                /* too slow with true */
-                if ($blFindName) {
-                    $mixValue = $this->getNames($outArResult[Front::CANVAS_INPUT_IDENTIFIER], $mixValue);
-                }
+            /* too slow with true lbFindName */
+            if ($strProperty == PubChemFinder::IUPAC_NAME && $blFindName) {
+                $mixValue = $this->getNames($outArResult[Front::CANVAS_INPUT_IDENTIFIER], $mixValue);
             }
             $outArResult[$this->getArrayKeyFromReplyProperty($strProperty)] = $mixValue;
         }
