@@ -1,0 +1,12 @@
+{
+  "name": "bbdgnc",
+  "version": "1.0.0",
+  "description": "Building Block Database of Natural Compounds",
+  "repository": "https://github.com/privrja/bbdgnc.git",
+  "author": "Jan Privratsky",
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "smiles-drawer": "git+https://github.com/privrja/smilesDrawer.git"
+  }
+}
