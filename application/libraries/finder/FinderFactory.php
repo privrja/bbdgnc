@@ -16,7 +16,9 @@ abstract class FinderFactory {
     private static function isOptionSet($strOption, $arOptions) {
         if (isset($arOptions[$strOption])) {
             return $arOptions[$strOption];
-        } else return null;
+        } else {
+            return null;
+        }
     }
 
     /**
@@ -27,6 +29,7 @@ abstract class FinderFactory {
      */
     public static function getFinder($intDatabase, $arOptions = array()) {
         switch ($intDatabase) {
+            default:
             case ServerEnum::PUBCHEM:
                 return new PubChemFinder(self::isOptionSet(self::OPTION_EXACT_MATCH, $arOptions));
             /* TODO ChemSpider */

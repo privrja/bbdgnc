@@ -2,6 +2,8 @@
 
 namespace Bbdgnc\Finder;
 
+use Bbdgnc\Enum\LoggerEnum;
+
 abstract class JsonDownloader {
 
     /**
@@ -18,8 +20,8 @@ abstract class JsonDownloader {
             /** TODO Bad transfer -> maybe can try it again? */
             $error = curl_error($curl);
             curl_close($curl);
-            log_message("error", "Error in cURL on URI: " . $strUri);
-            log_message("error", "Error in cURL: " . $error);
+            log_message(LoggerEnum::ERROR, "Error in cURL on URI: " . $strUri);
+            log_message(LoggerEnum::ERROR, "Error in cURL: " . $error);
             throw new \Exception("Error during cURL");
         }
         curl_close($curl);
@@ -27,11 +29,11 @@ abstract class JsonDownloader {
 
         /* Bad reply */
         if (isset($decoded[PubChemFinder::REPLY_FAULT])) {
-            log_message('error', "REST reply fault. Uri: " . $strUri);
+            log_message(LoggerEnum::ERROR, "REST reply fault. Uri: " . $strUri);
             return false;
         }
 
-        log_message('info', "Response OK to URI: $strUri");
+        log_message(LoggerEnum::INFO, "Response OK to URI: $strUri");
         return $decoded;
     }
 

@@ -121,6 +121,7 @@ class Land extends CI_Controller {
         }
 
         switch ($intResultCode) {
+            default:
             case ResultEnum::REPLY_NONE:
                 $this->errors = "Not Found";
                 $this->index($this->getLastData());
