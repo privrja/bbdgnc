@@ -1,10 +1,10 @@
 <?php
 
-use Bbdgnc\Finder\FinderFactory;
-use Bbdgnc\Finder\Enum\FindByEnum;
 use Bbdgnc\Enum\Front;
+use Bbdgnc\Finder\Enum\FindByEnum;
 use Bbdgnc\Finder\Enum\ResultEnum;
 use Bbdgnc\Finder\Enum\ServerEnum;
+use Bbdgnc\Finder\FinderFactory;
 use Bbdgnc\Finder\PubChemFinder;
 
 class Land extends CI_Controller {
@@ -45,22 +45,22 @@ class Land extends CI_Controller {
      * @param array $viewData default null, data for view to print
      */
     public function index($viewData = null) {
-        $this->load->view('templates/header');
-        $this->load->view('pages/canvas');
+        $this->load->view(Front::TEMPLATES_HEADER);
+        $this->load->view(Front::PAGES_CANVAS);
         if (isset($viewData)) {
-            $this->load->view('pages/main', $viewData);
+            $this->load->view(Front::PAGES_MAIN, $viewData);
         } else {
-            $this->load->view('pages/main', $this->getData());
+            $this->load->view(Front::PAGES_MAIN, $this->getData());
         }
-        $this->load->view('templates/footer');
+        $this->load->view(Front::TEMPLATES_FOOTER);
     }
 
     private function renderSelect($viewSelectData, $viewData) {
-        $this->load->view('templates/header');
-        $this->load->view('pages/canvas');
-        $this->load->view('pages/main', $viewData);
-        $this->load->view('pages/select', $viewSelectData);
-        $this->load->view('templates/footer');
+        $this->load->view(Front::TEMPLATES_HEADER);
+        $this->load->view(Front::PAGES_CANVAS);
+        $this->load->view(Front::PAGES_MAIN, $viewData);
+        $this->load->view(Front::PAGES_SELECT, $viewSelectData);
+        $this->load->view(Front::TEMPLATES_FOOTER);
     }
 
     /**
@@ -97,8 +97,8 @@ class Land extends CI_Controller {
      */
     private function find($intDatabase, $intFindBy, $blMatch) {
         /* input check */
-        $this->form_validation->set_rules(Front::CANVAS_INPUT_DATABASE, "Database", "required");
-        $this->form_validation->set_rules(Front::CANVAS_INPUT_SEARCH_BY, "Search by", "required");
+        $this->form_validation->set_rules(Front::CANVAS_INPUT_DATABASE, "Database", Front::REQUIRED);
+        $this->form_validation->set_rules(Front::CANVAS_INPUT_SEARCH_BY, "Search by", Front::REQUIRED);
         if ($this->form_validation->run() === false) {
             $this->index($this->getLastData());
             return;
@@ -228,31 +228,31 @@ class Land extends CI_Controller {
         $finder = FinderFactory::getFinder($intDatabase, $arSearchOptions);
         switch ($intFindBy) {
             case FindByEnum::IDENTIFIER:
-                $this->form_validation->set_rules(Front::CANVAS_INPUT_IDENTIFIER, "Identifier", "required");
+                $this->form_validation->set_rules(Front::CANVAS_INPUT_IDENTIFIER, "Identifier", Front::REQUIRED);
                 if ($this->form_validation->run() === false) {
                     return ResultEnum::REPLY_NONE;
                 }
                 return $finder->findByIdentifier($this->input->post(Front::CANVAS_INPUT_IDENTIFIER), $outArResult);
             case FindByEnum::NAME:
-                $this->form_validation->set_rules(Front::CANVAS_INPUT_NAME, "Name", "required");
+                $this->form_validation->set_rules(Front::CANVAS_INPUT_NAME, "Name", Front::REQUIRED);
                 if ($this->form_validation->run() === false) {
                     return ResultEnum::REPLY_NONE;
                 }
                 return $finder->findByName($this->input->post(Front::CANVAS_INPUT_NAME), $outArResult, $outArNextResult);
             case FindByEnum::FORMULA:
-                $this->form_validation->set_rules(Front::CANVAS_INPUT_FORMULA, "Formula", "required");
+                $this->form_validation->set_rules(Front::CANVAS_INPUT_FORMULA, "Formula", Front::REQUIRED);
                 if ($this->form_validation->run() === false) {
                     return ResultEnum::REPLY_NONE;
                 }
                 return $finder->findByFormula($this->input->post(Front::CANVAS_INPUT_FORMULA), $outArResult, $outArNextResult);
             case FindByEnum::SMILE:
-                $this->form_validation->set_rules(Front::CANVAS_INPUT_SMILE, "SMILES", "required");
+                $this->form_validation->set_rules(Front::CANVAS_INPUT_SMILE, "SMILES", Front::REQUIRED);
                 if ($this->form_validation->run() === false) {
                     return ResultEnum::REPLY_NONE;
                 }
                 return $finder->findBySmile($this->input->post(Front::CANVAS_INPUT_SMILE), $outArResult, $outArNextResult);
             case FindByEnum::MASS:
-                $this->form_validation->set_rules(Front::CANVAS_INPUT_MASS, "Mass", "required");
+                $this->form_validation->set_rules(Front::CANVAS_INPUT_MASS, "Mass", Front::REQUIRED);
                 if ($this->form_validation->run() === false) {
                     return ResultEnum::REPLY_NONE;
                 }

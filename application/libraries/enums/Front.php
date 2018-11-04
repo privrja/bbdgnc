@@ -17,8 +17,15 @@ abstract class Front {
     const CANVAS_HIDDEN_NEXT_RESULTS = "nextResults";
     const CANVAS_HIDDEN_SHOW_NEXT_RESULTS = "showNextResults";
 
+    const PAGES_MAIN = "pages/main";
+    const PAGES_CANVAS = "pages/canvas";
+    const PAGES_SELECT = "pages/select";
+    const TEMPLATES_FOOTER = "templates/footer";
+    const TEMPLATES_HEADER = "templates/header";
+
     const MAX_LENGTH_TEXT = 20;
     const STRING_TREE_DOTS = "...";
+    const REQUIRED = "required";
 
     public static function formula($strFormula) {
         return preg_replace('/(\d+)/', '<sub>$1</sub>', $strFormula);
