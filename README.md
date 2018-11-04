@@ -29,6 +29,7 @@ Default value is http://localhost/ already set
     $config['base_url'] = 'http://localhost/';
     
 ## EasyPHP Windows configuration
+
 In php.ini uncomment two lines:
     
     extension=php_curl.dll
@@ -43,6 +44,7 @@ Add a path to certificate in php.ini
 Tested on DEVSERVER 17.0 
 
 ## XAMPP Windows configuration
+
 In php.ini only need to uncomment one line:
 
     extension=php_soap.dll
