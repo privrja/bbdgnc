@@ -1,54 +1,60 @@
-<div id="div-canvas">
-    <canvas id="canvas-main"></canvas>
-</div>
+<?php
+
+use Bbdgnc\Finder\Enum\ServerEnum;
+use Bbdgnc\Finder\Enum\FindByEnum;
+use Bbdgnc\Enum\Front;
+
+?>
+
 <div id="div-right">
 
-    <?= validation_errors(); ?>
+    <?= form_open('land/form', array('class' => 'form')); ?>
 
-    <?= form_open('land/index', array('class' => 'form')); ?>
+    <label for="sel-canvas-database">Database</label>
+    <?= form_dropdown(Front::CANVAS_INPUT_DATABASE, ServerEnum::$values, set_value(Front::CANVAS_INPUT_DATABASE),
+        'id="sel-canvas-database" class="select" title="Search"'); ?>
 
-    <label for="search">Database</label>
-    <select name="search" class="select" title="Search">
-        <option value="pubchem">PubChem</option>
-        <option value="chemspider">ChemSpider</option>
-        <option value="norine">Norine</option>
-        <option value="pdb">PDB</option>
-    </select>
+    <label for="sel-canvas-search">Search by</label>
+    <?= form_dropdown(Front::CANVAS_INPUT_SEARCH_BY, FindByEnum::$values, set_value(Front::CANVAS_INPUT_SEARCH_BY),
+        'id="sel-canvas-search" class="select" title="Search"') ?>
 
-    <label for="search">Search by</label>
-    <select name="search" class="select" title="Search">
-        <option value="name">Name</option>
-        <option value="name">SMILES</option>
-        <option value="fle">Molecular Formula</option>
-        <option value="mass">Monoisotopic Mass</option>
-        <option value="id">Identifier</option>
-    </select>
+    <label for="txt-canvas-name">Name</label>
+    <input type="text" id="txt-canvas-name" class="txt-def" name="<?= Front::CANVAS_INPUT_NAME ?>" title="Name"
+           value="<?= $name ?>"/>
 
-    <label for="name">Name</label>
-    <input type="text" id="txt-canvas-name" class="txt-def" name="name" title="Name"/>
+    <label for="chk-match" class="chk">Exact match</label>
+    <input type="checkbox" id="chk-match" name="<?= Front::CANVAS_INPUT_MATCH ?>" value="1" <?= set_checkbox(Front::CANVAS_INPUT_MATCH, '1',true); ?>/>
 
-    <label for="smile">SMILES</label>
-    <textarea id="txt-canvas-smile" class="txt-area" name="smile" title="SMILES"></textarea>
+    <label for="txt-canvas-smile">SMILES</label>
+    <textarea id="txt-canvas-smile" class="txt-area" name="<?= Front::CANVAS_INPUT_SMILE ?>"
+              title="SMILES"><?= $smile ?></textarea>
 
-    <label for="fle">Molecular Formula</label>
-    <input type="text" id="txt-canvas-fle" class="txt-def" name="fle" title="Formula"/>
+    <label for="txt-canvas-fle">Molecular Formula</label>
+    <input type="text" id="txt-canvas-fle" class="txt-def" name="<?= Front::CANVAS_INPUT_FORMULA ?>" title="Formula"
+           value="<?= $formula ?>"/>
 
-    <label for="mass">Monoisotopic Mass</label>
-    <input type="number" id="txt-canvas-mass" class="txt-def" name="mass" title="Monoisotopic Mass"/>
-    <label for="deflection" class="lbl-block">+/-</label>
-    <input type="number" id="txt-canvas-mass-deflection" class="txt-def" name="deflection" title="Deflection"/>
+    <label for="txt-canvas-mass">Monoisotopic Mass</label>
+    <input type="number" step="any" id="txt-canvas-mass" class="txt-def" name="<?= Front::CANVAS_INPUT_MASS ?>"
+           title="Monoisotopic Mass" value="<?= $mass ?>"/>
+    <label for="txt-canvas-mass-deflection" class="lbl-block">+/-</label>
+    <input type="number" step="any" id="txt-canvas-mass-deflection" class="txt-def" name="<?= Front::CANVAS_INPUT_DEFLECTION ?>"
+           title="Deflection" value="<?= $deflection ?>"/>
 
-    <label for="id">Identifier</label>
-    <input type=text class="txt-def" name="id" title="Id"/>
+    <label for="txt-canvas-identifier">Identifier</label>
+    <input type=text id="txt-canvas-identifier" class="txt-def" name="<?= Front::CANVAS_INPUT_IDENTIFIER ?>" title="Id"
+           value="<?= $identifier ?>"/>
 
-    <button type="button" id="btn-canvas-find" class="btn-same" name="find">Find</button>
-    <button type="button" id="btn-canvas-load" class="btn-same" name="load">Load</button>
+    <input type="submit" id="btn-canvas-find" class="btn-same" name="find" value="Find"/>
+    <button type="button" id="btn-canvas-update" class="btn-same" onclick="resize()">Update</button>
     <button type="button" id="button-canvas-easy-smile" class="btn-same" onclick="easy()">Canonical SMILES</button>
     <button type="button" id="btn-canvas-disintegrate" class="btn-same">Building Blocks</button>
-    <button type="button" id="btn-canvas-update" class="btn-same" onclick="drawSmile()">Update</button>
+    <button type="button" id="btn-canvas-load" class="btn-same" name="load">Load</button>
     <input type="submit" class="btn-same" value="Save"/>
 
     </form>
+
+    <?= validation_errors(); ?>
+    <?php if (isset($errors)) echo $errors; ?>
 
 </div>
 
