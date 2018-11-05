@@ -5,6 +5,7 @@ use Bbdgnc\Finder\Enum\FindByEnum;
 use Bbdgnc\Finder\Enum\ResultEnum;
 use Bbdgnc\Finder\Enum\ServerEnum;
 use Bbdgnc\Finder\FinderFactory;
+use Bbdgnc\Finder\IFinder;
 use Bbdgnc\Finder\PubChemFinder;
 
 class Land extends CI_Controller {
@@ -223,44 +224,104 @@ class Land extends CI_Controller {
      * @param int $intFindBy find by this param
      * @param array $outArResult output param result only first X results, can be influenced by param IFinder::FIRST_X_RESULTS
      * @param array $outArNextResult next results identifiers
+     * @param array $arSearchOptions
      * @return int result code 0 => find none, 1 => find 1, 2 => find more than 1
      */
     private function findBy($intDatabase, $intFindBy, &$outArResult = array(), &$outArNextResult = array(), $arSearchOptions = array()) {
         $finder = FinderFactory::getFinder($intDatabase, $arSearchOptions);
         switch ($intFindBy) {
             case FindByEnum::IDENTIFIER:
-                $this->form_validation->set_rules(Front::CANVAS_INPUT_IDENTIFIER, "Identifier", Front::REQUIRED);
-                if ($this->form_validation->run() === false) {
-                    return ResultEnum::REPLY_NONE;
-                }
-                return $finder->findByIdentifier($this->input->post(Front::CANVAS_INPUT_IDENTIFIER), $outArResult);
+                return $this->validateFormAndSearchByIdentifier($finder, $outArResult);
             case FindByEnum::NAME:
-                $this->form_validation->set_rules(Front::CANVAS_INPUT_NAME, "Name", Front::REQUIRED);
-                if ($this->form_validation->run() === false) {
-                    return ResultEnum::REPLY_NONE;
-                }
-                return $finder->findByName($this->input->post(Front::CANVAS_INPUT_NAME), $outArResult, $outArNextResult);
+                return $this->validateFormAndSearchByName($finder, $outArResult, $outArNextResult);
             case FindByEnum::FORMULA:
-                $this->form_validation->set_rules(Front::CANVAS_INPUT_FORMULA, "Formula", Front::REQUIRED);
-                if ($this->form_validation->run() === false) {
-                    return ResultEnum::REPLY_NONE;
-                }
-                return $finder->findByFormula($this->input->post(Front::CANVAS_INPUT_FORMULA), $outArResult, $outArNextResult);
+                return $this->validateFormAndSearchByFormula($finder, $outArResult, $outArNextResult);
             case FindByEnum::SMILE:
-                $this->form_validation->set_rules(Front::CANVAS_INPUT_SMILE, "SMILES", Front::REQUIRED);
-                if ($this->form_validation->run() === false) {
-                    return ResultEnum::REPLY_NONE;
-                }
-                return $finder->findBySmile($this->input->post(Front::CANVAS_INPUT_SMILE), $outArResult, $outArNextResult);
+                return $this->validateFormAndSearchBySmiles($finder, $outArResult, $outArNextResult);
             case FindByEnum::MASS:
-                $this->form_validation->set_rules(Front::CANVAS_INPUT_MASS, "Mass", Front::REQUIRED);
-                if ($this->form_validation->run() === false) {
-                    return ResultEnum::REPLY_NONE;
-                }
-                return $finder->findByMass($this->input->post(Front::CANVAS_INPUT_MASS), $this->input->post(Front::CANVAS_INPUT_DEFLECTION),$outArResult, $outArNextResult);
+                return $this->validateFormAndSearchByMass($finder, $outArResult, $outArNextResult);
             default:
                 return ResultEnum::REPLY_NONE;
         }
+    }
+
+    /**
+     * Set form validation, when search by identifier, validate form and search by identifier
+     * @param IFinder $finder
+     * @param array $outArResult output param with result
+     * @return int result code 0 => find none, 1 => find 1, 2 => find more than 1
+     * @see ResultEnum
+     */
+    private function validateFormAndSearchByIdentifier($finder, &$outArResult) {
+        $this->form_validation->set_rules(Front::CANVAS_INPUT_IDENTIFIER, "Identifier", Front::REQUIRED);
+        if ($this->form_validation->run() === false) {
+            return ResultEnum::REPLY_NONE;
+        }
+        return $finder->findByIdentifier($this->input->post(Front::CANVAS_INPUT_IDENTIFIER), $outArResult);
+    }
+
+    /**
+     * Set form validation, when search by name, validate form and search by name
+     * @param IFinder $finder
+     * @param array $outArResult output param with result
+     * @param array $outArNextResult output param with integers as identifiers of next results
+     * @return int result code 0 => find none, 1 => find 1, 2 => find more than 1
+     * @see ResultEnum
+     */
+    private function validateFormAndSearchByName($finder, &$outArResult, &$outArNextResult) {
+        $this->form_validation->set_rules(Front::CANVAS_INPUT_NAME, "Name", Front::REQUIRED);
+        if ($this->form_validation->run() === false) {
+            return ResultEnum::REPLY_NONE;
+        }
+        return $finder->findByName($this->input->post(Front::CANVAS_INPUT_NAME), $outArResult, $outArNextResult);
+    }
+
+    /**
+     * Set form validation, when search by formula, validate form and search by formula
+     * @param IFinder $finder
+     * @param array $outArResult output param with result
+     * @param array $outArNextResult output param with integers as identifiers of next results
+     * @return int result code 0 => find none, 1 => find 1, 2 => find more than 1
+     * @see ResultEnum
+     */
+    private function validateFormAndSearchByFormula($finder, &$outArResult, &$outArNextResult) {
+        $this->form_validation->set_rules(Front::CANVAS_INPUT_FORMULA, "Formula", Front::REQUIRED);
+        if ($this->form_validation->run() === false) {
+            return ResultEnum::REPLY_NONE;
+        }
+        return $finder->findByFormula($this->input->post(Front::CANVAS_INPUT_FORMULA), $outArResult, $outArNextResult);
+    }
+
+    /**
+     * Set form validation, when search by SMILES, validate form and search by SMILES
+     * @param IFinder $finder
+     * @param array $outArResult output param with result
+     * @param array $outArNextResult output param with integers as identifiers of next results
+     * @return int result code 0 => find none, 1 => find 1, 2 => find more than 1
+     * @see ResultEnum
+     */
+    private function validateFormAndSearchBySmiles($finder, &$outArResult, &$outArNextResult) {
+        $this->form_validation->set_rules(Front::CANVAS_INPUT_SMILE, "SMILES", Front::REQUIRED);
+        if ($this->form_validation->run() === false) {
+            return ResultEnum::REPLY_NONE;
+        }
+        return $finder->findBySmile($this->input->post(Front::CANVAS_INPUT_SMILE), $outArResult, $outArNextResult);
+    }
+
+    /**
+     * Set form validation, when search by mass, validate form and search by mass
+     * @param IFinder $finder
+     * @param array $outArResult output param with result
+     * @param array $outArNextResult output param with integers as identifiers of next results
+     * @return int result code 0 => find none, 1 => find 1, 2 => find more than 1
+     * @see ResultEnum
+     */
+    private function validateFormAndSearchByMass($finder, &$outArResult, &$outArNextResult) {
+        $this->form_validation->set_rules(Front::CANVAS_INPUT_MASS, "Mass", Front::REQUIRED);
+        if ($this->form_validation->run() === false) {
+            return ResultEnum::REPLY_NONE;
+        }
+        return $finder->findByMass($this->input->post(Front::CANVAS_INPUT_MASS), $this->input->post(Front::CANVAS_INPUT_DEFLECTION), $outArResult, $outArNextResult);
     }
 
 }

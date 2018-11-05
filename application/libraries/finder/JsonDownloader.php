@@ -3,6 +3,7 @@
 namespace Bbdgnc\Finder;
 
 use Bbdgnc\Enum\LoggerEnum;
+use Bbdgnc\Finder\Exception\BadTransferException;
 
 abstract class JsonDownloader {
 
@@ -10,7 +11,7 @@ abstract class JsonDownloader {
      * Download JSON file from URI and decode it to array
      * @param string $strUri uri for curl
      * @return bool|array false if something goes wrong or array with result when ok
-     * @throws \Exception
+     * @throws BadTransferException
      */
     public static function getJsonFromUri($strUri) {
         $curl = curl_init($strUri);
@@ -22,7 +23,7 @@ abstract class JsonDownloader {
             curl_close($curl);
             log_message(LoggerEnum::ERROR, "Error in cURL on URI: " . $strUri);
             log_message(LoggerEnum::ERROR, "Error in cURL: " . $error);
-            throw new \Exception("Error during cURL");
+            throw new BadTransferException("Error during cURL");
         }
         curl_close($curl);
         $decoded = json_decode($curl_response, true);
