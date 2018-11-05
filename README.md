@@ -7,6 +7,8 @@ Apache or other similar server
 PHP 5.3.7 or higher
 PHP componets need: libcurl, libxml
 
+PHP components need: libcurl, libxml
+
 [Composer](https://getcomposer.org/download/)
 
 ## Install
