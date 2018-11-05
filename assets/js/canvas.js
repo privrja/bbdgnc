@@ -1,6 +1,16 @@
 /** constants HTML id */
 const CANVAS_ID = "canvas-main";
 const TXT_SMILE_ID = "txt-canvas-smile";
+const HIDDEN_SMILE_ID = "hidden-canvas-small-";
+const CANVAS_SMALL_ID = "canvas-small-";
+const CANVAS_LARGE_ID = "canvas-large";
+
+const WINDOW_MIN_WIDTH = 850;
+const WINDOW_MIN_HEIGHT = 575;
+const CANVAS_SMALL_WIDTH = 300;
+
+const PIXEL_TWO = 2;
+const PROCENT_SIXTY = 0.6;
 
 /** constants mode */
 const MODE_LIGHT = "light";
@@ -10,12 +20,21 @@ const MODE_DARK = "dark";
 const COLOR_WHITE = "white";
 const COLOR_BLACK = "black";
 
-/** Initialize the drawer */
+/** boolean is mobile version? */
+let mobile = false;
 
+/** int last show last preview of SMILES */
+let lastLargeSmilesId;
+
+/** Initialize the drawer */
 let smilesDrawer = getSmilesDrawer();
+let smallSmilesDrawer = getSmallSmilesDrawer();
+let largeSmilesDrawer = getLargeSmilesDrawer();
 
 /** Resize event */
-window.addEventListener('resize', function () {
+window.addEventListener('resize', resize);
+
+function resize() {
     let canvas = document.getElementById(CANVAS_ID);
     canvas.style.width = "100%";
     canvas.style.height = "100%";
@@ -23,7 +42,20 @@ window.addEventListener('resize', function () {
     context.clearRect(0, 0, canvas.width, canvas.height);
     smilesDrawer = getSmilesDrawer();
     drawSmile();
-});
+}
+
+window.onload = function () {
+    var smallCanvases = document.querySelectorAll('[data-canvas-small-id]');
+    for (let i = 0; i < smallCanvases.length; i++) {
+        let elem = smallCanvases[i];
+        drawSmallSmile(elem.getAttribute("data-canvas-small-id"));
+        if (i === 0) {
+            document.location.href = "#h-results";
+        }
+    }
+    mobileVersion();
+    resize();
+};
 
 /** default screen mode (dark/light) def = light */
 let DEFAULT_SCREEN_MODE = MODE_LIGHT;
@@ -32,7 +64,31 @@ let DEFAULT_SCREEN_MODE = MODE_LIGHT;
  * Get SMILES Drawer instance with dimension of canvas
  */
 function getSmilesDrawer() {
-    return new SmilesDrawer.Drawer({width: getCanvasWidth(), height: getCanvasHeight()});
+    return new SmilesDrawer.Drawer({width: getCanvasWidth(), height: getCanvasHeight() });
+}
+
+function getSmallSmilesDrawer() {
+    return new SmilesDrawer.Drawer({width: CANVAS_SMALL_WIDTH, height: CANVAS_SMALL_WIDTH });
+}
+
+function getLargeSmilesDrawer() {
+    return new SmilesDrawer.Drawer({width: getWindowWidth() * PROCENT_SIXTY, height: getWindowHeight() + PIXEL_TWO });
+}
+
+/**
+ * Mobile version?
+ * set mobile to true if window is too small
+ */
+function mobileVersion() {
+    mobile = getWindowWidth() <= WINDOW_MIN_WIDTH || getWindowHeight() <= WINDOW_MIN_HEIGHT;
+}
+
+function getWindowWidth() {
+    return window.innerWidth;
+}
+
+function getWindowHeight() {
+    return window.innerHeight;
 }
 
 /**
@@ -60,7 +116,8 @@ function easy() {
 }
 
 /**
- * SMILEs to easy form
+ * SMILEs to easy
+ * TODO form !! [NH3+] not functional !!
  * @param smile string SMILEs
  * @returns {Array} SMILEs
  */
@@ -70,8 +127,6 @@ function smileToEasy(smile) {
         switch (c) {
             case ']':
                 stack = isoText(stack);
-                break;
-            case '/':
                 break;
             default:
                 stack.push(c);
@@ -93,19 +148,14 @@ function isoText(stack) {
         switch (c) {
             case '@':
             case 'H':
+            case ']':
                 break;
             default:
-                text.unshift(c);
+                text.push(c);
                 break;
         }
         c = stack.pop();
     }
-    text.unshift('[');
-
-    if (text.length === 3) {
-        text = text[1];
-    }
-
     stack = stack.concat(text);
     return stack;
 }
@@ -163,6 +213,44 @@ function drawSmile() {
         // smilesDrawer.canvasWrapper.scale(smilesDrawer.graph.vertices);
         // drawLine2(smilesDrawer.canvasWrapper, line);
         // smilesDrawer.reset();
+    });
+}
+
+function drawSmallSmile(canvasId) {
+    drawSmall(canvasId);
+}
+
+function clearLargeCanvas() {
+    document.getElementById(CANVAS_LARGE_ID).style.display = "none";
+}
+
+function drawOrClearLargeSmile(canvasId) {
+    if (mobile) return;
+    if (lastLargeSmilesId === canvasId) {
+        clearLargeCanvas();
+        lastLargeSmilesId = null;
+    } else {
+        let canvas = document.getElementById(CANVAS_LARGE_ID);
+        canvas.style.display = "block";
+        drawLarge(canvasId);
+        lastLargeSmilesId = canvasId;
+    }
+}
+
+function drawSmall(canvasId) {
+    SmilesDrawer.parse(document.getElementById(HIDDEN_SMILE_ID + canvasId).value, function (tree) {
+        activateScreenMode();
+        smallSmilesDrawer.draw(tree, CANVAS_SMALL_ID + canvasId, DEFAULT_SCREEN_MODE, false);
+    });
+}
+
+function drawLarge(canvasId) {
+    let canvas = document.getElementById(CANVAS_LARGE_ID);
+    let context = canvas.getContext("2d");
+    context.clearRect(0, 0, canvas.width, canvas.height);
+    SmilesDrawer.parse(document.getElementById(HIDDEN_SMILE_ID + canvasId).value, function (tree) {
+        activateScreenMode();
+        largeSmilesDrawer.draw(tree, CANVAS_LARGE_ID, DEFAULT_SCREEN_MODE, false);
     });
 }
 
