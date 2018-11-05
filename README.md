@@ -5,7 +5,8 @@ Building Blocks Database Generator of Natural Compounds
 Apache or other similar server
 
 PHP 5.3.7 or higher
-PHP componets need: libcurl, libxml
+
+PHP components need: libcurl, libxml
 
 [Composer](https://getcomposer.org/download/)
 
@@ -28,7 +29,8 @@ Default value is http://localhost/ already set
 
     $config['base_url'] = 'http://localhost/';
     
-##EasyPHP Windows configuration
+## EasyPHP Windows configuration
+
 In php.ini uncomment two lines:
     
     extension=php_curl.dll
@@ -42,7 +44,8 @@ Add a path to certificate in php.ini
     
 Tested on DEVSERVER 17.0 
 
-##XAMPP Windows configuration
+## XAMPP Windows configuration
+
 In php.ini only need to uncomment one line:
 
     extension=php_soap.dll
