@@ -115,6 +115,7 @@ function easy() {
     drawSmile();
 }
 
+
 /**
  * SMILEs to easy
  * TODO form !! [NH3+] not functional !!
@@ -122,7 +123,7 @@ function easy() {
  * @returns {Array} SMILEs
  */
 function smileToEasy(smile) {
-    var stack = [];
+    let stack = [];
     smile.split('').forEach(c => {
         switch (c) {
             case ']':
@@ -138,8 +139,8 @@ function smileToEasy(smile) {
 
 /**
  * Go back in stack and solve [C@@H] -> C
- * @param {[]} stack
- * @returns stack
+ * @param stack
+ * @returns {T[] | string}
  */
 function isoText(stack) {
     let text = [];
@@ -160,6 +161,11 @@ function isoText(stack) {
     return stack;
 }
 
+/**
+ * Return string from stack
+ * @param stack
+ * @returns {string}
+ */
 function stackToString(stack) {
     var text = "";
     stack.forEach(e => {
