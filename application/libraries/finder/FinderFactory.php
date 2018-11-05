@@ -32,8 +32,6 @@ abstract class FinderFactory {
             default:
             case ServerEnum::PUBCHEM:
                 return new PubChemFinder(self::isOptionSet(self::OPTION_EXACT_MATCH, $arOptions));
-            /* TODO ChemSpider */
-//            case ServerEnum::CHEMSPIDER:
             case ServerEnum::CHEBI:
                 return new ChebiFinder();
         }

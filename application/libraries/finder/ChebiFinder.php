@@ -143,10 +143,7 @@ class ChebiFinder implements IFinder {
             $response = $client->GetCompleteEntity($arInput);
             $intCounter = 0;
             foreach ($response as $value) {
-                $outArResult[Front::CANVAS_INPUT_NAME] = $value->chebiAsciiName;
-                $outArResult[Front::CANVAS_INPUT_SMILE] = $value->smiles;
-                $outArResult[Front::CANVAS_INPUT_MASS] = $value->monoisotopicMass;
-                $this->getFormulaFromFormulae($value->Formulae, $outArResult);
+                $this->getDataFromResultWithoutIdentifier($value, $outArResult);
                 $intCounter++;
             }
             if ($intCounter == 0) {
@@ -278,6 +275,15 @@ class ChebiFinder implements IFinder {
      */
     private function getDataFromResult($arData, &$outArMolecule) {
         $outArMolecule[Front::CANVAS_INPUT_IDENTIFIER] = substr($arData->chebiId, self::IDENTIFIER_PREFIX_SIZE);
+        $this->getDataFromResultWithoutIdentifier($arData, $outArMolecule);
+    }
+
+    /**
+     * Setup data from result to right structure without identifier
+     * @param array $arData
+     * @param array $outArMolecule
+     */
+    private function getDataFromResultWithoutIdentifier($arData, &$outArMolecule) {
         $this->getName($arData, $outArMolecule);
         $this->getSmiles($arData, $outArMolecule);
         $this->getMass($arData, $outArMolecule);
