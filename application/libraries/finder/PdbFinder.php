@@ -26,7 +26,7 @@ class PdbFinder implements IFinder {
      * @return int
      */
     public function findByName($strName, &$outArResult, &$outArNextResult) {
-        // TODO: Implement findByName() method.
+        return ResultEnum::REPLY_NONE;
     }
 
     /**
@@ -37,7 +37,7 @@ class PdbFinder implements IFinder {
      * @return int
      */
     public function findBySmile($strSmile, &$outArResult, &$outArNextResult) {
-        // TODO: Implement findBySmile() method.
+        return ResultEnum::REPLY_NONE;
     }
 
     /**
@@ -48,7 +48,7 @@ class PdbFinder implements IFinder {
      * @return int
      */
     public function findByFormula($strFormula, &$outArResult, &$outArNextResult) {
-        // TODO: Implement findByFormula() method.
+        return ResultEnum::REPLY_NONE;
     }
 
     /**
@@ -57,10 +57,10 @@ class PdbFinder implements IFinder {
      * @param $decTolerance
      * @param array $outArResult
      * @param $outArNextResult
-     * @return void
+     * @return int
      */
     public function findByMass($decMass, $decTolerance, &$outArResult, &$outArNextResult) {
-        // TODO: Implement findByMass() method.
+        return ResultEnum::REPLY_NONE;
     }
 
     /**
@@ -68,7 +68,7 @@ class PdbFinder implements IFinder {
      * @param string $strId
      * @param array $outArResult
      * @return int
-     * @throws \Exception
+     * @throws Exception\BadTransferException
      */
     public function findByIdentifier($strId, &$outArResult) {
         $strUri = self::REST_BASE_URI . self::REST_SUMMARY . $strId;
@@ -88,7 +88,7 @@ class PdbFinder implements IFinder {
      * @return int
      */
     public function findByIdentifiers($arIds, &$outArResult) {
-        // TODO: Implement findByIdentifiers() method.
+        return ResultEnum::REPLY_NONE;
     }
 
     /**
@@ -114,4 +114,5 @@ class PdbFinder implements IFinder {
         $outArResult[Front::CANVAS_INPUT_SMILE] = @$arPeptide[self::REPLY_SMILES][0][self::REPLY_NAME];
         $outArResult[Front::CANVAS_INPUT_DATABASE] = ServerEnum::PDB;
     }
+
 }
