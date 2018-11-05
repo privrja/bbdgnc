@@ -5,7 +5,7 @@
   "repository": "https://github.com/privrja/bbdgnc.git",
   "author": "Jan Privratsky",
   "license": "MIT",
-  "private": true,
+  "private": false,
   "dependencies": {
     "smiles-drawer": "git+https://github.com/privrja/smilesDrawer.git"
   }
