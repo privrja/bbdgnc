@@ -2,6 +2,8 @@
 
 namespace Bbdgnc\Finder;
 
+use Bbdgnc\Finder\Enum\ResultEnum;
+
 interface IFinder {
 
     /** FORMAT of REST API output */
@@ -22,6 +24,8 @@ interface IFinder {
      * @param array $outArResult
      * @param array $outArNextResult id with next results
      * @return int
+     * @see ResultEnum
+     * @throws Exception\BadTransferException
      */
     public function findByName($strName, &$outArResult, &$outArNextResult);
 
@@ -31,6 +35,8 @@ interface IFinder {
      * @param array $outArResult
      * @param array $outArNextResult id with next results
      * @return int
+     * @see ResultEnum
+     * @throws Exception\BadTransferException
      */
     public function findBySmile($strSmile, &$outArResult, &$outArNextResult);
 
@@ -40,6 +46,8 @@ interface IFinder {
      * @param array $outArResult
      * @param array $outArNextResult id with next results
      * @return int
+     * @see ResultEnum
+     * @throws Exception\BadTransferException
      */
     public function findByFormula($strFormula, &$outArResult, &$outArNextResult);
 
@@ -50,6 +58,8 @@ interface IFinder {
      * @param array $outArResult
      * @param $outArNextResult
      * @return int
+     * @see ResultEnum
+     * @throws Exception\BadTransferException
      */
     public function findByMass($decMass, $decTolerance, &$outArResult, &$outArNextResult);
 
@@ -58,6 +68,8 @@ interface IFinder {
      * @param string $strId
      * @param array $outArResult
      * @return int
+     * @see ResultEnum
+     * @throws Exception\BadTransferException
      */
     public function findByIdentifier($strId, &$outArResult);
 
@@ -66,6 +78,8 @@ interface IFinder {
      * @param array $arIds ids in array
      * @param array $outArResult result
      * @return int
+     * @see ResultEnum
+     * @throws Exception\BadTransferException
      */
     public function findByIdentifiers($arIds, &$outArResult);
 

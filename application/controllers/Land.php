@@ -1,6 +1,7 @@
 <?php
 
 use Bbdgnc\Enum\Front;
+use Bbdgnc\Enum\LoggerEnum;
 use Bbdgnc\Finder\Enum\FindByEnum;
 use Bbdgnc\Finder\Enum\ResultEnum;
 use Bbdgnc\Finder\Enum\ServerEnum;
@@ -190,7 +191,7 @@ class Land extends CI_Controller {
                 $data[Front::CANVAS_HIDDEN_NEXT_RESULTS] = serialize($arNext);
                 $data[Front::CANVAS_HIDDEN_SHOW_NEXT_RESULTS] = true;
             } else {
-                log_message('debug', "Last page of results");
+                log_message(LoggerEnum::DEBUG, "Last page of results");
                 $data[Front::CANVAS_HIDDEN_SHOW_NEXT_RESULTS] = false;
                 // last page -> not show next results button
             }
@@ -226,6 +227,7 @@ class Land extends CI_Controller {
      * @param array $outArNextResult next results identifiers
      * @param array $arSearchOptions
      * @return int result code 0 => find none, 1 => find 1, 2 => find more than 1
+     * @throws \Bbdgnc\Finder\Exception\BadTransferException
      */
     private function findBy($intDatabase, $intFindBy, &$outArResult = array(), &$outArNextResult = array(), $arSearchOptions = array()) {
         $finder = FinderFactory::getFinder($intDatabase, $arSearchOptions);
@@ -251,6 +253,7 @@ class Land extends CI_Controller {
      * @param array $outArResult output param with result
      * @return int result code 0 => find none, 1 => find 1, 2 => find more than 1
      * @see ResultEnum
+     * @throws \Bbdgnc\Finder\Exception\BadTransferException
      */
     private function validateFormAndSearchByIdentifier($finder, &$outArResult) {
         $this->form_validation->set_rules(Front::CANVAS_INPUT_IDENTIFIER, "Identifier", Front::REQUIRED);
@@ -267,6 +270,7 @@ class Land extends CI_Controller {
      * @param array $outArNextResult output param with integers as identifiers of next results
      * @return int result code 0 => find none, 1 => find 1, 2 => find more than 1
      * @see ResultEnum
+     * @throws \Bbdgnc\Finder\Exception\BadTransferException
      */
     private function validateFormAndSearchByName($finder, &$outArResult, &$outArNextResult) {
         $this->form_validation->set_rules(Front::CANVAS_INPUT_NAME, "Name", Front::REQUIRED);
@@ -283,6 +287,7 @@ class Land extends CI_Controller {
      * @param array $outArNextResult output param with integers as identifiers of next results
      * @return int result code 0 => find none, 1 => find 1, 2 => find more than 1
      * @see ResultEnum
+     * @throws \Bbdgnc\Finder\Exception\BadTransferException
      */
     private function validateFormAndSearchByFormula($finder, &$outArResult, &$outArNextResult) {
         $this->form_validation->set_rules(Front::CANVAS_INPUT_FORMULA, "Formula", Front::REQUIRED);
@@ -299,6 +304,7 @@ class Land extends CI_Controller {
      * @param array $outArNextResult output param with integers as identifiers of next results
      * @return int result code 0 => find none, 1 => find 1, 2 => find more than 1
      * @see ResultEnum
+     * @throws \Bbdgnc\Finder\Exception\BadTransferException
      */
     private function validateFormAndSearchBySmiles($finder, &$outArResult, &$outArNextResult) {
         $this->form_validation->set_rules(Front::CANVAS_INPUT_SMILE, "SMILES", Front::REQUIRED);
@@ -315,6 +321,7 @@ class Land extends CI_Controller {
      * @param array $outArNextResult output param with integers as identifiers of next results
      * @return int result code 0 => find none, 1 => find 1, 2 => find more than 1
      * @see ResultEnum
+     * @throws \Bbdgnc\Finder\Exception\BadTransferException
      */
     private function validateFormAndSearchByMass($finder, &$outArResult, &$outArNextResult) {
         $this->form_validation->set_rules(Front::CANVAS_INPUT_MASS, "Mass", Front::REQUIRED);

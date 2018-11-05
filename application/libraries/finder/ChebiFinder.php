@@ -3,9 +3,10 @@
 namespace Bbdgnc\Finder;
 
 use Bbdgnc\Enum\Front;
+use Bbdgnc\Enum\LoggerEnum;
 use Bbdgnc\Finder\Enum\ChebiSearchCategoryEnum;
 use Bbdgnc\Finder\Enum\ResultEnum;
-use Bbdgnc\Finder\Enum\ServerEnum;
+use Bbdgnc\Finder\Exception\BadTransferException;
 
 class ChebiFinder implements IFinder {
 
@@ -53,6 +54,8 @@ class ChebiFinder implements IFinder {
      * @param array $outArResult
      * @param array $outArNextResult id with next results
      * @return int
+     * @see ResultEnum
+     * @throws BadTransferException
      */
     public function findByName($strName, &$outArResult, &$outArNextResult) {
         return $this->getLiteEntity($strName, ChebiSearchCategoryEnum::ALL, $outArResult, $outArNextResult);
@@ -64,6 +67,8 @@ class ChebiFinder implements IFinder {
      * @param array $outArResult
      * @param array $outArNextResult id with next results
      * @return int
+     * @see ResultEnum
+     * @throws BadTransferException
      */
     public function findBySmile($strSmile, &$outArResult, &$outArNextResult) {
         $client = new \SoapClient(self::WSDL, $this->options);
@@ -85,7 +90,8 @@ class ChebiFinder implements IFinder {
             }
             $this->findByIdentifiers($arIds, $outArResult);
         } catch (\Exception $ex) {
-            return ResultEnum::REPLY_NONE;
+            log_message(LoggerEnum::ERROR, "Error during Soap" , $ex->getMessage());
+            throw new BadTransferException("Error during Soap");
         }
         return ResultEnum::REPLY_OK_MORE;
     }
@@ -96,6 +102,8 @@ class ChebiFinder implements IFinder {
      * @param array $outArResult
      * @param array $outArNextResult id with next results
      * @return int
+     * @see ResultEnum
+     * @throws BadTransferException
      */
     public function findByFormula($strFormula, &$outArResult, &$outArNextResult) {
         return $this->getLiteEntity($strFormula, ChebiSearchCategoryEnum::FORMULA, $outArResult, $outArNextResult);
@@ -108,6 +116,8 @@ class ChebiFinder implements IFinder {
      * @param array $outArResult
      * @param $outArNextResult
      * @return int
+     * @see ResultEnum
+     * @throws BadTransferException
      */
     public function findByMass($decMass, $decTolerance, &$outArResult, &$outArNextResult) {
         return $this->getLiteEntity($decMass, ChebiSearchCategoryEnum::MONOISOTOPIC_MASS, $outArResult, $outArNextResult);
@@ -118,6 +128,8 @@ class ChebiFinder implements IFinder {
      * @param string $strId
      * @param array $outArResult
      * @return int
+     * @see ResultEnum
+     * @throws BadTransferException
      */
     public function findByIdentifier($strId, &$outArResult) {
         $client = new \SoapClient(self::WSDL, $this->options);
@@ -141,7 +153,8 @@ class ChebiFinder implements IFinder {
                 return ResultEnum::REPLY_NONE;
             }
         } catch (\Exception $ex) {
-            return ResultEnum::REPLY_NONE;
+            log_message(LoggerEnum::ERROR, "Error during Soap" , $ex->getMessage());
+            throw new BadTransferException("Error during Soap");
         }
         log_message('info', "Response OK to SOAP query.");
         return ResultEnum::REPLY_OK_ONE;
@@ -152,6 +165,8 @@ class ChebiFinder implements IFinder {
      * @param array $arIds ids in array
      * @param array $outArResult result
      * @return int
+     * @see ResultEnum
+     * @throws BadTransferException
      */
     public function findByIdentifiers($arIds, &$outArResult) {
         $client = new \SoapClient(self::WSDL, $this->options);
@@ -168,7 +183,8 @@ class ChebiFinder implements IFinder {
                 }
             }
         } catch (\Exception $ex) {
-            return ResultEnum::REPLY_NONE;
+            log_message(LoggerEnum::ERROR, "Error during Soap" , $ex->getMessage());
+            throw new BadTransferException("Error during Soap");
         }
         return ResultEnum::REPLY_OK_MORE;
     }
@@ -189,6 +205,8 @@ class ChebiFinder implements IFinder {
      * @param array $outArResult
      * @param array $outArNextResult
      * @return int
+     * @see ResultEnum
+     * @throws BadTransferException
      */
     private function getLiteEntity($strSearchParam, $strSearchCategory, &$outArResult, &$outArNextResult) {
         $client = new \SoapClient(self::WSDL, $this->options);
@@ -199,6 +217,7 @@ class ChebiFinder implements IFinder {
             if (!isset($response->return->ListElement)) {
                 return ResultEnum::REPLY_NONE;
             }
+            $arIds = array();
             if (is_array($response->return->ListElement)) {
                 foreach ($response->return->ListElement as $ar) {
                     $arIds[] = $ar->chebiId;
@@ -210,11 +229,12 @@ class ChebiFinder implements IFinder {
                     $outArNextResult = array();
                 }
             } else {
-                return $this->findByIdentifier(substr($response->return->ListElement->chebiId, self::IDENTIFIER_PREFIX_SIZE), $outArResult, $outArNextResult);
+                return $this->findByIdentifier(substr($response->return->ListElement->chebiId, self::IDENTIFIER_PREFIX_SIZE), $outArResult);
             }
             $this->findByIdentifiers($arIds, $outArResult);
         } catch (\Exception $ex) {
-            return ResultEnum::REPLY_NONE;
+            log_message(LoggerEnum::ERROR, "Error during Soap" , $ex->getMessage());
+            throw new BadTransferException("Error during Soap");
         }
         return ResultEnum::REPLY_OK_MORE;
     }
