@@ -45,6 +45,9 @@ class ChebiFinder implements IFinder {
     /** @var string star option */
     const STARS_ALL = "ALL";
 
+    const ERROR_DURING_SOAP = "Error during Soap";
+    const INFO_SOAP_OK = "Response OK to SOAP query.";
+
     /** @var array default options for query */
     private $options = array('exceptions' => true);
 
@@ -90,9 +93,10 @@ class ChebiFinder implements IFinder {
             }
             $this->findByIdentifiers($arIds, $outArResult);
         } catch (\Exception $ex) {
-            log_message(LoggerEnum::ERROR, "Error during Soap" , $ex->getMessage());
-            throw new BadTransferException("Error during Soap");
+            log_message(LoggerEnum::ERROR, self::ERROR_DURING_SOAP, $ex->getMessage());
+            throw new BadTransferException(self::ERROR_DURING_SOAP);
         }
+        log_message(LoggerEnum::INFO, self::INFO_SOAP_OK);
         return ResultEnum::REPLY_OK_MORE;
     }
 
@@ -153,10 +157,10 @@ class ChebiFinder implements IFinder {
                 return ResultEnum::REPLY_NONE;
             }
         } catch (\Exception $ex) {
-            log_message(LoggerEnum::ERROR, "Error during Soap" , $ex->getMessage());
-            throw new BadTransferException("Error during Soap");
+            log_message(LoggerEnum::ERROR, self::ERROR_DURING_SOAP, $ex->getMessage());
+            throw new BadTransferException(self::ERROR_DURING_SOAP);
         }
-        log_message('info', "Response OK to SOAP query.");
+        log_message(LoggerEnum::INFO, self::INFO_SOAP_OK);
         return ResultEnum::REPLY_OK_ONE;
     }
 
@@ -183,9 +187,10 @@ class ChebiFinder implements IFinder {
                 }
             }
         } catch (\Exception $ex) {
-            log_message(LoggerEnum::ERROR, "Error during Soap" , $ex->getMessage());
-            throw new BadTransferException("Error during Soap");
+            log_message(LoggerEnum::ERROR, self::ERROR_DURING_SOAP, $ex->getMessage());
+            throw new BadTransferException(self::ERROR_DURING_SOAP);
         }
+        log_message(LoggerEnum::INFO, self::INFO_SOAP_OK);
         return ResultEnum::REPLY_OK_MORE;
     }
 
@@ -233,9 +238,10 @@ class ChebiFinder implements IFinder {
             }
             $this->findByIdentifiers($arIds, $outArResult);
         } catch (\Exception $ex) {
-            log_message(LoggerEnum::ERROR, "Error during Soap" , $ex->getMessage());
-            throw new BadTransferException("Error during Soap");
+            log_message(LoggerEnum::ERROR, self::ERROR_DURING_SOAP, $ex->getMessage());
+            throw new BadTransferException(self::ERROR_DURING_SOAP);
         }
+        log_message(LoggerEnum::INFO, self::INFO_SOAP_OK);
         return ResultEnum::REPLY_OK_MORE;
     }
 
