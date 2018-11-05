@@ -18,7 +18,6 @@ abstract class JsonDownloader {
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
         $curl_response = curl_exec($curl);
         if ($curl_response === false) {
-            /** TODO Bad transfer -> maybe can try it again? */
             $error = curl_error($curl);
             curl_close($curl);
             log_message(LoggerEnum::ERROR, "Error in cURL on URI: " . $strUri);
