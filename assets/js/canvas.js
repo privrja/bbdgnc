@@ -115,10 +115,8 @@ function easy() {
     drawSmile();
 }
 
-
 /**
- * SMILEs to easy
- * TODO form !! [NH3+] not functional !!
+ * SMILEs to easy form
  * @param smile string SMILEs
  * @returns {Array} SMILEs
  */
@@ -128,6 +126,8 @@ function smileToEasy(smile) {
         switch (c) {
             case ']':
                 stack = isoText(stack);
+                break;
+            case '/':
                 break;
             default:
                 stack.push(c);
@@ -149,14 +149,19 @@ function isoText(stack) {
         switch (c) {
             case '@':
             case 'H':
-            case ']':
                 break;
             default:
-                text.push(c);
+                text.unshift(c);
                 break;
         }
         c = stack.pop();
     }
+    text.unshift('[');
+
+    if (text.length === 3) {
+        text = text[1];
+    }
+
     stack = stack.concat(text);
     return stack;
 }
