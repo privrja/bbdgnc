@@ -7,7 +7,7 @@ const CANVAS_LARGE_ID = "canvas-large";
 
 const WINDOW_MIN_WIDTH = 850;
 const WINDOW_MIN_HEIGHT = 575;
-const CANVAS_SMALL_WIDTH = 300;
+const CANVAS_SMALL_SQUARE = 300;
 
 const PIXEL_TWO = 2;
 const PROCENT_SIXTY = 0.6;
@@ -26,14 +26,40 @@ let mobile = false;
 /** int last show last preview of SMILES */
 let lastLargeSmilesId;
 
-/** Initialize the drawer */
+/** default options for main drawer */
+let options = {width: getCanvasWidth(), height: getCanvasHeight(), themes: {light: {O: '#e67e22'}}};
+
+/** Initialize the drawers */
 let smilesDrawer = getSmilesDrawer();
 let smallSmilesDrawer = getSmallSmilesDrawer();
 let largeSmilesDrawer = getLargeSmilesDrawer();
 
-/** Resize event */
-window.addEventListener('resize', resize);
+/** events */
+document.addEventListener('DOMContentLoaded', function () {
+    window.addEventListener('resize', resize);
+    window.addEventListener('load', finder);
+    document.getElementById(TXT_SMILE_ID).addEventListener('input', drawSmile);
+});
 
+/**
+ * Prepare small previews for results find by query
+ */
+function finder() {
+    let smallCanvases = document.querySelectorAll('[data-canvas-small-id]');
+    for (let i = 0; i < smallCanvases.length; i++) {
+        let elem = smallCanvases[i];
+        drawSmallSmile(elem.getAttribute("data-canvas-small-id"));
+        if (i === 0) {
+            document.location.href = "#h-results";
+        }
+    }
+    mobileVersion();
+    resize();
+}
+
+/**
+ * Resize canvas on window moves, etc
+ */
 function resize() {
     let canvas = document.getElementById(CANVAS_ID);
     canvas.style.width = "100%";
@@ -44,19 +70,6 @@ function resize() {
     drawSmile();
 }
 
-window.onload = function () {
-    var smallCanvases = document.querySelectorAll('[data-canvas-small-id]');
-    for (let i = 0; i < smallCanvases.length; i++) {
-        let elem = smallCanvases[i];
-        drawSmallSmile(elem.getAttribute("data-canvas-small-id"));
-        if (i === 0) {
-            document.location.href = "#h-results";
-        }
-    }
-    mobileVersion();
-    resize();
-};
-
 /** default screen mode (dark/light) def = light */
 let DEFAULT_SCREEN_MODE = MODE_LIGHT;
 
@@ -64,13 +77,15 @@ let DEFAULT_SCREEN_MODE = MODE_LIGHT;
  * Get SMILES Drawer instance with dimension of canvas
  */
 function getSmilesDrawer() {
-    return new SmilesDrawer.Drawer({width: getCanvasWidth(), height: getCanvasHeight() });
+    return new SmilesDrawer.Drawer(options);
 }
 
+/** Get SMILES Drawer instance for small preview */
 function getSmallSmilesDrawer() {
-    return new SmilesDrawer.Drawer({width: CANVAS_SMALL_WIDTH, height: CANVAS_SMALL_WIDTH });
+    return new SmilesDrawer.Drawer({width: CANVAS_SMALL_SQUARE, height: CANVAS_SMALL_SQUARE });
 }
 
+/** Get SMILES Drawer instance for large preview */
 function getLargeSmilesDrawer() {
     return new SmilesDrawer.Drawer({width: getWindowWidth() * PROCENT_SIXTY, height: getWindowHeight() + PIXEL_TWO });
 }
@@ -83,10 +98,18 @@ function mobileVersion() {
     mobile = getWindowWidth() <= WINDOW_MIN_WIDTH || getWindowHeight() <= WINDOW_MIN_HEIGHT;
 }
 
+/**
+ * Get window width
+ * @returns {number}
+ */
 function getWindowWidth() {
     return window.innerWidth;
 }
 
+/**
+ * Get window height
+ * @returns {number}
+ */
 function getWindowHeight() {
     return window.innerHeight;
 }
@@ -106,15 +129,16 @@ function getCanvasHeight() {
 }
 
 /**
- * Parse Isomeric SMILE to Cannonical SMILE
+ * Parse Isomeric SMILE to Canonical SMILES
+ *
+ * get smile from txt
+ * parse it and put it back
+ * refresh canvas
  */
 function easy() {
-    /** get smile from txt, parse it and put it back */
     document.getElementById(TXT_SMILE_ID).value = stackToString(smileToEasy(document.getElementById(TXT_SMILE_ID).value));
-    /** refresh canvas */
     drawSmile();
 }
-
 
 /**
  * SMILEs to easy form
@@ -141,7 +165,7 @@ function smileToEasy(smile) {
 /**
  * Go back in stack and solve [C@@H] -> C
  * @param stack
- * @returns {T[] | string}
+ * @returns {char[] | string}
  */
 function isoText(stack) {
     let text = [];
@@ -203,35 +227,31 @@ function lightMode() {
     document.getElementById(CANVAS_ID).style.backgroundColor = COLOR_WHITE;
 }
 
+/** draw smiles to main canvas */
 function drawSmile() {
     // Clean the input (remove unrecognized characters, such as spaces and tabs) and parse it
-    SmilesDrawer.parse(document.getElementById(TXT_SMILE_ID).value, function (tree) {
+    let strSmiles = document.getElementById(TXT_SMILE_ID).value;
+    strSmiles = strSmiles.replace(/\r?\n|\r/g, '');
+    strSmiles = strSmiles.trim();
+    SmilesDrawer.parse(strSmiles, function (tree) {
         // Draw to the canvas
         activateScreenMode();
         smilesDrawer.draw(tree, CANVAS_ID, DEFAULT_SCREEN_MODE, false);
         document.getElementById(TXT_CANVAS_FLE).value = smilesDrawer.getMolecularFormula();
-
-        // let edge = smilesDrawer.graph.edges[0];
-        // let vertexA = smilesDrawer.graph.vertices[edge.sourceId].position;
-        // let vertexB = smilesDrawer.graph.vertices[edge.targetId].position;
-
-        // var line = new SmilesDrawer.Line(vertexA, vertexB);
-        // console.log(vertexA);
-        // console.log(vertexB);
-        // console.log(line);
-        // line = line.rotate(Math.PI/2);
-
-        // //asi nejdulezitejsi radka kodu :-) :D :P
-        // smilesDrawer.canvasWrapper.scale(smilesDrawer.graph.vertices);
-        // drawLine2(smilesDrawer.canvasWrapper, line);
-        // smilesDrawer.reset();
     });
 }
 
+/**
+ * Draw SMILES to small preview
+ * @param canvasId - where to draw SMILES
+ */
 function drawSmallSmile(canvasId) {
     drawSmall(canvasId);
 }
 
+/**
+ * Clear large preview
+ */
 function clearLargeCanvas() {
     document.getElementById(CANVAS_LARGE_ID).style.display = "none";
 }
@@ -264,30 +284,4 @@ function drawLarge(canvasId) {
         activateScreenMode();
         largeSmilesDrawer.draw(tree, CANVAS_LARGE_ID, DEFAULT_SCREEN_MODE, false);
     });
-}
-
-// function drawLine2(wr, line) {
-//     let l = line.getLeftVector();
-//     let r = line.getRightVector();
-//
-//     l.x += wr.offsetX;
-//     l.y += wr.offsetY;
-//
-//     r.x += wr.offsetX;
-//     r.y += wr.offsetY;
-//
-//     wr.ctx.save();
-//     wr.ctx.beginPath();
-//     wr.ctx.moveTo(l.x, l.y);
-//     wr.ctx.lineTo(r.x, r.y);
-//     wr.ctx.lineCap = 'round';
-//     wr.ctx.lineWidth = wr.opts.bondThickness;
-//     wr.ctx.strokeStyle = "#FF0000";
-//     wr.ctx.stroke();
-//     wr.ctx.globalCompositeOperation = 'source-over';
-//     wr.ctx.restore();
-// }
-
-function disintegrate() {
-
 }
