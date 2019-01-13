@@ -5,7 +5,7 @@ namespace Bbdgnc\Finder;
 use Bbdgnc\Enum\Front;
 use Bbdgnc\Enum\LoggerEnum;
 use Bbdgnc\Enum\PeriodicTableSingleton;
-use Bbdgnc\Exception\IllegalStateError;
+use Bbdgnc\Exception\IllegalStateException;
 use Bbdgnc\Finder\Enum\ChebiSearchCategoryEnum;
 use Bbdgnc\Finder\Enum\ResultEnum;
 use Bbdgnc\Finder\Exception\BadTransferException;
@@ -122,44 +122,61 @@ class ChebiFinder implements IFinder {
                 }
                 return $result;
             default:
-                throw new IllegalStateError();
+                throw new IllegalStateException();
         }
     }
 
     /**
-     * compute mass
+     * Compute mass
      * @param String $strFormula
      * @return float
      */
     public function computeMass($strFormula) {
-        $mass = 0;
-        $length = strlen($strFormula);
-        $intIndex = 0;
-        $strName = $strFormula[$intIndex];
-        $intIndex++;
-        while ($intIndex < $length) {
-            while (!is_numeric($strFormula[$intIndex])) {
-                $strName .= $strFormula[$intIndex];
-                $intIndex++;
-                if($intIndex >= $length) {
-                    break;
-                }
+        if (!isset($strFormula) || empty($strFormula)) {
+            throw new \InvalidArgumentException();
+        }
+        $intLength = strlen($strFormula);
+        if ($intLength == 1) {
+            throw new \InvalidArgumentException();
+        }
+        $mass = $intIndex = 0;
+        while ($intIndex < $intLength) {
+            $strName = $this->readLiteral($strFormula, $intLength, $intIndex);
+            $strCount = $this->readNumber($strFormula, $intLength, $intIndex);
+            try {
+                $mass += (PeriodicTableSingleton::getInstance()->getAtoms())[$strName]->getMass() * $strCount;
+            } catch (\Exception $exception) {
+                throw new \InvalidArgumentException();
             }
-            $strCount = "";
-            while (is_numeric($strFormula[$intIndex])) {
-                if($intIndex >= $length) {
-                    break;
-                }
-                $strCount .= $strFormula[$intIndex];
-                $intIndex++;
-                if($intIndex >= $length) {
-                    break;
-                }
-            }
-            $mass += (PeriodicTableSingleton::getInstance()->getAtoms())[$strName]->getMass() * $strCount;
-            $strName = "";
         }
         return $mass;
+    }
+
+    private function readNumber($strFormula, $intLength, &$intIndex) {
+        if($strFormula[$intIndex] == "0") {
+            throw new \InvalidArgumentException();
+        }
+        $strCount = "";
+        while (is_numeric($strFormula[$intIndex])) {
+            $strCount .= $strFormula[$intIndex];
+            $intIndex++;
+            if ($intIndex >= $intLength) {
+                break;
+            }
+        }
+        return $strCount;
+    }
+
+    private function readLiteral($strFormula, $intLength, &$intIndex) {
+        $strName = "";
+        while (!is_numeric($strFormula[$intIndex])) {
+            $strName .= $strFormula[$intIndex];
+            $intIndex++;
+            if ($intIndex >= $intLength) {
+                throw new \InvalidArgumentException();
+            }
+        }
+        return $strName;
     }
 
     /**

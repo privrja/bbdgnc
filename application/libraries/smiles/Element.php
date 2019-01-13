@@ -13,12 +13,16 @@ class Element {
      * Element constructor.
      * @param string $name shortcut of atom name ex.: H, C, O, N or He
      * @param int $protons number of protons
+     * must be non negative number
      * @param int $bindings number of typical bindings ex.: O have 2, C have 4, N have 3, ...
      * must be non negative number
-     * @param $mass
+     * @param float $mass
      * must be positive number
      */
     public function __construct($name, $protons, $bindings, $mass) {
+        assert($protons >= 0);
+        assert($bindings >= 0);
+        assert($mass > 0);
         $this->name = $name;
         $this->protons = $protons;
         $this->bindings = $bindings;
