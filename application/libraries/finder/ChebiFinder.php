@@ -4,6 +4,8 @@ namespace Bbdgnc\Finder;
 
 use Bbdgnc\Enum\Front;
 use Bbdgnc\Enum\LoggerEnum;
+use Bbdgnc\Enum\PeriodicTableSingleton;
+use Bbdgnc\Exception\IllegalStateError;
 use Bbdgnc\Finder\Enum\ChebiSearchCategoryEnum;
 use Bbdgnc\Finder\Enum\ResultEnum;
 use Bbdgnc\Finder\Exception\BadTransferException;
@@ -110,7 +112,54 @@ class ChebiFinder implements IFinder {
      * @throws BadTransferException
      */
     public function findByFormula($strFormula, &$outArResult, &$outArNextResult) {
-        return $this->getLiteEntity($strFormula, ChebiSearchCategoryEnum::FORMULA, $outArResult, $outArNextResult);
+        $result = $this->getLiteEntity($strFormula, ChebiSearchCategoryEnum::FORMULA, $outArResult, $outArNextResult);
+        switch ($result) {
+            case ResultEnum::REPLY_NONE:
+            case ResultEnum::REPLY_OK_ONE:
+                return $result;
+            case ResultEnum::REPLY_OK_MORE;
+                foreach ($outArResult as $molecule) {
+                }
+                return $result;
+            default:
+                throw new IllegalStateError();
+        }
+    }
+
+    /**
+     * compute mass
+     * @param String $strFormula
+     * @return float
+     */
+    public function computeMass($strFormula) {
+        $mass = 0;
+        $length = strlen($strFormula);
+        $intIndex = 0;
+        $strName = $strFormula[$intIndex];
+        $intIndex++;
+        while ($intIndex < $length) {
+            while (!is_numeric($strFormula[$intIndex])) {
+                $strName .= $strFormula[$intIndex];
+                $intIndex++;
+                if($intIndex >= $length) {
+                    break;
+                }
+            }
+            $strCount = "";
+            while (is_numeric($strFormula[$intIndex])) {
+                if($intIndex >= $length) {
+                    break;
+                }
+                $strCount .= $strFormula[$intIndex];
+                $intIndex++;
+                if($intIndex >= $length) {
+                    break;
+                }
+            }
+            $mass += (PeriodicTableSingleton::getInstance()->getAtoms())[$strName]->getMass() * $strCount;
+            $strName = "";
+        }
+        return $mass;
     }
 
     /**

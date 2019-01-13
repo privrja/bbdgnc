@@ -19,7 +19,8 @@
 			"Bbdgnc\\Finder\\Enum\\" : "application/libraries/finder/enums",
 			"Bbdgnc\\Finder\\Exception\\" : "application/libraries/finder/exceptions",
 			"Bbdgnc\\Enum\\" : "application/libraries/enums",
-			"Bbdgnc\\Smiles\\" : "application/libraries/smiles"
+			"Bbdgnc\\Smiles\\" : "application/libraries/smiles",
+			"Bbdgnc\\Exception\\" : "application/exceptions"
 		}
 	},
 	"require-dev": {

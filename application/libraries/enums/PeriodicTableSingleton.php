@@ -25,6 +25,9 @@ class PeriodicTableSingleton {
         return self::$instance;
     }
 
+    /**
+     * @return array
+     */
     public function getAtoms() {
         return $this->arAtoms;
     }
