@@ -113,16 +113,29 @@ class ChebiFinder implements IFinder {
      */
     public function findByFormula($strFormula, &$outArResult, &$outArNextResult) {
         $result = $this->getLiteEntity($strFormula, ChebiSearchCategoryEnum::FORMULA, $outArResult, $outArNextResult);
+        // TODO i think its unnecessary
         switch ($result) {
             case ResultEnum::REPLY_NONE:
             case ResultEnum::REPLY_OK_ONE:
                 return $result;
             case ResultEnum::REPLY_OK_MORE;
+                $mass = $this->computeMass($strFormula);
                 foreach ($outArResult as $molecule) {
+                    if ($molecule[Front::CANVAS_INPUT_MASS] > $mass + 4
+                        || $molecule[Front::CANVAS_INPUT_MASS] < $mass - 4) {
+                        $this->deleteElement($molecule, $outArResult);
+                    }
                 }
                 return $result;
             default:
                 throw new IllegalStateException();
+        }
+    }
+
+    function deleteElement($element, &$array){
+        $index = array_search($element, $array);
+        if($index !== false){
+            unset($array[$index]);
         }
     }
 
