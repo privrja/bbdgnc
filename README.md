@@ -4,7 +4,7 @@ Building Blocks Database Generator of Natural Compounds
 ## Requirements
 Apache or other similar server
 
-PHP 5.3.7 or higher
+PHP 5.6 or higher
 
 PHP components need: libcurl, libxml
 

@@ -23,7 +23,7 @@ class Smiles {
     }
 
     /**
-     * Canonicalization of melecular graphs using an unambiguous function
+     * Canonicalization of molecular graphs using an unambiguous function
      */
     private function canon() {
 

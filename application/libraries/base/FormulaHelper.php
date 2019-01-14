@@ -3,6 +3,7 @@
 namespace Bbdgnc\Base;
 
 use Bbdgnc\Enum\PeriodicTableSingleton;
+use Bbdgnc\Exception\IllegalArgumentException;
 
 class FormulaHelper {
 
@@ -13,11 +14,11 @@ class FormulaHelper {
      */
     public static function computeMass($strFormula) {
         if (!isset($strFormula) || empty($strFormula)) {
-            throw new \InvalidArgumentException();
+            throw new IllegalArgumentException();
         }
         $intLength = strlen($strFormula);
         if ($intLength == 1) {
-            throw new \InvalidArgumentException();
+            throw new IllegalArgumentException();
         }
         $mass = $intIndex = 0;
         while ($intIndex < $intLength) {
@@ -26,7 +27,7 @@ class FormulaHelper {
             try {
                 $mass += (PeriodicTableSingleton::getInstance()->getAtoms())[$strName]->getMass() * $strCount;
             } catch (\Exception $exception) {
-                throw new \InvalidArgumentException();
+                throw new IllegalArgumentException();
             }
         }
         return $mass;
@@ -34,7 +35,7 @@ class FormulaHelper {
 
     private static function readNumber($strFormula, $intLength, &$intIndex) {
         if($strFormula[$intIndex] == "0") {
-            throw new \InvalidArgumentException();
+            throw new IllegalArgumentException();
         }
         $strCount = "";
         while (is_numeric($strFormula[$intIndex])) {
@@ -53,7 +54,7 @@ class FormulaHelper {
             $strName .= $strFormula[$intIndex];
             $intIndex++;
             if ($intIndex >= $intLength) {
-                throw new \InvalidArgumentException();
+                throw new IllegalArgumentException();
             }
         }
         return $strName;

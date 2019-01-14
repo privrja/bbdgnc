@@ -11,7 +11,7 @@
 		"source": "https://github.com/bcit-ci/CodeIgniter"
 	},
 	"require": {
-		"php": ">=5.3.7"
+      "php": ">=5.6"
 	},
 	"autoload": {
 		"psr-4": {
@@ -21,6 +21,8 @@
 			"Bbdgnc\\Finder\\Exception\\" : "application/libraries/finder/exceptions",
 			"Bbdgnc\\Enum\\" : "application/libraries/enums",
 			"Bbdgnc\\Smiles\\" : "application/libraries/smiles",
+          "Bbdgnc\\Smiles\\enums\\": "application/libraries/smiles/enums",
+          "Bbdgnc\\Smiles\\parsers\\": "application/libraries/smiles/parsers",
 			"Bbdgnc\\Exception\\" : "application/libraries/exceptions"
 		}
 	},
