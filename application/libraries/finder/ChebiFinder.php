@@ -2,8 +2,10 @@
 
 namespace Bbdgnc\Finder;
 
+use Bbdgnc\Base\FormulaHelper;
 use Bbdgnc\Enum\Front;
 use Bbdgnc\Enum\LoggerEnum;
+use Bbdgnc\Exception\IllegalStateException;
 use Bbdgnc\Finder\Enum\ChebiSearchCategoryEnum;
 use Bbdgnc\Finder\Enum\ResultEnum;
 use Bbdgnc\Finder\Exception\BadTransferException;
@@ -110,8 +112,33 @@ class ChebiFinder implements IFinder {
      * @throws BadTransferException
      */
     public function findByFormula($strFormula, &$outArResult, &$outArNextResult) {
-        return $this->getLiteEntity($strFormula, ChebiSearchCategoryEnum::FORMULA, $outArResult, $outArNextResult);
+        $result = $this->getLiteEntity($strFormula, ChebiSearchCategoryEnum::FORMULA, $outArResult, $outArNextResult);
+        // TODO i think its unnecessary
+        switch ($result) {
+            case ResultEnum::REPLY_NONE:
+            case ResultEnum::REPLY_OK_ONE:
+                return $result;
+            case ResultEnum::REPLY_OK_MORE;
+                $mass = FormulaHelper::computeMass($strFormula);
+                foreach ($outArResult as $molecule) {
+                    if ($molecule[Front::CANVAS_INPUT_MASS] > $mass + 4
+                        || $molecule[Front::CANVAS_INPUT_MASS] < $mass - 4) {
+                        $this->deleteElement($molecule, $outArResult);
+                    }
+                }
+                return $result;
+            default:
+                throw new IllegalStateException();
+        }
     }
+
+    function deleteElement($element, &$array){
+        $index = array_search($element, $array);
+        if($index !== false){
+            unset($array[$index]);
+        }
+    }
+
 
     /**
      * Find data by Monoisotopic Mass
