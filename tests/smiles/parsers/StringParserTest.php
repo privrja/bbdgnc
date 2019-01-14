@@ -7,15 +7,15 @@ use Bbdgnc\Smiles\parsers\StringParser;
 class StringParserTest extends \PHPUnit\Framework\TestCase {
 
     public function testWithNull() {
-        $this->expectException(\Bbdgnc\Exception\IllegalArgumentException::class);
         $parser = new StringParser();
-        $parser->parseTextWithTemplate('Hello', null);
+        $result = $parser->parseTextWithTemplate('Hello', null);
+        $this->assertEquals(StringParser::reject(), $result);
     }
 
     public function testWithEmptyString() {
         $parser = new StringParser();
         $parseResult = $parser->parseTextWithTemplate('', '');
-        $this->assertEquals(new Accept('', ''), $parseResult);
+        $this->assertEquals(StringParser::reject(), $parseResult);
     }
 
     public function testWithEmptyString2() {
