@@ -1,5 +1,7 @@
 <?php
 
+namespace Bbdgnc\Test\Smiles\Parser;
+
 use Bbdgnc\Smiles\parsers\Accept;
 use Bbdgnc\Smiles\parsers\Reject;
 use Bbdgnc\Smiles\parsers\StringParser;

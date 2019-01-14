@@ -21,9 +21,12 @@
 			"Bbdgnc\\Finder\\Exception\\" : "application/libraries/finder/exceptions",
 			"Bbdgnc\\Enum\\" : "application/libraries/enums",
 			"Bbdgnc\\Smiles\\" : "application/libraries/smiles",
-          "Bbdgnc\\Smiles\\enums\\": "application/libraries/smiles/enums",
-          "Bbdgnc\\Smiles\\parsers\\": "application/libraries/smiles/parsers",
-			"Bbdgnc\\Exception\\" : "application/libraries/exceptions"
+          "Bbdgnc\\Smiles\\Enums\\": "application/libraries/smiles/enums",
+          "Bbdgnc\\Smiles\\Parsers\\": "application/libraries/smiles/parsers",
+          "Bbdgnc\\Exception\\": "application/libraries/exceptions",
+          "Bbdgnc\\Tests\\Base\\": "tests/base",
+          "Bbdgnc\\Tests\\Smiles\\": "tests/smiles",
+          "Bbdgnc\\Tests\\Smiles\\Parser\\": "tests/smiles/parsers"
 		}
 	},
 	"require-dev": {

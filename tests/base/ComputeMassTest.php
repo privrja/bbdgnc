@@ -1,5 +1,7 @@
 <?php
 
+namespace Bbdgnc\Test\Base;
+
 use Bbdgnc\Base\FormulaHelper;
 
 final class ComputeMassTest extends \PHPUnit\Framework\TestCase {
