@@ -15,6 +15,7 @@
 	},
 	"autoload": {
 		"psr-4": {
+            "Bbdgnc\\Base\\" : "application/libraries/base",
 			"Bbdgnc\\Finder\\" : "application/libraries/finder",
 			"Bbdgnc\\Finder\\Enum\\" : "application/libraries/finder/enums",
 			"Bbdgnc\\Finder\\Exception\\" : "application/libraries/finder/exceptions",

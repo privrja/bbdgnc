@@ -2,9 +2,9 @@
 
 namespace Bbdgnc\Finder;
 
+use Bbdgnc\Base\FormulaHelper;
 use Bbdgnc\Enum\Front;
 use Bbdgnc\Enum\LoggerEnum;
-use Bbdgnc\Enum\PeriodicTableSingleton;
 use Bbdgnc\Exception\IllegalStateException;
 use Bbdgnc\Finder\Enum\ChebiSearchCategoryEnum;
 use Bbdgnc\Finder\Enum\ResultEnum;
@@ -119,7 +119,7 @@ class ChebiFinder implements IFinder {
             case ResultEnum::REPLY_OK_ONE:
                 return $result;
             case ResultEnum::REPLY_OK_MORE;
-                $mass = $this->computeMass($strFormula);
+                $mass = FormulaHelper::computeMass($strFormula);
                 foreach ($outArResult as $molecule) {
                     if ($molecule[Front::CANVAS_INPUT_MASS] > $mass + 4
                         || $molecule[Front::CANVAS_INPUT_MASS] < $mass - 4) {
@@ -139,58 +139,6 @@ class ChebiFinder implements IFinder {
         }
     }
 
-    /**
-     * Compute mass
-     * @param String $strFormula
-     * @return float
-     */
-    public function computeMass($strFormula) {
-        if (!isset($strFormula) || empty($strFormula)) {
-            throw new \InvalidArgumentException();
-        }
-        $intLength = strlen($strFormula);
-        if ($intLength == 1) {
-            throw new \InvalidArgumentException();
-        }
-        $mass = $intIndex = 0;
-        while ($intIndex < $intLength) {
-            $strName = $this->readLiteral($strFormula, $intLength, $intIndex);
-            $strCount = $this->readNumber($strFormula, $intLength, $intIndex);
-            try {
-                $mass += (PeriodicTableSingleton::getInstance()->getAtoms())[$strName]->getMass() * $strCount;
-            } catch (\Exception $exception) {
-                throw new \InvalidArgumentException();
-            }
-        }
-        return $mass;
-    }
-
-    private function readNumber($strFormula, $intLength, &$intIndex) {
-        if($strFormula[$intIndex] == "0") {
-            throw new \InvalidArgumentException();
-        }
-        $strCount = "";
-        while (is_numeric($strFormula[$intIndex])) {
-            $strCount .= $strFormula[$intIndex];
-            $intIndex++;
-            if ($intIndex >= $intLength) {
-                break;
-            }
-        }
-        return $strCount;
-    }
-
-    private function readLiteral($strFormula, $intLength, &$intIndex) {
-        $strName = "";
-        while (!is_numeric($strFormula[$intIndex])) {
-            $strName .= $strFormula[$intIndex];
-            $intIndex++;
-            if ($intIndex >= $intLength) {
-                throw new \InvalidArgumentException();
-            }
-        }
-        return $strName;
-    }
 
     /**
      * Find data by Monoisotopic Mass
