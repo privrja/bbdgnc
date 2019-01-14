@@ -2,7 +2,7 @@
 
 namespace Bbdgnc\Smiles;
 
-use Bbdgnc\Smiles\enums\BondTypeEnum;
+use Bbdgnc\Smiles\Enum\BondTypeEnum;
 
 class Bond {
 

@@ -27,7 +27,6 @@ class Graph {
         $intIndex = 0;
         while ($intIndex < $intLength) {
             $stack[] = $strSmiles[$intIndex];
-            readChar();
 
             $intIndex++;
         }
