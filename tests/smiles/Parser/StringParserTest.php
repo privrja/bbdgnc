@@ -7,7 +7,7 @@ use Bbdgnc\Smiles\Parser\Reject;
 use Bbdgnc\Smiles\Parser\StringParser;
 use PHPUnit\Framework\TestCase;
 
-class StringParserTest extends TestCase {
+final class StringParserTest extends TestCase {
 
     public function testWithNull() {
         $parser = new StringParser();

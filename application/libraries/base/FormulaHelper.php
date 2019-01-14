@@ -9,7 +9,7 @@ class FormulaHelper {
 
     /**
      * Compute mass
-     * @param String $strFormula
+     * @param string $strFormula
      * @return float
      */
     public static function computeMass($strFormula) {

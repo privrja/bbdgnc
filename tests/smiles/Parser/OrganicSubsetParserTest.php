@@ -7,7 +7,7 @@ use Bbdgnc\Smiles\Parser\Accept;
 use Bbdgnc\Smiles\Parser\OrganicSubsetParser;
 use Bbdgnc\Smiles\Parser\Reject;
 
-class OrganicSubsetParserTest extends \PHPUnit\Framework\TestCase {
+final class OrganicSubsetParserTest extends \PHPUnit\Framework\TestCase {
 
     public function testWithNull() {
         $parser = new OrganicSubsetParser();
