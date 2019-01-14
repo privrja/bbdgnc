@@ -6,9 +6,11 @@ Apache or other similar server
 
 PHP 5.6 or higher
 
-PHP components need: libcurl, libxml
+PHP components need: libcurl, libxml, soap
 
 [Composer](https://getcomposer.org/download/)
+
+npm
 
 ## Install
 Clone this repository
