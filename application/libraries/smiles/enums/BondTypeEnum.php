@@ -1,6 +1,6 @@
 <?php
 
-namespace Bbdgnc\Smiles\enums;
+namespace Bbdgnc\Smiles\Enum;
 
 class BondTypeEnum {
 

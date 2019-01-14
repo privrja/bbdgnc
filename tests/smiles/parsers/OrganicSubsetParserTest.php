@@ -3,9 +3,9 @@
 namespace Bbdgnc\Test\Smiles\Parser;
 
 use Bbdgnc\Enum\PeriodicTableSingleton;
+use Bbdgnc\Smiles\Parser\Accept;
 use Bbdgnc\Smiles\Parser\OrganicSubsetParser;
-use Bbdgnc\Smiles\parsers\Accept;
-use Bbdgnc\Smiles\parsers\Reject;
+use Bbdgnc\Smiles\Parser\Reject;
 
 class OrganicSubsetParserTest extends \PHPUnit\Framework\TestCase {
 

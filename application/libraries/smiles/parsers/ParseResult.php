@@ -1,6 +1,6 @@
 <?php
 
-namespace Bbdgnc\Smiles\parsers;
+namespace Bbdgnc\Smiles\Parser;
 
 
 abstract class ParseResult {

@@ -2,11 +2,12 @@
 
 namespace Bbdgnc\Test\Smiles\Parser;
 
-use Bbdgnc\Smiles\parsers\Accept;
-use Bbdgnc\Smiles\parsers\Reject;
-use Bbdgnc\Smiles\parsers\StringParser;
+use Bbdgnc\Smiles\Parser\Accept;
+use Bbdgnc\Smiles\Parser\Reject;
+use Bbdgnc\Smiles\Parser\StringParser;
+use PHPUnit\Framework\TestCase;
 
-class StringParserTest extends \PHPUnit\Framework\TestCase {
+class StringParserTest extends TestCase {
 
     public function testWithNull() {
         $parser = new StringParser();

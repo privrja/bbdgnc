@@ -3,6 +3,7 @@
 namespace Bbdgnc\Test\Base;
 
 use Bbdgnc\Base\FormulaHelper;
+use Bbdgnc\Exception\IllegalArgumentException;
 
 final class ComputeMassTest extends \PHPUnit\Framework\TestCase {
 
@@ -18,42 +19,42 @@ final class ComputeMassTest extends \PHPUnit\Framework\TestCase {
     }
 
     public function testComputeMassWithNull() {
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(IllegalArgumentException::class);
         FormulaHelper::computeMass(null);
     }
 
     public function testComputeMassWithEmptyString() {
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(IllegalArgumentException::class);
         FormulaHelper::computeMass('');
     }
 
     public function testComputeMassWithWrongData() {
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(IllegalArgumentException::class);
         FormulaHelper::computeMass('C');
     }
 
     public function testComputeMassWithWrongData2() {
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(IllegalArgumentException::class);
         FormulaHelper::computeMass('CO');
     }
 
     public function testComputeMassWithWrongData3() {
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(IllegalArgumentException::class);
         FormulaHelper::computeMass('C2O01');
     }
 
     public function testComputeMassWithWrongData4() {
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(IllegalArgumentException::class);
         FormulaHelper::computeMass('C15H27Ke5');
     }
 
     public function testComputeMassWithWrongData5() {
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(IllegalArgumentException::class);
         FormulaHelper::computeMass('5');
     }
 
     public function testComputeMassWithWrongData6() {
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(IllegalArgumentException::class);
         FormulaHelper::computeMass('C21H');
     }
 
