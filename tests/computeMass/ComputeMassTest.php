@@ -1,68 +1,58 @@
 <?php
 
-use Bbdgnc\Finder\ChebiFinder;
+use Bbdgnc\Base\FormulaHelper;
 
 final class ComputeMassTest extends \PHPUnit\Framework\TestCase {
 
     public function testComputeMassWithRightData() {
-        $chebiFinder = new ChebiFinder();
-        $result = $chebiFinder->computeMass('C62H111N11O12');
+        $result = FormulaHelper::computeMass('C62H111N11O12');
         $this->assertGreaterThan(1198.841, $result);
         $this->assertLessThan(1204.841, $result);
     }
 
     public function testComputeMassWithRightData2() {
-        $chebiFinder = new ChebiFinder();
-        $result = $chebiFinder->computeMass('C5H8Fe2');
+        $result = FormulaHelper::computeMass('C5H8Fe2');
         $this->assertEquals(179.9324802568, $result);
     }
 
     public function testComputeMassWithNull() {
-        $chebiFinder = new ChebiFinder();
         $this->expectException(InvalidArgumentException::class);
-        $chebiFinder->computeMass(null);
+        FormulaHelper::computeMass(null);
     }
 
     public function testComputeMassWithEmptyString() {
-        $chebiFinder = new ChebiFinder();
         $this->expectException(InvalidArgumentException::class);
-        $chebiFinder->computeMass('');
+        FormulaHelper::computeMass('');
     }
 
     public function testComputeMassWithWrongData() {
-        $chebiFinder = new ChebiFinder();
         $this->expectException(InvalidArgumentException::class);
-        $chebiFinder->computeMass('C');
+        FormulaHelper::computeMass('C');
     }
 
     public function testComputeMassWithWrongData2() {
-        $chebiFinder = new ChebiFinder();
         $this->expectException(InvalidArgumentException::class);
-        $chebiFinder->computeMass('CO');
+        FormulaHelper::computeMass('CO');
     }
 
     public function testComputeMassWithWrongData3() {
-        $chebiFinder = new ChebiFinder();
         $this->expectException(InvalidArgumentException::class);
-        $chebiFinder->computeMass('C2O01');
+        FormulaHelper::computeMass('C2O01');
     }
 
     public function testComputeMassWithWrongData4() {
-        $chebiFinder = new ChebiFinder();
         $this->expectException(InvalidArgumentException::class);
-        $chebiFinder->computeMass('C15H27Ke5');
+        FormulaHelper::computeMass('C15H27Ke5');
     }
 
     public function testComputeMassWithWrongData5() {
-        $chebiFinder = new ChebiFinder();
         $this->expectException(InvalidArgumentException::class);
-        $chebiFinder->computeMass('5');
+        FormulaHelper::computeMass('5');
     }
 
     public function testComputeMassWithWrongData6() {
-        $chebiFinder = new ChebiFinder();
         $this->expectException(InvalidArgumentException::class);
-        $chebiFinder->computeMass('C21H');
+        FormulaHelper::computeMass('C21H');
     }
 
 }
