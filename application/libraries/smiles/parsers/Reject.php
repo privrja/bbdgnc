@@ -7,6 +7,14 @@ use Bbdgnc\Exception\IllegalStateException;
 class Reject extends ParseResult {
 
     /**
+     * Reject constructor.
+     * @param string $errorMessage
+     */
+    public function __construct($errorMessage) {
+        $this->errorMessage = $errorMessage;
+    }
+
+    /**
      * @return boolean
      */
     public function isAccepted() {

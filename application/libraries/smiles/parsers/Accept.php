@@ -7,6 +7,16 @@ use Bbdgnc\Exception\IllegalStateException;
 class Accept extends ParseResult {
 
     /**
+     * Accept constructor.
+     * @param $result
+     * @param string $remainder
+     */
+    public function __construct($result, $remainder) {
+        $this->result = $result;
+        $this->remainder = $remainder;
+    }
+
+    /**
      * @return boolean
      */
     public function isAccepted() {
