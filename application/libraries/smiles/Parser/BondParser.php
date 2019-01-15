@@ -16,11 +16,14 @@ class BondParser implements IParser {
             return self::reject();
         }
         foreach (BondTypeEnum::$values as $bond => $value) {
+            if ($bond == '') {
+                continue;
+            }
             if (preg_match('/^' . $bond . '/', $strText)) {
                 return new Accept($bond, substr($strText, 1));
             }
         }
-        return new Accept('-', $strText);
+        return new Accept('', $strText);
     }
 
     /**

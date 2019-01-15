@@ -30,6 +30,6 @@ final class BondParserTest extends TestCase {
     public function testWithWrongData() {
         $parser = new BondParser();
         $result = $parser->parse('CC');
-        $this->assertEquals(new Accept('-', 'CC'), $result);
+        $this->assertEquals(new Accept('', 'CC'), $result);
     }
 }

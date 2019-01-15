@@ -3,7 +3,7 @@
 namespace Bbdgnc\Smiles;
 
 
-use Bbdgnc\Exception\IllegalArgumentException;
+use Bbdgnc\Smiles\Parser\SmilesParser;
 
 class Graph {
 
@@ -11,26 +11,27 @@ class Graph {
 
     /**
      * Graph constructor.
-     * @param string $strSmiles SMILES
+     * @param string $strText
      */
-    public function __construct($strSmiles) {
-        $this->buildGraph($strSmiles);
+    public function __construct($strText) {
+        $this->buildGraph($strText);
     }
 
-    private function buildGraph($strSmiles) {
-        if (!isset($strSmiles) || empty($strSmiles)) {
-            throw new IllegalArgumentException();
+    public function addNode(Element $element) {
+        $this->arNodes[] = new Node($element);
+    }
+
+    public function addBond(int $nodeIndex, Bond $bond) {
+        $this->arNodes[$nodeIndex]->addBond($bond);
+    }
+
+    public function buildGraph($strText) {
+        $smilesParser = new SmilesParser($this);
+        $result = $smilesParser->parse($strText);
+        if ($result->isAccepted()) {
+            // OK
         }
-
-        $stack = array();
-        $intLength = strlen($strSmiles);
-        $intIndex = 0;
-        while ($intIndex < $intLength) {
-            $stack[] = $strSmiles[$intIndex];
-
-            $intIndex++;
-        }
-
+        // WRONG
     }
 
 }
