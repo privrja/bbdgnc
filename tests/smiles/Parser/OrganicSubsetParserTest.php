@@ -2,7 +2,6 @@
 
 namespace Bbdgnc\Test\Smiles\Parser;
 
-use Bbdgnc\Enum\PeriodicTableSingleton;
 use Bbdgnc\Smiles\Parser\Accept;
 use Bbdgnc\Smiles\Parser\OrganicSubsetParser;
 use Bbdgnc\Smiles\Parser\Reject;
@@ -24,13 +23,13 @@ final class OrganicSubsetParserTest extends \PHPUnit\Framework\TestCase {
     public function testWithRightData() {
         $parser = new OrganicSubsetParser();
         $result = $parser->parse('Cl');
-        $this->assertEquals(new Accept(PeriodicTableSingleton::getInstance()->getAtoms()['Cl'], ''), $result);
+        $this->assertEquals(new Accept('Cl', ''), $result);
     }
 
     public function testWithRightData2() {
         $parser = new OrganicSubsetParser();
         $result = $parser->parse('Fe');
-        $this->assertEquals(new Accept(PeriodicTableSingleton::getInstance()->getAtoms()['F'], 'e'), $result);
+        $this->assertEquals(new Accept('F', 'e'), $result);
     }
 
     public function testWithWrongData() {
