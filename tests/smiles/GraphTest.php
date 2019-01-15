@@ -88,6 +88,11 @@ class GraphTest extends TestCase {
         new Graph('CC(C))');
     }
 
+    public function testGraphWrong8() {
+        $this->expectException(IllegalArgumentException::class);
+        new Graph('C%1%CC(=O)CC%1%');
+    }
+
     public function testGraph4() {
         $graph = new Graph('C=C(C)C(#O)C');
         $expectedGraph = new Graph('');
@@ -146,4 +151,35 @@ class GraphTest extends TestCase {
         $expectedGraph->addBond(11, new Bond(1, ''));
         $this->assertEquals($expectedGraph, $graph);
     }
+
+    public function testGraph6() {
+        $graph = new Graph('C1C(C)C1');
+        $expectedGraph = new Graph('');
+        for ($i = 0; $i < 4; $i++) {
+            $expectedGraph->addNode('C');
+        }
+        $expectedGraph->addBond(0, new Bond(1, '='));
+        $expectedGraph->addBond(1, new Bond(0, '='));
+        $expectedGraph->addBond(1, new Bond(2, ''));
+        $expectedGraph->addBond(1, new Bond(3, ''));
+        $expectedGraph->addBond(2, new Bond(1, ''));
+        $expectedGraph->addBond(3, new Bond(1, ''));
+        $this->assertEquals($expectedGraph, $graph);
+    }
+
+    public function testGraph7() {
+        $graph = new Graph('C%18%CC(=O)CC%18%');
+        $expectedGraph = new Graph('');
+        for ($i = 0; $i < 4; $i++) {
+            $expectedGraph->addNode('C');
+        }
+        $expectedGraph->addBond(0, new Bond(1, '='));
+        $expectedGraph->addBond(1, new Bond(0, '='));
+        $expectedGraph->addBond(1, new Bond(2, ''));
+        $expectedGraph->addBond(1, new Bond(3, ''));
+        $expectedGraph->addBond(2, new Bond(1, ''));
+        $expectedGraph->addBond(3, new Bond(1, ''));
+        $this->assertEquals($expectedGraph, $graph);
+    }
+
 }
