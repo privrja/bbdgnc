@@ -9,6 +9,11 @@ use PHPUnit\Framework\TestCase;
 
 class GraphTest extends TestCase {
 
+    public function testWithNull() {
+        $this->expectException(\TypeError::class);
+        new Graph(null);
+    }
+
     public function testGraph() {
         $graph = new Graph("CCC");
         $expectedGraph = new Graph('');
@@ -76,6 +81,11 @@ class GraphTest extends TestCase {
     public function testGraphWrong6() {
         $this->expectException(IllegalArgumentException::class);
         new Graph('CC(Fe)C');
+    }
+
+    public function testGraphWrong7() {
+        $this->expectException(IllegalArgumentException::class);
+        new Graph('CC(C))');
     }
 
     public function testGraph4() {

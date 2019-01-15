@@ -4,6 +4,7 @@ namespace Bbdgnc\Smiles\Parser;
 
 use Bbdgnc\Smiles\Bond;
 use Bbdgnc\Smiles\Enum\BondTypeEnum;
+use Bbdgnc\Smiles\Exception\RejectException;
 use Bbdgnc\Smiles\Graph;
 
 class SmilesParser implements IParser {
@@ -49,101 +50,124 @@ class SmilesParser implements IParser {
      */
     public function parse($strText) {
         $this->initialize($strText);
-        while ($this->strSmiles != '') {
+        try {
+            while ($this->strSmiles != '') {
 //            if ($intNodeIndex >= 25) break;
-            $orgResult = $this->orgParser->parse($this->strSmiles);
-            if ($orgResult->isAccepted()) {
-                $this->graph->addNode($orgResult->getResult());
-                if ($this->intNodeIndex > 0) {
-                    $this->graph->addBond($this->intNodeIndex - 1, new Bond($this->intNodeIndex, $this->lastBond));
-                    $this->graph->addBond($this->intNodeIndex, new Bond($this->intNodeIndex - 1, $this->lastBond));
-                }
-                // try bond
-                $bondResult = $this->bondParser->parse($orgResult->getRemainder());
-                if (!$bondResult->isAccepted()) {
-                    var_dump("BREAK III");
-                    $this->strSmiles = $orgResult->getRemainder();
-                } else {
-                    $this->lastBond = $bondResult->getResult();
-
-                    // try ( || [ || Organic subset if it's ( this bond is wrong -> need to be only -, need to parse again after bracket
-
-
-                    $leftBracketResult = $this->leftBracketParser->parse($bondResult->getRemainder());
-                    if ($leftBracketResult->isAccepted()) {
-//                    var_dump("(");
-                        $this->intLeftBraces++;
-                        // problem try bond if last bond is multiple => error
-                        if (BondTypeEnum::isMultipleBinding($bondResult->getResult())) {
-                            return self::reject();
-                        }
-                        $this->parseAndCallBack($leftBracketResult->getRemainder(), $this->bondParser, 'bondAfterBracketOk', 'bondAfterBracketKo');
-                    } else {
-                        // no ( test [ || Organic Subset again -> continue in cycle
-                        $this->strSmiles = $bondResult->getRemainder();
-                        $this->intNodeIndex++;
+                $orgResult = $this->orgParser->parse($this->strSmiles);
+                if ($orgResult->isAccepted()) {
+                    $this->graph->addNode($orgResult->getResult());
+                    if ($this->intNodeIndex > 0) {
+                        $this->graph->addBond($this->intNodeIndex - 1, new Bond($this->intNodeIndex, $this->lastBond));
+                        $this->graph->addBond($this->intNodeIndex, new Bond($this->intNodeIndex - 1, $this->lastBond));
                     }
-                }
-            } else if (!empty($this->arNodesBeforeBracket)) {
-                $rightBracketResult = $this->rightBracketParser->parse($this->strSmiles);
-                if ($rightBracketResult->isAccepted()) {
-//                    var_dump(")");
-                    $this->intRightBraces++;
-                    // there can be bond
-                    $bondAfterBracketResult = $this->bondParser->parse($rightBracketResult->getRemainder());
-                    if (!$bondAfterBracketResult->isAccepted()) {
-                        var_dump("BREAK I");
-                        $this->strSmiles = $rightBracketResult->getRemainder();
-                    } else {
-                        // removed unnecessary parenthesis before start
-                        // there can be [ || organic subset but i need to parse it now no going to new cycle
-                        $orgAfterBracket = $this->orgParser->parse($bondAfterBracketResult->getRemainder());
-                        if ($orgAfterBracket->isAccepted()) {
-                            $intNodeAfterBracketIndex = array_pop($this->arNodesBeforeBracket);
-                            $this->graph->addNode($orgAfterBracket->getResult());
-                            $this->graph->addBond($intNodeAfterBracketIndex, new Bond($this->intNodeIndex, $bondAfterBracketResult->getResult()));
-                            $this->graph->addBond($this->intNodeIndex, new Bond($intNodeAfterBracketIndex, $bondAfterBracketResult->getResult()));
-                            $this->strSmiles = $orgAfterBracket->getRemainder();
-                            $this->intNodeIndex++;
-                        } else {
-                            // there can be [ || ) if not remove unnecessary parentheses otherwise reject
-                            var_dump("reject I");
-                            return self::reject();
-                        }
-                    }
+                    // try bond
+                    $this->parseAndCallBack($orgResult, $this->bondParser, 'tryBondOk', 'tryBondKo');
+                } else if (!empty($this->arNodesBeforeBracket)) {
+                    $this->parseAndCallBack(new Accept('', $this->strSmiles), $this->rightBracketParser, 'rightBracketOk', 'rightBracketKo');
                 } else {
-                    var_dump("reject II");
-                    return self::reject();
+//                    var_dump($this->strSmiles);
+                    var_dump("reject III");
+                    throw new RejectException();
                 }
-            } else {
-//                var_dump($this->strSmiles);
-                var_dump("reject III");
-                return self::reject();
             }
+        } catch (\Exception $exception) {
+            return self::reject();
         }
         return $this->intLeftBraces == $this->intRightBraces ? new Accept($this->graph, '') : self::reject();
     }
 
-    private function parseAndCallBack(string $strText, IParser $parser, $funcOk, $funcKo) {
-        $result = $parser->parse($strText);
+    private function parseAndCallBack(ParseResult $lastResult, IParser $parser, $funcOk, $funcKo) {
+        $result = $parser->parse($lastResult->getRemainder());
         if ($result->isAccepted()) {
-            $this->$funcOk($result);
+            $this->$funcOk($result, $lastResult);
         } else {
-            $this->$funcKo($strText);
+            $this->$funcKo($result, $lastResult);
         }
     }
 
-    private function bondAfterBracketOk(ParseResult $result) {
-        var_dump('ok');
+    private function rightBracketOk(ParseResult $result, ParseResult $lasResult) {
+        // var_dump(")");
+        $this->intRightBraces++;
+        // there can be bond
+        $this->parseAndCallBack($result, $this->bondParser, 'bondAfterRightBracketOk', 'bondAfterRightBracketKo');
+    }
+
+    private function rightBracketKo(ParseResult $result, ParseResult $lasResult) {
+        var_dump("reject II");
+        throw new RejectException();
+    }
+
+    private function bondAfterRightBracketOk(ParseResult $result, ParseResult $lasResult) {
+        // removed unnecessary parenthesis before start
+        // there can be [ || organic subset but i need to parse it now no going to new cycle
+        $this->parseAndCallBack($result, $this->orgParser, 'orgAfterBracketOk', 'orgAfterBracketKo');
+    }
+
+    private function bondAfterRightBracketKo(ParseResult $result, ParseResult $lasResult) {
+        var_dump("BREAK I");
+        $this->strSmiles = $lasResult->getRemainder();
+    }
+
+    private function orgAfterBracketOk(ParseResult $result, ParseResult $lasResult) {
+        $intNodeAfterBracketIndex = array_pop($this->arNodesBeforeBracket);
+        $this->graph->addNode($result->getResult());
+        $this->graph->addBond($intNodeAfterBracketIndex, new Bond($this->intNodeIndex, $lasResult->getResult()));
+        $this->graph->addBond($this->intNodeIndex, new Bond($intNodeAfterBracketIndex, $lasResult->getResult()));
+//        var_dump("here " . $result->getRemainder());
+//        var_dump($this->arNodesBeforeBracket);
+        $this->parseAndCallBack($result, $this->bondParser, 'tryBondOk', 'checkBracketKo');
+    }
+
+    private function checkBracketKo(ParseResult $result, ParseResult $lasResult) {
+        $this->strSmiles = $lasResult->getRemainder();
+    }
+
+    private function orgAfterBracketKo(ParseResult $result, ParseResult $lasResult) {
+        // there can be [ || ) if not remove unnecessary parentheses otherwise reject
+        var_dump("reject I");
+        throw new RejectException();
+    }
+
+    private function tryBondOk(ParseResult $result, ParseResult $lasResult) {
         $this->lastBond = $result->getResult();
-        $this->arNodesBeforeBracket[] = $this->intNodeIndex;
-        $this->strSmiles = $result->getRemainder();
+        // try ( || [ || Organic subset if it's ( this bond is wrong -> need to be only -, need to parse again after bracket
+//        var_dump($result->getRemainder());
+        $this->parseAndCallBack($result, $this->leftBracketParser, 'leftBracketOk', 'leftBracketKo');
+    }
+
+    private function tryBondKo(ParseResult $result, ParseResult $lasResult) {
+        var_dump("BREAK III");
+        $this->strSmiles = $lasResult->getRemainder();
+    }
+
+    private function leftBracketOk(ParseResult $result, ParseResult $lastResult) {
+        $this->intLeftBraces++;
+        // problem try bond if last bond is multiple => error
+//        var_dump($lastResult->getResult());
+//        var_dump($result->getRemainder());
+        if (BondTypeEnum::isMultipleBinding($lastResult->getResult())) {
+            throw new RejectException();
+        }
+        $this->parseAndCallBack($result, $this->bondParser, 'bondAfterBracketOk', 'bondAfterBracketKo');
+    }
+
+    private function leftBracketKo(ParseResult $result, ParseResult $lastResult) {
+        $this->strSmiles = $lastResult->getRemainder();
         $this->intNodeIndex++;
     }
 
-    private function bondAfterBracketKo(string $strText) {
-        var_dump('ko');
-        $this->strSmiles = $strText;
+    private function bondAfterBracketOk(ParseResult $result, ParseResult $lastParserResult) {
+        $this->lastBond = $result->getResult();
+        $this->arNodesBeforeBracket[] = $this->intNodeIndex;
+        $this->strSmiles = $result->getRemainder();
+//        var_dump($result->getRemainder());
+//        var_dump($this->arNodesBeforeBracket);
+//        var_dump($this->intNodeIndex);
+        $this->intNodeIndex++;
+    }
+
+    private function bondAfterBracketKo(ParseResult $result, ParseResult $lastResult) {
+        $this->strSmiles = $lastResult->getRemainder();
     }
 
     /**
