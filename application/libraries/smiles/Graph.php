@@ -3,6 +3,8 @@
 namespace Bbdgnc\Smiles;
 
 
+use Bbdgnc\Enum\PeriodicTableSingleton;
+use Bbdgnc\Exception\IllegalArgumentException;
 use Bbdgnc\Smiles\Parser\SmilesParser;
 
 class Graph {
@@ -13,25 +15,47 @@ class Graph {
      * Graph constructor.
      * @param string $strText
      */
-    public function __construct($strText) {
+    public function __construct(string $strText) {
         $this->buildGraph($strText);
     }
 
-    public function addNode(Element $element) {
-        $this->arNodes[] = new Node($element);
+    public function addNode(string $elementName) {
+        $this->arNodes[] = new Node(PeriodicTableSingleton::getInstance()->getAtoms()[$elementName]);
     }
 
     public function addBond(int $nodeIndex, Bond $bond) {
         $this->arNodes[$nodeIndex]->addBond($bond);
     }
 
-    public function buildGraph($strText) {
+    private function buildGraph($strText) {
         $smilesParser = new SmilesParser($this);
         $result = $smilesParser->parse($strText);
-        if ($result->isAccepted()) {
-            // OK
+        if (!$result->isAccepted()) {
+            throw new IllegalArgumentException();
         }
-        // WRONG
+    }
+
+    public function toString() {
+        $str = "";
+        $intIndex = 0;
+        /** @var Node $node */
+        foreach ($this->arNodes as $node) {
+            $str .= '[' . $intIndex . '] ' . $node->getAtom()->getName() . ' => ';
+            /** @var Bond $bond */
+            foreach ($node->getBonds() as $bond) {
+                $str .= $bond->getNodeNumber() . ' ';
+            }
+            $str .= PHP_EOL;
+            $intIndex++;
+        }
+        return $str;
+    }
+
+    /**
+     * @return array
+     */
+    public function getArNodes(): array {
+        return $this->arNodes;
     }
 
 }

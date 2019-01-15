@@ -20,5 +20,18 @@ class Bond {
         $this->bondType = BondTypeEnum::$values[$bondType];
     }
 
+    /**
+     * @return mixed
+     */
+    public function getNodeNumber() {
+        return $this->nodeNumber;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getBondType() {
+        return $this->bondType;
+    }
 
 }
