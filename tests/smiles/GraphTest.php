@@ -93,6 +93,11 @@ final class GraphTest extends TestCase {
         new Graph('C%1%CC(=O)CC%1%');
     }
 
+    public function testGraphWrong9() {
+        $this->expectException(IllegalArgumentException::class);
+        new Graph('C1CCC2CC1');
+    }
+
     public function testGraph4() {
         $graph = new Graph('C=C(C)C(#O)C');
         $expectedGraph = new Graph('');
