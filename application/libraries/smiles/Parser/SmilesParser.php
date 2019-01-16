@@ -52,8 +52,8 @@ class SmilesParser implements IParser {
     /** @var RightBracketParser $rightBracketParser */
     private $rightBracketParser;
 
-    /** @var FirstDigitParser $natParser */
-    private $natParser;
+    /** @var SmilesNumberParser $smilesNumberParser */
+    private $smilesNumberParser;
 
     /**
      * SmilesParser constructor.
@@ -66,7 +66,7 @@ class SmilesParser implements IParser {
         $this->orgParser = new OrganicSubsetParser();
         $this->leftBracketParser = new LeftBracketParser();
         $this->rightBracketParser = new RightBracketParser();
-        $this->natParser = new FirstDigitParser();
+        $this->smilesNumberParser = new SmilesNumberParser();
     }
 
     /**
@@ -120,7 +120,7 @@ class SmilesParser implements IParser {
             $this->arNumberBonds[$result->getResult()] = new OneTimeReadable($this->intNodeIndex - 1);
             $this->intWriting++;
         }
-        $this->parseAndCallBack($result, $this->natParser, 'tryNumberOk', 'tryBond');
+        $this->parseAndCallBack($result, $this->smilesNumberParser, 'tryNumberOk', 'tryBond');
     }
 
     /**
@@ -204,7 +204,7 @@ class SmilesParser implements IParser {
             $this->graph->addBidirectionalBond($this->intNodeIndex - 1, $this->intNodeIndex, $this->lastBond);
         }
         $this->intNodeIndex++;
-        $this->parseAndCallBack($result, $this->natParser, 'tryNumberOk', 'tryBond');
+        $this->parseAndCallBack($result, $this->smilesNumberParser, 'tryNumberOk', 'tryBond');
     }
 
     /**
@@ -239,7 +239,7 @@ class SmilesParser implements IParser {
         $this->graph->addNode($result->getResult());
         $this->graph->addBidirectionalBond($intTargetNodeIndex, $this->intNodeIndex, $this->lastBond);
         $this->intNodeIndex++;
-        $this->parseAndCallBack($result, $this->natParser, 'tryNumberOk', 'tryBond');
+        $this->parseAndCallBack($result, $this->smilesNumberParser, 'tryNumberOk', 'tryBond');
     }
 
     /**

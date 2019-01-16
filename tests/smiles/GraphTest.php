@@ -177,16 +177,45 @@ final class GraphTest extends TestCase {
     public function testGraph7() {
         $graph = new Graph('C%18%CC(=O)CC%18%');
         $expectedGraph = new Graph('');
-        for ($i = 0; $i < 4; $i++) {
+        for ($i = 0; $i < 3; $i++) {
             $expectedGraph->addNode('C');
         }
-        $expectedGraph->addBond(0, new Bond(1, '='));
-        $expectedGraph->addBond(1, new Bond(0, '='));
+        $expectedGraph->addNode('O');
+        $expectedGraph->addNode('C');
+        $expectedGraph->addNode('C');
+        $expectedGraph->addBond(0, new Bond(1, ''));
+        $expectedGraph->addBond(0, new Bond(5, ''));
+        $expectedGraph->addBond(1, new Bond(0, ''));
         $expectedGraph->addBond(1, new Bond(2, ''));
-        $expectedGraph->addBond(1, new Bond(3, ''));
         $expectedGraph->addBond(2, new Bond(1, ''));
-        $expectedGraph->addBond(3, new Bond(1, ''));
+        $expectedGraph->addBond(2, new Bond(3, '='));
+        $expectedGraph->addBond(2, new Bond(4, ''));
+        $expectedGraph->addBond(3, new Bond(2, '='));
+        $expectedGraph->addBond(4, new Bond(2, ''));
+        $expectedGraph->addBond(4, new Bond(5, ''));
+        $expectedGraph->addBond(5, new Bond(4, ''));
+        $expectedGraph->addBond(5, new Bond(0, ''));
         $this->assertEquals($graph, $expectedGraph);
     }
 
+    public function testGraph8() {
+        $graph = new Graph('c1ccccc1');
+        $expectedGraph = new Graph('');
+        for ($i = 0; $i < 6; $i++) {
+            $expectedGraph->addNode('c');
+        }
+        $expectedGraph->addBond(0, new Bond(1, ''));
+        $expectedGraph->addBond(0, new Bond(5, ''));
+        $expectedGraph->addBond(1, new Bond(0, ''));
+        $expectedGraph->addBond(1, new Bond(2, ''));
+        $expectedGraph->addBond(2, new Bond(1, ''));
+        $expectedGraph->addBond(2, new Bond(3, ''));
+        $expectedGraph->addBond(3, new Bond(2, ''));
+        $expectedGraph->addBond(3, new Bond(4, ''));
+        $expectedGraph->addBond(4, new Bond(3, ''));
+        $expectedGraph->addBond(4, new Bond(5, ''));
+        $expectedGraph->addBond(5, new Bond(4, ''));
+        $expectedGraph->addBond(5, new Bond(0, ''));
+        $this->assertEquals($graph, $expectedGraph);
+    }
 }

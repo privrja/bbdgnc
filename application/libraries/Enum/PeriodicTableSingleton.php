@@ -43,7 +43,7 @@ class PeriodicTableSingleton {
             'He' => new Element('He', 2, 1, 4.002606),
             'Li' => new Element('Li', 3, 1, 7.016004),
             'Be' => new Element('Be', 4, 1, 9.012182),
-            'B' => new Element('B', 5, 1, 11.009306),
+            'B' => new Element('B', 5, 3, 11.009306),
             'C' => new Element('C', 6, 4, 12.0),
             'N' => new Element('N', 7, 3, 14.0030740052),
             'O' => new Element('O', 8, 2, 15.9949146221),
