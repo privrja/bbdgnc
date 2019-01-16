@@ -24,7 +24,7 @@ class Graph {
      * @param string $elementName
      */
     public function addNode(string $elementName) {
-        $this->arNodes[] = new Node(PeriodicTableSingleton::getInstance()->getAtoms()[$elementName]);
+        $this->arNodes[] = new Node(PeriodicTableSingleton::getInstance()->getAtoms()[ucfirst($elementName)]);
     }
 
     /**
