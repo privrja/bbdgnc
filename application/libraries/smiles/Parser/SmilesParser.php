@@ -16,10 +16,12 @@ class SmilesParser implements IParser {
     private $intLeftBraces;
     private $intRightBraces;
     private $arNodesBeforeBracket;
+    private $arNumberBonds;
     private $bondParser;
     private $orgParser;
     private $leftBracketParser;
     private $rightBracketParser;
+    private $natParser;
 
     /**
      * SmilesParser constructor.
@@ -31,12 +33,13 @@ class SmilesParser implements IParser {
         $this->orgParser = new OrganicSubsetParser();
         $this->leftBracketParser = new LeftBracketParser();
         $this->rightBracketParser = new RightBracketParser();
+        $this->natParser = new FirstDigitParser();
     }
 
     public function initialize($strText) {
         $this->strSmiles = $strText;
         $this->intNodeIndex = $this->intLeftBraces = $this->intRightBraces = 0;
-        $this->arNodesBeforeBracket = [];
+        $this->arNodesBeforeBracket = $this->arNumberBonds = [];
         $this->lastBond = null;
     }
 
@@ -48,6 +51,69 @@ class SmilesParser implements IParser {
      * @param string $strText
      * @return Accept|Reject
      */
+    public function parser($strText) {
+        $this->initialize($strText);
+        try {
+            while ($this->strSmiles != '') {
+                $this->parseAndCallBack(self::accept(), $this->orgParser, 'firstOrgOk', 'backFromBracket');
+            }
+        } catch (RejectException $exception) {
+            return self::reject();
+        }
+        return $this->intLeftBraces == $this->intRightBraces ? new Accept($this->graph, '') : self::reject();
+    }
+
+    private function tryNumberOk(ParseResult $result, ParseResult $lasResult) {
+        // save data
+
+
+        $this->parseAndCallBack($result, $this->natParser, 'tryNumberOk', 'tryBond');
+    }
+
+    private function tryBond(ParseResult $result, ParseResult $lasResult) {
+        $this->lastBond = $result->getResult();
+        $this->parseAndCallBack($result, $this->leftBracketParser, 'leftBracketXOk', 'next');
+    }
+
+    private function leftBracketXOk(ParseResult $result, ParseResult $lastResult) {
+        $this->intLeftBraces++;
+        if (BondTypeEnum::isMultipleBinding($lastResult->getResult())) {
+            throw new RejectException();
+        }
+        $this->parseAndCallBack($result, $this->bondParser, 'bondAfterBracketXOk', 'next');
+    }
+
+    private function next(ParseResult $result, ParseResult $lastResult) {
+        $this->strSmiles = $lastResult->getRemainder();
+    }
+
+    private function bondAfterBracketXOk(ParseResult $result, ParseResult $lastParserResult) {
+        $this->lastBond = $result->getResult();
+        $this->arNodesBeforeBracket[] = $this->intNodeIndex - 1;
+        $this->strSmiles = $result->getRemainder();
+    }
+
+    private function firstOrgOk(ParseResult $result, ParseResult $lasResult) {
+        //save data
+        $this->graph->addNode($result->getResult());
+        if ($this->intNodeIndex > 0) {
+            $this->graph->addBond($this->intNodeIndex - 1, new Bond($this->intNodeIndex, $this->lastBond));
+            $this->graph->addBond($this->intNodeIndex, new Bond($this->intNodeIndex - 1, $this->lastBond));
+        }
+        $this->intNodeIndex++;
+        // try parse number
+        $this->parseAndCallBack($result, $this->natParser, 'tryNumberOk', 'tryBond');
+    }
+
+    private function backFromBracket(ParseResult $result, ParseResult $lasResult) {
+        if (!empty($this->arNodesBeforeBracket)) {
+            $this->parseAndCallBack(self::accept(), $this->rightBracketParser, 'rightBracketOk', 'rightBracketKo');
+        } else {
+            var_dump("reject III");
+            throw new RejectException();
+        }
+    }
+
     public function parse($strText) {
         $this->initialize($strText);
         try {
@@ -60,12 +126,16 @@ class SmilesParser implements IParser {
                         $this->graph->addBond($this->intNodeIndex - 1, new Bond($this->intNodeIndex, $this->lastBond));
                         $this->graph->addBond($this->intNodeIndex, new Bond($this->intNodeIndex - 1, $this->lastBond));
                     }
+                    //try number
+//                    $natResult = $this->natParser->parse($orgResult->getRemainder());
+
+
                     // try bond
                     $this->parseAndCallBack($orgResult, $this->bondParser, 'tryBondOk', 'tryBondKo');
                 } else if (!empty($this->arNodesBeforeBracket)) {
                     $this->parseAndCallBack(new Accept('', $this->strSmiles), $this->rightBracketParser, 'rightBracketOk', 'rightBracketKo');
                 } else {
-//                    var_dump($this->strSmiles);
+                    var_dump($this->strSmiles);
                     var_dump("reject III");
                     throw new RejectException();
                 }
@@ -76,11 +146,14 @@ class SmilesParser implements IParser {
         return $this->intLeftBraces == $this->intRightBraces ? new Accept($this->graph, '') : self::reject();
     }
 
-    private function parseAndCallBack(ParseResult $lastResult, IParser $parser, $funcOk, $funcKo) {
+    private function parseAndCallBack(ParseResult $lastResult, IParser $parser, string $funcOk, string $funcKo = '') {
         $result = $parser->parse($lastResult->getRemainder());
         if ($result->isAccepted()) {
             $this->$funcOk($result, $lastResult);
         } else {
+            if (empty($funcKo)) {
+                return;
+            }
             $this->$funcKo($result, $lastResult);
         }
     }
@@ -176,5 +249,9 @@ class SmilesParser implements IParser {
      */
     public static function reject() {
         return new Reject('Not match SMILES');
+    }
+
+    private function accept() {
+        return new Accept('', $this->strSmiles);
     }
 }
