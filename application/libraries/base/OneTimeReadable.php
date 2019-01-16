@@ -38,9 +38,9 @@ class OneTimeReadable {
      * @return mixed
      */
     private function swap() {
-        $object = $this->object;
+        $tmpObject = $this->object;
         $this->object = null;
-        return $object;
+        return $tmpObject;
     }
 
     /**

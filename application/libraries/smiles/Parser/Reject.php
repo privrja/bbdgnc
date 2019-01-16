@@ -39,6 +39,6 @@ class Reject extends ParseResult {
      * @return string
      */
     public function getRemainder() {
-        throw new IllegalStateException();
+        $this->getResult();
     }
 }

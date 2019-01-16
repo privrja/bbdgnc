@@ -55,11 +55,26 @@ class SmilesParser implements IParser {
     /** @var SmilesNumberParser $smilesNumberParser */
     private $smilesNumberParser;
 
+    /** @var string name of methods for callbacks */
+    const TRY_BOND = 'tryBond';
+    const TRY_NUMBER = 'tryNumberOk';
+    const NEXT = 'next';
+    const KO = 'ko';
+    const BOND_AFTER_BRACKET = 'bondAfterBracketOk';
+    const BOND_OK = 'bondOk';
+    const LEFT_BRACKET_OK = 'leftBracketOk';
+    const RIGHT_BRACKET_OK = 'rightBracketOk';
+    const ORG_AFTER_BRACKET_OK = 'orgAfterBracketOk';
+    const BOND_AFTER_RIGHT_BRACKET_OK = 'bondAfterRightBracketOk';
+    const FIRST_ORG_OK = 'firstOrgOk';
+    const BACK_FROM_BRACKET = 'backFromBracket';
+
     /**
      * SmilesParser constructor.
      * Initialize needed parsers and setup graph
      * @param Graph $graph
      */
+
     public function __construct(Graph $graph) {
         $this->graph = $graph;
         $this->bondParser = new BondParser();
@@ -92,7 +107,7 @@ class SmilesParser implements IParser {
         $this->initialize($strText);
         try {
             while ($this->strSmiles != '') {
-                $this->parseAndCallBack(self::accept(), $this->orgParser, 'firstOrgOk', 'backFromBracket');
+                $this->parseAndCallBack(self::accept(), $this->orgParser, self::FIRST_ORG_OK, self::BACK_FROM_BRACKET);
             }
         } catch (RejectException | ReadOnlyOneTimeException $exception) {
             return self::reject();
@@ -120,7 +135,7 @@ class SmilesParser implements IParser {
             $this->arNumberBonds[$result->getResult()] = new OneTimeReadable($this->intNodeIndex - 1);
             $this->intWriting++;
         }
-        $this->parseAndCallBack($result, $this->smilesNumberParser, 'tryNumberOk', 'tryBond');
+        $this->parseAndCallBack($result, $this->smilesNumberParser, self::TRY_NUMBER, self::TRY_BOND);
     }
 
     /**
@@ -131,7 +146,7 @@ class SmilesParser implements IParser {
      * @param ParseResult $lastResult
      */
     private function tryBond(ParseResult $result, ParseResult $lastResult) {
-        $this->parseAndCallBack($lastResult, $this->bondParser, 'bondOk', 'next');
+        $this->parseAndCallBack($lastResult, $this->bondParser, self::BOND_OK, self::NEXT);
     }
 
     /**
@@ -145,7 +160,7 @@ class SmilesParser implements IParser {
      */
     private function bondOk(ParseResult $result, ParseResult $lastResult) {
         $this->lastBond = $result->getResult();
-        $this->parseAndCallBack($result, $this->leftBracketParser, 'leftBracketOk', 'next');
+        $this->parseAndCallBack($result, $this->leftBracketParser, self::LEFT_BRACKET_OK, self::NEXT);
     }
 
     /**
@@ -163,7 +178,7 @@ class SmilesParser implements IParser {
         if (BondTypeEnum::isMultipleBinding($lastResult->getResult())) {
             throw new RejectException();
         }
-        $this->parseAndCallBack($result, $this->bondParser, 'bondAfterBracketOk', 'next');
+        $this->parseAndCallBack($result, $this->bondParser, self::BOND_AFTER_BRACKET, self::NEXT);
     }
 
     /**
@@ -204,7 +219,7 @@ class SmilesParser implements IParser {
             $this->graph->addBidirectionalBond($this->intNodeIndex - 1, $this->intNodeIndex, $this->lastBond);
         }
         $this->intNodeIndex++;
-        $this->parseAndCallBack($result, $this->smilesNumberParser, 'tryNumberOk', 'tryBond');
+        $this->parseAndCallBack($result, $this->smilesNumberParser, self::TRY_NUMBER, self::TRY_BOND);
     }
 
     /**
@@ -218,7 +233,7 @@ class SmilesParser implements IParser {
      */
     private function backFromBracket(ParseResult $result, ParseResult $lastResult) {
         if (!empty($this->arNodesBeforeBracket)) {
-            $this->parseAndCallBack(self::accept(), $this->rightBracketParser, 'rightBracketOk', 'ko');
+            $this->parseAndCallBack(self::accept(), $this->rightBracketParser, self::RIGHT_BRACKET_OK, self::KO);
         } else {
             throw new RejectException();
         }
@@ -238,7 +253,7 @@ class SmilesParser implements IParser {
         $this->graph->addNode($result->getResult());
         $this->graph->addBidirectionalBond($intTargetNodeIndex, $this->intNodeIndex, $this->lastBond);
         $this->intNodeIndex++;
-        $this->parseAndCallBack($result, $this->smilesNumberParser, 'tryNumberOk', 'tryBond');
+        $this->parseAndCallBack($result, $this->smilesNumberParser, self::TRY_NUMBER, self::TRY_BOND);
     }
 
     /**
@@ -261,7 +276,7 @@ class SmilesParser implements IParser {
      * @param ParseResult $lastResult
      */
     private function bondAfterRightBracketOk(ParseResult $result, ParseResult $lastResult) {
-        $this->parseAndCallBack($result, $this->orgParser, 'orgAfterBracketOk', 'ko');
+        $this->parseAndCallBack($result, $this->orgParser, self::ORG_AFTER_BRACKET_OK, self::KO);
     }
 
     /**
@@ -274,7 +289,7 @@ class SmilesParser implements IParser {
      */
     private function rightBracketOk(ParseResult $result, ParseResult $lastResult) {
         $this->intRightBraces++;
-        $this->parseAndCallBack($result, $this->bondParser, 'bondAfterRightBracketOk', 'next');
+        $this->parseAndCallBack($result, $this->bondParser, self::BOND_AFTER_RIGHT_BRACKET_OK, self::NEXT);
     }
 
     /**
