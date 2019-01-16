@@ -1,8 +1,8 @@
 <?php
 
-namespace Bbdgnc\Smiles\Parser;
+namespace Bbdgnc\Base;
 
-use Bbdgnc\Smiles\Exception\ReadOnlyOneTimeException;
+use Bbdgnc\Exception\ReadOnlyOneTimeException;
 
 class OneTimeReadable {
 
@@ -13,16 +13,34 @@ class OneTimeReadable {
     private $read = false;
 
     /**
+     * OneTimeReadable constructor.
+     * @param mixed $object
+     */
+    public function __construct($object) {
+        $this->object = $object;
+    }
+
+    /**
      * Get Stored Object
      * @return mixed stored object
      * @throws ReadOnlyOneTimeException when object has been already read
      */
     public function getObject() {
-        if (!$this->read) {
+        if ($this->read) {
             throw new ReadOnlyOneTimeException();
         }
-        $this->read = false;
-        return $this->object;
+        $this->read = true;
+        return $this->swap();
+    }
+
+    /**
+     * Destroy object in this class
+     * @return mixed
+     */
+    private function swap() {
+        $object = $this->object;
+        $this->object = null;
+        return $object;
     }
 
     /**

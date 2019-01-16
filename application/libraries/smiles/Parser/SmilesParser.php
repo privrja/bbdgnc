@@ -2,6 +2,8 @@
 
 namespace Bbdgnc\Smiles\Parser;
 
+use Bbdgnc\Base\OneTimeReadable;
+use Bbdgnc\Exception\ReadOnlyOneTimeException;
 use Bbdgnc\Smiles\Bond;
 use Bbdgnc\Smiles\Enum\BondTypeEnum;
 use Bbdgnc\Smiles\Exception\RejectException;
@@ -16,6 +18,8 @@ class SmilesParser implements IParser {
     private $intLeftBraces;
     private $intRightBraces;
     private $arNodesBeforeBracket;
+
+    /** @var OneTimeReadable[] */
     private $arNumberBonds;
     private $bondParser;
     private $orgParser;
@@ -43,6 +47,11 @@ class SmilesParser implements IParser {
         $this->lastBond = null;
     }
 
+    private function addBonds(int $from, int $to) {
+        $this->graph->addBond($from, new Bond($to, $this->lastBond));
+        $this->graph->addBond($to, new Bond($from, $this->lastBond));
+    }
+
     /**
      * Parse text
      * - remove all whitespace from text
@@ -51,31 +60,40 @@ class SmilesParser implements IParser {
      * @param string $strText
      * @return Accept|Reject
      */
-    public function parser($strText) {
+    public function parse($strText) {
         $this->initialize($strText);
         try {
             while ($this->strSmiles != '') {
                 $this->parseAndCallBack(self::accept(), $this->orgParser, 'firstOrgOk', 'backFromBracket');
             }
-        } catch (RejectException $exception) {
+        } catch (RejectException | ReadOnlyOneTimeException $exception) {
             return self::reject();
         }
         return $this->intLeftBraces == $this->intRightBraces ? new Accept($this->graph, '') : self::reject();
     }
 
-    private function tryNumberOk(ParseResult $result, ParseResult $lasResult) {
+    private function tryNumberOk(ParseResult $result, ParseResult $lastResult) {
         // save data
-
-
+        if (isset($this->arNumberBonds[$result->getResult()])) {
+            $intWhere = $this->arNumberBonds[$result->getResult()]->getObject();
+            $this->addBonds($intWhere, $this->intNodeIndex - 1);
+        } else {
+            $this->arNumberBonds[$result->getResult()] = new OneTimeReadable($this->intNodeIndex - 1);
+        }
         $this->parseAndCallBack($result, $this->natParser, 'tryNumberOk', 'tryBond');
     }
 
-    private function tryBond(ParseResult $result, ParseResult $lasResult) {
+    private function tryBond(ParseResult $result, ParseResult $lastResult) {
+        $this->parseAndCallBack($lastResult, $this->bondParser, 'bondXOk', 'next');
+    }
+
+    private function bondXOk(ParseResult $result, ParseResult $lastResult) {
         $this->lastBond = $result->getResult();
         $this->parseAndCallBack($result, $this->leftBracketParser, 'leftBracketXOk', 'next');
     }
 
-    private function leftBracketXOk(ParseResult $result, ParseResult $lastResult) {
+    private
+    function leftBracketXOk(ParseResult $result, ParseResult $lastResult) {
         $this->intLeftBraces++;
         if (BondTypeEnum::isMultipleBinding($lastResult->getResult())) {
             throw new RejectException();
@@ -83,175 +101,86 @@ class SmilesParser implements IParser {
         $this->parseAndCallBack($result, $this->bondParser, 'bondAfterBracketXOk', 'next');
     }
 
-    private function next(ParseResult $result, ParseResult $lastResult) {
+    private
+    function next(ParseResult $result, ParseResult $lastResult) {
         $this->strSmiles = $lastResult->getRemainder();
     }
 
-    private function bondAfterBracketXOk(ParseResult $result, ParseResult $lastParserResult) {
+    private
+    function bondAfterBracketXOk(ParseResult $result, ParseResult $lastResult) {
         $this->lastBond = $result->getResult();
         $this->arNodesBeforeBracket[] = $this->intNodeIndex - 1;
         $this->strSmiles = $result->getRemainder();
     }
 
-    private function firstOrgOk(ParseResult $result, ParseResult $lasResult) {
+    private
+    function firstOrgOk(ParseResult $result, ParseResult $lastResult) {
         //save data
         $this->graph->addNode($result->getResult());
         if ($this->intNodeIndex > 0) {
-            $this->graph->addBond($this->intNodeIndex - 1, new Bond($this->intNodeIndex, $this->lastBond));
-            $this->graph->addBond($this->intNodeIndex, new Bond($this->intNodeIndex - 1, $this->lastBond));
+            $this->addBonds($this->intNodeIndex - 1, $this->intNodeIndex);
         }
         $this->intNodeIndex++;
         // try parse number
         $this->parseAndCallBack($result, $this->natParser, 'tryNumberOk', 'tryBond');
     }
 
-    private function backFromBracket(ParseResult $result, ParseResult $lasResult) {
+    private
+    function backFromBracket(ParseResult $result, ParseResult $lastResult) {
         if (!empty($this->arNodesBeforeBracket)) {
-            $this->parseAndCallBack(self::accept(), $this->rightBracketParser, 'rightBracketOk', 'rightBracketKo');
+            $this->parseAndCallBack(self::accept(), $this->rightBracketParser, 'rightBracketXOk', 'ko');
         } else {
             var_dump("reject III");
             throw new RejectException();
         }
     }
 
-    public function parse($strText) {
-        $this->initialize($strText);
-        try {
-            while ($this->strSmiles != '') {
-//            if ($intNodeIndex >= 25) break;
-                $orgResult = $this->orgParser->parse($this->strSmiles);
-                if ($orgResult->isAccepted()) {
-                    $this->graph->addNode($orgResult->getResult());
-                    if ($this->intNodeIndex > 0) {
-                        $this->graph->addBond($this->intNodeIndex - 1, new Bond($this->intNodeIndex, $this->lastBond));
-                        $this->graph->addBond($this->intNodeIndex, new Bond($this->intNodeIndex - 1, $this->lastBond));
-                    }
-                    //try number
-//                    $natResult = $this->natParser->parse($orgResult->getRemainder());
-
-
-                    // try bond
-                    $this->parseAndCallBack($orgResult, $this->bondParser, 'tryBondOk', 'tryBondKo');
-                } else if (!empty($this->arNodesBeforeBracket)) {
-                    $this->parseAndCallBack(new Accept('', $this->strSmiles), $this->rightBracketParser, 'rightBracketOk', 'rightBracketKo');
-                } else {
-                    var_dump($this->strSmiles);
-                    var_dump("reject III");
-                    throw new RejectException();
-                }
-            }
-        } catch (\Exception $exception) {
-            return self::reject();
-        }
-        return $this->intLeftBraces == $this->intRightBraces ? new Accept($this->graph, '') : self::reject();
+    private
+    function orgAfterBracketXOk(ParseResult $result, ParseResult $lastResult) {
+        $intNodeAfterBracketIndex = array_pop($this->arNodesBeforeBracket);
+        $this->graph->addNode($result->getResult());
+        $this->addBonds($intNodeAfterBracketIndex, $this->intNodeIndex);
+        $this->intNodeIndex++;
+        $this->parseAndCallBack($result, $this->natParser, 'tryNumberOk', 'tryBond');
     }
 
-    private function parseAndCallBack(ParseResult $lastResult, IParser $parser, string $funcOk, string $funcKo = '') {
+    private
+    function ko(ParseResult $result, ParseResult $lastResult) {
+        throw new RejectException();
+    }
+
+    private
+    function bondAfterRightBracketXOk(ParseResult $result, ParseResult $lastResult) {
+        $this->parseAndCallBack($result, $this->orgParser, 'orgAfterBracketXOk', 'ko');
+    }
+
+    private
+    function rightBracketXOk(ParseResult $result, ParseResult $lastResult) {
+        $this->intRightBraces++;
+        $this->parseAndCallBack($result, $this->bondParser, 'bondAfterRightBracketXOk', 'next');
+    }
+
+    private
+    function parseAndCallBack(ParseResult $lastResult, IParser $parser, string $funcOk, string $funcKo) {
         $result = $parser->parse($lastResult->getRemainder());
         if ($result->isAccepted()) {
             $this->$funcOk($result, $lastResult);
         } else {
-            if (empty($funcKo)) {
-                return;
-            }
             $this->$funcKo($result, $lastResult);
         }
-    }
-
-    private function rightBracketOk(ParseResult $result, ParseResult $lasResult) {
-        // var_dump(")");
-        $this->intRightBraces++;
-        // there can be bond
-        $this->parseAndCallBack($result, $this->bondParser, 'bondAfterRightBracketOk', 'bondAfterRightBracketKo');
-    }
-
-    private function rightBracketKo(ParseResult $result, ParseResult $lasResult) {
-        var_dump("reject II");
-        throw new RejectException();
-    }
-
-    private function bondAfterRightBracketOk(ParseResult $result, ParseResult $lasResult) {
-        // removed unnecessary parenthesis before start
-        // there can be [ || organic subset but i need to parse it now no going to new cycle
-        $this->parseAndCallBack($result, $this->orgParser, 'orgAfterBracketOk', 'orgAfterBracketKo');
-    }
-
-    private function bondAfterRightBracketKo(ParseResult $result, ParseResult $lasResult) {
-        var_dump("BREAK I");
-        $this->strSmiles = $lasResult->getRemainder();
-    }
-
-    private function orgAfterBracketOk(ParseResult $result, ParseResult $lasResult) {
-        $intNodeAfterBracketIndex = array_pop($this->arNodesBeforeBracket);
-        $this->graph->addNode($result->getResult());
-        $this->graph->addBond($intNodeAfterBracketIndex, new Bond($this->intNodeIndex, $lasResult->getResult()));
-        $this->graph->addBond($this->intNodeIndex, new Bond($intNodeAfterBracketIndex, $lasResult->getResult()));
-//        var_dump("here " . $result->getRemainder());
-//        var_dump($this->arNodesBeforeBracket);
-        $this->parseAndCallBack($result, $this->bondParser, 'tryBondOk', 'checkBracketKo');
-    }
-
-    private function checkBracketKo(ParseResult $result, ParseResult $lasResult) {
-        $this->strSmiles = $lasResult->getRemainder();
-    }
-
-    private function orgAfterBracketKo(ParseResult $result, ParseResult $lasResult) {
-        // there can be [ || ) if not remove unnecessary parentheses otherwise reject
-        var_dump("reject I");
-        throw new RejectException();
-    }
-
-    private function tryBondOk(ParseResult $result, ParseResult $lasResult) {
-        $this->lastBond = $result->getResult();
-        // try ( || [ || Organic subset if it's ( this bond is wrong -> need to be only -, need to parse again after bracket
-//        var_dump($result->getRemainder());
-        $this->parseAndCallBack($result, $this->leftBracketParser, 'leftBracketOk', 'leftBracketKo');
-    }
-
-    private function tryBondKo(ParseResult $result, ParseResult $lasResult) {
-        var_dump("BREAK III");
-        $this->strSmiles = $lasResult->getRemainder();
-    }
-
-    private function leftBracketOk(ParseResult $result, ParseResult $lastResult) {
-        $this->intLeftBraces++;
-        // problem try bond if last bond is multiple => error
-//        var_dump($lastResult->getResult());
-//        var_dump($result->getRemainder());
-        if (BondTypeEnum::isMultipleBinding($lastResult->getResult())) {
-            throw new RejectException();
-        }
-        $this->parseAndCallBack($result, $this->bondParser, 'bondAfterBracketOk', 'bondAfterBracketKo');
-    }
-
-    private function leftBracketKo(ParseResult $result, ParseResult $lastResult) {
-        $this->strSmiles = $lastResult->getRemainder();
-        $this->intNodeIndex++;
-    }
-
-    private function bondAfterBracketOk(ParseResult $result, ParseResult $lastParserResult) {
-        $this->lastBond = $result->getResult();
-        $this->arNodesBeforeBracket[] = $this->intNodeIndex;
-        $this->strSmiles = $result->getRemainder();
-//        var_dump($result->getRemainder());
-//        var_dump($this->arNodesBeforeBracket);
-//        var_dump($this->intNodeIndex);
-        $this->intNodeIndex++;
-    }
-
-    private function bondAfterBracketKo(ParseResult $result, ParseResult $lastResult) {
-        $this->strSmiles = $lastResult->getRemainder();
     }
 
     /**
      * Get instance of Reject
      * @return Reject
      */
-    public static function reject() {
+    public
+    static function reject() {
         return new Reject('Not match SMILES');
     }
 
-    private function accept() {
+    private
+    function accept() {
         return new Accept('', $this->strSmiles);
     }
 }

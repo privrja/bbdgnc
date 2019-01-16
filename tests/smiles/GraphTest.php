@@ -7,7 +7,7 @@ use Bbdgnc\Smiles\Bond;
 use Bbdgnc\Smiles\Graph;
 use PHPUnit\Framework\TestCase;
 
-class GraphTest extends TestCase {
+final class GraphTest extends TestCase {
 
     public function testWithNull() {
         $this->expectException(\TypeError::class);
@@ -24,7 +24,7 @@ class GraphTest extends TestCase {
         $expectedGraph->addBond(1, new Bond(0, ''));
         $expectedGraph->addBond(1, new Bond(2, ''));
         $expectedGraph->addBond(2, new Bond(1, ''));
-        $this->assertEquals($expectedGraph, $graph);
+        $this->assertEquals($graph, $expectedGraph);
     }
 
     public function testGraph2() {
@@ -35,7 +35,7 @@ class GraphTest extends TestCase {
         }
         $expectedGraph->addBond(0, new Bond(1, '='));
         $expectedGraph->addBond(1, new Bond(0, '='));
-        $this->assertEquals($expectedGraph, $graph);
+        $this->assertEquals($graph, $expectedGraph);
     }
 
     public function testGraph3() {
@@ -50,7 +50,7 @@ class GraphTest extends TestCase {
         $expectedGraph->addBond(1, new Bond(3, ''));
         $expectedGraph->addBond(2, new Bond(1, ''));
         $expectedGraph->addBond(3, new Bond(1, ''));
-        $this->assertEquals($expectedGraph, $graph);
+        $this->assertEquals($graph, $expectedGraph);
     }
 
     public function testGraphWrong() {
@@ -111,7 +111,7 @@ class GraphTest extends TestCase {
         $expectedGraph->addBond(3, new Bond(5, ''));
         $expectedGraph->addBond(4, new Bond(3, '#'));
         $expectedGraph->addBond(5, new Bond(3, ''));
-        $this->assertEquals($expectedGraph, $graph);
+        $this->assertEquals($graph, $expectedGraph);
     }
 
     public function testGraph5() {
@@ -149,7 +149,7 @@ class GraphTest extends TestCase {
         $expectedGraph->addBond(9, new Bond(8, ''));
         $expectedGraph->addBond(10, new Bond(5, ''));
         $expectedGraph->addBond(11, new Bond(1, ''));
-        $this->assertEquals($expectedGraph, $graph);
+        $this->assertEquals($graph, $expectedGraph);
     }
 
     public function testGraph6() {
@@ -158,13 +158,15 @@ class GraphTest extends TestCase {
         for ($i = 0; $i < 4; $i++) {
             $expectedGraph->addNode('C');
         }
-        $expectedGraph->addBond(0, new Bond(1, '='));
-        $expectedGraph->addBond(1, new Bond(0, '='));
+        $expectedGraph->addBond(0, new Bond(1, ''));
+        $expectedGraph->addBond(0, new Bond(3, ''));
+        $expectedGraph->addBond(1, new Bond(0, ''));
         $expectedGraph->addBond(1, new Bond(2, ''));
         $expectedGraph->addBond(1, new Bond(3, ''));
         $expectedGraph->addBond(2, new Bond(1, ''));
         $expectedGraph->addBond(3, new Bond(1, ''));
-        $this->assertEquals($expectedGraph, $graph);
+        $expectedGraph->addBond(3, new Bond(0, ''));
+        $this->assertEquals($graph, $expectedGraph);
     }
 
     public function testGraph7() {
@@ -179,7 +181,7 @@ class GraphTest extends TestCase {
         $expectedGraph->addBond(1, new Bond(3, ''));
         $expectedGraph->addBond(2, new Bond(1, ''));
         $expectedGraph->addBond(3, new Bond(1, ''));
-        $this->assertEquals($expectedGraph, $graph);
+        $this->assertEquals($graph, $expectedGraph);
     }
 
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace Bbdgnc\Smiles\Exception;
+namespace Bbdgnc\Exception;
 
 class ReadOnlyOneTimeException extends \Exception {
 }
