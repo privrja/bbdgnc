@@ -220,7 +220,6 @@ class SmilesParser implements IParser {
         if (!empty($this->arNodesBeforeBracket)) {
             $this->parseAndCallBack(self::accept(), $this->rightBracketParser, 'rightBracketOk', 'ko');
         } else {
-            var_dump("reject III");
             throw new RejectException();
         }
     }
