@@ -19,14 +19,38 @@ class Graph {
         $this->buildGraph($strText);
     }
 
+    /**
+     * Add node to graph, in graph stored as @see \Bbdgnc\Smiles\Node
+     * @param string $elementName
+     */
     public function addNode(string $elementName) {
         $this->arNodes[] = new Node(PeriodicTableSingleton::getInstance()->getAtoms()[$elementName]);
     }
 
+    /**
+     * Add bond (edge) to graph
+     * @param int $nodeIndex index of source node
+     * @param Bond $bond -> index of target node and type of bond
+     */
     public function addBond(int $nodeIndex, Bond $bond) {
         $this->arNodes[$nodeIndex]->addBond($bond);
     }
 
+    /**
+     * Add to bonds to graph source <-> target
+     * @param int $sourceIndex
+     * @param int $targetIndex
+     * @param string $bondType
+     */
+    public function addBidirectionalBond(int $sourceIndex, int $targetIndex, string $bondType) {
+        $this->addBond($sourceIndex, new Bond($targetIndex, $bondType));
+        $this->addBond($targetIndex, new Bond($sourceIndex, $bondType));
+    }
+
+    /**
+     * Parse input SMILES and build graph from it
+     * @param string $strText
+     */
     private function buildGraph($strText) {
         $smilesParser = new SmilesParser($this);
         $result = $smilesParser->parse($strText);
@@ -49,13 +73,6 @@ class Graph {
             $intIndex++;
         }
         return $str;
-    }
-
-    /**
-     * @return array
-     */
-    public function getArNodes(): array {
-        return $this->arNodes;
     }
 
 }
