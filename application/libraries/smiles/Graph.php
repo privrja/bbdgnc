@@ -59,6 +59,10 @@ class Graph {
         }
     }
 
+    public function getSmiles() {
+
+    }
+
     public function toString() {
         $str = "";
         $intIndex = 0;
