@@ -38,8 +38,8 @@ class PeriodicTableSingleton {
     public function __construct() {
         $this->arAtoms = array(
             'H' => new Element('H', 1, 1, 1.0078250321),
-            'D' => new Element('D', 0, 1, 2.014102), // TODO what is this?
-            'T' => new Element('T', 0, 1, 3.016049), // TODO what is this?
+            'D' => new Element('D', 1, 1, 2.014102),
+            'T' => new Element('T', 1, 1, 3.016049),
             'He' => new Element('He', 2, 1, 4.002606),
             'Li' => new Element('Li', 3, 1, 7.016004),
             'Be' => new Element('Be', 4, 1, 9.012182),

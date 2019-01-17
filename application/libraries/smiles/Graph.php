@@ -63,6 +63,10 @@ class Graph {
 
     }
 
+    public function getUniqueSmiles() {
+
+    }
+
     public function toString() {
         $str = "";
         $intIndex = 0;
