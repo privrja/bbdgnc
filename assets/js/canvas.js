@@ -27,19 +27,32 @@ let mobile = false;
 let lastLargeSmilesId;
 
 /** default options for main drawer */
-let options = {width: getCanvasWidth(), height: getCanvasHeight(), themes: {light: {O: '#e67e22'}}};
+let options = {
+    width: getCanvasWidth(),
+    height: getCanvasHeight(),
+    themes: {light: {O: '#e67e22'}},
+    drawDecayPoints: true,
+    compactDrawing: false
+};
 
 /** Initialize the drawers */
 let smilesDrawer = getSmilesDrawer();
 let smallSmilesDrawer = getSmallSmilesDrawer();
 let largeSmilesDrawer = getLargeSmilesDrawer();
+let canvas = document.getElementById(CANVAS_ID);
+let offsetX = canvas.offsetLeft;
+let offsetY = canvas.offsetTop;
 
 /** events */
 document.addEventListener('DOMContentLoaded', function () {
     window.addEventListener('resize', resize);
     window.addEventListener('load', finder);
     document.getElementById(TXT_SMILE_ID).addEventListener('input', drawSmile);
+    canvas.addEventListener('click', function (e) {
+        smilesDrawer.handleMouseClick(e, offsetX, offsetY);
+    });
 });
+
 
 /**
  * Prepare small previews for results find by query
