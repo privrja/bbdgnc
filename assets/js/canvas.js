@@ -39,16 +39,16 @@ let options = {
 let smilesDrawer = getSmilesDrawer();
 let smallSmilesDrawer = getSmallSmilesDrawer();
 let largeSmilesDrawer = getLargeSmilesDrawer();
-let canvas = document.getElementById(CANVAS_ID);
-let offsetX = canvas.offsetLeft;
-let offsetY = canvas.offsetTop;
+let canvasRef = document.getElementById(CANVAS_ID);
+let offsetX = canvasRef.offsetLeft;
+let offsetY = canvasRef.offsetTop;
 
 /** events */
 document.addEventListener('DOMContentLoaded', function () {
     window.addEventListener('resize', resize);
     window.addEventListener('load', finder);
     document.getElementById(TXT_SMILE_ID).addEventListener('input', drawSmile);
-    canvas.addEventListener('click', function (e) {
+    canvasRef.addEventListener('click', function (e) {
         smilesDrawer.handleMouseClick(e, offsetX, offsetY);
     });
 });
