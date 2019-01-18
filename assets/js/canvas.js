@@ -4,6 +4,8 @@ const TXT_SMILE_ID = "txt-canvas-smile";
 const HIDDEN_SMILE_ID = "hidden-canvas-small-";
 const CANVAS_SMALL_ID = "canvas-small-";
 const CANVAS_LARGE_ID = "canvas-large";
+const FORM_MAIN = "form-main";
+const CAPTION_RESULTS = "#h-results";
 
 const WINDOW_MIN_WIDTH = 850;
 const WINDOW_MIN_HEIGHT = 575;
@@ -30,7 +32,7 @@ let lastLargeSmilesId;
 let options = {
     width: getCanvasWidth(),
     height: getCanvasHeight(),
-    themes: {light: {O: '#e67e22'}},
+    themes: {light: {O: '#e67e22', DECAY: '#ff0000'}},
     drawDecayPoints: true,
     compactDrawing: false
 };
@@ -53,7 +55,6 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 
-
 /**
  * Prepare small previews for results find by query
  */
@@ -63,7 +64,7 @@ function finder() {
         let elem = smallCanvases[i];
         drawSmallSmile(elem.getAttribute("data-canvas-small-id"));
         if (i === 0) {
-            document.location.href = "#h-results";
+            document.location.href = CAPTION_RESULTS;
         }
     }
     mobileVersion();
@@ -81,6 +82,12 @@ function resize() {
     context.clearRect(0, 0, canvas.width, canvas.height);
     smilesDrawer = getSmilesDrawer();
     drawSmile();
+}
+
+function disintegrate() {
+    let smiles = smilesDrawer.buildBlockSmiles();
+    let data = {smiles: smiles, blocks: 'Blocks'};
+    redirectWithData(FORM_MAIN, data);
 }
 
 /** default screen mode (dark/light) def = light */
@@ -250,7 +257,9 @@ function drawSmile() {
         // Draw to the canvas
         activateScreenMode();
         smilesDrawer.draw(tree, CANVAS_ID, DEFAULT_SCREEN_MODE, false);
-        document.getElementById(TXT_CANVAS_FLE).value = smilesDrawer.getMolecularFormula();
+        // document.getElementById(TXT_CANVAS_FLE).value = smilesDrawer.getMolecularFormula();
+        canvasRef.style.width = '100%';
+        canvasRef.style.height = '100%';
     });
 }
 
@@ -297,4 +306,17 @@ function drawLarge(canvasId) {
         activateScreenMode();
         largeSmilesDrawer.draw(tree, CANVAS_LARGE_ID, DEFAULT_SCREEN_MODE, false);
     });
+}
+
+function redirectWithData(formId, data) {
+    let form = document.getElementById(formId);
+    form.method = 'post';
+    for (let name in data) {
+        let input = document.createElement('input');
+        input.type = 'hidden';
+        input.name = name;
+        input.value = data[name];
+        form.appendChild(input);
+    }
+    form.submit();
 }

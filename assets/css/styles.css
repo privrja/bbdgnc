@@ -32,6 +32,8 @@ footer {
 
 /** Drawing sketch div */
 #div-canvas {
+    /*position: relative;*/
+    z-index: 1;
     width: 75%;
     min-height: 90vh;
     float: left;
@@ -39,6 +41,8 @@ footer {
 
 /** Right menu */
 #div-right {
+    position: relative;
+    z-index: 2;
     width: 25%;
     min-height: 90vh;
     float: right;
@@ -53,7 +57,7 @@ footer {
     background-color: #fff;
 }
 
-#div-select {
+#div-select, #div-blocks {
     width: 100%;
     clear: both;
 }

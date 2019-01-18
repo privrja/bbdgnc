@@ -25,6 +25,10 @@ class Land extends CI_Controller {
      * Get Default data for view
      * @return array
      */
+    const HELPER_FORM = "form";
+
+    const HELPER_URL = "url";
+
     private function getData() {
         return array(
             Front::CANVAS_INPUT_NAME => "", Front::CANVAS_INPUT_SMILE => "",
@@ -39,7 +43,7 @@ class Land extends CI_Controller {
      */
     public function __construct() {
         parent::__construct();
-        $this->load->helper(array("form", "url"));
+        $this->load->helper(array(self::HELPER_FORM, self::HELPER_URL));
     }
 
     /**
@@ -65,6 +69,28 @@ class Land extends CI_Controller {
         $this->load->view(Front::TEMPLATES_FOOTER);
     }
 
+    public function blocks() {
+        $molecules = [];
+        $intCounter = 0;
+        $smiles = explode(",", $this->input->post(Front::BLOCKS_BLOCK_SMILES));
+        foreach ($smiles as $smile) {
+            $molecule[Front::CANVAS_INPUT_IDENTIFIER] = $intCounter;
+            $molecule[Front::CANVAS_INPUT_SMILE] = $smile;
+            $molecules[] = $molecule;
+            $intCounter++;
+        }
+//        var_dump($molecules);
+
+        $data = $this->getLastData();
+        $data['molecules'] = $molecules;
+
+        $this->load->view(Front::TEMPLATES_HEADER);
+        $this->load->view(Front::PAGES_CANVAS);
+        $this->load->view(Front::PAGES_MAIN, $this->getLastData());
+        $this->load->view(Front::PAGES_BLOCKS, $data);
+        $this->load->view(Front::TEMPLATES_FOOTER);
+    }
+
     /**
      * Form
      * Find in specific database by specific param or save data to database
@@ -77,6 +103,7 @@ class Land extends CI_Controller {
         $btnFind = $this->input->post("find");
         $btnSave = $this->input->post("save");
         $btnLoad = $this->input->post("load");
+        $btnBlocks = $this->input->post("blocks");
         $intDatabase = $this->input->post(Front::CANVAS_INPUT_DATABASE);
         $intFindBy = $this->input->post(Front::CANVAS_INPUT_SEARCH_BY);
         $blMatch = $this->input->post(Front::CANVAS_INPUT_MATCH);
@@ -88,6 +115,9 @@ class Land extends CI_Controller {
             /* Save to database */
         } else if (isset($btnLoad)) {
             /* Load from database */
+        } else if (isset($btnBlocks)) {
+            /* Building Blocks */
+            $this->blocks();
         }
     }
 
