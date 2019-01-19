@@ -41,4 +41,3 @@ use Bbdgnc\Enum\Front;
 </div>
 
 <canvas id="canvas-large" onclick="clearLargeCanvas()"></canvas>
-
