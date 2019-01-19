@@ -62,6 +62,11 @@ footer {
     clear: both;
 }
 
+.jsme {
+    margin: 0 auto;
+    padding: 4vh;
+}
+
 .canvas-small {
     cursor: pointer;
 }
