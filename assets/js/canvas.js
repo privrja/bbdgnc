@@ -6,6 +6,7 @@ const CANVAS_SMALL_ID = "canvas-small-";
 const CANVAS_LARGE_ID = "canvas-large";
 const FORM_MAIN = "form-main";
 const CAPTION_RESULTS = "#h-results";
+const CAPTION_EDITOR = "#h-editor";
 
 const WINDOW_MIN_WIDTH = 850;
 const WINDOW_MIN_HEIGHT = 575;
@@ -146,6 +147,24 @@ function getCanvasWidth() {
  */
 function getCanvasHeight() {
     return document.getElementById(CANVAS_ID).offsetHeight;
+}
+
+/**
+ * Read SMILES from input and set it to editor
+ */
+function readSmiles(smilesId) {
+    document.getElementById("editor-input").value = smilesId;
+    document.JME.readGenericMolecularInput(document.getElementById('hidden-canvas-small-' + smilesId).value);
+    document.location.href = CAPTION_EDITOR;
+}
+
+/**
+ * Get SMILES from editor and set back it to specific input
+ */
+function getSmiles() {
+    let identifier = document.getElementById('editor-input').value;
+    document.getElementById('hidden-canvas-small-' + identifier).value = document.JME.nonisomericSmiles();
+    drawSmallSmile(identifier);
 }
 
 /**

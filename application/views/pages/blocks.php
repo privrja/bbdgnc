@@ -18,8 +18,7 @@ use Bbdgnc\Enum\Front;
         <div class="tbody">
             <?php foreach ($molecules as $molecule): ?>
 
-                <?= form_open('land/select', array('class' => 'tr')); ?>
-
+                <div class="tr">
                 <div class="td">
                     <canvas id="canvas-small-<?= $molecule[Front::CANVAS_INPUT_IDENTIFIER] ?>"
                             data-canvas-small-id="<?= $molecule[Front::CANVAS_INPUT_IDENTIFIER] ?>"
@@ -37,21 +36,25 @@ use Bbdgnc\Enum\Front;
                     />
                 </div>
 
-                <!--                <div class="td">--><? //= $molecule[Front::CANVAS_INPUT_IDENTIFIER] ?><!--</div>-->
-                <div class="td"><a href="" title="SMILES Editor">Editor</a></div>
+                    <div class="td">
+                        <button class="" title="SMILES Editor"
+                                onclick="readSmiles(<?= $molecule[Front::CANVAS_INPUT_IDENTIFIER] ?>)">Editor
+                        </button>
+                    </div>
                 <input type="hidden"
                        name="<?= Front::CANVAS_INPUT_IDENTIFIER ?>"
                        value="<?= $molecule[Front::CANVAS_INPUT_IDENTIFIER] ?>"/>
-                </form>
-
+                </div>
             <?php endforeach; ?>
         </div>
     </div>
 
+    <h2 id="h-editor">JSME editor</h2>
     <div class="jsme" code="JME.class" name="JME" archive="JME.jar" width=500 height=500>You have to enable Java and
         JavaScritpt on your machine!
     </div>
-
+    <button class="" onclick="getSmiles()">Accept changes</button>
+    <input type="hidden" id="editor-input" value="<?= $molecule[Front::CANVAS_INPUT_IDENTIFIER] ?>"/>
 
 </div>
 
