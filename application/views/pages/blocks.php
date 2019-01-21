@@ -2,6 +2,7 @@
 
 use Bbdgnc\Enum\Front;
 use Bbdgnc\Enum\SequenceTypeEnum;
+use Bbdgnc\TransportObjects\BlockTO;
 
 ?>
 
@@ -27,42 +28,55 @@ use Bbdgnc\Enum\SequenceTypeEnum;
         <label for="txt-branch-modification">Branch Modification</label>
         <input type="text" id="txt-branch-modification" name="branchModification" value="" />
 
-
     </div>
 
     <div class="table t">
         <div class="thead t">
             <div class="tr t">
                 <div class="td"></div>
+                <div class="td">Name</div>
+                <div class="td">Acronym</div>
                 <div class="td">SMILES</div>
                 <div class="td">Editor</div>
+                <div class="td">Accept</div>
             </div>
         </div>
         <div class="tbody">
-            <?php foreach ($molecules as $molecule): ?>
+            <?php foreach ($blocks as $block): ?>
 
-                <?= form_open('land/editor', array('class' => 'tr')); ?>
+                <?= form_open('land/block', array('class' => 'tr')); ?>
                 <div class="td">
-                    <canvas id="canvas-small-<?= $molecule[Front::CANVAS_INPUT_IDENTIFIER] ?>"
-                            data-canvas-small-id="<?= $molecule[Front::CANVAS_INPUT_IDENTIFIER] ?>"
+                    <canvas id="canvas-small-<?= $block->id; ?>"
+                            data-canvas-small-id="<?= $block->id ?>"
                             class="canvas-small"
-                            onclick="drawOrClearLargeSmile(<?= $molecule[Front::CANVAS_INPUT_IDENTIFIER] ?>)"
-                            title="<?= $molecule[Front::BLOCKS_BLOCK_SMILE] ?>">
+                            onclick="drawOrClearLargeSmile(<?= $block->id ?>)"
+                            title="<?= $block->smiles ?>">
                     </canvas>
                 </div>
 
                 <div class="td">
-                    <input type="text" name="<?= Front::BLOCKS_BLOCK_SMILE ?>"
-                           id="hidden-canvas-small-<?= $molecule[Front::CANVAS_INPUT_IDENTIFIER] ?>"
-                           value="<?= $molecule[Front::BLOCKS_BLOCK_SMILE] ?>"
-                           oninput="drawSmallSmile(<?= $molecule[Front::CANVAS_INPUT_IDENTIFIER] ?>)"/>
+                    <input type="text" size="20" name="<?= Front::BLOCK_NAME ?>" value="<?= $block->name ?>" />
                 </div>
 
-                <input type="hidden" name="<?= Front::EDITOR_INPUT ?>" value="<?= $molecule[Front::CANVAS_INPUT_IDENTIFIER] ?>" />
-                <input type="hidden" name="<?= Front::BLOCKS_BLOCK_SMILES ?>" value="<?= $blockSmiles ?>"/>
+                <div class="td">
+                    <input type="text" size="20" name="<?= Front::BLOCK_ACRONYM ?>" value="<?= $block->acronym ?>" />
+                </div>
 
                 <div class="td">
-                    <input type="submit" title="SMILES Editor" value="Editor"/>
+                    <input type="text" name="<?= Front::BLOCK_SMILE ?>"
+                           id="hidden-canvas-small-<?= $block->id ?>"
+                           value="<?= $block->smiles ?>"
+                           oninput="drawSmallSmile(<?= $block->id ?>)"/>
+                </div>
+
+                <input type="hidden" name="<?= Front::BLOCK_IDENTIFIER ?>" value="<?= $block->id ?>" />
+
+                <div class="td">
+                    <input type="submit" title="SMILES Editor" name="editor" value="Editor" />
+                </div>
+
+                <div class="td">
+                    <input type="submit" title="Accept changes" name="accept" value="Accept" />
                 </div>
 
                 <input type="hidden" name="<?= Front::CANVAS_INPUT_DATABASE ?>" value="<?= $database ?>" />

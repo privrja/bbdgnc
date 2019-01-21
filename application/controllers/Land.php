@@ -8,6 +8,7 @@ use Bbdgnc\Finder\Enum\ServerEnum;
 use Bbdgnc\Finder\FinderFactory;
 use Bbdgnc\Finder\IFinder;
 use Bbdgnc\Finder\PubChemFinder;
+use Bbdgnc\TransportObjects\BlockTO;
 
 class Land extends CI_Controller {
 
@@ -21,13 +22,17 @@ class Land extends CI_Controller {
 
     private $errors = "";
 
+    const HELPER_FORM = "form";
+
+    const HELPER_URL = "url";
+
+    const HELPER_COOKIE = "cookie";
+
     /**
      * Get Default data for view
      * @return array
      */
-    const HELPER_FORM = "form";
-
-    const HELPER_URL = "url";
+    const HELPER_SESSION = "session";
 
     private function getData() {
         return array(
@@ -43,7 +48,7 @@ class Land extends CI_Controller {
      */
     public function __construct() {
         parent::__construct();
-        $this->load->helper(array(self::HELPER_FORM, self::HELPER_URL));
+        $this->load->helper(array(self::HELPER_FORM, self::HELPER_URL, self::HELPER_COOKIE));
     }
 
     /**
@@ -69,38 +74,64 @@ class Land extends CI_Controller {
         $this->load->view(Front::TEMPLATES_FOOTER);
     }
 
+
+    public function block() {
+        $btnEditor = $this->input->post('editor');
+        $btnAccept = $this->input->post('accept');
+
+        if (isset($btnEditor)) {
+            $this->editor();
+        } else if (isset($btnAccept)) {
+            $this->blocks();
+        }
+    }
+
     public function editor() {
-        $inputSmiles = $this->input->post(Front::BLOCKS_BLOCK_SMILES);
-        $editorInput = $this->input->post(Front::EDITOR_INPUT);
-        $inputSmile = $this->input->post(Front::BLOCKS_BLOCK_SMILE);
+        $blockIdentifier = $this->input->post(Front::BLOCK_IDENTIFIER);
+        $blockSmile = $this->input->post(Front::BLOCK_SMILE);
+        $blockAcronym = $this->input->post(Front::BLOCK_ACRONYM);
+        $blockName = $this->input->post(Front::BLOCK_NAME);
+        $blockCount = $this->input->post(Front::BLOCK_COUNT);
 
         // TODO value check
 
         $data = $this->getLastData();
-        $data[Front::BLOCKS_BLOCK_SMILES] = $inputSmiles;
-        $data[Front::EDITOR_INPUT] = $editorInput;
-        $data[Front::BLOCKS_BLOCK_SMILE] = $inputSmile;
+        $data[Front::BLOCK_IDENTIFIER] = $blockIdentifier;
+        $data[Front::BLOCK_SMILE] = $blockSmile;
+        $data[Front::BLOCK_ACRONYM] = $blockAcronym;
+        $data[Front::BLOCK_NAME] = $blockName;
+        $data[Front::BLOCK_COUNT] = $blockCount;
         $this->load->view('templates/header');
         $this->load->view('editor/index', $data);
         $this->load->view('templates/footer');
     }
 
     public function blocks() {
-        $molecules = [];
-        $intCounter = 0;
-        $inputSmiles = $this->input->post(Front::BLOCKS_BLOCK_SMILES);
-        $smiles = explode(",", $inputSmiles);
-        foreach ($smiles as $smile) {
-            $molecule[Front::CANVAS_INPUT_IDENTIFIER] = $intCounter;
-            $molecule[Front::BLOCKS_BLOCK_SMILE] = $smile;
-            $molecules[] = $molecule;
-            $intCounter++;
-        }
-
         $data = $this->getLastData();
-        $data['molecules'] = $molecules;
-        $data['blockCount'] = $intCounter;
-        $data[Front::BLOCKS_BLOCK_SMILES] = $inputSmiles;
+        $cookieVal = get_cookie("cookie-blocks");
+        if ($cookieVal !== null) {
+            $blocks = json_decode($cookieVal);
+            $blockIdentifier = $this->input->post(Front::BLOCK_IDENTIFIER);
+            $blocks[$blockIdentifier]->acronym = $this->input->post(Front::BLOCK_ACRONYM);
+            $blocks[$blockIdentifier]->name = $this->input->post(Front::BLOCK_NAME);
+            $blocks[$blockIdentifier]->smiles = $this->input->post(Front::BLOCK_SMILE);
+            $data[Front::BLOCK_COUNT] = $this->input->post(Front::BLOCK_COUNT);
+        } else {
+            $blocks = [];
+            $intCounter = 0;
+            $inputSmiles = $this->input->post(Front::BLOCK_SMILES);
+            $smiles = explode(",", $inputSmiles);
+            foreach ($smiles as $smile) {
+                $blockTO = new BlockTO($intCounter, "", "", $smile);
+                $blocks[] = $blockTO;
+                $intCounter++;
+            }
+
+            $data[Front::BLOCK_COUNT] = $intCounter;
+        }
+        $data[Front::BLOCKS] = $blocks;
+
+        set_cookie("cookie-blocks", json_encode($blocks), 3600);
 
         $this->load->view(Front::TEMPLATES_HEADER);
         $this->load->view(Front::PAGES_CANVAS);

@@ -17,11 +17,7 @@ use Bbdgnc\Enum\Front;
 
     function getSmiles() {
         let smile = jsmeApplet.nonisomericSmiles();
-        let smiles = '<?= $blockSmiles ?>';
-        let acSmiles = smiles.split(',');
-        let index = '<?= $editorInput ?>';
-        acSmiles[index] = smile;
-        redirectWithData({blockSmiles: acSmiles, blocks: 'Blocks'});
+        redirectWithData({blockIdentifier: <?= $blockIdentifier ?>, blockSmile: smile, blocks: 'Blocks'});
     }
 
     function redirectWithData(data) {
@@ -56,5 +52,8 @@ use Bbdgnc\Enum\Front;
 <input type="hidden" name="<?= Front::CANVAS_INPUT_MASS ?>" value="<?= $mass ?>" />
 <input type="hidden" name="<?= Front::CANVAS_INPUT_DEFLECTION ?>" value="<?= $deflection ?>" />
 <input type="hidden" name="<?= Front::CANVAS_INPUT_IDENTIFIER ?>" value="<?= $identifier ?>" />
+<input type="hidden" name="<?= Front::BLOCK_ACRONYM ?>" value="<?= $blockAcronym ?>" />
+<input type="hidden" name="<?= Front::BLOCK_NAME ?>" value="<?= $blockName ?>" />
+<input type="hidden" name="<?= Front::BLOCK_COUNT ?>" value="<?= $blockCount ?>" />
 
 </form>
