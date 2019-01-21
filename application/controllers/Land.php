@@ -34,6 +34,8 @@ class Land extends CI_Controller {
      */
     const HELPER_SESSION = "session";
 
+    const COOKIE_BLOCKS = "cookie_blocks";
+
     private function getData() {
         return array(
             Front::CANVAS_INPUT_NAME => "", Front::CANVAS_INPUT_SMILE => "",
@@ -107,9 +109,10 @@ class Land extends CI_Controller {
     }
 
     public function blocks() {
+        $first = $this->input->post('first');
         $data = $this->getLastData();
-        $cookieVal = get_cookie("cookie-blocks");
-        if ($cookieVal !== null) {
+        $cookieVal = get_cookie(self::COOKIE_BLOCKS);
+        if (!isset($first) && $cookieVal !== null) {
             $blocks = json_decode($cookieVal);
             $blockIdentifier = $this->input->post(Front::BLOCK_IDENTIFIER);
             $blocks[$blockIdentifier]->acronym = $this->input->post(Front::BLOCK_ACRONYM);
@@ -131,7 +134,7 @@ class Land extends CI_Controller {
         }
         $data[Front::BLOCKS] = $blocks;
 
-        set_cookie("cookie-blocks", json_encode($blocks), 3600);
+        set_cookie(self::COOKIE_BLOCKS, json_encode($blocks), 3600);
 
         $this->load->view(Front::TEMPLATES_HEADER);
         $this->load->view(Front::PAGES_CANVAS);
