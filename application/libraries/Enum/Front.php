@@ -17,6 +17,7 @@ abstract class Front {
     const CANVAS_HIDDEN_NEXT_RESULTS = "nextResults";
     const CANVAS_HIDDEN_SHOW_NEXT_RESULTS = "showNextResults";
     const BLOCKS_BLOCK_SMILES = "smiles";
+    const EDITOR_INPUT = "editorInput";
 
     const PAGES_MAIN = "pages/main";
     const PAGES_CANVAS = "pages/canvas";

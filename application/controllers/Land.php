@@ -72,17 +72,18 @@ class Land extends CI_Controller {
     public function blocks() {
         $molecules = [];
         $intCounter = 0;
-        $smiles = explode(",", $this->input->post(Front::BLOCKS_BLOCK_SMILES));
+        $inputSmiles = $this->input->post(Front::BLOCKS_BLOCK_SMILES);
+        $smiles = explode(",", $inputSmiles);
         foreach ($smiles as $smile) {
             $molecule[Front::CANVAS_INPUT_IDENTIFIER] = $intCounter;
             $molecule[Front::CANVAS_INPUT_SMILE] = $smile;
             $molecules[] = $molecule;
             $intCounter++;
         }
-//        var_dump($molecules);
 
         $data = $this->getLastData();
         $data['molecules'] = $molecules;
+        $data[Front::BLOCKS_BLOCK_SMILES] = $inputSmiles;
 
         $this->load->view(Front::TEMPLATES_HEADER);
         $this->load->view(Front::PAGES_CANVAS);
