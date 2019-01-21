@@ -16,8 +16,11 @@ abstract class Front {
     const CANVAS_INPUT_IDENTIFIER = "identifier";
     const CANVAS_HIDDEN_NEXT_RESULTS = "nextResults";
     const CANVAS_HIDDEN_SHOW_NEXT_RESULTS = "showNextResults";
-    const BLOCKS_BLOCK_SMILES = "smiles";
+    const BLOCKS_BLOCK_SMILES = "blockSmiles";
+    const BLOCKS_BLOCK_SMILE = "blockSmile";
     const EDITOR_INPUT = "editorInput";
+    const SEQUENCE_TYPE = "sequenceType";
+    const SEQUENCE = "sequence";
 
     const PAGES_MAIN = "pages/main";
     const PAGES_CANVAS = "pages/canvas";

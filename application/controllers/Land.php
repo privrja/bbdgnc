@@ -69,6 +69,22 @@ class Land extends CI_Controller {
         $this->load->view(Front::TEMPLATES_FOOTER);
     }
 
+    public function editor() {
+        $inputSmiles = $this->input->post(Front::BLOCKS_BLOCK_SMILES);
+        $editorInput = $this->input->post(Front::EDITOR_INPUT);
+        $inputSmile = $this->input->post(Front::BLOCKS_BLOCK_SMILE);
+
+        // TODO value check
+
+        $data = $this->getLastData();
+        $data[Front::BLOCKS_BLOCK_SMILES] = $inputSmiles;
+        $data[Front::EDITOR_INPUT] = $editorInput;
+        $data[Front::BLOCKS_BLOCK_SMILE] = $inputSmile;
+        $this->load->view('templates/header');
+        $this->load->view('editor/index', $data);
+        $this->load->view('templates/footer');
+    }
+
     public function blocks() {
         $molecules = [];
         $intCounter = 0;
@@ -76,13 +92,14 @@ class Land extends CI_Controller {
         $smiles = explode(",", $inputSmiles);
         foreach ($smiles as $smile) {
             $molecule[Front::CANVAS_INPUT_IDENTIFIER] = $intCounter;
-            $molecule[Front::CANVAS_INPUT_SMILE] = $smile;
+            $molecule[Front::BLOCKS_BLOCK_SMILE] = $smile;
             $molecules[] = $molecule;
             $intCounter++;
         }
 
         $data = $this->getLastData();
         $data['molecules'] = $molecules;
+        $data['blockCount'] = $intCounter;
         $data[Front::BLOCKS_BLOCK_SMILES] = $inputSmiles;
 
         $this->load->view(Front::TEMPLATES_HEADER);

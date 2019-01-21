@@ -10,6 +10,20 @@ class Editor extends CI_Controller {
         $this->load->helper('url');
     }
 
+    private function getLastData() {
+        $arViewData = array();
+        $arViewData[Front::CANVAS_INPUT_DATABASE] = $this->input->post(Front::CANVAS_INPUT_DATABASE);
+        $arViewData[Front::CANVAS_INPUT_SEARCH_BY] = $this->input->post(Front::CANVAS_INPUT_SEARCH_BY);
+        $arViewData[Front::CANVAS_INPUT_NAME] = $this->input->post(Front::CANVAS_INPUT_NAME);
+        $arViewData[Front::CANVAS_INPUT_SMILE] = $this->input->post(Front::CANVAS_INPUT_SMILE);
+        $arViewData[Front::CANVAS_INPUT_FORMULA] = $this->input->post(Front::CANVAS_INPUT_FORMULA);
+        $arViewData[Front::CANVAS_INPUT_MASS] = $this->input->post(Front::CANVAS_INPUT_MASS);
+        $arViewData[Front::CANVAS_INPUT_DEFLECTION] = $this->input->post(Front::CANVAS_INPUT_DEFLECTION);
+        $arViewData[Front::CANVAS_INPUT_IDENTIFIER] = $this->input->post(Front::CANVAS_INPUT_IDENTIFIER);
+//        $arViewData[self::ERRORS] = $this->errors;
+        return $arViewData;
+    }
+
     public function index() {
         $inputSmiles = $this->input->post(Front::BLOCKS_BLOCK_SMILES);
         $editorInput = $this->input->post(Front::EDITOR_INPUT);
@@ -17,6 +31,7 @@ class Editor extends CI_Controller {
 
         // TODO value check
 
+        $data = $this->getLastData();
         $data[Front::BLOCKS_BLOCK_SMILES] = $inputSmiles;
         $data[Front::EDITOR_INPUT] = $editorInput;
         $data[Front::CANVAS_INPUT_SMILE] = $inputSmile;

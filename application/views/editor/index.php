@@ -1,3 +1,9 @@
+<?php
+
+use Bbdgnc\Enum\Front;
+
+?>
+
 <script src="<?= AssetHelper::jsJsme() ?>"></script>
 
 <script>
@@ -6,23 +12,20 @@
      */
     function jsmeOnLoad() {
         jsmeApplet = new JSApplet.JSME("jsme_container", "600px", "600px");
-        jsmeApplet.readGenericMolecularInput('<?= $smile ?>');
+        jsmeApplet.readGenericMolecularInput('<?= $blockSmile ?>');
     }
 
     function getSmiles() {
         let smile = jsmeApplet.nonisomericSmiles();
-        let smiles = '<?= $smiles ?>';
+        let smiles = '<?= $blockSmiles ?>';
         let acSmiles = smiles.split(',');
         let index = '<?= $editorInput ?>';
         acSmiles[index] = smile;
-        redirectWithData({smiles: acSmiles, blocks: 'Blocks'});
+        redirectWithData({blockSmiles: acSmiles, blocks: 'Blocks'});
     }
 
     function redirectWithData(data) {
-        let form = document.createElement('form');
-        document.body.appendChild(form);
-        form.method = 'post';
-        form.action = 'land/form';
+        let form = document.getElementById('form-block');
         for (let name in data) {
             let input = document.createElement('input');
             input.type = 'hidden';
@@ -41,3 +44,17 @@
         <button onclick="getSmiles()">Accept changes</button>
     </div>
 </div>
+
+
+<?= form_open('land/form', array('class' => 'tr', 'id' => 'form-block')); ?>
+
+<input type="hidden" name="<?= Front::CANVAS_INPUT_DATABASE ?>" value="<?= $database ?>" />
+<input type="hidden" name="<?= Front::CANVAS_INPUT_SEARCH_BY ?>" value="<?= $search ?>" />
+<input type="hidden" name="<?= Front::CANVAS_INPUT_NAME ?>" value="<?= $name ?>" />
+<input type="hidden" name="<?= Front::CANVAS_INPUT_SMILE ?>" value="<?= $smile ?>" />
+<input type="hidden" name="<?= Front::CANVAS_INPUT_FORMULA ?>" value="<?= $formula ?>" />
+<input type="hidden" name="<?= Front::CANVAS_INPUT_MASS ?>" value="<?= $mass ?>" />
+<input type="hidden" name="<?= Front::CANVAS_INPUT_DEFLECTION ?>" value="<?= $deflection ?>" />
+<input type="hidden" name="<?= Front::CANVAS_INPUT_IDENTIFIER ?>" value="<?= $identifier ?>" />
+
+</form>
