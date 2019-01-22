@@ -37,6 +37,18 @@ final class FormulaFromSmilesTest extends TestCase {
         $this->assertEquals('C39H61N7O7', FormulaHelper::formulaFromSmiles('CCC(C)C(NC(C)=O)C(=O)NC2CCCNC(=O)C(NC(=O)C(NC(=O)C3CCCN3(C(=O)C(Cc1ccccc1)NC2(=O)))C(C)CC)C(C)CC'));
     }
 
+    public function testWithRightData6() {
+        $this->assertEquals('C54H90N6O18', FormulaHelper::formulaFromSmiles('CC1C(=O)NC(C(=O)OC(C(=O)NC(C(=O)OC(C(=O)NC(C(=O)OC(C(=O)NC(C(=O)OC(C(=O)NC(C(=O)OC(C(=O)NC(C(=O)O1)C(C)C)C(C)C)C(C)C)C)C(C)C)C(C)C)C(C)C)C)C(C)C)C(C)C)C(C)C'));
+    }
+
+    public function testWithRightData8() {
+        $this->assertEquals('C39H63N7O8', FormulaHelper::formulaFromSmiles('CCC(C)C(C(=O)NC(CCCNC(=O)C(C(C)CC)NC(=O)C(C(C)CC)NC(=O)C1CCCN1)C(=O)NC(CC2=CC=CC=C2)C(=O)O)NC(=O)C'));
+    }
+
+    public function testWithRightData9() {
+        $this->assertEquals('C10H11N1O3', FormulaHelper::formulaFromSmiles('C(=O)NC(CC2=CC=CC=C2)C(=O)O'));
+    }
+
     public function testWithWrong() {
         $this->expectException(IllegalArgumentException::class);
         FormulaHelper::formulaFromSmiles('====');

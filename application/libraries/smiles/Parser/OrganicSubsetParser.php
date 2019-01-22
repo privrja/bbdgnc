@@ -4,7 +4,7 @@ namespace Bbdgnc\Smiles\Parser;
 
 class OrganicSubsetParser implements IParser {
 
-    const LITERALS = ["Br", "Cl", "B", "C", "N", "O", "P", "S", "F", "I", "br", "cl", "b", "c", "n", "o", "p", "s", "f", "i"];
+    const LITERALS = ["Br", "Cl", "B", "C", "N", "O", "P", "S", "F", "I", "b", "c", "n", "o", "p", "s", "f", "i"];
 
     /**
      * Parse text
