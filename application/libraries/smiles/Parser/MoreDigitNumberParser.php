@@ -23,11 +23,7 @@ class MoreDigitNumberParser implements IParser {
         if (!$natResult->isAccepted() || $natResult->getResult() < 10) {
             return self::reject();
         }
-        $secondPercentResult = $this->parsePercent($stringParser, $natResult->getRemainder());
-        if (!$secondPercentResult->isAccepted()) {
-            return self::reject();
-        }
-        return new Accept($natResult->getResult(), $secondPercentResult->getRemainder());
+        return $natResult;
     }
 
     private function parsePercent(StringParser $stringParser, $strText) {

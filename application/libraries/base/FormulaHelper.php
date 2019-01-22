@@ -33,8 +33,15 @@ class FormulaHelper {
         return $mass;
     }
 
+    public static function formulaFromSmiles($strSmiles) {
+        $arMap = [];
+
+
+
+    }
+
     private static function readNumber($strFormula, $intLength, &$intIndex) {
-        if($strFormula[$intIndex] == "0") {
+        if ($strFormula[$intIndex] == "0") {
             throw new IllegalArgumentException();
         }
         $strCount = "";

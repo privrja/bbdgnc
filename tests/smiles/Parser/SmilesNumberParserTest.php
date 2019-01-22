@@ -29,7 +29,7 @@ final class SmilesNumberParserTest extends TestCase {
     public function testWithRightData2() {
         $parser = new SmilesNumberParser();
         $result = $parser->parse('%34%C');
-        $this->assertEquals(new Accept('34', 'C'), $result);
+        $this->assertEquals(new Accept('34', '%C'), $result);
     }
 
     public function testWithWrongData() {

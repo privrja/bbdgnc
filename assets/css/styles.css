@@ -48,13 +48,6 @@ footer {
     background-color: #fff;
 }
 
-#div-sequence {
-    position: relative;
-    width: 100%;
-    padding: 3vh 6vh 2vh 6vh;
-    float: left;
-}
-
 /* Drawing sketch canvas */
 #canvas-main {
     width: 100%;
@@ -65,6 +58,12 @@ footer {
 #div-select, #div-blocks {
     width: 100%;
     clear: both;
+}
+
+#div-sequence {
+    margin: 0 auto;
+    position: relative;
+    padding: 3vh 6vh 3vh 6vh;
 }
 
 #div-editor {

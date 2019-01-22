@@ -10,7 +10,15 @@ class BlockTO {
 
     public $acronym = "";
 
+    public $formula = "";
+
+    public $neutralLosses = "";
+
+    public $mass = 0;
+
     public $smiles = "";
+
+    public $reference;
 
     /**
      * BlockTO constructor.
@@ -25,5 +33,7 @@ class BlockTO {
         $this->acronym = $acronym;
         $this->smiles = $smiles;
     }
+
+
 
 }

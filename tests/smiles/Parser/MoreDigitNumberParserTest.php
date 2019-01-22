@@ -23,18 +23,18 @@ class MoreDigitNumberParserTest extends TestCase {
     public function testWithRightData() {
         $parser = new MoreDigitNumberParser();
         $result = $parser->parse('%34%');
-        $this->assertEquals(new Accept(34, ''), $result);
+        $this->assertEquals(new Accept(34, '%'), $result);
     }
 
     public function testWithRightData2() {
         $parser = new MoreDigitNumberParser();
-        $result = $parser->parse('%10%');
+        $result = $parser->parse('%10');
         $this->assertEquals(new Accept(10, ''), $result);
     }
 
     public function testWithWrongData() {
         $parser = new MoreDigitNumberParser();
-        $result = $parser->parse('%55');
+        $result = $parser->parse('5%');
         $this->assertEquals(MoreDigitNumberParser::reject(), $result);
     }
 
@@ -46,13 +46,13 @@ class MoreDigitNumberParserTest extends TestCase {
 
     public function testWithWrongData3() {
         $parser = new MoreDigitNumberParser();
-        $result = $parser->parse('%9%');
+        $result = $parser->parse('%9');
         $this->assertEquals(MoreDigitNumberParser::reject(), $result);
     }
 
     public function testWithWrongData4() {
         $parser = new MoreDigitNumberParser();
-        $result = $parser->parse('%0%');
+        $result = $parser->parse('%0');
         $this->assertEquals(MoreDigitNumberParser::reject(), $result);
     }
 

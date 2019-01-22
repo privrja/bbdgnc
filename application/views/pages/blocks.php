@@ -2,7 +2,6 @@
 
 use Bbdgnc\Enum\Front;
 use Bbdgnc\Enum\SequenceTypeEnum;
-use Bbdgnc\TransportObjects\BlockTO;
 
 ?>
 
@@ -36,9 +35,12 @@ use Bbdgnc\TransportObjects\BlockTO;
                 <div class="td"></div>
                 <div class="td">Name</div>
                 <div class="td">Acronym</div>
+                <div class="td">Formula</div>
+                <div class="td">Neutral loss</div>
+                <div class="td">Mass</div>
                 <div class="td">SMILES</div>
+                <div class="td">Reference</div>
                 <div class="td">Editor</div>
-                <div class="td">Accept</div>
             </div>
         </div>
         <div class="tbody">
@@ -63,6 +65,10 @@ use Bbdgnc\TransportObjects\BlockTO;
                 </div>
 
                 <div class="td">
+                    <input type="text" size="20" name="<?= Front::BLOCK_FORMULA ?>" value="<?= $block->formula ?>" />
+                </div>
+
+                <div class="td">
                     <input type="text" name="<?= Front::BLOCK_SMILE ?>"
                            id="hidden-canvas-small-<?= $block->id ?>"
                            value="<?= $block->smiles ?>"
@@ -70,13 +76,10 @@ use Bbdgnc\TransportObjects\BlockTO;
                 </div>
 
                 <input type="hidden" name="<?= Front::BLOCK_IDENTIFIER ?>" value="<?= $block->id ?>" />
+                <input type="hidden" name="<?= Front::BLOCK_COUNT ?>" value="<?= $blockCount ?>" />
 
                 <div class="td">
-                    <input type="submit" title="SMILES Editor" name="editor" value="Editor" />
-                </div>
-
-                <div class="td">
-                    <input type="submit" title="Accept changes" name="accept" value="Accept" />
+                    <input type="submit" title="SMILES Editor" name="editor" value="Edit" />
                 </div>
 
                 <input type="hidden" name="<?= Front::CANVAS_INPUT_DATABASE ?>" value="<?= $database ?>" />

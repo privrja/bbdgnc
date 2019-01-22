@@ -175,7 +175,7 @@ final class GraphTest extends TestCase {
     }
 
     public function testGraph7() {
-        $graph = new Graph('C%18%CC(=O)CC%18%');
+        $graph = new Graph('C%18CC(=O)CC%18');
         $expectedGraph = new Graph('');
         for ($i = 0; $i < 3; $i++) {
             $expectedGraph->addNode('C');
