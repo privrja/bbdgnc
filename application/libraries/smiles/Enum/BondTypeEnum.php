@@ -23,4 +23,9 @@ class BondTypeEnum {
         return self::$values[$strBond] > 1;
     }
 
+    public static $backValues = array(
+        1 => '',
+        2 => '=',
+        3 => '#',
+    );
 }

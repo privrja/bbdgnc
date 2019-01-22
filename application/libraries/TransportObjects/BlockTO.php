@@ -2,6 +2,8 @@
 
 namespace Bbdgnc\TransportObjects;
 
+use Bbdgnc\Base\FormulaHelper;
+
 class BlockTO {
 
     public $id = 0;
@@ -12,7 +14,7 @@ class BlockTO {
 
     public $formula = "";
 
-    public $neutralLosses = "";
+    public $losses = "";
 
     public $mass = 0;
 
@@ -32,8 +34,9 @@ class BlockTO {
         $this->name = $name;
         $this->acronym = $acronym;
         $this->smiles = $smiles;
+        $this->formula = FormulaHelper::formulaFromSmiles($smiles);
+        $this->mass = FormulaHelper::computeMass($this->formula);
     }
-
 
 
 }

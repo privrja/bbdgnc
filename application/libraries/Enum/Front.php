@@ -25,7 +25,9 @@ abstract class Front {
     const BLOCKS = "blocks";
     const BLOCK_NAME = "blockName";
     const BLOCK_FORMULA = "blockFormula";
-    const EDITOR_INPUT = "editorInput";
+    const BLOCK_NEUTRAL_LOSSES = "blockLosses";
+    const BLOCK_MASS = "blockMass";
+    const BLOCK_REFERENCE = "blockReference";
     const SEQUENCE_TYPE = "sequenceType";
     const SEQUENCE = "sequence";
 

@@ -100,7 +100,7 @@ class Graph {
             $str .= '[' . $intIndex . '] ' . $node->getAtom()->getName() . ' H' . $node->hydrogensCount() . ' => ';
             /** @var Bond $bond */
             foreach ($node->getBonds() as $bond) {
-                $str .= $bond->getNodeNumber() . ' ';
+                $str .= $bond->getBondTypeString() . $bond->getNodeNumber() . ' ';
             }
             $str .= PHP_EOL;
             $intIndex++;

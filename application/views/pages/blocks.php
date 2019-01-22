@@ -65,7 +65,16 @@ use Bbdgnc\Enum\SequenceTypeEnum;
                 </div>
 
                 <div class="td">
-                    <input type="text" size="20" name="<?= Front::BLOCK_FORMULA ?>" value="<?= $block->formula ?>" />
+                    <p><?= $block->formula ?></p>
+                </div>
+
+                <div class="td">
+                    <input type="text" size="20" name="<?= Front::BLOCK_NEUTRAL_LOSSES ?>"
+                           value="<?= $block->losses ?>"/>
+                </div>
+
+                <div class="td">
+                    <p><?= $block->mass ?></p>
                 </div>
 
                 <div class="td">
@@ -73,6 +82,10 @@ use Bbdgnc\Enum\SequenceTypeEnum;
                            id="hidden-canvas-small-<?= $block->id ?>"
                            value="<?= $block->smiles ?>"
                            oninput="drawSmallSmile(<?= $block->id ?>)"/>
+                </div>
+
+                <div class="td">
+                    <input type="text" size="20" name="<?= Front::BLOCK_REFERENCE ?>" value="<?= $block->reference ?>"/>
                 </div>
 
                 <input type="hidden" name="<?= Front::BLOCK_IDENTIFIER ?>" value="<?= $block->id ?>" />

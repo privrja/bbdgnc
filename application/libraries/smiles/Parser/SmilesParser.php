@@ -129,7 +129,7 @@ class SmilesParser implements IParser {
     private function tryNumberOk(ParseResult $result, ParseResult $lastResult) {
         if (isset($this->arNumberBonds[$result->getResult()])) {
             $intWhere = $this->arNumberBonds[$result->getResult()]->getObject();
-            $this->graph->addBidirectionalBond($intWhere, $this->intNodeIndex - 1, $this->lastBond);
+            $this->graph->addBidirectionalBond($intWhere, $this->intNodeIndex - 1, '');
             $this->intReading++;
         } else {
             $this->arNumberBonds[$result->getResult()] = new OneTimeReadable($this->intNodeIndex - 1);

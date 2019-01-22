@@ -34,4 +34,8 @@ class Bond {
         return $this->bondType;
     }
 
+    public function getBondTypeString() {
+        return BondTypeEnum::$backValues[$this->bondType];
+    }
+
 }
