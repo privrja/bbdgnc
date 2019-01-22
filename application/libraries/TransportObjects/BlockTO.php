@@ -3,6 +3,8 @@
 namespace Bbdgnc\TransportObjects;
 
 use Bbdgnc\Base\FormulaHelper;
+use Bbdgnc\Enum\LoggerEnum;
+use Bbdgnc\Exception\IllegalArgumentException;
 
 class BlockTO {
 
@@ -35,7 +37,11 @@ class BlockTO {
         $this->acronym = $acronym;
         $this->smiles = $smiles;
         $this->formula = FormulaHelper::formulaFromSmiles($smiles);
-        $this->mass = FormulaHelper::computeMass($this->formula);
+        try {
+            $this->mass = FormulaHelper::computeMass($this->formula);
+        } catch (IllegalArgumentException $exception) {
+            log_message(LoggerEnum::ERROR, $exception->getMessage());
+        }
     }
 
 
