@@ -9,6 +9,7 @@ use Bbdgnc\Smiles\Parser\SmilesParser;
 
 class Graph {
 
+    /** @var Node[] */
     private $arNodes = array();
 
     /**
@@ -24,7 +25,7 @@ class Graph {
      * @param string $elementName
      */
     public function addNode(string $elementName) {
-        $this->arNodes[] = new Node(PeriodicTableSingleton::getInstance()->getAtoms()[ucfirst($elementName)]);
+        $this->arNodes[] = new Node(PeriodicTableSingleton::getInstance()->getAtoms()[$elementName]);
     }
 
     /**
@@ -52,11 +53,35 @@ class Graph {
      * @param string $strText
      */
     private function buildGraph($strText) {
+        $strText = SmilesBuilder::removeUnnecessaryParentheses($strText);
         $smilesParser = new SmilesParser($this);
         $result = $smilesParser->parse($strText);
         if (!$result->isAccepted()) {
             throw new IllegalArgumentException();
         }
+    }
+
+    public function getFormula() {
+        $arMap = [];
+        foreach ($this->arNodes as $node) {
+            if (isset($arMap['H'])) {
+                $arMap['H'] += $node->hydrogensCount();
+            } else {
+                $arMap['H'] = $node->hydrogensCount();
+            }
+
+            if (isset($arMap[$node->getAtom()->getName()])) {
+                $arMap[$node->getAtom()->getName()]++;
+            } else {
+                $arMap[$node->getAtom()->getName()] = 1;
+            }
+        }
+        ksort($arMap);
+        $strFormula = "";
+        foreach ($arMap as $key => $value) {
+            $strFormula .= $key . $value;
+        }
+        return $strFormula;
     }
 
     public function getSmiles() {
@@ -72,7 +97,7 @@ class Graph {
         $intIndex = 0;
         /** @var Node $node */
         foreach ($this->arNodes as $node) {
-            $str .= '[' . $intIndex . '] ' . $node->getAtom()->getName() . ' => ';
+            $str .= '[' . $intIndex . '] ' . $node->getAtom()->getName() . ' H' . $node->hydrogensCount() . ' => ';
             /** @var Bond $bond */
             foreach ($node->getBonds() as $bond) {
                 $str .= $bond->getNodeNumber() . ' ';

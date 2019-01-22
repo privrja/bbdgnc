@@ -4,12 +4,14 @@ namespace Bbdgnc\Smiles;
 
 class Node {
 
+    /** @var Element atom */
     private $atom;
 
     private $invariants;
 
     private $rank;
 
+    /** @var Bond[] */
     private $arBonds = array();
 
     /**
@@ -20,6 +22,17 @@ class Node {
     public function __construct(Element $atom, array $arBounds = []) {
         $this->atom = $atom;
         $this->arBonds = $arBounds;
+    }
+
+    public function hydrogensCount() {
+        $actualBindings = 0;
+        foreach ($this->arBonds as $bond) {
+            $actualBindings += $bond->getBondType();
+        }
+        $hydrogensCount = $this->atom->getBindings() - $actualBindings;
+        $hydrogensCount = $hydrogensCount < 0 ? 0 : $hydrogensCount;
+//        var_dump($this->atom->getName() . " H" . $hydrogensCount);
+        return $hydrogensCount;
     }
 
     public function addBond(Bond $bond) {

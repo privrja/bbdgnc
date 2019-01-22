@@ -218,4 +218,42 @@ final class GraphTest extends TestCase {
         $expectedGraph->addBond(5, new Bond(0, ''));
         $this->assertEquals($graph, $expectedGraph);
     }
+
+    public function testGraph9() {
+        $graph = new Graph('CCC(C)C(NC(C)=O)C(=O)');
+        $expectedGraph = new Graph('');
+        for ($i = 0; $i < 5; $i++) {
+            $expectedGraph->addNode('C');
+        }
+        $expectedGraph->addNode('N');
+        $expectedGraph->addNode('C');
+        $expectedGraph->addNode('C');
+        $expectedGraph->addNode('O');
+        $expectedGraph->addNode('C');
+        $expectedGraph->addNode('O');
+        $expectedGraph->addBond(0, new Bond(1, ''));
+        $expectedGraph->addBond(1, new Bond(0, ''));
+        $expectedGraph->addBond(1, new Bond(2, ''));
+        $expectedGraph->addBond(2, new Bond(1, ''));
+        $expectedGraph->addBond(2, new Bond(3, ''));
+        $expectedGraph->addBond(2, new Bond(4, ''));
+        $expectedGraph->addBond(3, new Bond(2, ''));
+        $expectedGraph->addBond(4, new Bond(2, ''));
+        $expectedGraph->addBond(4, new Bond(5, ''));
+        $expectedGraph->addBond(4, new Bond(9, ''));
+        $expectedGraph->addBond(5, new Bond(4, ''));
+        $expectedGraph->addBond(5, new Bond(6, ''));
+        $expectedGraph->addBond(6, new Bond(5, ''));
+        $expectedGraph->addBond(6, new Bond(7, ''));
+        $expectedGraph->addBond(6, new Bond(8, '='));
+        $expectedGraph->addBond(7, new Bond(6, ''));
+        $expectedGraph->addBond(8, new Bond(6, '='));
+        $expectedGraph->addBond(9, new Bond(4, ''));
+        $expectedGraph->addBond(9, new Bond(10, '='));
+        $expectedGraph->addBond(10, new Bond(9, '='));
+        $this->assertEquals($graph, $expectedGraph);
+    }
+
+
+
 }

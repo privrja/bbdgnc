@@ -276,6 +276,7 @@ class SmilesParser implements IParser {
      * @param ParseResult $lastResult
      */
     private function bondAfterRightBracketOk(ParseResult $result, ParseResult $lastResult) {
+        $this->lastBond = $result->getResult();
         $this->parseAndCallBack($result, $this->orgParser, self::ORG_AFTER_BRACKET_OK, self::KO);
     }
 

@@ -4,6 +4,7 @@ namespace Bbdgnc\Base;
 
 use Bbdgnc\Enum\PeriodicTableSingleton;
 use Bbdgnc\Exception\IllegalArgumentException;
+use Bbdgnc\Smiles\Graph;
 
 class FormulaHelper {
 
@@ -33,11 +34,14 @@ class FormulaHelper {
         return $mass;
     }
 
-    public static function formulaFromSmiles($strSmiles) {
-        $arMap = [];
-
-
-
+    /**
+     * Get Formula from SMILES
+     * @param string $strSmiles SMILES
+     * @return string formula
+     */
+    public static function formulaFromSmiles(string $strSmiles) {
+        $graph = new Graph($strSmiles);
+        return $graph->getFormula();
     }
 
     private static function readNumber($strFormula, $intLength, &$intIndex) {
