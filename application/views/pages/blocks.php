@@ -9,24 +9,73 @@ use Bbdgnc\Enum\SequenceTypeEnum;
     <h2 id="h-results">Building blocks</h2>
 
     <div id="div-sequence">
-        <p>Number of blocks: <?= $blockCount ?></p>
+        <div id="div-top-sequence">
+            <h3>Sequence</h3>
+            <p>Number of blocks: <?= $blockCount ?></p>
 
-        <label for="sel-sequence-type">Type</label>
-        <?= form_dropdown(Front::CANVAS_INPUT_DATABASE, SequenceTypeEnum::$values, set_value(Front::SEQUENCE_TYPE),
-            'id="sel-sequence-type" class="select" title="Type"'); ?>
+            <label for="sel-sequence-type">Type</label>
+            <?= form_dropdown(Front::CANVAS_INPUT_DATABASE, SequenceTypeEnum::$values, set_value(Front::SEQUENCE_TYPE),
+                'id="sel-sequence-type" class="select" title="Type"'); ?>
 
-        <label for="txt-sequence">Sequence</label>
-        <input type="text" id="txt-sequence" name="sequence" value="" />
+            <label for="txt-sequence">Sequence</label>
+            <input type="text" id="txt-sequence" name="sequence" value=""/>
+        </div>
 
-        <label for="txt-n-modification">N-terminal Modification</label>
-        <input type="text" id="txt-n-modification" name="nModification" value="" />
+        <div class="div-modification">
+            <h4>N-terminal Modification</h4>
 
-        <label for="txt-c-modification">C-terminal Modification</label>
-        <input type="text" id="txt-c-modification" name="cModification" value="" />
+            <label for="txt-n-modification">Name</label>
+            <input type="text" id="txt-n-modification" name="nModification" value=""/>
 
-        <label for="txt-branch-modification">Branch Modification</label>
-        <input type="text" id="txt-branch-modification" name="branchModification" value="" />
+            <label for="txt-n-formula">Formula</label>
+            <input type="text" id="txt-n-formula" name="nFormula" value=""/>
 
+            <label for="txt-n-mass">Monoisotopic Mass</label>
+            <input type="text" id="txt-n-mass" name="nMass" value=""/>
+
+            <label for="chk-n-nterminal" class="chk">N-terminal</label>
+            <input type="checkbox" id="chk-n-nterminal" name="nnTerminal" value=""/>
+
+            <label for="chk-n-cterminal" class="chk">C-terminal</label>
+            <input type="checkbox" id="chk-n-cterminal" name="ncTerminal" value=""/>
+        </div>
+
+        <div class="div-modification">
+            <h4>C-terminal Modification</h4>
+
+            <label for="txt-c-modification">Name</label>
+            <input type="text" id="txt-c-modification" name="cModification" value=""/>
+
+            <label for="txt-c-formula">Formula</label>
+            <input type="text" id="txt-c-formula" name="cFormula" value=""/>
+
+            <label for="txt-c-mass">Monoisotopic Mass</label>
+            <input type="text" id="txt-c-mass" name="cMass" value=""/>
+
+            <label for="chk-c-nterminal" class="chk">N-terminal</label>
+            <input type="checkbox" id="chk-c-nterminal" name="cnTerminal" value=""/>
+
+            <label for="chk-c-cterminal" class="chk">C-terminal</label>
+            <input type="checkbox" id="chk-c-cterminal" name="ccTerminal" value=""/>
+        </div>
+
+        <div class="div-modification">
+            <h4>Branch Modification</h4>
+            <label for="txt-b-modification">Name</label>
+            <input type="text" id="txt-b-modification" name="bModification" value=""/>
+
+            <label for="txt-b-formula">Formula</label>
+            <input type="text" id="txt-b-formula" name="bFormula" value=""/>
+
+            <label for="txt-b-mass">Monoisotopic Mass</label>
+            <input type="text" id="txt-b-mass" name="bMass" value=""/>
+
+            <label for="chk-b-nterminal" class="chk">N-terminal</label>
+            <input type="checkbox" id="chk-b-nterminal" name="bnTerminal" value=""/>
+
+            <label for="chk-b-cterminal" class="chk">C-terminal</label>
+            <input type="checkbox" id="chk-b-cterminal" name="bcTerminal" value=""/>
+        </div>
     </div>
 
     <div class="table t">
@@ -57,11 +106,11 @@ use Bbdgnc\Enum\SequenceTypeEnum;
                 </div>
 
                 <div class="td">
-                    <input type="text" size="20" name="<?= Front::BLOCK_NAME ?>" value="<?= $block->name ?>" />
+                    <p><?= $block->name ?></p>
                 </div>
 
                 <div class="td">
-                    <input type="text" size="20" name="<?= Front::BLOCK_ACRONYM ?>" value="<?= $block->acronym ?>" />
+                    <p><?= $block->acronym ?></p>
                 </div>
 
                 <div class="td">
@@ -69,8 +118,7 @@ use Bbdgnc\Enum\SequenceTypeEnum;
                 </div>
 
                 <div class="td">
-                    <input type="text" size="20" name="<?= Front::BLOCK_NEUTRAL_LOSSES ?>"
-                           value="<?= $block->losses ?>"/>
+                    <p><?= $block->losses ?></p>
                 </div>
 
                 <div class="td">
@@ -78,31 +126,32 @@ use Bbdgnc\Enum\SequenceTypeEnum;
                 </div>
 
                 <div class="td">
-                    <input type="text" name="<?= Front::BLOCK_SMILE ?>"
-                           id="hidden-canvas-small-<?= $block->id ?>"
-                           value="<?= $block->smiles ?>"
-                           oninput="drawSmallSmile(<?= $block->id ?>)"/>
+                    <p><?= $block->smiles ?></p>
                 </div>
 
                 <div class="td">
-                    <input type="text" size="20" name="<?= Front::BLOCK_REFERENCE ?>" value="<?= $block->reference ?>"/>
+                    <p><?= $block->reference ?></p>
                 </div>
 
-                <input type="hidden" name="<?= Front::BLOCK_IDENTIFIER ?>" value="<?= $block->id ?>" />
-                <input type="hidden" name="<?= Front::BLOCK_COUNT ?>" value="<?= $blockCount ?>" />
+                <input type="hidden" name="<?= Front::BLOCK_SMILE ?>"
+                       id="hidden-canvas-small-<?= $block->id ?>"
+                       value="<?= $block->smiles ?>"/>
+
+                <input type="hidden" name="<?= Front::BLOCK_IDENTIFIER ?>" value="<?= $block->id ?>"/>
+                <input type="hidden" name="<?= Front::BLOCK_COUNT ?>" value="<?= $blockCount ?>"/>
 
                 <div class="td">
-                    <input type="submit" title="SMILES Editor" name="editor" value="Edit" />
+                    <input type="submit" title="SMILES Editor" name="editor" value="Edit"/>
                 </div>
 
-                <input type="hidden" name="<?= Front::CANVAS_INPUT_DATABASE ?>" value="<?= $database ?>" />
-                <input type="hidden" name="<?= Front::CANVAS_INPUT_SEARCH_BY ?>" value="<?= $search ?>" />
-                <input type="hidden" name="<?= Front::CANVAS_INPUT_NAME ?>" value="<?= $name ?>" />
-                <input type="hidden" name="<?= Front::CANVAS_INPUT_SMILE ?>" value="<?= $smile ?>" />
-                <input type="hidden" name="<?= Front::CANVAS_INPUT_FORMULA ?>" value="<?= $formula ?>" />
-                <input type="hidden" name="<?= Front::CANVAS_INPUT_MASS ?>" value="<?= $mass ?>" />
-                <input type="hidden" name="<?= Front::CANVAS_INPUT_DEFLECTION ?>" value="<?= $deflection ?>" />
-                <input type="hidden" name="<?= Front::CANVAS_INPUT_IDENTIFIER ?>" value="<?= $identifier ?>" />
+                <input type="hidden" name="<?= Front::CANVAS_INPUT_DATABASE ?>" value="<?= $database ?>"/>
+                <input type="hidden" name="<?= Front::CANVAS_INPUT_SEARCH_BY ?>" value="<?= $search ?>"/>
+                <input type="hidden" name="<?= Front::CANVAS_INPUT_NAME ?>" value="<?= $name ?>"/>
+                <input type="hidden" name="<?= Front::CANVAS_INPUT_SMILE ?>" value="<?= $smile ?>"/>
+                <input type="hidden" name="<?= Front::CANVAS_INPUT_FORMULA ?>" value="<?= $formula ?>"/>
+                <input type="hidden" name="<?= Front::CANVAS_INPUT_MASS ?>" value="<?= $mass ?>"/>
+                <input type="hidden" name="<?= Front::CANVAS_INPUT_DEFLECTION ?>" value="<?= $deflection ?>"/>
+                <input type="hidden" name="<?= Front::CANVAS_INPUT_IDENTIFIER ?>" value="<?= $identifier ?>"/>
                 </form>
             <?php endforeach; ?>
         </div>

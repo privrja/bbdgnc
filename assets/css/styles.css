@@ -63,7 +63,11 @@ footer {
 #div-sequence {
     margin: 0 auto;
     position: relative;
-    padding: 3vh 6vh 3vh 6vh;
+    padding: 3vh 6vh 12vh 6vh;
+}
+
+#div-top-sequence {
+    width: 70%;
 }
 
 #div-editor {
@@ -73,6 +77,11 @@ footer {
 
 .canvas-small {
     cursor: pointer;
+}
+
+.div-modification {
+    width: 33%;
+    display: inline-block;
 }
 
 #canvas-large {
