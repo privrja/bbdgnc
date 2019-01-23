@@ -177,6 +177,7 @@ function smileToEasy(smile) {
                 stack = isoText(stack);
                 break;
             case '/':
+            case '\\':
                 break;
             default:
                 stack.push(c);
