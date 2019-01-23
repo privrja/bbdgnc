@@ -293,6 +293,7 @@ class SmilesParser implements IParser {
     }
 
     private function bondWhenDifferentBracketsAfter(ParseResult $result, ParseResult $lastResult) {
+        $this->lastBond = $result->getResult();
         $this->parseAndCallBack($result, $this->orgParser, 'orgWhenDifferentBrackets', self::KO);
     }
 
