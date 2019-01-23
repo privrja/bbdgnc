@@ -254,6 +254,23 @@ final class GraphTest extends TestCase {
         $this->assertEquals($graph, $expectedGraph);
     }
 
-
+    public function testGraph10() {
+        $graph = new Graph('C1C(C)(C)C1');
+        $expectedGraph = new Graph('');
+        for ($i = 0; $i < 5; $i++) {
+            $expectedGraph->addNode('C');
+        }
+        $expectedGraph->addBond(0, new Bond(1, ''));
+        $expectedGraph->addBond(0, new Bond(4, ''));
+        $expectedGraph->addBond(1, new Bond(0, ''));
+        $expectedGraph->addBond(1, new Bond(2, ''));
+        $expectedGraph->addBond(1, new Bond(3, ''));
+        $expectedGraph->addBond(1, new Bond(4, ''));
+        $expectedGraph->addBond(2, new Bond(1, ''));
+        $expectedGraph->addBond(3, new Bond(1, ''));
+        $expectedGraph->addBond(4, new Bond(1, ''));
+        $expectedGraph->addBond(4, new Bond(0, ''));
+        $this->assertEquals($graph, $expectedGraph);
+    }
 
 }
