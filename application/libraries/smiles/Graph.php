@@ -5,6 +5,7 @@ namespace Bbdgnc\Smiles;
 
 use Bbdgnc\Enum\PeriodicTableSingleton;
 use Bbdgnc\Exception\IllegalArgumentException;
+use Bbdgnc\Smiles\Enum\LossesEnum;
 use Bbdgnc\Smiles\Parser\SmilesParser;
 
 class Graph {
@@ -61,13 +62,13 @@ class Graph {
         }
     }
 
-    public function getFormula() {
+    public function getFormula(int $losses) {
         $arMap = [];
         foreach ($this->arNodes as $node) {
-            if (isset($arMap['H'])) {
-                $arMap['H'] += $node->hydrogensCount();
+            if (isset($arMap[PeriodicTableSingleton::H])) {
+                $arMap[PeriodicTableSingleton::H] += $node->hydrogensCount();
             } else {
-                $arMap['H'] = $node->hydrogensCount();
+                $arMap[PeriodicTableSingleton::H] = $node->hydrogensCount();
             }
 
             if (isset($arMap[$node->getAtom()->getName()])) {
@@ -76,6 +77,7 @@ class Graph {
                 $arMap[$node->getAtom()->getName()] = 1;
             }
         }
+        $arMap = LossesEnum::subtractLosses($losses, $arMap);
         ksort($arMap);
         $strFormula = "";
         foreach ($arMap as $key => $value) {
