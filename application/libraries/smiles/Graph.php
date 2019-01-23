@@ -81,7 +81,11 @@ class Graph {
         ksort($arMap);
         $strFormula = "";
         foreach ($arMap as $key => $value) {
-            $strFormula .= $key . $value;
+            if ($value === 1) {
+                $strFormula .= $key;
+            } else {
+                $strFormula .= $key . $value;
+            }
         }
         return $strFormula;
     }

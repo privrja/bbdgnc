@@ -19,9 +19,6 @@ class FormulaHelper {
             throw new IllegalArgumentException();
         }
         $intLength = strlen($strFormula);
-        if ($intLength == 1) {
-            throw new IllegalArgumentException();
-        }
         $mass = $intIndex = 0;
         while ($intIndex < $intLength) {
             $strName = self::readLiteral($strFormula, $intLength, $intIndex);
@@ -47,6 +44,9 @@ class FormulaHelper {
     }
 
     private static function readNumber($strFormula, $intLength, &$intIndex) {
+        if ($intIndex >= $intLength) {
+            return 1;
+        }
         if ($strFormula[$intIndex] == "0") {
             throw new IllegalArgumentException();
         }
@@ -58,18 +58,30 @@ class FormulaHelper {
                 break;
             }
         }
-        return $strCount;
+        if (empty($strCount)) {
+            return 1;
+        } else {
+            return $strCount;
+        }
     }
 
     private static function readLiteral($strFormula, $intLength, &$intIndex) {
         $strName = "";
+        $intFirstIndex = $intIndex;
         while (!is_numeric($strFormula[$intIndex])) {
+            if ($intIndex > $intFirstIndex && ctype_upper($strFormula[$intIndex])) {
+                return $strName;
+            }
             $strName .= $strFormula[$intIndex];
             $intIndex++;
             if ($intIndex >= $intLength) {
-                throw new IllegalArgumentException();
+                break;
             }
         }
-        return $strName;
+        if (empty($strName)) {
+            throw new IllegalArgumentException();
+        } else {
+            return $strName;
+        }
     }
 }
