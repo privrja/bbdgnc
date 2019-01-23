@@ -14,6 +14,9 @@ class PeriodicTableSingleton {
     private static $instance = null;
     private $arAtoms;
 
+    const H = 'H';
+    const O = 'O';
+
     /**
      * Get instance of singleton
      * @return PeriodicTableSingleton

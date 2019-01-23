@@ -115,9 +115,7 @@ class Land extends CI_Controller {
         if (!isset($first) && $cookieVal !== null) {
             $blocks = json_decode($cookieVal);
             $blockIdentifier = $this->input->post(Front::BLOCK_IDENTIFIER);
-            $blocks[$blockIdentifier]->acronym = $this->input->post(Front::BLOCK_ACRONYM);
-            $blocks[$blockIdentifier]->name = $this->input->post(Front::BLOCK_NAME);
-            $blocks[$blockIdentifier]->smiles = $this->input->post(Front::BLOCK_SMILE);
+            $blocks[$blockIdentifier] = new BlockTO($blockIdentifier, $this->input->post(Front::BLOCK_NAME), $this->input->post(Front::BLOCK_ACRONYM), $this->input->post(Front::BLOCK_SMILE));
             $data[Front::BLOCK_COUNT] = $this->input->post(Front::BLOCK_COUNT);
         } else {
             $blocks = [];

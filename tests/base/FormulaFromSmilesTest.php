@@ -4,6 +4,7 @@ namespace Bbdgnc\Test\Base;
 
 use Bbdgnc\Base\FormulaHelper;
 use Bbdgnc\Exception\IllegalArgumentException;
+use Bbdgnc\Smiles\Enum\LossesEnum;
 use PHPUnit\Framework\TestCase;
 
 final class FormulaFromSmilesTest extends TestCase {
@@ -47,6 +48,22 @@ final class FormulaFromSmilesTest extends TestCase {
 
     public function testWithRightData9() {
         $this->assertEquals('C10H11N1O3', FormulaHelper::formulaFromSmiles('C(=O)NC(CC2=CC=CC=C2)C(=O)O'));
+    }
+
+    public function testWithRightData10() {
+        $this->assertEquals('C10H9N1O2', FormulaHelper::formulaFromSmiles('C(=O)NC(CC2=CC=CC=C2)C(=O)O', LossesEnum::H2O));
+    }
+
+    public function testWithRightData11() {
+        $this->assertEquals('C10H9N1O3', FormulaHelper::formulaFromSmiles('C(=O)NC(CC2=CC=CC=C2)C(=O)O', LossesEnum::H2));
+    }
+
+    public function testWithRightData12() {
+        $this->assertEquals('C5H9N1O1', FormulaHelper::formulaFromSmiles('CC(C)C(N)C(=O)O', LossesEnum::H2O));
+    }
+
+    public function testWithRightData13() {
+        $this->assertEquals('C6H11N1', FormulaHelper::formulaFromSmiles('CC(C)C(N)C(=O)C', LossesEnum::H2O));
     }
 
     public function testWithWrong() {
