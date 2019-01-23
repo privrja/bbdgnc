@@ -102,12 +102,16 @@ function getSmilesDrawer() {
 
 /** Get SMILES Drawer instance for small preview */
 function getSmallSmilesDrawer() {
-    return new SmilesDrawer.Drawer({width: CANVAS_SMALL_SQUARE, height: CANVAS_SMALL_SQUARE });
+    return new SmilesDrawer.Drawer({width: CANVAS_SMALL_SQUARE, height: CANVAS_SMALL_SQUARE, compactDrawing: false});
 }
 
 /** Get SMILES Drawer instance for large preview */
 function getLargeSmilesDrawer() {
-    return new SmilesDrawer.Drawer({width: getWindowWidth() * PROCENT_SIXTY, height: getWindowHeight() + PIXEL_TWO });
+    return new SmilesDrawer.Drawer({
+        width: getWindowWidth() * PROCENT_SIXTY,
+        height: getWindowHeight() + PIXEL_TWO,
+        compactDrawing: false
+    });
 }
 
 /**
