@@ -164,7 +164,7 @@ class SmilesParser implements IParser {
     }
 
     /**
-     * '{' parsed ok
+     * '(' parsed ok
      * If last bond was more than '-' -> then reject, because of wrong input
      * Try to parse right bond
      *  true -> call bondAfterBracketOk
@@ -277,7 +277,31 @@ class SmilesParser implements IParser {
      */
     private function bondAfterRightBracketOk(ParseResult $result, ParseResult $lastResult) {
         $this->lastBond = $result->getResult();
-        $this->parseAndCallBack($result, $this->orgParser, self::ORG_AFTER_BRACKET_OK, self::KO);
+        $this->parseAndCallBack($result, $this->orgParser, self::ORG_AFTER_BRACKET_OK, 'leftBracketAfterRight');
+    }
+
+    private function leftBracketAfterRight(ParseResult $result, ParseResult $lastResult) {
+        if (BondTypeEnum::isMultipleBinding($this->lastBond)) {
+            $this->ko($result, $lastResult);
+        }
+        $this->parseAndCallBack($lastResult, $this->leftBracketParser, 'leftWhenDifferentBrackets', self::KO);
+    }
+
+    private function leftWhenDifferentBrackets(ParseResult $result, ParseResult $lastResult) {
+        $this->intLeftBraces++;
+        $this->parseAndCallBack($result, $this->bondParser, 'bondWhenDifferentBracketsAfter', self::KO);
+    }
+
+    private function bondWhenDifferentBracketsAfter(ParseResult $result, ParseResult $lastResult) {
+        $this->parseAndCallBack($result, $this->orgParser, 'orgWhenDifferentBrackets', self::KO);
+    }
+
+    private function orgWhenDifferentBrackets(ParseResult $result, ParseResult $lastResult) {
+        $intTargetNodeIndex = end($this->arNodesBeforeBracket);
+        $this->graph->addNode($result->getResult());
+        $this->graph->addBidirectionalBond($intTargetNodeIndex, $this->intNodeIndex, $this->lastBond);
+        $this->intNodeIndex++;
+        $this->parseAndCallBack($result, $this->smilesNumberParser, self::TRY_NUMBER, self::TRY_BOND);
     }
 
     /**

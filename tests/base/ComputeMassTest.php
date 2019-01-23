@@ -19,6 +19,11 @@ final class ComputeMassTest extends TestCase {
         $this->assertEquals(179.9324802568, $result);
     }
 
+    public function testComputeMassWithRightData4() {
+        $result = FormulaHelper::computeMass('C10H19NO3');
+        $this->assertEquals(201.1364934814, $result);
+    }
+
     public function testComputeMassWithNull() {
         $this->expectException(IllegalArgumentException::class);
         FormulaHelper::computeMass(null);
@@ -30,13 +35,13 @@ final class ComputeMassTest extends TestCase {
     }
 
     public function testComputeMassWithWrongData() {
-        $this->expectException(IllegalArgumentException::class);
-        FormulaHelper::computeMass('C');
+        $result = FormulaHelper::computeMass('C');
+        $this->assertEquals(12, $result);
     }
 
     public function testComputeMassWithWrongData2() {
-        $this->expectException(IllegalArgumentException::class);
-        FormulaHelper::computeMass('CO');
+        $result = FormulaHelper::computeMass('CO');
+        $this->assertEquals(27.9949146221, $result);
     }
 
     public function testComputeMassWithWrongData3() {
@@ -55,8 +60,8 @@ final class ComputeMassTest extends TestCase {
     }
 
     public function testComputeMassWithWrongData6() {
-        $this->expectException(IllegalArgumentException::class);
-        FormulaHelper::computeMass('C21H');
+        $result = FormulaHelper::computeMass('C21H');
+        $this->assertEquals(253.0078250321, $result);
     }
 
 }
