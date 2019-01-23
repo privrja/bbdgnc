@@ -66,6 +66,10 @@ final class FormulaFromSmilesTest extends TestCase {
         $this->assertEquals('C6H11N', FormulaHelper::formulaFromSmiles('CC(C)C(N)C(=O)C', LossesEnum::H2O));
     }
 
+    public function testWithRightData14() {
+        $this->assertEquals('C4H7NO', FormulaHelper::formulaFromSmiles('C(C(CC)N)(=O)O', LossesEnum::H2O));
+    }
+
     public function testWithWrong() {
         $this->expectException(IllegalArgumentException::class);
         FormulaHelper::formulaFromSmiles('====');
