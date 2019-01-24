@@ -75,6 +75,17 @@ footer {
     padding-top: 2vh;
 }
 
+.div-editor-left {
+    width: 60%;
+    display: inline-block;
+}
+
+#div-editor-form {
+    vertical-align: top;
+    width: 30%;
+    display: inline-block;
+}
+
 .canvas-small {
     cursor: pointer;
 }
@@ -256,13 +267,6 @@ input[type=number] {
     display: table;
     margin: 0 auto;
     padding: 1vh;
-}
-
-.table-left {
-    display: table;
-    margin: 0 auto;
-    padding: 2vh 6vh 2vh 6vh;
-    float: left;
 }
 
 .thead {

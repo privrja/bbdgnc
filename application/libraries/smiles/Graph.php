@@ -62,25 +62,31 @@ class Graph {
         }
     }
 
+    /**
+     * Get formula from graph
+     * @param int $losses losses to formula, this value will by subtracted from formula
+     * @see LossesEnum
+     * @return string formula
+     */
     public function getFormula(int $losses) {
-        $arMap = [];
+        $arMapNodesAndCount = [];
         foreach ($this->arNodes as $node) {
-            if (isset($arMap[PeriodicTableSingleton::H])) {
-                $arMap[PeriodicTableSingleton::H] += $node->hydrogensCount();
+            if (isset($arMapNodesAndCount[PeriodicTableSingleton::H])) {
+                $arMapNodesAndCount[PeriodicTableSingleton::H] += $node->hydrogensCount();
             } else {
-                $arMap[PeriodicTableSingleton::H] = $node->hydrogensCount();
+                $arMapNodesAndCount[PeriodicTableSingleton::H] = $node->hydrogensCount();
             }
 
-            if (isset($arMap[$node->getAtom()->getName()])) {
-                $arMap[$node->getAtom()->getName()]++;
+            if (isset($arMapNodesAndCount[$node->getAtom()->getName()])) {
+                $arMapNodesAndCount[$node->getAtom()->getName()]++;
             } else {
-                $arMap[$node->getAtom()->getName()] = 1;
+                $arMapNodesAndCount[$node->getAtom()->getName()] = 1;
             }
         }
-        $arMap = LossesEnum::subtractLosses($losses, $arMap);
-        ksort($arMap);
+        $arMapNodesAndCount = LossesEnum::subtractLosses($losses, $arMapNodesAndCount);
+        ksort($arMapNodesAndCount);
         $strFormula = "";
-        foreach ($arMap as $key => $value) {
+        foreach ($arMapNodesAndCount as $key => $value) {
             if ($value === 1) {
                 $strFormula .= $key;
             } else {
@@ -90,6 +96,10 @@ class Graph {
         return $strFormula;
     }
 
+    /**
+     * Return SMILES, now only the argument passed in constructor
+     * @return string
+     */
     public function getSmiles() {
 
     }
