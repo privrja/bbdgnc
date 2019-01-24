@@ -38,14 +38,14 @@ final class AtomParserTest extends TestCase {
         $this->assertEquals(new Accept('Uus', '+'), $parser->parse('Uus+'));
     }
 
+    public function testWithRightData5() {
+        $parser = new AtomParser();
+        $this->assertEquals(new Accept('Qq', ''), $parser->parse('Qq'));
+    }
+
     public function testWithWrongData() {
         $parser = new AtomParser();
         $this->assertEquals(AtomParser::reject(), $parser->parse('['));
-    }
-
-    public function testWithWrongData2() {
-        $parser = new AtomParser();
-        $this->assertEquals(AtomParser::reject(), $parser->parse('Qq'));
     }
 
 }
