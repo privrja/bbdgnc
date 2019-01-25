@@ -22,11 +22,9 @@ class BracketElement extends Element {
      */
     public function __construct(string $name, int $protons, int $bindings, float $mass, Charge $charge, int $hydrogens) {
         parent::__construct($name, $protons, $bindings, $mass);
-
         $this->charge = $charge;
         $this->hydrogens = $hydrogens;
     }
-
 
     /**
      * @return Charge
@@ -57,7 +55,7 @@ class BracketElement extends Element {
     }
 
     public function getHydrogensCount($actualBindings) {
-        return $this->hydrogens;
+        return $this->getHydrogens();
     }
 
 }

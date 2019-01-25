@@ -23,10 +23,8 @@ class ChargeParser implements IParser {
         }
 
         $signNextResult = $signParser->parse($signResult->getRemainder());
-        if ($signNextResult->isAccepted()) {
-            if ($signNextResult->getResult() === $signResult->getResult()) {
-                return new Accept(new Charge($signResult->getResult(), 2), $signNextResult->getRemainder());
-            }
+        if ($signNextResult->isAccepted() && $signNextResult->getResult() === $signResult->getResult()) {
+            return new Accept(new Charge($signResult->getResult(), 2), $signNextResult->getRemainder());
         }
 
         $natParser = new NatParser();

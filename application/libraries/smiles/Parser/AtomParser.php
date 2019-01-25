@@ -10,18 +10,15 @@ class AtomParser implements IParser {
      * @return Accept|Reject
      */
     public function parse($strText) {
-        if (empty($strText) || "" === $strText) {
-            return self::reject();
-        }
         $intIndex = 0;
-        if (!ctype_alpha($strText[$intIndex])) {
+        if (empty($strText) || "" === $strText || !ctype_alpha($strText[$intIndex])) {
             return self::reject();
         }
         $strName = "";
         $intLength = strlen($strText);
         while (ctype_alpha($strText[$intIndex])) {
             if ($intIndex > 0 && ctype_upper($strText[$intIndex])) {
-                return new Accept($strName, substr($strText, $intIndex));
+                break;
             }
             $strName .= $strText[$intIndex];
             $intIndex++;

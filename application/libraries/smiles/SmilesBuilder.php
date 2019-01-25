@@ -20,7 +20,7 @@ class SmilesBuilder {
         $arTexts = $this->prepareTexts($strText);
         foreach ($arTexts as $strSmiles) {
             try {
-                $this->arSmiles[] = new Smiles($strSmiles); // TODO is it OK when parse error?
+                $this->arSmiles[] = new Smiles($strSmiles);
             } catch (IllegalArgumentException $exception) {
                 $this->arBadInput[] = $strSmiles;
             }
@@ -58,18 +58,18 @@ class SmilesBuilder {
      * @return {Array}
      */
     public static function removeUnnecessaryParentheses($strSmiles) {
-        $stackRight = str_split($strSmiles, 1);;
+        $stackRight = str_split($strSmiles, 1);
         $stackRightLength = sizeof($stackRight);
         if ($stackRightLength === 0) {
             return [];
-        };
+        }
         $stackLeft = [];
         $stackLeftLength = 0;
         $lastLiteral = $literal = "";
         while ($stackRightLength > 0) {
             $literal = array_shift($stackRight);
             $stackRightLength--;
-            if ((")" === $literal && ")" === $lastLiteral)) {
+            if (")" === $literal && ")" === $lastLiteral) {
                 SmilesBuilder::removeParentheses($stackLeft, $stackLeftLength, false, $literal);
             } else {
                 $stackLeft[] = $literal;
@@ -80,7 +80,7 @@ class SmilesBuilder {
 
         $literal = array_pop($stackLeft);
         $stackLeftLength--;
-        if ((")" === $literal && $stackRightLength === 0)) {
+        if (")" === $literal && $stackRightLength === 0) {
             SmilesBuilder::removeParentheses($stackLeft, $stackLeftLength);
         } else {
             $stackLeft[] = $literal;

@@ -2,7 +2,7 @@
 
 namespace Bbdgnc\Smiles\Parser;
 
-use Bbdgnc\Smiles\Element;
+use Bbdgnc\Smiles\BracketElement;
 
 class BracketAtomParser implements IParser {
 
@@ -12,7 +12,7 @@ class BracketAtomParser implements IParser {
      * @return Accept|Reject
      */
     public function parse($strText) {
-        /** @var Element $element */
+        /** @var BracketElement $element */
         $element = null;
         $leftBracketParser = new LeftSquareBracketParser();
         $leftResult = $leftBracketParser->parse($strText);
