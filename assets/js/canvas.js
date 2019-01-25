@@ -5,6 +5,23 @@ const HIDDEN_SMILE_ID = "hidden-canvas-small-";
 const CANVAS_SMALL_ID = "canvas-small-";
 const CANVAS_LARGE_ID = "canvas-large";
 const FORM_MAIN = "form-main";
+const SEQUENCE_TYPE = "sel-sequence-type";
+const TXT_N_MODIFICATION = "txt-n-modification";
+const TXT_N_FORMULA = "txt-n-formula";
+const TXT_N_MASS = "txt-n-mass";
+const CHK_N_NTERMINAL = "chk-n-nterminal";
+const CHK_N_CTERMINAL = "chk-n-cterminal";
+const TXT_C_MODIFICATION = "txt-c-modification";
+const TXT_C_FORMULA = "txt-c-formula";
+const TXT_C_MASS = "txt-c-mass";
+const CHK_C_NTERMINAL = "chk-c-nterminal";
+const CHK_C_CTERMINAL = "chk-c-cterminal";
+const TXT_BRANCH_MODIFICATION = "txt-b-modification";
+const TXT_BRANCH_FORMULA = "txt-b-formula";
+const TXT_BRANCH_MASS = "txt-b-mass";
+const CHK_BRANCH_NTERMINAL = "chk-b-nterminal";
+const CHK_BRANCH_CTERMINAL = "chk-b-cterminal";
+
 const CAPTION_RESULTS = "#h-results";
 
 const WINDOW_MIN_WIDTH = 850;
@@ -150,6 +167,87 @@ function getCanvasWidth() {
  */
 function getCanvasHeight() {
     return document.getElementById(CANVAS_ID).offsetHeight;
+}
+
+function sequenceTypeChanged() {
+    switch (document.getElementById(SEQUENCE_TYPE).value) {
+        case "0":
+        case "4":
+            enableModificationN();
+            enableModificationC();
+            disableModificationBranch();
+            break;
+        case "1":
+        case "5":
+            disableModificationN();
+            disableModificationC();
+            disableModificationBranch();
+            break;
+        case "3":
+            disableModificationN();
+            disableModificationC();
+            enableModificationBranch();
+            break;
+        case "2":
+        case "6":
+        default:
+            enableModificationN();
+            enableModificationC();
+            enableModificationBranch();
+            break;
+    }
+}
+
+function disableModificationN() {
+    enableOrDisableModificationN(true);
+}
+
+function enableModificationN() {
+    enableOrDisableModificationN(false);
+}
+
+function disableModificationC() {
+    enableOrDisableModificationC(true);
+}
+
+function enableModificationC() {
+    enableOrDisableModificationC(false);
+}
+
+function disableModificationBranch() {
+    enableOrDisableModificationBranch(true);
+}
+
+function enableModificationBranch() {
+    enableOrDisableModificationBranch(false);
+}
+
+function enableOrDisableModificationN(disable) {
+    disableOrEnableElement(TXT_N_MODIFICATION, disable);
+    disableOrEnableElement(TXT_N_FORMULA, disable);
+    disableOrEnableElement(TXT_N_MASS, disable);
+    disableOrEnableElement(CHK_N_NTERMINAL, disable);
+    disableOrEnableElement(CHK_N_CTERMINAL, disable);
+}
+
+function enableOrDisableModificationC(disable) {
+    disableOrEnableElement(TXT_C_MODIFICATION, disable);
+    disableOrEnableElement(TXT_C_FORMULA, disable);
+    disableOrEnableElement(TXT_C_MASS, disable);
+    disableOrEnableElement(CHK_C_NTERMINAL, disable);
+    disableOrEnableElement(CHK_C_CTERMINAL, disable);
+}
+
+function enableOrDisableModificationBranch(disable) {
+    disableOrEnableElement(TXT_BRANCH_MODIFICATION, disable);
+    disableOrEnableElement(TXT_BRANCH_FORMULA, disable);
+    disableOrEnableElement(TXT_BRANCH_MASS, disable);
+    disableOrEnableElement(CHK_BRANCH_NTERMINAL, disable);
+    disableOrEnableElement(CHK_BRANCH_CTERMINAL, disable);
+}
+
+function disableOrEnableElement(elementId, disable) {
+    document.getElementById(elementId).disabled = disable;
 }
 
 /**

@@ -15,7 +15,7 @@ use Bbdgnc\Enum\SequenceTypeEnum;
 
             <label for="sel-sequence-type">Type</label>
             <?= form_dropdown(Front::CANVAS_INPUT_DATABASE, SequenceTypeEnum::$values, set_value(Front::SEQUENCE_TYPE),
-                'id="sel-sequence-type" class="select" title="Type"'); ?>
+                'id="sel-sequence-type" class="select" title="Type" onchange="sequenceTypeChanged()"'); ?>
 
             <label for="txt-sequence">Sequence</label>
             <input type="text" id="txt-sequence" name="sequence" value=""/>

@@ -7,6 +7,7 @@ use Bbdgnc\Enum\Front;
 <script src="<?= AssetHelper::jsJsme() ?>"></script>
 
 <script>
+
     /**
      * This function will be called after the JavaScriptApplet code has been loaded.
      */
@@ -15,11 +16,19 @@ use Bbdgnc\Enum\Front;
         jsmeApplet.readGenericMolecularInput('<?= $block->smiles ?>');
     }
 
+    /**
+     * This function is called after Acept button is clicked
+     * Get SMILES from editor and submit form
+     */
     function getSmiles() {
         let smile = jsmeApplet.nonisomericSmiles();
         redirectWithData({blockIdentifier: <?= $block->id ?>, blockSmile: smile, blocks: 'Blocks'});
     }
 
+    /**
+     * This function add data to form as hidden and submit form
+     * @param data
+     */
     function redirectWithData(data) {
         let form = document.getElementById('form-block');
         for (let name in data) {
@@ -33,7 +42,7 @@ use Bbdgnc\Enum\Front;
     }
 </script>
 
-<?= form_open('land/form', array('class' => 'tr', 'id' => 'form-block')); ?>
+<?= form_open('land/form', array('id' => 'form-block')); ?>
 
 <div id="div-editor">
     <h2>JSME editor</h2>

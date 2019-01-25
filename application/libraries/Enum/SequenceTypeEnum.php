@@ -16,7 +16,7 @@ class SequenceTypeEnum {
 
     const CYCLIC_POLYKETIDE = 5;
 
-    const OTHER = "other";
+    const OTHER = 6;
 
     /** @var array mapping int code to string */
     public static $values = array(
