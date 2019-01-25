@@ -58,7 +58,8 @@ class Element {
     }
 
     public function getHydrogensCount($actualBindings) {
-        return $this->bindings - $actualBindings;
+        $hydrogensCount = $this->bindings - $actualBindings;
+        return $hydrogensCount < 0 ? 0 : $hydrogensCount;
     }
 
     public function asBracketElement() {

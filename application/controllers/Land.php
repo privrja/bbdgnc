@@ -21,22 +21,22 @@ class Land extends CI_Controller {
 
     const ERRORS = "errors";
 
-    private $errors = "";
-
     const HELPER_FORM = "form";
 
     const HELPER_URL = "url";
 
     const HELPER_COOKIE = "cookie";
 
-    /**
-     * Get Default data for view
-     * @return array
-     */
     const HELPER_SESSION = "session";
 
     const COOKIE_BLOCKS = "cookie_blocks";
 
+    private $errors = "";
+
+    /**
+     * Get Default data for view
+     * @return array
+     */
     private function getData() {
         return array(
             Front::CANVAS_INPUT_NAME => "", Front::CANVAS_INPUT_SMILE => "",

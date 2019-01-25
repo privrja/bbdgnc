@@ -29,8 +29,7 @@ class Node {
         foreach ($this->arBonds as $bond) {
             $actualBindings += $bond->getBondType();
         }
-        $hydrogensCount = $this->atom->getBindings() - $actualBindings;
-        return $hydrogensCount < 0 ? 0 : $hydrogensCount;
+        return $this->atom->getHydrogensCount($actualBindings);
     }
 
     public function addBond(Bond $bond) {
