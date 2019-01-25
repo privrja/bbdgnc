@@ -2,6 +2,8 @@
 
 namespace Bbdgnc\Smiles\Parser;
 
+use Bbdgnc\Enum\PeriodicTableSingleton;
+
 class OrganicSubsetParser implements IParser {
 
     const LITERALS = ["Br", "Cl", "B", "C", "N", "O", "P", "S", "F", "I", "b", "c", "n", "o", "p", "s", "f", "i"];
@@ -16,7 +18,7 @@ class OrganicSubsetParser implements IParser {
         foreach (self::LITERALS as $LITERAL) {
             $parseResult = $stringParser->parseTextWithTemplate($strText, $LITERAL);
             if ($parseResult->isAccepted()) {
-                return new Accept($LITERAL, $parseResult->getRemainder());
+                return new Accept(PeriodicTableSingleton::getInstance()->getAtoms()[$LITERAL], $parseResult->getRemainder());
             }
         }
         return self::reject();

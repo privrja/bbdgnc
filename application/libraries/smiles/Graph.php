@@ -25,8 +25,8 @@ class Graph {
      * Add node to graph, in graph stored as @see \Bbdgnc\Smiles\Node
      * @param string $elementName
      */
-    public function addNode(string $elementName) {
-        $this->arNodes[] = new Node(PeriodicTableSingleton::getInstance()->getAtoms()[$elementName]);
+    public function addNode(Element $element) {
+        $this->arNodes[] = new Node($element);
     }
 
     /**

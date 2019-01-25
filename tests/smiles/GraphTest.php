@@ -5,6 +5,7 @@ namespace Bbdgnc\Test\Smiles;
 use Bbdgnc\Enum\PeriodicTableSingleton;
 use Bbdgnc\Exception\IllegalArgumentException;
 use Bbdgnc\Smiles\Bond;
+use Bbdgnc\Smiles\Charge;
 use Bbdgnc\Smiles\Graph;
 use PHPUnit\Framework\TestCase;
 
@@ -296,5 +297,157 @@ final class GraphTest extends TestCase {
         $expectedGraph->addBond(5, new Bond(0, '='));
         $expectedGraph->addBond(6, new Bond(0, ''));
         $this->assertEquals($graph, $expectedGraph);
+    }
+
+    public function testGraph12() {
+        $graph = new Graph('CC[NH4]C');
+        $expectedGraph = new Graph('');
+        for ($i = 0; $i < 3; $i++) {
+            $expectedGraph->addNode(PeriodicTableSingleton::getInstance()->getAtoms()['C']);
+        }
+        $atom = PeriodicTableSingleton::getInstance()->getAtoms()['N']->asBracketElement();
+        $atom->setHydrogens(4);
+        $expectedGraph->addNode($atom);
+        $expectedGraph->addNode(PeriodicTableSingleton::getInstance()->getAtoms()['C']);
+        $expectedGraph->addBond(0, new Bond(1, ''));
+        $expectedGraph->addBond(1, new Bond(0, ''));
+        $expectedGraph->addBond(1, new Bond(2, ''));
+        $expectedGraph->addBond(1, new Bond(3, ''));
+        $expectedGraph->addBond(2, new Bond(1, ''));
+        $expectedGraph->addBond(3, new Bond(2, ''));
+        $this->assertEquals($graph, $expectedGraph);
+    }
+
+    public function testGraph13() {
+        $graph = new Graph('CC#[NH4]C');
+        $expectedGraph = new Graph('');
+        for ($i = 0; $i < 3; $i++) {
+            $expectedGraph->addNode(PeriodicTableSingleton::getInstance()->getAtoms()['C']);
+        }
+        $atom = PeriodicTableSingleton::getInstance()->getAtoms()['N']->asBracketElement();
+        $atom->setHydrogens(4);
+        $expectedGraph->addNode($atom);
+        $expectedGraph->addNode(PeriodicTableSingleton::getInstance()->getAtoms()['C']);
+        $expectedGraph->addBond(0, new Bond(1, ''));
+        $expectedGraph->addBond(1, new Bond(0, ''));
+        $expectedGraph->addBond(1, new Bond(2, '#'));
+        $expectedGraph->addBond(1, new Bond(3, ''));
+        $expectedGraph->addBond(2, new Bond(1, '#'));
+        $expectedGraph->addBond(3, new Bond(2, ''));
+        $this->assertEquals($graph, $expectedGraph);
+    }
+
+    public function testGraph14() {
+        $graph = new Graph('C1CCC[NH]1');
+        $expectedGraph = new Graph('');
+        for ($i = 0; $i < 4; $i++) {
+            $expectedGraph->addNode(PeriodicTableSingleton::getInstance()->getAtoms()['C']);
+        }
+        $atom = PeriodicTableSingleton::getInstance()->getAtoms()['N']->asBracketElement();
+        $atom->setHydrogens(1);
+        $expectedGraph->addNode($atom);
+        $expectedGraph->addBond(0, new Bond(1, ''));
+        $expectedGraph->addBond(0, new Bond(4, ''));
+        $expectedGraph->addBond(1, new Bond(0, ''));
+        $expectedGraph->addBond(2, new Bond(1, ''));
+        $expectedGraph->addBond(2, new Bond(3, ''));
+        $expectedGraph->addBond(3, new Bond(2, ''));
+        $expectedGraph->addBond(3, new Bond(4, ''));
+        $expectedGraph->addBond(4, new Bond(3, ''));
+        $expectedGraph->addBond(4, new Bond(0, ''));
+        $this->assertEquals($graph, $expectedGraph);
+    }
+
+    public function testGraph15() {
+        $graph = new Graph('C1CCC[N]1');
+        $expectedGraph = new Graph('');
+        for ($i = 0; $i < 4; $i++) {
+            $expectedGraph->addNode(PeriodicTableSingleton::getInstance()->getAtoms()['C']);
+        }
+        $atom = PeriodicTableSingleton::getInstance()->getAtoms()['N']->asBracketElement();
+        $expectedGraph->addNode($atom);
+        $expectedGraph->addBond(0, new Bond(1, ''));
+        $expectedGraph->addBond(0, new Bond(4, ''));
+        $expectedGraph->addBond(1, new Bond(0, ''));
+        $expectedGraph->addBond(2, new Bond(1, ''));
+        $expectedGraph->addBond(2, new Bond(3, ''));
+        $expectedGraph->addBond(3, new Bond(2, ''));
+        $expectedGraph->addBond(3, new Bond(4, ''));
+        $expectedGraph->addBond(4, new Bond(3, ''));
+        $expectedGraph->addBond(4, new Bond(0, ''));
+        $this->assertEquals($graph, $expectedGraph);
+    }
+
+    public function testGraph16() {
+        $graph = new Graph('CCC[O+]');
+        $expectedGraph = new Graph('');
+        for ($i = 0; $i < 3; $i++) {
+            $expectedGraph->addNode(PeriodicTableSingleton::getInstance()->getAtoms()['C']);
+        }
+        $atom = PeriodicTableSingleton::getInstance()->getAtoms()['O']->asBracketElement();
+        $atom->setCharge(new Charge('+', 1));
+        $expectedGraph->addNode($atom);
+        $expectedGraph->addBond(0, new Bond(1, ''));
+        $expectedGraph->addBond(1, new Bond(0, ''));
+        $expectedGraph->addBond(2, new Bond(1, ''));
+        $expectedGraph->addBond(2, new Bond(3, ''));
+        $expectedGraph->addBond(3, new Bond(2, ''));
+        $this->assertEquals($graph, $expectedGraph);
+    }
+
+    public function testGraph17() {
+        $graph = new Graph('[CH4]CC=[nH-3]');
+        $atom = PeriodicTableSingleton::getInstance()->getAtoms()['C']->asBracketElement();
+        $atom->setHydrogens(4);
+        $expectedGraph = new Graph('');
+        $expectedGraph->addNode($atom);
+        for ($i = 0; $i < 3; $i++) {
+            $expectedGraph->addNode(PeriodicTableSingleton::getInstance()->getAtoms()['C']);
+        }
+        $atom = PeriodicTableSingleton::getInstance()->getAtoms()['n']->asBracketElement();
+        $atom->setCharge(new Charge('-', 3));
+        $atom->setHydrogens(1);
+        $expectedGraph->addNode($atom);
+        $expectedGraph->addBond(0, new Bond(1, ''));
+        $expectedGraph->addBond(1, new Bond(0, ''));
+        $expectedGraph->addBond(2, new Bond(1, ''));
+        $expectedGraph->addBond(2, new Bond(3, ''));
+        $expectedGraph->addBond(3, new Bond(2, ''));
+        $this->assertEquals($graph, $expectedGraph);
+    }
+
+    public function testGraphWrong10() {
+        $this->expectException(IllegalArgumentException::class);
+        new Graph('[CH4]CC=');
+    }
+
+    public function testGraphWrong11() {
+        $this->expectException(IllegalArgumentException::class);
+        new Graph('[CH4CC');
+    }
+
+    public function testGraphWrong12() {
+        $this->expectException(IllegalArgumentException::class);
+        new Graph('C1CC[C1]');
+    }
+
+    public function testGraphWrong13() {
+        $this->expectException(IllegalArgumentException::class);
+        new Graph('C1CC[CH0]1');
+    }
+
+    public function testGraphWrong14() {
+        $this->expectException(IllegalArgumentException::class);
+        new Graph('CCC[C---]');
+    }
+
+    public function testGraphWrong15() {
+        $this->expectException(IllegalArgumentException::class);
+        new Graph('CCC[H]');
+    }
+
+    public function testGraphWrong16() {
+        $this->expectException(IllegalArgumentException::class);
+        new Graph('CCC[]');
     }
 }
