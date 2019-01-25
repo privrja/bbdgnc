@@ -1,5 +1,6 @@
 <?php
 
+use Bbdgnc\Enum\ComputeEnum;
 use Bbdgnc\Enum\Front;
 use Bbdgnc\Enum\LoggerEnum;
 use Bbdgnc\Finder\Enum\FindByEnum;
@@ -97,11 +98,13 @@ class Land extends CI_Controller {
 
         // TODO value check
 
+        $block = new BlockTO($blockIdentifier, $blockName, $blockAcronym, $blockSmile, ComputeEnum::NO);
+        $block->formula = $this->input->post(Front::BLOCK_FORMULA);
+        $block->mass = $this->input->post(Front::BLOCK_MASS);
+        $block->losses = $this->input->post(Front::BLOCK_NEUTRAL_LOSSES);
+        $block->reference = $this->input->post(Front::BLOCK_REFERENCE);
         $data = $this->getLastData();
-        $data[Front::BLOCK_IDENTIFIER] = $blockIdentifier;
-        $data[Front::BLOCK_SMILE] = $blockSmile;
-        $data[Front::BLOCK_ACRONYM] = $blockAcronym;
-        $data[Front::BLOCK_NAME] = $blockName;
+        $data[Front::BLOCK] = $block;
         $data[Front::BLOCK_COUNT] = $blockCount;
         $this->load->view('templates/header');
         $this->load->view('editor/index', $data);
@@ -115,7 +118,12 @@ class Land extends CI_Controller {
         if (!isset($first) && $cookieVal !== null) {
             $blocks = json_decode($cookieVal);
             $blockIdentifier = $this->input->post(Front::BLOCK_IDENTIFIER);
-            $blocks[$blockIdentifier] = new BlockTO($blockIdentifier, $this->input->post(Front::BLOCK_NAME), $this->input->post(Front::BLOCK_ACRONYM), $this->input->post(Front::BLOCK_SMILE));
+            $blockTO = new BlockTO($blockIdentifier, $this->input->post(Front::BLOCK_NAME), $this->input->post(Front::BLOCK_ACRONYM), $this->input->post(Front::BLOCK_SMILE), ComputeEnum::NO);
+            $blockTO->formula = $this->input->post(Front::BLOCK_FORMULA);
+            $blockTO->mass = $this->input->post(Front::BLOCK_MASS);
+            $blockTO->losses = $this->input->post(Front::BLOCK_NEUTRAL_LOSSES);
+            $blockTO->reference = $this->input->post(Front::BLOCK_REFERENCE);
+            $blocks[$blockIdentifier] = $blockTO;
             $data[Front::BLOCK_COUNT] = $this->input->post(Front::BLOCK_COUNT);
         } else {
             $blocks = [];

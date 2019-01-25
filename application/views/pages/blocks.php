@@ -138,6 +138,12 @@ use Bbdgnc\Enum\SequenceTypeEnum;
                        value="<?= $block->smiles ?>"/>
 
                 <input type="hidden" name="<?= Front::BLOCK_IDENTIFIER ?>" value="<?= $block->id ?>"/>
+                <input type="hidden" name="<?= Front::BLOCK_NAME ?>" value="<?= $block->name ?>"/>
+                <input type="hidden" name="<?= Front::BLOCK_ACRONYM ?>" value="<?= $block->acronym ?>"/>
+                <input type="hidden" name="<?= Front::BLOCK_FORMULA ?>" value="<?= $block->formula ?>"/>
+                <input type="hidden" name="<?= Front::BLOCK_MASS ?>" value="<?= $block->mass ?>"/>
+                <input type="hidden" name="<?= Front::BLOCK_NEUTRAL_LOSSES ?>" value="<?= $block->losses ?>"/>
+                <input type="hidden" name="<?= Front::BLOCK_REFERENCE ?>" value="<?= $block->reference ?>"/>
                 <input type="hidden" name="<?= Front::BLOCK_COUNT ?>" value="<?= $blockCount ?>"/>
 
                 <div class="td">

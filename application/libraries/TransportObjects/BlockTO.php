@@ -3,6 +3,7 @@
 namespace Bbdgnc\TransportObjects;
 
 use Bbdgnc\Base\FormulaHelper;
+use Bbdgnc\Enum\ComputeEnum;
 use Bbdgnc\Enum\LoggerEnum;
 use Bbdgnc\Exception\IllegalArgumentException;
 use Bbdgnc\Smiles\Enum\LossesEnum;
@@ -31,17 +32,21 @@ class BlockTO {
      * @param string $name
      * @param string $acronym
      * @param string $smiles
+     * @param int $compute
+     * @see ComputeEnum
      */
-    public function __construct(int $id, string $name, string $acronym, string $smiles) {
+    public function __construct(int $id, $name, $acronym, $smiles, int $compute = ComputeEnum::YES) {
         $this->id = $id;
         $this->name = $name;
         $this->acronym = $acronym;
         $this->smiles = $smiles;
-        $this->formula = FormulaHelper::formulaFromSmiles($smiles, LossesEnum::H2O);
-        try {
-            $this->mass = FormulaHelper::computeMass($this->formula);
-        } catch (IllegalArgumentException $exception) {
-            log_message(LoggerEnum::ERROR, $exception->getMessage());
+        if ($compute === ComputeEnum::YES) {
+            $this->formula = FormulaHelper::formulaFromSmiles($smiles, LossesEnum::H2O);
+            try {
+                $this->mass = FormulaHelper::computeMass($this->formula);
+            } catch (IllegalArgumentException $exception) {
+                log_message(LoggerEnum::ERROR, $exception->getMessage());
+            }
         }
     }
 
