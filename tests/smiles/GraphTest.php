@@ -302,7 +302,7 @@ final class GraphTest extends TestCase {
     public function testGraph12() {
         $graph = new Graph('CC[NH4]C');
         $expectedGraph = new Graph('');
-        for ($i = 0; $i < 3; $i++) {
+        for ($i = 0; $i < 2; $i++) {
             $expectedGraph->addNode(PeriodicTableSingleton::getInstance()->getAtoms()['C']);
         }
         $atom = PeriodicTableSingleton::getInstance()->getAtoms()['N']->asBracketElement();
@@ -312,16 +312,16 @@ final class GraphTest extends TestCase {
         $expectedGraph->addBond(0, new Bond(1, ''));
         $expectedGraph->addBond(1, new Bond(0, ''));
         $expectedGraph->addBond(1, new Bond(2, ''));
-        $expectedGraph->addBond(1, new Bond(3, ''));
         $expectedGraph->addBond(2, new Bond(1, ''));
+        $expectedGraph->addBond(2, new Bond(3, ''));
         $expectedGraph->addBond(3, new Bond(2, ''));
-        $this->assertEquals($graph, $expectedGraph);
+        $this->assertEquals($expectedGraph, $graph);
     }
 
     public function testGraph13() {
         $graph = new Graph('CC#[NH4]C');
         $expectedGraph = new Graph('');
-        for ($i = 0; $i < 3; $i++) {
+        for ($i = 0; $i < 2; $i++) {
             $expectedGraph->addNode(PeriodicTableSingleton::getInstance()->getAtoms()['C']);
         }
         $atom = PeriodicTableSingleton::getInstance()->getAtoms()['N']->asBracketElement();
@@ -331,10 +331,10 @@ final class GraphTest extends TestCase {
         $expectedGraph->addBond(0, new Bond(1, ''));
         $expectedGraph->addBond(1, new Bond(0, ''));
         $expectedGraph->addBond(1, new Bond(2, '#'));
-        $expectedGraph->addBond(1, new Bond(3, ''));
         $expectedGraph->addBond(2, new Bond(1, '#'));
+        $expectedGraph->addBond(2, new Bond(3, ''));
         $expectedGraph->addBond(3, new Bond(2, ''));
-        $this->assertEquals($graph, $expectedGraph);
+        $this->assertEquals($expectedGraph, $graph);
     }
 
     public function testGraph14() {
@@ -349,6 +349,7 @@ final class GraphTest extends TestCase {
         $expectedGraph->addBond(0, new Bond(1, ''));
         $expectedGraph->addBond(0, new Bond(4, ''));
         $expectedGraph->addBond(1, new Bond(0, ''));
+        $expectedGraph->addBond(1, new Bond(2, ''));
         $expectedGraph->addBond(2, new Bond(1, ''));
         $expectedGraph->addBond(2, new Bond(3, ''));
         $expectedGraph->addBond(3, new Bond(2, ''));
@@ -369,6 +370,7 @@ final class GraphTest extends TestCase {
         $expectedGraph->addBond(0, new Bond(1, ''));
         $expectedGraph->addBond(0, new Bond(4, ''));
         $expectedGraph->addBond(1, new Bond(0, ''));
+        $expectedGraph->addBond(1, new Bond(2, ''));
         $expectedGraph->addBond(2, new Bond(1, ''));
         $expectedGraph->addBond(2, new Bond(3, ''));
         $expectedGraph->addBond(3, new Bond(2, ''));
@@ -389,6 +391,7 @@ final class GraphTest extends TestCase {
         $expectedGraph->addNode($atom);
         $expectedGraph->addBond(0, new Bond(1, ''));
         $expectedGraph->addBond(1, new Bond(0, ''));
+        $expectedGraph->addBond(1, new Bond(2, ''));
         $expectedGraph->addBond(2, new Bond(1, ''));
         $expectedGraph->addBond(2, new Bond(3, ''));
         $expectedGraph->addBond(3, new Bond(2, ''));
@@ -401,7 +404,7 @@ final class GraphTest extends TestCase {
         $atom->setHydrogens(4);
         $expectedGraph = new Graph('');
         $expectedGraph->addNode($atom);
-        for ($i = 0; $i < 3; $i++) {
+        for ($i = 0; $i < 2; $i++) {
             $expectedGraph->addNode(PeriodicTableSingleton::getInstance()->getAtoms()['C']);
         }
         $atom = PeriodicTableSingleton::getInstance()->getAtoms()['n']->asBracketElement();
@@ -410,9 +413,10 @@ final class GraphTest extends TestCase {
         $expectedGraph->addNode($atom);
         $expectedGraph->addBond(0, new Bond(1, ''));
         $expectedGraph->addBond(1, new Bond(0, ''));
+        $expectedGraph->addBond(1, new Bond(2, ''));
         $expectedGraph->addBond(2, new Bond(1, ''));
-        $expectedGraph->addBond(2, new Bond(3, ''));
-        $expectedGraph->addBond(3, new Bond(2, ''));
+        $expectedGraph->addBond(2, new Bond(3, '='));
+        $expectedGraph->addBond(3, new Bond(2, '='));
         $this->assertEquals($graph, $expectedGraph);
     }
 
