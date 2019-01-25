@@ -48,4 +48,14 @@ final class AtomParserTest extends TestCase {
         $this->assertEquals(AtomParser::reject(), $parser->parse('['));
     }
 
+    public function testWithWrongData2() {
+        $parser = new AtomParser();
+        $this->assertEquals(AtomParser::reject(), $parser->parse('2'));
+    }
+
+    public function testWithWrongData3() {
+        $parser = new AtomParser();
+        $this->assertEquals(AtomParser::reject(), $parser->parse('+'));
+    }
+
 }

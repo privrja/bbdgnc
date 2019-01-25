@@ -13,29 +13,23 @@ class AtomParser implements IParser {
         if (empty($strText) || !isset($strText)) {
             return self::reject();
         }
-        $strName = "";
         $intIndex = 0;
+        if (!ctype_alpha($strText[$intIndex])) {
+            return self::reject();
+        }
+        $strName = "";
         $intLength = strlen($strText);
-        while (!is_numeric($strText[$intIndex])) {
-            // TODO +
+        while (ctype_alpha($strText[$intIndex])) {
             if ($intIndex > 0 && ctype_upper($strText[$intIndex])) {
                 return new Accept($strName, substr($strText, $intIndex));
             }
             $strName .= $strText[$intIndex];
             $intIndex++;
             if ($intIndex >= $intLength) {
-                return self::reject();
+                return new Accept($strName, '');
             }
         }
         return new Accept($strName, substr($strText, $intIndex));
-//        $stringParser = new StringParser();
-//        foreach (PeriodicTableSingleton::getInstance()->getAtoms() as $atom => $value) {
-//            $result = $stringParser->parseTextWithTemplate($strText, $atom);
-//            if ($result->isAccepted()) {
-//                return $result;
-//            }
-//        }
-//        return self::reject();
     }
 
     /**

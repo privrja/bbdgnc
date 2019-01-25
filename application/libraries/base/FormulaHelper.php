@@ -6,6 +6,8 @@ use Bbdgnc\Enum\PeriodicTableSingleton;
 use Bbdgnc\Exception\IllegalArgumentException;
 use Bbdgnc\Smiles\Enum\LossesEnum;
 use Bbdgnc\Smiles\Graph;
+use Bbdgnc\Smiles\Parser\AtomParser;
+use Bbdgnc\Smiles\Parser\NatParser;
 
 class FormulaHelper {
 
@@ -18,11 +20,22 @@ class FormulaHelper {
         if (!isset($strFormula) || empty($strFormula)) {
             throw new IllegalArgumentException();
         }
-        $intLength = strlen($strFormula);
-        $mass = $intIndex = 0;
-        while ($intIndex < $intLength) {
-            $strName = self::readLiteral($strFormula, $intLength, $intIndex);
-            $strCount = self::readNumber($strFormula, $intLength, $intIndex);
+        $mass = 0;
+        while (!empty($strFormula)) {
+            $atomParser = new AtomParser();
+            $result = $atomParser->parse($strFormula);
+            if (!$result->isAccepted()) {
+                throw new IllegalArgumentException();
+            }
+            $strFormula = $result->getRemainder();
+            $strName = $result->getResult();
+            $strCount = 1;
+            $numberParser = new NatParser();
+            $numberResult = $numberParser->parse($strFormula);
+            if ($numberResult->isAccepted()) {
+                $strCount = $numberResult->getResult();
+                $strFormula = $numberResult->getRemainder();
+            }
             try {
                 $mass += (PeriodicTableSingleton::getInstance()->getAtoms())[$strName]->getMass() * $strCount;
             } catch (\Exception $exception) {
@@ -43,45 +56,4 @@ class FormulaHelper {
         return $graph->getFormula($losses);
     }
 
-    private static function readNumber($strFormula, $intLength, &$intIndex) {
-        if ($intIndex >= $intLength) {
-            return 1;
-        }
-        if ($strFormula[$intIndex] == "0") {
-            throw new IllegalArgumentException();
-        }
-        $strCount = "";
-        while (is_numeric($strFormula[$intIndex])) {
-            $strCount .= $strFormula[$intIndex];
-            $intIndex++;
-            if ($intIndex >= $intLength) {
-                break;
-            }
-        }
-        if (empty($strCount)) {
-            return 1;
-        } else {
-            return $strCount;
-        }
-    }
-
-    private static function readLiteral($strFormula, $intLength, &$intIndex) {
-        $strName = "";
-        $intFirstIndex = $intIndex;
-        while (!is_numeric($strFormula[$intIndex])) {
-            if ($intIndex > $intFirstIndex && ctype_upper($strFormula[$intIndex])) {
-                return $strName;
-            }
-            $strName .= $strFormula[$intIndex];
-            $intIndex++;
-            if ($intIndex >= $intLength) {
-                break;
-            }
-        }
-        if (empty($strName)) {
-            throw new IllegalArgumentException();
-        } else {
-            return $strName;
-        }
-    }
 }
