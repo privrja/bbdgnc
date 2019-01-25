@@ -4,10 +4,10 @@ namespace Bbdgnc\Smiles;
 
 class Element {
 
-    private $name = "";
-    private $protons = 0;
-    private $bindings = 0;
-    private $mass = 0;
+    protected $name = "";
+    protected $protons = 0;
+    protected $bindings = 0;
+    protected $mass = 0;
 
     /**
      * Element constructor.
@@ -19,7 +19,7 @@ class Element {
      * @param float $mass
      * must be positive number
      */
-    public function __construct($name, $protons, $bindings, $mass) {
+    public function __construct(string $name, int $protons, int $bindings, float $mass) {
         assert($protons >= 0);
         assert($bindings >= 0);
         assert($mass > 0);
@@ -55,6 +55,14 @@ class Element {
      */
     public function getMass() {
         return $this->mass;
+    }
+
+    public function getHydrogensCount($actualBindings) {
+        return $this->bindings - $actualBindings;
+    }
+
+    public function asBracketElement() {
+        return new BracketElement($this->name, $this->protons, $this->bindings, $this->mass, new Charge(), 0);
     }
 
 }

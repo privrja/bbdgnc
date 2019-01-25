@@ -12,6 +12,8 @@ use Bbdgnc\Smiles\Element;
 class PeriodicTableSingleton {
 
     private static $instance = null;
+
+    /** @var Element[] */
     private $arAtoms;
 
     const H = 'H';
@@ -29,7 +31,7 @@ class PeriodicTableSingleton {
     }
 
     /**
-     * @return array
+     * @return array|Element[]
      */
     public function getAtoms() {
         return $this->arAtoms;

@@ -10,7 +10,7 @@ class AtomParser implements IParser {
      * @return Accept|Reject
      */
     public function parse($strText) {
-        if (empty($strText) || !isset($strText)) {
+        if (empty($strText) || "" === $strText) {
             return self::reject();
         }
         $intIndex = 0;

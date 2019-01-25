@@ -11,7 +11,7 @@ class StringParser {
      * @return Accept|Reject
      */
     public function parseTextWithTemplate($strText, $strTemplate) {
-        if (!isset($strTemplate) || !isset($strText) || empty($strText) || empty($strTemplate)) {
+        if (!isset($strTemplate) || !isset($strText) || "" === $strText || "" === $strTemplate) {
             return self::reject();
         }
 

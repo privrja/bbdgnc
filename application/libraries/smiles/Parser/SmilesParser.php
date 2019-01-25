@@ -106,7 +106,7 @@ class SmilesParser implements IParser {
     public function parse($strText) {
         $this->initialize($strText);
         try {
-            while ($this->strSmiles != '') {
+            while ($this->strSmiles !== '') {
                 $this->parseAndCallBack(self::accept(), $this->orgParser, self::FIRST_ORG_OK, self::BACK_FROM_BRACKET);
             }
         } catch (RejectException | ReadOnlyOneTimeException $exception) {

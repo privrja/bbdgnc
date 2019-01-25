@@ -12,7 +12,7 @@ class BondParser implements IParser {
      * @return Accept|Reject
      */
     public function parse($strText) {
-        if (!isset($strText) || empty($strText)) {
+        if (!isset($strText) || "" === $strText) {
             return self::reject();
         }
         foreach (BondTypeEnum::$values as $bond => $value) {
