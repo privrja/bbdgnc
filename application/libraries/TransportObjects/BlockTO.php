@@ -24,6 +24,7 @@ class BlockTO {
 
     public $smiles = "";
 
+    /** @var ReferenceTO $reference */
     public $reference;
 
     /**

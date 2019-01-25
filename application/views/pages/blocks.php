@@ -130,7 +130,7 @@ use Bbdgnc\Enum\SequenceTypeEnum;
                 </div>
 
                 <div class="td">
-                    <p><?= $block->reference ?></p>
+                    <p><?= $block->reference->cid ?></p>
                 </div>
 
                 <input type="hidden" name="<?= Front::BLOCK_SMILE ?>"
@@ -143,7 +143,7 @@ use Bbdgnc\Enum\SequenceTypeEnum;
                 <input type="hidden" name="<?= Front::BLOCK_FORMULA ?>" value="<?= $block->formula ?>"/>
                 <input type="hidden" name="<?= Front::BLOCK_MASS ?>" value="<?= $block->mass ?>"/>
                 <input type="hidden" name="<?= Front::BLOCK_NEUTRAL_LOSSES ?>" value="<?= $block->losses ?>"/>
-                <input type="hidden" name="<?= Front::BLOCK_REFERENCE ?>" value="<?= $block->reference ?>"/>
+                <input type="hidden" name="<?= Front::BLOCK_REFERENCE ?>" value="<?= $block->reference->cid ?>"/>
                 <input type="hidden" name="<?= Front::BLOCK_COUNT ?>" value="<?= $blockCount ?>"/>
 
                 <div class="td">
