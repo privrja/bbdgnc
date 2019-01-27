@@ -26,6 +26,15 @@ class Charge {
     }
 
     /**
+     * For non negative return 0
+     * for negative return 1
+     * @return int
+     */
+    public function getSignValue() {
+        return $this->sign === '-' ? 1 : 0;
+    }
+
+    /**
      * @return string
      */
     public function getSign(): string {

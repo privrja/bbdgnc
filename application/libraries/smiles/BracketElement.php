@@ -4,9 +4,6 @@ namespace Bbdgnc\Smiles;
 
 class BracketElement extends Element {
 
-    /** @var Charge $charge */
-    private $charge;
-
     /** @var int $hydrogens */
     private $hydrogens;
 
@@ -24,20 +21,6 @@ class BracketElement extends Element {
         parent::__construct($name, $protons, $bindings, $mass);
         $this->charge = $charge;
         $this->hydrogens = $hydrogens;
-    }
-
-    /**
-     * @return Charge
-     */
-    public function getCharge(): Charge {
-        return $this->charge;
-    }
-
-    /**
-     * @param Charge $charge
-     */
-    public function setCharge(Charge $charge): void {
-        $this->charge = $charge;
     }
 
     /**

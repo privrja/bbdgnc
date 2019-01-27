@@ -9,6 +9,9 @@ class Element {
     protected $bindings = 0;
     protected $mass = 0;
 
+    /** @var Charge $charge */
+    protected $charge;
+
     /**
      * Element constructor.
      * @param string $name shortcut of atom name ex.: H, C, O, N or He
@@ -27,6 +30,21 @@ class Element {
         $this->protons = $protons;
         $this->bindings = $bindings;
         $this->mass = $mass;
+        $this->charge = new Charge();
+    }
+
+    /**
+     * @return Charge
+     */
+    public function getCharge(): Charge {
+        return $this->charge;
+    }
+
+    /**
+     * @param Charge $charge
+     */
+    public function setCharge(Charge $charge): void {
+        $this->charge = $charge;
     }
 
     /**

@@ -96,6 +96,67 @@ class Graph {
         return $strFormula;
     }
 
+
+    /**
+     * Rank invariants in nodes
+     * @param bool $first if to set last rank to same values
+     */
+    public function rankInvariants($first = false) {
+        $heap = new \SplMinHeap();
+        foreach ($this->arNodes as $node) {
+            $heap->insert($node->getInvariant());
+        }
+
+        $arMap = [];
+        $index = 1;
+        while (!$heap->isEmpty()) {
+            $min = $heap->extract();
+            if (!isset($arMap[$min])) {
+                $arMap[$min] = $index;
+                $index++;
+            }
+        }
+
+        foreach ($this->arNodes as $node) {
+            $node->setRank($arMap[$node->getInvariant()]);
+            if ($first) {
+                $node->setLastRank($arMap[$node->getInvariant()]);
+            }
+        }
+    }
+
+    private function rankToPrimesInvariants() {
+        $heap = new \SplMinHeap();
+        foreach ($this->arNodes as $node) {
+            $heap->insert($node->getRank());
+            $node->setLastRank($node->getRank());
+        }
+
+        $arMap = [];
+        $index = 0;
+        while (!$heap->isEmpty()) {
+            $min = $heap->extract();
+            if (!isset($arMap[$min])) {
+                $arMap[$min] = Smiles::$primes[$index];
+                $index++;
+            }
+        }
+
+        foreach ($this->arNodes as $node) {
+            $node->setInvariant($arMap[$node->getInvariant()]);
+        }
+    }
+
+    private function productPrimes() {
+        foreach ($this->arNodes as $node) {
+            $product = 1;
+            foreach ($node->getBonds() as $bond) {
+                $product *= $this->arNodes[$bond->getNodeNumber()]->getRank();
+            }
+            $node->setInvariant($product);
+        }
+    }
+
     /**
      * Return SMILES, now only the argument passed in constructor
      * @return string

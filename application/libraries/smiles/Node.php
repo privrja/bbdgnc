@@ -7,8 +7,13 @@ class Node {
     /** @var Element atom */
     private $atom;
 
-    private $invariants;
+    /** @var int $invariant */
+    private $invariant;
 
+    /** @var int $lastRank */
+    private $lastRank;
+
+    /** @var int $rank */
     private $rank;
 
     /** @var Bond[] */
@@ -24,16 +29,42 @@ class Node {
         $this->arBonds = $arBounds;
     }
 
-    public function hydrogensCount() {
+    public function actualBindings() {
         $actualBindings = 0;
         foreach ($this->arBonds as $bond) {
             $actualBindings += $bond->getBondType();
         }
-        return $this->atom->getHydrogensCount($actualBindings);
+        return $actualBindings;
+    }
+
+    public function hydrogensCount() {
+        return $this->atom->getHydrogensCount($this->actualBindings());
     }
 
     public function addBond(Bond $bond) {
         $this->arBonds[] = $bond;
+    }
+
+    public function computeInvariants() {
+        $this->invariant = "";
+        $this->invariant .= sizeof($this->arBonds);
+        $this->invariant .= $this->actualBindingsWithZero();
+        $this->invariant .= $this->protonNumber();
+        $this->invariant .= $this->atom->getCharge()->getSignValue();
+        $this->invariant .= $this->atom->getCharge()->getChargeSize();
+        $this->invariant .= $this->hydrogensCount();
+    }
+
+    private function protonNumber() {
+        return $this->addZero($this->atom->getProtons());
+    }
+
+    private function actualBindingsWithZero() {
+        return $this->addZero($this->actualBindings());
+    }
+
+    private function addZero($number) {
+        return $number < 10 ? '0' . $number : $number;
     }
 
     /**
@@ -46,8 +77,8 @@ class Node {
     /**
      * @return mixed
      */
-    public function getInvariants() {
-        return $this->invariants;
+    public function getInvariant() {
+        return $this->invariant;
     }
 
     /**
@@ -58,10 +89,38 @@ class Node {
     }
 
     /**
-     * @return array
+     * @return Bond[]
      */
     public function getBonds(): array {
         return $this->arBonds;
+    }
+
+    /**
+     * @param int $rank
+     */
+    public function setRank(int $rank) {
+        $this->rank = $rank;
+    }
+
+    /**
+     * @param $invariant
+     */
+    public function setInvariant($invariant) {
+        $this->invariant = $invariant;
+    }
+
+    /**
+     * @return int
+     */
+    public function getLastRank(): int {
+        return $this->lastRank;
+    }
+
+    /**
+     * @param int $lastRank
+     */
+    public function setLastRank(int $lastRank): void {
+        $this->lastRank = $lastRank;
     }
 
 }
