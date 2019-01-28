@@ -162,4 +162,14 @@ final class UniqueSmilesTest extends TestCase {
         $this->assertEquals('OCC(O)C1OC(=O)C(=C1O)O', $graph->getUniqueSmiles());
     }
 
+    public function testCyclic4() {
+        $graph = new Graph('C1=CC=CC=C1C');
+        $this->assertEquals('CC1=CC=CC=C1', $graph->getUniqueSmiles());
+    }
+
+    public function testCubane() {
+        $graph = new Graph('C12C3C4C1C5C4C3C25');
+        $this->assertEquals('C12C3C4C1C5C2C3C45', $graph->getUniqueSmiles());
+    }
+
 }

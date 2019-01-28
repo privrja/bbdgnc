@@ -14,7 +14,11 @@ class Graph {
     /** @var Node[] */
     private $arNodes = array();
 
+    /** @var string $uniqueSmiles */
     private $uniqueSmiles = "";
+
+    /** @var bool $isCyclic */
+    private $isCyclic = false;
 
     /**
      * Graph constructor.
@@ -332,6 +336,9 @@ class Graph {
      */
     private function dfs(int $nodeNumber, $branch = false, $bond = '', $lastNodeNumber = -1) {
         $node = $this->arNodes[$nodeNumber];
+        if ($node->getVertexState() === VertexStateEnum::OPEN) {
+            $this->isCyclic = true;
+        }
         if ($node->getVertexState() !== VertexStateEnum::NOT_FOUND) {
             return;
         }
