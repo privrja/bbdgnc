@@ -10,11 +10,8 @@ class Node {
     /** @var int $invariant */
     private $invariant;
 
-    /** @var int $lastRank */
-    private $lastRank;
-
-    /** @var int $rank */
-    private $rank;
+    /** @var CangenStructure $cangenStructure */
+    private $cangenStructure;
 
     /** @var Bond[] */
     private $arBonds = array();
@@ -27,6 +24,7 @@ class Node {
     public function __construct(Element $atom, array $arBounds = []) {
         $this->atom = $atom;
         $this->arBonds = $arBounds;
+        $this->cangenStructure = new CangenStructure();
     }
 
     public function actualBindings() {
@@ -82,24 +80,10 @@ class Node {
     }
 
     /**
-     * @return mixed
-     */
-    public function getRank() {
-        return $this->rank;
-    }
-
-    /**
      * @return Bond[]
      */
     public function getBonds(): array {
         return $this->arBonds;
-    }
-
-    /**
-     * @param int $rank
-     */
-    public function setRank(int $rank) {
-        $this->rank = $rank;
     }
 
     /**
@@ -110,17 +94,17 @@ class Node {
     }
 
     /**
-     * @return int
+     * @return CangenStructure
      */
-    public function getLastRank(): int {
-        return $this->lastRank;
+    public function getCangenStructure(): CangenStructure {
+        return $this->cangenStructure;
     }
 
     /**
-     * @param int $lastRank
+     * @param CangenStructure $cangenStructure
      */
-    public function setLastRank(int $lastRank): void {
-        $this->lastRank = $lastRank;
+    public function setCangenStructure(CangenStructure $cangenStructure): void {
+        $this->cangenStructure = $cangenStructure;
     }
 
 }

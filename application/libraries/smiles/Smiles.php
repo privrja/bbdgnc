@@ -31,22 +31,4 @@ class Smiles {
         return $this->strSmiles;
     }
 
-    private function cangen() {
-
-    }
-
-    /**
-     * Canonicalization of molecular graphs using an unambiguous function
-     */
-    private function canon() {
-
-    }
-
-    /**
-     * Generation of unique SMILES
-     */
-    private function genes() {
-
-    }
-
 }

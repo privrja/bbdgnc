@@ -23,7 +23,7 @@ class Graph {
 
     /**
      * Add node to graph, in graph stored as @see \Bbdgnc\Smiles\Node
-     * @param string $elementName
+     * @param Element $element
      */
     public function addNode(Element $element) {
         $this->arNodes[] = new Node($element);
@@ -96,12 +96,40 @@ class Graph {
         return $strFormula;
     }
 
+    public function getUniqueSmiles() {
+        $this->cangen();
+        return $this->genes();
+    }
+
+    public function genes() {
+
+    }
+
+    public function cangen() {
+        $nodesLength = sizeof($this->arNodes);
+        $this->computeInvariants();
+        $this->rankInvariants();
+        while (true) {
+            while (true) {
+                $this->rankToPrimes();
+                $this->productPrimes();
+                $this->rankByPrimes();
+                if ($this->rankEquals()) {
+                    break;
+                }
+            }
+            if ($this->maxRank() < $nodesLength) {
+                $this->breakTies();
+            } else {
+                break;
+            }
+        }
+    }
 
     /**
      * Rank invariants in nodes
-     * @param bool $first if to set last rank to same values
      */
-    public function rankInvariants($first = false) {
+    public function rankInvariants() {
         $heap = new \SplMinHeap();
         foreach ($this->arNodes as $node) {
             $heap->insert($node->getInvariant());
@@ -118,18 +146,16 @@ class Graph {
         }
 
         foreach ($this->arNodes as $node) {
-            $node->setRank($arMap[$node->getInvariant()]);
-            if ($first) {
-                $node->setLastRank($arMap[$node->getInvariant()]);
-            }
+            $node->getCangenStructure()->setRank($arMap[$node->getInvariant()]);
+            $node->getCangenStructure()->setLastRank($arMap[$node->getInvariant()]);
         }
     }
 
-    private function rankToPrimesInvariants() {
+    public function rankToPrimes() {
         $heap = new \SplMinHeap();
         foreach ($this->arNodes as $node) {
-            $heap->insert($node->getRank());
-            $node->setLastRank($node->getRank());
+            $heap->insert($node->getCangenStructure()->getRank());
+            $node->getCangenStructure()->setLastRank($node->getCangenStructure()->getRank());
         }
 
         $arMap = [];
@@ -143,17 +169,35 @@ class Graph {
         }
 
         foreach ($this->arNodes as $node) {
-            $node->setInvariant($arMap[$node->getInvariant()]);
+            $node->getCangenStructure()->setRank($arMap[$node->getCangenStructure()->getLastRank()]);
         }
     }
 
-    private function productPrimes() {
+    public function productPrimes() {
         foreach ($this->arNodes as $node) {
             $product = 1;
             foreach ($node->getBonds() as $bond) {
-                $product *= $this->arNodes[$bond->getNodeNumber()]->getRank();
+                $product *= $this->arNodes[$bond->getNodeNumber()]->getCangenStructure()->getRank();
             }
-            $node->setInvariant($product);
+            $node->getCangenStructure()->setProductPrime($product);
+        }
+    }
+
+    public function rankByPrimes() {
+        $heap = new CangenMinHeap();
+        foreach ($this->arNodes as $node) {
+            $heap->insert($node->getCangenStructure());
+        }
+
+        $index = 0;
+        $lastMin = new CangenStructure();
+        while (!$heap->isEmpty()) {
+            $min = $heap->extract();
+            if ($lastMin->getLastRank() !== $min->getLastRank() || $lastMin->getProductPrime() !== $min->getProductPrime()) {
+                $index++;
+                $lastMin = $min;
+            }
+            $min->setRank($index);
         }
     }
 
@@ -165,8 +209,76 @@ class Graph {
 
     }
 
-    public function getUniqueSmiles() {
+    /**
+     * Return true when ranks are same for all nodes
+     * otherwise return false
+     * @return bool
+     */
+    public function rankEquals() {
+        foreach ($this->arNodes as $node) {
+            if (!$node->getCangenStructure()->isRankSameAsLastRank()) {
+                return false;
+            }
+        }
+        return true;
+    }
 
+    public function computeInvariants() {
+        foreach ($this->arNodes as $node) {
+            $node->computeInvariants();
+        }
+    }
+
+    public function maxRank() {
+        $index = 0;
+        $max = $this->arNodes[$index]->getCangenStructure()->getRank();
+        foreach ($this->arNodes as $node) {
+            if ($node->getCangenStructure()->getRank() > $max) {
+                $max = $node->getCangenStructure()->getRank();
+            }
+            $index++;
+        }
+        return $max;
+    }
+
+    public function minRankIndex() {
+        $heap = new \SplMinHeap();
+        foreach ($this->arNodes as $node) {
+            $heap->insert($node->getCangenStructure()->getRank());
+        }
+
+        $lastMin = -1;
+        while (!$heap->isEmpty()) {
+            $min = $heap->extract();
+            if ($lastMin === $min) {
+                break;
+            }
+            $lastMin = $min;
+        }
+
+        $index = 0;
+        foreach ($this->arNodes as $node) {
+            if ($node->getCangenStructure()->getRank() === $lastMin) {
+                break;
+            }
+            $index++;
+        }
+        return $index;
+    }
+
+    private function breakTies() {
+        foreach ($this->arNodes as $node) {
+            $node->setInvariant($node->getCangenStructure()->getRank() * 2);
+        }
+
+        $minIndex = $this->minRankIndex();
+        $rank = $this->arNodes[$minIndex]->getCangenStructure()->getRank() * 2 - 1;
+        $this->arNodes[$minIndex]->setInvariant($rank);
+        $this->rankInvariants();
+    }
+
+    public function getNodes() {
+        return $this->arNodes;
     }
 
     public function toString() {
@@ -184,5 +296,6 @@ class Graph {
         }
         return $str;
     }
+
 
 }
