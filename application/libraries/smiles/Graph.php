@@ -20,6 +20,12 @@ class Graph {
     /** @var bool $isCyclic */
     private $isCyclic = false;
 
+    /** @var bool $isSecondPass */
+    private $isSecondPass = false;
+
+    /** @var int $digit */
+    private $digit = 1;
+
     /**
      * Graph constructor.
      * @param string $strText
@@ -111,7 +117,11 @@ class Graph {
     public function genes() {
         $startVertexIndex = $this->dfsInitialization();
         $this->dfs($startVertexIndex);
-        // TODO second pass
+        if ($this->isCyclic) {
+            $this->isSecondPass = true;
+            $this->dfsInitialization();
+            $this->dfs($startVertexIndex);
+        }
         return $this->uniqueSmiles;
     }
 
@@ -314,6 +324,8 @@ class Graph {
      */
     private function dfsInitialization() {
         $this->uniqueSmiles = "";
+        $this->isCyclic = false;
+        $this->digit = 1;
         $min = $this->arNodes[0]->getCangenStructure()->getRank();
         $index = $minIndex = 0;
         foreach ($this->arNodes as $node) {
@@ -338,6 +350,9 @@ class Graph {
         $node = $this->arNodes[$nodeNumber];
         if ($node->getVertexState() === VertexStateEnum::OPEN) {
             $this->isCyclic = true;
+            $node->addDigit($this->digit);
+            $this->arNodes[$lastNodeNumber]->addDigit($this->digit);
+            $this->digit++;
         }
         if ($node->getVertexState() !== VertexStateEnum::NOT_FOUND) {
             return;
@@ -349,7 +364,12 @@ class Graph {
         }
         $this->uniqueSmiles .= $bond;
         $this->uniqueSmiles .= $node->getAtom()->elementSmiles();
-        $heap = new RankMinHeap();
+        $heap = null;
+        if ($this->isSecondPass) {
+            $heap = new RankBondMinHeap();
+        } else {
+            $heap = new RankMinHeap();
+        }
         foreach ($node->getBonds() as $bond) {
             if ($lastNodeNumber == $bond->getNodeNumber()) {
                 continue;

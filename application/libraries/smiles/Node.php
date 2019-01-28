@@ -9,6 +9,9 @@ class Node {
     /** @var Element atom */
     private $atom;
 
+    /** @var int[] $arDigits */
+    private $arDigits = [];
+
     /** @var int $invariant */
     private $invariant;
 
@@ -129,4 +132,14 @@ class Node {
         $this->vertexState = $vertexState;
     }
 
+    /**
+     * @return int[]
+     */
+    public function getDigits(): array {
+        return $this->arDigits;
+    }
+
+    public function addDigit(int $digit): void {
+        $this->arDigits[] = $digit;
+    }
 }
