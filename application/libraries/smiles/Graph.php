@@ -106,10 +106,9 @@ class Graph {
 
     public function genes() {
         $startVertexIndex = $this->dfsInitialization();
-
-        $this->dfs($this->arNodes[$startVertexIndex]);
-
-
+        $this->dfs($startVertexIndex);
+        // TODO second pass
+        return $this->uniqueSmiles;
     }
 
     public function cangen() {
@@ -310,6 +309,7 @@ class Graph {
      * @return int
      */
     private function dfsInitialization() {
+        $this->uniqueSmiles = "";
         $min = $this->arNodes[0]->getCangenStructure()->getRank();
         $index = $minIndex = 0;
         foreach ($this->arNodes as $node) {
@@ -325,15 +325,42 @@ class Graph {
 
     /**
      * DFS for UNIQUE SMILES
-     * @param Node $node
+     * @param int $nodeNumber
+     * @param bool $branch
+     * @param string $bond
+     * @param int $lastNodeNumber
      */
-    private function dfs(Node $node) {
+    private function dfs(int $nodeNumber, $branch = false, $bond = '', $lastNodeNumber = -1) {
+        $node = $this->arNodes[$nodeNumber];
         if ($node->getVertexState() !== VertexStateEnum::NOT_FOUND) {
             return;
         }
 
+        $node->setVertexState(VertexStateEnum::OPEN);
+        if ($branch) {
+            $this->uniqueSmiles .= '(';
+        }
+        $this->uniqueSmiles .= $bond;
+        $this->uniqueSmiles .= $node->getAtom()->elementSmiles();
+        $heap = new RankMinHeap();
+        foreach ($node->getBonds() as $bond) {
+            if ($lastNodeNumber == $bond->getNodeNumber()) {
+                continue;
+            }
+            $heap->insert(new NextNode($bond->getNodeNumber(), $bond->getBondTypeString(),
+                $this->arNodes[$bond->getNodeNumber()]->getCangenStructure()->getRank()));
+        }
 
-
+        while (!$heap->isEmpty()) {
+            /** @var NextNode $nextNode */
+            $heapCount = $heap->count();
+            $nextNode = $heap->extract();
+            $this->dfs($nextNode->getNodeIndex(), $heapCount > 1, $nextNode->getBondType(), $nodeNumber);
+        }
+        if ($branch) {
+            $this->uniqueSmiles .= ')';
+        }
+        $node->setVertexState(VertexStateEnum::CLOSED);
     }
 
 }

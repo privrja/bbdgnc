@@ -41,6 +41,7 @@ class BracketElement extends Element {
     public function getHydrogensCount($actualBindings) {
         return $this->getHydrogens();
     }
+
     public function elementSmiles() {
         $smiles =  '[' . $this->name;
         if ($this->hydrogens > 0) {
