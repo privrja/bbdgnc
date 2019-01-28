@@ -48,6 +48,10 @@ class Charge {
         return $this->chargeSize;
     }
 
+    public function isZero() {
+        return $this->chargeSize === 0;
+    }
+
     public function getCharge() {
         if ($this->chargeSize === 0) {
             return "";

@@ -236,6 +236,28 @@ final class InvariantsTest extends TestCase {
         $this->assertEquals($expectedGraph, $graph);
     }
 
+    public function testCangen4() {
+        $graph = new Graph('CC(=O)C');
+        $graph->cangen();
+        $expectedGraph = new Graph('');
+        for ($i = 0; $i < 2; ++$i) {
+            $expectedGraph->addNode(PeriodicTableSingleton::getInstance()->getAtoms()['C']);
+        }
+        $expectedGraph->addNode(PeriodicTableSingleton::getInstance()->getAtoms()['O']);
+        $expectedGraph->addNode(PeriodicTableSingleton::getInstance()->getAtoms()['C']);
+        $expectedGraph->addBond(0, new Bond(1, ''));
+        $expectedGraph->addBond(1, new Bond(0, ''));
+        $expectedGraph->addBond(1, new Bond(2, '='));
+        $expectedGraph->addBond(1, new Bond(3, ''));
+        $expectedGraph->addBond(2, new Bond(1, '='));
+        $expectedGraph->addBond(3, new Bond(1, ''));
+        $this->setNodeAll($expectedGraph, [0], 1, 1, 1, 7);
+        $this->setNodeAll($expectedGraph, [1], 6, 4, 4,30);
+        $this->setNodeAll($expectedGraph, [2], 4, 3, 3, 7);
+        $this->setNodeAll($expectedGraph, [3], 2, 2, 2, 7);
+        $this->assertEquals($expectedGraph, $graph);
+    }
+
     private function setNodeInvariant(Graph $graph, array $indexes, int $invariant, int $lastRank) {
         foreach ($indexes as $index) {
             $graph->getNodes()[$index]->setInvariant($invariant);

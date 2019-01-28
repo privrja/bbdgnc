@@ -2,6 +2,8 @@
 
 namespace Bbdgnc\Smiles;
 
+use Bbdgnc\Smiles\Enum\VertexStateEnum;
+
 class Node {
 
     /** @var Element atom */
@@ -15,6 +17,12 @@ class Node {
 
     /** @var Bond[] */
     private $arBonds = array();
+
+    /**
+     * @var int $vertexState
+     * @see VertexStateEnum
+     */
+    private $vertexState = VertexStateEnum::NOT_FOUND;
 
     /**
      * Node constructor.
@@ -105,6 +113,20 @@ class Node {
      */
     public function setCangenStructure(CangenStructure $cangenStructure): void {
         $this->cangenStructure = $cangenStructure;
+    }
+
+    /**
+     * @return int
+     */
+    public function getVertexState(): int {
+        return $this->vertexState;
+    }
+
+    /**
+     * @param int $vertexState
+     */
+    public function setVertexState(int $vertexState): void {
+        $this->vertexState = $vertexState;
     }
 
 }

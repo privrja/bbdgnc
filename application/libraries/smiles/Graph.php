@@ -6,12 +6,15 @@ namespace Bbdgnc\Smiles;
 use Bbdgnc\Enum\PeriodicTableSingleton;
 use Bbdgnc\Exception\IllegalArgumentException;
 use Bbdgnc\Smiles\Enum\LossesEnum;
+use Bbdgnc\Smiles\Enum\VertexStateEnum;
 use Bbdgnc\Smiles\Parser\SmilesParser;
 
 class Graph {
 
     /** @var Node[] */
     private $arNodes = array();
+
+    private $uniqueSmiles = "";
 
     /**
      * Graph constructor.
@@ -102,6 +105,10 @@ class Graph {
     }
 
     public function genes() {
+        $startVertexIndex = $this->dfsInitialization();
+
+        $this->dfs($this->arNodes[$startVertexIndex]);
+
 
     }
 
@@ -297,5 +304,36 @@ class Graph {
         return $str;
     }
 
+    /**
+     * Initialize all nodes to VertexStateEnum::NOT_FOUND
+     * and return index of the lowest rank, this point would be the starting point
+     * @return int
+     */
+    private function dfsInitialization() {
+        $min = $this->arNodes[0]->getCangenStructure()->getRank();
+        $index = $minIndex = 0;
+        foreach ($this->arNodes as $node) {
+            if ($node->getCangenStructure()->getRank() < $min){
+                $min = $node->getCangenStructure()->getRank();
+                $minIndex = $index;
+            }
+            $node->setVertexState(VertexStateEnum::NOT_FOUND);
+            $index++;
+        }
+        return $minIndex;
+    }
+
+    /**
+     * DFS for UNIQUE SMILES
+     * @param Node $node
+     */
+    private function dfs(Node $node) {
+        if ($node->getVertexState() !== VertexStateEnum::NOT_FOUND) {
+            return;
+        }
+
+
+
+    }
 
 }

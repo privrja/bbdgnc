@@ -19,6 +19,7 @@ class BracketElement extends Element {
      */
     public function __construct(string $name, int $protons, int $bindings, float $mass, Charge $charge, int $hydrogens) {
         parent::__construct($name, $protons, $bindings, $mass);
+        assert($hydrogens >= 0);
         $this->charge = $charge;
         $this->hydrogens = $hydrogens;
     }
@@ -39,6 +40,16 @@ class BracketElement extends Element {
 
     public function getHydrogensCount($actualBindings) {
         return $this->getHydrogens();
+    }
+    public function elementSmiles() {
+        $smiles =  '[' . $this->name;
+        if ($this->hydrogens > 0) {
+            $smiles .= 'H' . $this->hydrogens;
+        }
+        if (!$this->charge->isZero()) {
+            $smiles .= $this->charge->getCharge();
+        }
+        return $smiles . ']';
     }
 
 }

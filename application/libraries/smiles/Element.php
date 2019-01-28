@@ -33,6 +33,10 @@ class Element {
         $this->charge = new Charge();
     }
 
+    protected function elementSmiles() {
+        return $this->name;
+    }
+
     /**
      * @return Charge
      */
