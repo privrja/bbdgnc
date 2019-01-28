@@ -132,4 +132,34 @@ final class UniqueSmilesTest extends TestCase {
         $this->assertEquals('NCCCCCNO', $graph->getUniqueSmiles());
     }
 
+    public function testRightData3() {
+        $graph = new Graph('OC(C=C(C)CCO)=O');
+        $this->assertEquals('CC(CCO)=CC(O)=O', $graph->getUniqueSmiles());
+    }
+
+    public function testRightData4() {
+        $graph = new Graph('CC(=CC(=O)O)CCO');
+        $this->assertEquals('CC(CCO)=CC(O)=O', $graph->getUniqueSmiles());
+    }
+
+    public function testRightData5() {
+        $graph = new Graph('N(CCCC(C(=O)O)N)[O-1]');
+        $this->assertEquals('NC(CCCN[O-1])C(O)=O', $graph->getUniqueSmiles());
+    }
+
+    public function testRightData6() {
+        $graph = new Graph('N(CCCC(C(=O)O)N)[O-]');
+        $this->assertEquals('NC(CCCN[O-1])C(O)=O', $graph->getUniqueSmiles());
+    }
+
+    public function testCyclic2() {
+        $graph = new Graph('CC(=CC(=O)N(CCCC1C(=O)NC(C(=O)N1)CCCN(C(=O)C=C(C)CCOC(=O)C(CCCN(C(=O)C=C(C)CCO)[O-])NC(=O)C)[O-])[O-])CCO');
+        $this->assertEquals('CC(=O)NC(CCCN([O-1])C(=O)C=C(C)CCO)C(=O)OCCC(C)=CC(=O)N([O-1])CCCC1NC(=O)C(CCCN([O-1])C(=O)C=C(C)CCO)NC1=O', $graph->getUniqueSmiles());
+    }
+
+    public function testCyclic3() {
+        $graph = new Graph('C(C(C1C(=C(C(=O)O1)O)O)O)O');
+        $this->assertEquals('OCC(O)C1OC(=O)C(=C1O)O', $graph->getUniqueSmiles());
+    }
+
 }
