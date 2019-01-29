@@ -92,7 +92,6 @@ class Element {
     }
 
     public function asNonAromatic() {
-        var_dump("asNON AROMATIC");
         if ($this->isAromatic) {
             $this->bindings++;
             $this->isAromatic = false;

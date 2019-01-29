@@ -17,6 +17,7 @@ final class UniqueSmilesTest extends TestCase {
         $this->assertEquals('CCC(CO)CCC(CN)CN', $graph->getUniqueSmiles());
     }
 
+
     public function testAminobuturicAcid() {
         $graph = new Graph('OC(C(CC)N)=O');
         $this->assertEquals('CCC(N)C(O)=O', $graph->getUniqueSmiles());
@@ -107,11 +108,6 @@ final class UniqueSmilesTest extends TestCase {
         $this->assertEquals('OC(=O)C1CCCN1', $graph->getUniqueSmiles());
     }
 
-    public function testPhenylAlanine() {
-        $graph = new Graph('OC(=O)C(Cc1ccccc1)N');
-        $this->assertEquals('NC(CC1=CC=CC=C1)C(O)=O', $graph->getUniqueSmiles());
-    }
-
     public function testDeferoxamine() {
         $graph = new Graph('CC(=O)N(CCCCCNC(=O)CCC(=O)N(CCCCCNC(=O)CCC(=O)N(CCCCCN)O)O)O');
         $this->assertEquals('CC(=O)N(O)CCCCCNC(=O)CCC(=O)N(O)CCCCCNC(=O)CCC(=O)N(O)CCCCCN', $graph->getUniqueSmiles());
@@ -198,16 +194,6 @@ final class UniqueSmilesTest extends TestCase {
     public function testCyclic10() {
         $graph = new Graph('O1CCCCC1N1CCCCC1');
         $this->assertEquals('C1CCN(CC1)C2CCCCO2', $graph->getUniqueSmiles());
-    }
-
-    public function testAromatic() {
-        $graph = new Graph('Cc1ccccc1');
-        $this->assertEquals(true, $graph->isAromaticRing([1, 2, 3, 4, 5, 6]));
-    }
-
-    public function testAromatic2() {
-        $graph = new Graph('Cc1ccccc1');
-        $this->assertEquals('CC1=CC=CC=C1', $graph->getUniqueSmiles());
     }
 
 }
