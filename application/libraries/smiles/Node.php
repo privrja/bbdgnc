@@ -9,7 +9,7 @@ class Node {
     /** @var Element atom */
     private $atom;
 
-    /** @var int[] $arDigits */
+    /** @var Digit[] $arDigits */
     private $arDigits = [];
 
     /** @var int $invariant */
@@ -136,14 +136,14 @@ class Node {
     }
 
     /**
-     * @return int[]
+     * @return Digit[]
      */
     public function getDigits(): array {
         return $this->arDigits;
     }
 
     /**
-     * @param int[] $arDigits
+     * @param Digit[] $arDigits
      */
     public function setDigits(array $arDigits): void {
         $this->arDigits = $arDigits;
@@ -151,16 +151,16 @@ class Node {
 
     /**
      * Add digit to arDigits
-     * @param int $digit
+     * @param Digit $digit
      */
-    public function addDigit(int $digit): void {
+    public function addDigit(Digit $digit): void {
         $this->arDigits[] = $digit;
     }
 
     public function deleteDigit(int $digit): void {
         $arDigitsLength = sizeof($this->arDigits);
         for ($index = 0; $index < $arDigitsLength; ++$index) {
-            if ($digit === $this->arDigits[$index]) {
+            if ($digit === $this->arDigits[$index]->getDigit()) {
                 unset($this->arDigits[$index]);
                 return;
             }

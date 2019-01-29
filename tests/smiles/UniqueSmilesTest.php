@@ -172,24 +172,27 @@ final class UniqueSmilesTest extends TestCase {
         $this->assertEquals('C12C3C4C1C5C2C3C45', $graph->getUniqueSmiles());
     }
 
+    /** in original with brackets: C[C]=1=CCCC=1 */
     public function testCyclic5() {
         $graph = new Graph('CC(=CCC1)=C1');
-        $this->assertEquals('C[C]=1=CCCC=1', $graph->getUniqueSmiles());
+        $this->assertEquals('CC=1=CCCC=1', $graph->getUniqueSmiles());
     }
 
+    /** in original: C[C]=1=CCC=C=1 */
     public function testCyclic6() {
         $graph = new Graph('CC(=C=CC1)=C1');
-        $this->assertEquals('C[C]=1=CCC=C=1', $graph->getUniqueSmiles());
+        $this->assertEquals('CC=1=CCC=C=1', $graph->getUniqueSmiles());
     }
 
+    /** in original: C[C]=1=C=CC=C=1 */
     public function testCyclic8() {
         $graph = new Graph('CC(=C=C1)=C=C1');
-        $this->assertEquals('C[C]=1=C=CC=C=1', $graph->getUniqueSmiles());
+        $this->assertEquals('CC=1=C=CC=C=1', $graph->getUniqueSmiles());
     }
 
     public function testCyclic9() {
         $graph = new Graph('C[C]=1C=CC=C=1');
-        $this->assertEquals('C[C]1=[C]=[CH]C=C1', $graph->getUniqueSmiles());
+        $this->assertEquals('CC1=C=CC=C1', $graph->getUniqueSmiles());
     }
 
     public function testCyclic10() {

@@ -5,6 +5,8 @@ namespace Bbdgnc\Smiles;
 
 use Bbdgnc\Enum\PeriodicTableSingleton;
 use Bbdgnc\Exception\IllegalArgumentException;
+use Bbdgnc\Exception\IllegalStateException;
+use Bbdgnc\Exception\NotFoundException;
 use Bbdgnc\Smiles\Enum\BondTypeEnum;
 use Bbdgnc\Smiles\Enum\LossesEnum;
 use Bbdgnc\Smiles\Enum\VertexStateEnum;
@@ -351,8 +353,8 @@ class Graph {
         $node = $this->arNodes[$nodeNumber];
         if ($node->getVertexState() === VertexStateEnum::OPEN) {
             $this->isCyclic = true;
-            $node->addDigit($this->digit);
-            $this->arNodes[$lastNodeNumber]->addDigit($this->digit);
+            $node->addDigit(new Digit($this->digit));
+            $this->arNodes[$lastNodeNumber]->addDigit(new Digit($this->digit));
             $this->digit++;
         }
         if ($node->getVertexState() !== VertexStateEnum::NOT_FOUND) {
@@ -370,11 +372,17 @@ class Graph {
         if (!$node->isDigitsEmpty()) {
             foreach ($node->getDigits() as $digit) {
                 foreach ($node->getBonds() as $bond) {
-                    if (in_array($digit, $this->arNodes[$bond->getNodeNumber()]->getDigits())) {
+                    if ($this->isDigitIn($digit->getDigit(), $this->arNodes[$bond->getNodeNumber()]->getDigits())) {
                         $this->findRings($nodeNumber, $bond->getNodeNumber(), $digit);
                     }
                 }
-                $this->uniqueSmiles .= $digit;
+                $newDigit = null;
+                try {
+                    $newDigit = $this->findDigit($digit->getDigit(), $this->arNodes[$nodeNumber]->getDigits());
+                } catch (NotFoundException $exception) {
+                    throw new IllegalStateException();
+                }
+                $this->uniqueSmiles .= $newDigit->printDigit();
                 $printedDigits++;
             }
         }
@@ -405,8 +413,40 @@ class Graph {
         $node->setVertexState(VertexStateEnum::CLOSED);
     }
 
+    /**
+     * @param int $digit
+     * @param Digit[] $digits
+     * @return Digit
+     * @throws NotFoundException
+     */
+    private function findDigit(int $digit, array $digits) {
+        foreach ($digits as $aDigit) {
+            if ($aDigit->getDigit() === $digit) {
+                return $aDigit;
+            }
+        }
+        throw new NotFoundException();
+    }
 
-    public function findRings(int $start, int $finish, int $digit) {
+    /**
+     * @param int $digit
+     * @param Digit[] $digits
+     * @return bool
+     */
+    private function isDigitIn(int $digit, array $digits) {
+        foreach ($digits as $aDigit) {
+            if ($aDigit->getDigit() === $digit) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
+    public function findRings(int $start, int $finish, Digit $digit) {
+        if ($digit->isAccepted()) {
+            return;
+        }
         $queue = new \SplQueue();
         $firstPath = [$start];
         $queue->push($firstPath);
@@ -416,27 +456,25 @@ class Graph {
             $path = $queue->pop();
             $last = end($path);
             if ($last === $finish) {
-                $node = $this->arNodes[$start];
-                foreach ($node->getBonds() as $bond) {
+                $nodeStart = $this->arNodes[$start];
+                foreach ($nodeStart->getBonds() as $bond) {
                     if ($bond->getNodeNumber() === $finish) {
                         if (BondTypeEnum::isMultipleBinding($bond->getBondTypeString())) {
-                            $this->arNodes[$finish]->deleteDigit($digit);
-                            $pathLength = sizeof($path);
-                            $break = false;
-                            for ($index = 0; $index < $pathLength; ++$index) {
-                                if ($index + 1 >= $pathLength) {
+                            $this->arNodes[$finish]->deleteDigit($digit->getDigit());
+                            $index = 0;
+                            $setNumber = false;
+                            foreach ($this->arNodes[$path[$index]]->getBonds() as $nextBond) {
+                                if ($nextBond->getNodeNumber() === $path[$index + 1] && BondTypeEnum::isSimple($nextBond->getBondTypeString())) {
+                                    $this->arNodes[$path[$index + 1]]->addDigit(new Digit($digit->getDigit(), true));
+                                    $setNumber = true;
                                     break;
                                 }
-                                foreach ($this->arNodes[$path[$index]]->getBonds() as $nextBond) {
-                                    if ($nextBond->getNodeNumber() === $path[$index + 1] && BondTypeEnum::isSimple($nextBond->getBondTypeString())) {
-                                        $this->arNodes[$path[$index + 1]]->addDigit($digit);
-                                        $break = true;
-                                        break;
-                                    }
-                                }
-                                if ($break) {
-                                    break;
-                                }
+                            }
+                            if (!$setNumber) {
+                                $this->arNodes[$start]->deleteDigit($digit->getDigit());
+                                $newDigit = new Digit($digit->getDigit(), true, $bond->getBondTypeString());
+                                $this->arNodes[$start]->addDigit($newDigit);
+                                $this->arNodes[$finish]->addDigit($newDigit);
                             }
                         }
                         break;
