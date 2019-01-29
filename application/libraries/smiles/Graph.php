@@ -5,6 +5,7 @@ namespace Bbdgnc\Smiles;
 
 use Bbdgnc\Enum\PeriodicTableSingleton;
 use Bbdgnc\Exception\IllegalArgumentException;
+use Bbdgnc\Smiles\Enum\BondTypeEnum;
 use Bbdgnc\Smiles\Enum\LossesEnum;
 use Bbdgnc\Smiles\Enum\VertexStateEnum;
 use Bbdgnc\Smiles\Parser\SmilesParser;
@@ -329,7 +330,7 @@ class Graph {
         $min = $this->arNodes[0]->getCangenStructure()->getRank();
         $index = $minIndex = 0;
         foreach ($this->arNodes as $node) {
-            if ($node->getCangenStructure()->getRank() < $min){
+            if ($node->getCangenStructure()->getRank() < $min) {
                 $min = $node->getCangenStructure()->getRank();
                 $minIndex = $index;
             }
@@ -364,8 +365,22 @@ class Graph {
         }
         $this->uniqueSmiles .= $bond;
         $this->uniqueSmiles .= $node->getAtom()->elementSmiles();
+
+        $printedDigits = 0;
+        if (!$node->isDigitsEmpty()) {
+            foreach ($node->getDigits() as $digit) {
+                foreach ($node->getBonds() as $bond) {
+                    if (in_array($digit, $this->arNodes[$bond->getNodeNumber()]->getDigits())) {
+                        $this->findRings($nodeNumber, $bond->getNodeNumber(), $digit);
+                    }
+                }
+                $this->uniqueSmiles .= $digit;
+                $printedDigits++;
+            }
+        }
+
         $heap = null;
-        if ($this->isSecondPass) {
+        if ($this->isSecondPass && $node->isInRing()) {
             $heap = new RankBondMinHeap();
         } else {
             $heap = new RankMinHeap();
@@ -382,12 +397,70 @@ class Graph {
             /** @var NextNode $nextNode */
             $heapCount = $heap->count();
             $nextNode = $heap->extract();
-            $this->dfs($nextNode->getNodeIndex(), $heapCount > 1, $nextNode->getBondType(), $nodeNumber);
+            $this->dfs($nextNode->getNodeIndex(), $heapCount - $printedDigits > 1, $nextNode->getBondType(), $nodeNumber);
         }
         if ($branch) {
             $this->uniqueSmiles .= ')';
         }
         $node->setVertexState(VertexStateEnum::CLOSED);
+    }
+
+
+    public function findRings(int $start, int $finish, int $digit) {
+        $queue = new \SplQueue();
+        $firstPath = [$start];
+        $queue->push($firstPath);
+        $firstPass = true;
+
+        while (!$queue->isEmpty()) {
+            $path = $queue->pop();
+            $last = end($path);
+            if ($last === $finish) {
+                $node = $this->arNodes[$start];
+                foreach ($node->getBonds() as $bond) {
+                    if ($bond->getNodeNumber() === $finish) {
+                        if (BondTypeEnum::isMultipleBinding($bond->getBondTypeString())) {
+                            $this->arNodes[$finish]->deleteDigit($digit);
+                            $pathLength = sizeof($path);
+                            $break = false;
+                            for ($index = 0; $index < $pathLength; ++$index) {
+                                if ($index + 1 >= $pathLength) {
+                                    break;
+                                }
+                                foreach ($this->arNodes[$path[$index]]->getBonds() as $nextBond) {
+                                    if ($nextBond->getNodeNumber() === $path[$index + 1] && BondTypeEnum::isSimple($nextBond->getBondTypeString())) {
+                                        $this->arNodes[$path[$index + 1]]->addDigit($digit);
+                                        $break = true;
+                                        break;
+                                    }
+                                }
+                                if ($break) {
+                                    break;
+                                }
+                            }
+                        }
+                        break;
+                    }
+                }
+                foreach ($path as $nodeNumber) {
+                    $this->arNodes[$nodeNumber]->setInRing(true);
+                }
+                continue;
+            }
+            $node = $this->arNodes[$last];
+            foreach ($node->getBonds() as $bond) {
+                if ($firstPass && $bond->getNodeNumber() === $finish) {
+                    $firstPass = false;
+                    continue;
+                }
+                if (!in_array($bond->getNodeNumber(), $path)) {
+                    $newPath = $path;
+                    $newPath[] = $bond->getNodeNumber();
+                    $queue->push($newPath);
+                }
+            }
+        }
+
     }
 
 }

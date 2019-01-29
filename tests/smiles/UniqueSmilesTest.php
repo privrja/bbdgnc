@@ -178,6 +178,21 @@ final class UniqueSmilesTest extends TestCase {
     }
 
     public function testCyclic6() {
+        $graph = new Graph('CC(=C=CC1)=C1');
+        $this->assertEquals('C[C]=1=CCC=C=1', $graph->getUniqueSmiles());
+    }
+
+    public function testCyclic8() {
+        $graph = new Graph('CC(=C=C1)=C=C1');
+        $this->assertEquals('C[C]=1=C=CC=C=1', $graph->getUniqueSmiles());
+    }
+
+    public function testCyclic9() {
+        $graph = new Graph('C[C]=1C=CC=C=1');
+        $this->assertEquals('C[C]1=[C]=[CH]C=C1', $graph->getUniqueSmiles());
+    }
+
+    public function testCyclic10() {
         $graph = new Graph('O1CCCCC1N1CCCCC1');
         $this->assertEquals('C1CCN(CC1)C2CCCCO2', $graph->getUniqueSmiles());
     }

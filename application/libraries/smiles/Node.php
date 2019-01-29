@@ -18,6 +18,9 @@ class Node {
     /** @var CangenStructure $cangenStructure */
     private $cangenStructure;
 
+    /** @var bool $inRing */
+    private $inRing = false;
+
     /** @var Bond[] */
     private $arBonds = array();
 
@@ -139,7 +142,51 @@ class Node {
         return $this->arDigits;
     }
 
+    /**
+     * @param int[] $arDigits
+     */
+    public function setDigits(array $arDigits): void {
+        $this->arDigits = $arDigits;
+    }
+
+    /**
+     * Add digit to arDigits
+     * @param int $digit
+     */
     public function addDigit(int $digit): void {
         $this->arDigits[] = $digit;
     }
+
+    public function deleteDigit(int $digit): void {
+        $arDigitsLength = sizeof($this->arDigits);
+        for ($index = 0; $index < $arDigitsLength; ++$index) {
+            if ($digit === $this->arDigits[$index]) {
+                unset($this->arDigits[$index]);
+                return;
+            }
+        }
+    }
+
+    /**
+     * Check if digits are empty
+     * @return bool
+     */
+    public function isDigitsEmpty() {
+        return empty($this->arDigits);
+    }
+
+    /**
+     * @return bool
+     */
+    public function isInRing(): bool {
+        return $this->inRing;
+    }
+
+    /**
+     * @param bool $inRing
+     */
+    public function setInRing(bool $inRing): void {
+        $this->inRing = $inRing;
+    }
+
 }
