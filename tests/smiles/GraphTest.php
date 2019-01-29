@@ -454,4 +454,45 @@ final class GraphTest extends TestCase {
         $this->expectException(IllegalArgumentException::class);
         new Graph('CCC[]');
     }
+
+
+    public function testGraphRight18() {
+        $graph = new Graph('OC(=O)C(Cc1ccccc1)N');
+        $expectedGraph = new Graph('');
+        $expectedGraph->addNode(PeriodicTableSingleton::getInstance()->getAtoms()['O']);
+        $expectedGraph->addNode(PeriodicTableSingleton::getInstance()->getAtoms()['C']);
+        $expectedGraph->addNode(PeriodicTableSingleton::getInstance()->getAtoms()['O']);
+        for ($i = 0; $i < 2; $i++) {
+            $expectedGraph->addNode(PeriodicTableSingleton::getInstance()->getAtoms()['C']);
+        }
+        for ($i = 0; $i < 6; $i++) {
+            $expectedGraph->addNode(PeriodicTableSingleton::getInstance()->getAtoms()['c']);
+        }
+        $expectedGraph->addNode(PeriodicTableSingleton::getInstance()->getAtoms()['N']);
+        $expectedGraph->addBond(0, new Bond(1, ''));
+        $expectedGraph->addBond(1, new Bond(0, ''));
+        $expectedGraph->addBond(1, new Bond(2, '='));
+        $expectedGraph->addBond(1, new Bond(3, ''));
+        $expectedGraph->addBond(2, new Bond(1, '='));
+        $expectedGraph->addBond(3, new Bond(1, ''));
+        $expectedGraph->addBond(3, new Bond(4, ''));
+        $expectedGraph->addBond(3, new Bond(11, ''));
+        $expectedGraph->addBond(4, new Bond(3, ''));
+        $expectedGraph->addBond(4, new Bond(5, ''));
+        $expectedGraph->addBond(5, new Bond(4, ''));
+        $expectedGraph->addBond(5, new Bond(6, ''));
+        $expectedGraph->addBond(5, new Bond(10, ''));
+        $expectedGraph->addBond(6, new Bond(5, ''));
+        $expectedGraph->addBond(6, new Bond(7, ''));
+        $expectedGraph->addBond(7, new Bond(6, ''));
+        $expectedGraph->addBond(7, new Bond(8, ''));
+        $expectedGraph->addBond(8, new Bond(7, ''));
+        $expectedGraph->addBond(8, new Bond(9, ''));
+        $expectedGraph->addBond(9, new Bond(8, ''));
+        $expectedGraph->addBond(9, new Bond(10, ''));
+        $expectedGraph->addBond(10, new Bond(9, ''));
+        $expectedGraph->addBond(10, new Bond(5, ''));
+        $expectedGraph->addBond(11, new Bond(3, ''));
+        $this->assertEquals($expectedGraph, $graph);
+    }
 }

@@ -9,6 +9,9 @@ class Element {
     protected $bindings = 0;
     protected $mass = 0;
 
+    /** @var bool $isAromatic */
+    protected $isAromatic;
+
     /** @var Charge $charge */
     protected $charge;
 
@@ -21,8 +24,9 @@ class Element {
      * must be non negative number
      * @param float $mass
      * must be positive number
+     * @param bool $isAromatic
      */
-    public function __construct(string $name, int $protons, int $bindings, float $mass) {
+    public function __construct(string $name, int $protons, int $bindings, float $mass, bool $isAromatic = false) {
         assert($protons >= 0);
         assert($bindings >= 0);
         assert($mass > 0);
@@ -30,6 +34,7 @@ class Element {
         $this->protons = $protons;
         $this->bindings = $bindings;
         $this->mass = $mass;
+        $this->isAromatic = $isAromatic;
         $this->charge = new Charge();
     }
 
@@ -85,7 +90,7 @@ class Element {
     }
 
     public function asBracketElement() {
-        return new BracketElement($this->name, $this->protons, $this->bindings, $this->mass, new Charge(), 0);
+        return new BracketElement($this->name, $this->protons, $this->bindings, $this->mass, $this->isAromatic, new Charge(), 0);
     }
 
 }
