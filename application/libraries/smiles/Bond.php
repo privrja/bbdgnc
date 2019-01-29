@@ -6,8 +6,10 @@ use Bbdgnc\Smiles\Enum\BondTypeEnum;
 
 class Bond {
 
+    /** @var int $nodeNumber */
     private $nodeNumber;
 
+    /** @var int $bondType */
     private $bondType;
 
     /**
@@ -15,9 +17,17 @@ class Bond {
      * @param $nodeNumber
      * @param $bondType
      */
-    public function __construct($nodeNumber, $bondType) {
+    public function __construct(int $nodeNumber, string $bondType) {
         $this->nodeNumber = $nodeNumber;
         $this->bondType = BondTypeEnum::$values[$bondType];
+    }
+
+    /**
+     * @param int $bondType
+     * @see BondTypeEnum
+     */
+    public function setBondType(int $bondType) {
+        $this->bondType = $bondType;
     }
 
     /**

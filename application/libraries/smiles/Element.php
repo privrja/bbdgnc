@@ -84,6 +84,21 @@ class Element {
         return $this->mass;
     }
 
+    /**
+     * @return bool
+     */
+    public function isAromatic(): bool {
+        return $this->isAromatic;
+    }
+
+    public function asNonAromatic() {
+        var_dump("asNON AROMATIC");
+        if ($this->isAromatic) {
+            $this->bindings++;
+            $this->isAromatic = false;
+        }
+    }
+
     public function getHydrogensCount($actualBindings) {
         $hydrogensCount = $this->bindings - $actualBindings;
         return $hydrogensCount < 0 ? 0 : $hydrogensCount;

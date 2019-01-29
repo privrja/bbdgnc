@@ -14,10 +14,11 @@ class BracketElement extends Element {
      * @param int $protons
      * @param int $bindings
      * @param float $mass
+     * @param bool $isAromatic
      * @param Charge $charge
      * @param int $hydrogens
      */
-    public function __construct(string $name, int $protons, int $bindings, float $mass, Charge $charge, int $hydrogens) {
+    public function __construct(string $name, int $protons, int $bindings, float $mass, bool $isAromatic, Charge $charge, int $hydrogens) {
         parent::__construct($name, $protons, $bindings, $mass);
         assert($hydrogens >= 0);
         $this->charge = $charge;

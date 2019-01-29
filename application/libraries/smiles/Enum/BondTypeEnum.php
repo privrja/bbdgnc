@@ -4,11 +4,17 @@ namespace Bbdgnc\Smiles\Enum;
 
 class BondTypeEnum {
 
+    const SIMPLE = 1;
+
+    const DOUBLE = 2;
+
+    const TRIPLE = 3;
+
     public static $values = array(
-        '' => 1,
-        '-' => 1,
-        '=' => 2,
-        '#' => 3,
+        '' => self::SIMPLE,
+        '-' => self::SIMPLE,
+        '=' => self::DOUBLE,
+        '#' => self::TRIPLE,
     );
 
     /**
@@ -24,8 +30,8 @@ class BondTypeEnum {
     }
 
     public static $backValues = array(
-        1 => '',
-        2 => '=',
-        3 => '#',
+        self::SIMPLE => '',
+        self::DOUBLE => '=',
+        self::TRIPLE => '#',
     );
 }

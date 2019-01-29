@@ -442,7 +442,42 @@ class Graph {
         return false;
     }
 
+    /**
+     * Return true when all nodes are aromatic
+     * otherwise false
+     * @param int[] $path node numbers
+     * @return bool
+     */
+    public function isAromaticRing($path) {
+        foreach ($path as $nodeNumber) {
+            if (!$this->arNodes[$nodeNumber]->getAtom()->isAromatic()) {
+                return false;
+            }
+        }
+        return true;
+    }
 
+    /**
+     * @param int $from node number from
+     * @param int $to node number to
+     * @return Bond
+     * @throws NotFoundException
+     */
+    private function findBondTo(int $from, int $to) {
+        foreach ($this->arNodes[$from]->getBonds() as $bond) {
+            if ($bond->getNodeNumber() === $to) {
+                return $bond;
+            }
+        }
+        throw new NotFoundException();
+    }
+
+    /**
+     * Set rings closure
+     * @param int $start node number start
+     * @param int $finish node number finish
+     * @param Digit $digit
+     */
     public function findRings(int $start, int $finish, Digit $digit) {
         if ($digit->isAccepted()) {
             return;
@@ -456,6 +491,24 @@ class Graph {
             $path = $queue->pop();
             $last = end($path);
             if ($last === $finish) {
+                var_dump("FINISH");
+                if ($this->isAromaticRing($path)) {
+                    $pathLength = sizeof($path);
+                    for ($index = 0; $index < $pathLength; ++$index) {
+                        $this->arNodes[$path[$index]]->getAtom()->asNonAromatic();
+                        if ($index % 2 === 0) {
+                            try {
+                                $bond = $this->findBondTo($path[$index], $path[$index + 1]);
+                                $bondBack = $this->findBondTo($path[$index + 1], $path[$index]);
+                            } catch (NotFoundException $exception) {
+                                throw new IllegalStateException();
+                            }
+                            $bond->setBondType(BondTypeEnum::DOUBLE);
+                            $bondBack->setBondType(BondTypeEnum::DOUBLE);
+                        }
+                    }
+                }
+
                 $nodeStart = $this->arNodes[$start];
                 foreach ($nodeStart->getBonds() as $bond) {
                     if ($bond->getNodeNumber() === $finish) {
