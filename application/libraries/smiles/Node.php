@@ -22,7 +22,7 @@ class Node {
     private $inRing = false;
 
     /** @var Bond[] */
-    private $arBonds = array();
+    private $arBonds;
 
     /**
      * @var int $vertexState
@@ -159,11 +159,7 @@ class Node {
 
     public function deleteDigit(int $digit): void {
         $arDigitsLength = sizeof($this->arDigits);
-        var_dump($arDigitsLength);
         for ($index = 0; $index < $arDigitsLength; ++$index) {
-            var_dump($index);
-            var_dump($this->arDigits);
-            var_dump($this->arDigits[$index]);
             if ($digit === $this->arDigits[$index]->getDigit()) {
                 array_splice($this->arDigits, $index, 1);
                 return;

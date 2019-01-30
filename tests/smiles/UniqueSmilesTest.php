@@ -196,4 +196,33 @@ final class UniqueSmilesTest extends TestCase {
         $this->assertEquals('C1CCN(CC1)C2CCCCO2', $graph->getUniqueSmiles());
     }
 
+    /** i think its unnecesarry */
+    public function testCyclic11() {
+        $graph = new Graph('CCC(C)C1C(=O)N(C(C(=O)N(C(C(=O)NCCC(=O)OC(C(=O)N2CCC(C2C(=O)N1)C)CC=C)C)C)C(C)C)C');
+        $this->assertEquals('CCC(C)C1NC(=O)C2C(C)CCN2C(=O)C(CC=C)OC(=O)CCNC(=O)C(C)N(C)C(=O)C(C(C)C)N(C)C1=O', $graph->getUniqueSmiles());
+    }
+
+    /** i think its unnecesarry */
+    public function testCyclic12() {
+        $graph = new Graph('CCC(C)C2C(=O)N(C(C(=O)N(C(C(=O)NCCC(=O)OC(C(=O)N1CCC(C1C(=O)N2)C)CC=C)C)C)C(C)C)C');
+        $this->assertEquals('CCC(C)C1NC(=O)C2C(C)CCN2C(=O)C(CC=C)OC(=O)CCNC(=O)C(C)N(C)C(=O)C(C(C)C)N(C)C1=O', $graph->getUniqueSmiles());
+    }
+
+    public function testCyclic13() {
+        $graph = new Graph('CCC1C(=O)N(CC(=O)N(C(C(=O)NC(C(=O)N(C(C(=O)NC(C(=O)NC(C(=O)N(C(C(=O)N(C(C(=O)N(C(C(=O)N(C(C(=O)N1)C(C(C)CC=CC)O)C)C(C)C)C)CC(C)C)C)CC(C)C)C)C)C)CC(C)C)C)C(C)C)CC(C)C)C)C');
+        $this->assertEquals('CCC1NC(=O)C(C(O)C(C)CC=CC)N(C)C(=O)C(C(C)C)N(C)C(=O)C(CC(C)C)N(C)C(=O)C(CC(C)C)N(C)C(=O)C(C)NC(=O)C(C)NC(=O)C(CC(C)C)N(C)C(=O)C(NC(=O)C(CC(C)C)N(C)C(=O)CN(C)C1=O)C(C)C', $graph->getUniqueSmiles());
+    }
+
+    public function testPhenylAlanine() {
+        $graph = new Graph('OC(=O)C(Cc1ccccc1)N');
+        $smiles = $graph->getUniqueSmiles();
+        $this->assertEquals('NC(CC1=CC=CC=C1)C(O)=O', $smiles);
+    }
+
+    public function testAromatic() {
+        $graph = new Graph('Cc1ccccc1');
+        $smiles = $graph->getUniqueSmiles();
+        $this->assertEquals('CC1=CC=CC=C1', $smiles);
+    }
+
 }

@@ -18,7 +18,7 @@ class OrganicSubsetParser implements IParser {
         foreach (self::LITERALS as $LITERAL) {
             $parseResult = $stringParser->parseTextWithTemplate($strText, $LITERAL);
             if ($parseResult->isAccepted()) {
-                return new Accept(PeriodicTableSingleton::getInstance()->getAtoms()[$LITERAL], $parseResult->getRemainder());
+                return new Accept(clone(PeriodicTableSingleton::getInstance()->getAtoms()[$LITERAL]), $parseResult->getRemainder());
             }
         }
         return self::reject();
