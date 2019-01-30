@@ -19,7 +19,7 @@ class Bond {
      */
     public function __construct(int $nodeNumber, string $bondType) {
         $this->nodeNumber = $nodeNumber;
-        $this->bondType = BondTypeEnum::$values[$bondType];
+        $this->bondType = BondTypeEnum::$backValues[$bondType];
     }
 
     /**
@@ -45,7 +45,7 @@ class Bond {
     }
 
     public function getBondTypeString() {
-        return BondTypeEnum::$backValues[$this->bondType];
+        return BondTypeEnum::$values[$this->bondType];
     }
 
 }

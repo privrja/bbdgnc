@@ -12,9 +12,9 @@ class RankBondMinHeap extends \SplMinHeap {
      */
     protected function compare($value1, $value2) {
         // TODO #, = than -, and - use normal rank
-        if (BondTypeEnum::$values[$value1->getBondType()] > BondTypeEnum::$values[$value2->getBondType()]) {
+        if (BondTypeEnum::$backValues[$value1->getBondType()] > BondTypeEnum::$backValues[$value2->getBondType()]) {
             return 1;
-        } else if (BondTypeEnum::$values[$value1->getBondType()] < BondTypeEnum::$values[$value2->getBondType()]) {
+        } else if (BondTypeEnum::$backValues[$value1->getBondType()] < BondTypeEnum::$backValues[$value2->getBondType()]) {
             return -1;
         }
         if ($value1->getRank() < $value2->getRank()) {

@@ -46,11 +46,11 @@ class Digit {
         return $this->bondType;
     }
 
-    private function printOnlyDigit() {
+    private function printOnlyDigit(): string {
         return $this->digit > 9 ? '%' . $this->digit : $this->digit;
     }
 
-    public function printDigit() {
+    public function printDigit(): string {
         return $this->bondType . $this->printOnlyDigit();
     }
 

@@ -41,7 +41,7 @@ class Node {
         $this->cangenStructure = new CangenStructure();
     }
 
-    public function actualBindings() {
+    public function actualBindings(): int {
         $actualBindings = 0;
         foreach ($this->arBonds as $bond) {
             $actualBindings += $bond->getBondType();
@@ -49,15 +49,15 @@ class Node {
         return $actualBindings;
     }
 
-    public function hydrogensCount() {
+    public function hydrogensCount(): int {
         return $this->atom->getHydrogensCount($this->actualBindings());
     }
 
-    public function addBond(Bond $bond) {
+    public function addBond(Bond $bond): void {
         $this->arBonds[] = $bond;
     }
 
-    public function computeInvariants() {
+    public function computeInvariants(): void {
         $this->invariant = "";
         $this->invariant .= sizeof($this->arBonds);
         $this->invariant .= $this->actualBindingsWithZero();
@@ -171,7 +171,7 @@ class Node {
      * Check if digits are empty
      * @return bool
      */
-    public function isDigitsEmpty() {
+    public function isDigitsEmpty(): bool {
         return empty($this->arDigits);
     }
 

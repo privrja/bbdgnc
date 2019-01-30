@@ -15,7 +15,7 @@ class BondParser implements IParser {
         if (!isset($strText) || "" === $strText) {
             return self::reject();
         }
-        foreach (BondTypeEnum::$values as $bond => $value) {
+        foreach (BondTypeEnum::$backValues as $bond => $value) {
             if ($bond == '') {
                 continue;
             }

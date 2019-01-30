@@ -141,7 +141,7 @@ final class InvariantsTest extends TestCase {
             $graph->rankToPrimes();
             $graph->productPrimes();
             $graph->rankByPrimes();
-            if ($graph->rankEquals()) {
+            if ($graph->ranksEquals()) {
                 break;
             }
         }

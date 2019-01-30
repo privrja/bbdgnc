@@ -2,7 +2,6 @@
 
 namespace Bbdgnc\Smiles;
 
-
 use Bbdgnc\Enum\PeriodicTableSingleton;
 use Bbdgnc\Exception\IllegalArgumentException;
 use Bbdgnc\Exception\IllegalStateException;
@@ -29,6 +28,12 @@ class Graph {
     /** @var int $digit */
     private $digit = 1;
 
+    /** @var int 0 */
+    private const ZERO = 0;
+
+    /** @var int 1 */
+    private const ONE = 1;
+
     /**
      * Graph constructor.
      * @param string $strText
@@ -41,7 +46,7 @@ class Graph {
      * Add node to graph, in graph stored as @see \Bbdgnc\Smiles\Node
      * @param Element $element
      */
-    public function addNode(Element $element) {
+    public function addNode(Element $element): void {
         $this->arNodes[] = new Node($element);
     }
 
@@ -50,7 +55,7 @@ class Graph {
      * @param int $nodeIndex index of source node
      * @param Bond $bond -> index of target node and type of bond
      */
-    public function addBond(int $nodeIndex, Bond $bond) {
+    public function addBond(int $nodeIndex, Bond $bond): void {
         $this->arNodes[$nodeIndex]->addBond($bond);
     }
 
@@ -60,7 +65,7 @@ class Graph {
      * @param int $targetIndex
      * @param string $bondType
      */
-    public function addBidirectionalBond(int $sourceIndex, int $targetIndex, string $bondType) {
+    public function addBidirectionalBond(int $sourceIndex, int $targetIndex, string $bondType): void {
         $this->addBond($sourceIndex, new Bond($targetIndex, $bondType));
         $this->addBond($targetIndex, new Bond($sourceIndex, $bondType));
     }
@@ -69,7 +74,7 @@ class Graph {
      * Parse input SMILES and build graph from it
      * @param string $strText
      */
-    private function buildGraph($strText) {
+    private function buildGraph($strText): void {
         $strText = SmilesBuilder::removeUnnecessaryParentheses($strText);
         $smilesParser = new SmilesParser($this);
         $result = $smilesParser->parse($strText);
@@ -84,7 +89,7 @@ class Graph {
      * @see LossesEnum
      * @return string formula
      */
-    public function getFormula(int $losses) {
+    public function getFormula(int $losses): string {
         $arMapNodesAndCount = [];
         foreach ($this->arNodes as $node) {
             if (isset($arMapNodesAndCount[PeriodicTableSingleton::H])) {
@@ -112,12 +117,13 @@ class Graph {
         return $strFormula;
     }
 
-    public function getUniqueSmiles() {
+    public function getUniqueSmiles(): string {
         $this->cangen();
-        return $this->genes();
+        $this->genes();
+        return $this->uniqueSmiles;
     }
 
-    public function genes() {
+    public function genes(): void {
         $startVertexIndex = $this->dfsInitialization();
         $this->dfs($startVertexIndex);
         if ($this->isCyclic) {
@@ -125,10 +131,9 @@ class Graph {
             $this->dfsInitialization();
             $this->dfs($startVertexIndex);
         }
-        return $this->uniqueSmiles;
     }
 
-    public function cangen() {
+    public function cangen(): void {
         $nodesLength = sizeof($this->arNodes);
         $this->computeInvariants();
         $this->rankInvariants();
@@ -137,7 +142,7 @@ class Graph {
                 $this->rankToPrimes();
                 $this->productPrimes();
                 $this->rankByPrimes();
-                if ($this->rankEquals()) {
+                if ($this->ranksEquals()) {
                     break;
                 }
             }
@@ -152,7 +157,7 @@ class Graph {
     /**
      * Rank invariants in nodes
      */
-    public function rankInvariants() {
+    public function rankInvariants(): void {
         $heap = new \SplMinHeap();
         foreach ($this->arNodes as $node) {
             $heap->insert($node->getInvariant());
@@ -174,7 +179,7 @@ class Graph {
         }
     }
 
-    public function rankToPrimes() {
+    public function rankToPrimes(): void {
         $heap = new \SplMinHeap();
         foreach ($this->arNodes as $node) {
             $heap->insert($node->getCangenStructure()->getRank());
@@ -196,7 +201,7 @@ class Graph {
         }
     }
 
-    public function productPrimes() {
+    public function productPrimes(): void {
         foreach ($this->arNodes as $node) {
             $product = 1;
             foreach ($node->getBonds() as $bond) {
@@ -206,7 +211,7 @@ class Graph {
         }
     }
 
-    public function rankByPrimes() {
+    public function rankByPrimes(): void {
         $heap = new CangenMinHeap();
         foreach ($this->arNodes as $node) {
             $heap->insert($node->getCangenStructure());
@@ -229,7 +234,7 @@ class Graph {
      * otherwise return false
      * @return bool
      */
-    public function rankEquals() {
+    public function ranksEquals(): bool {
         foreach ($this->arNodes as $node) {
             if (!$node->getCangenStructure()->isRankSameAsLastRank()) {
                 return false;
@@ -238,13 +243,13 @@ class Graph {
         return true;
     }
 
-    public function computeInvariants() {
+    public function computeInvariants(): void {
         foreach ($this->arNodes as $node) {
             $node->computeInvariants();
         }
     }
 
-    public function maxRank() {
+    public function maxRank(): int {
         $index = 0;
         $max = $this->arNodes[$index]->getCangenStructure()->getRank();
         foreach ($this->arNodes as $node) {
@@ -256,7 +261,7 @@ class Graph {
         return $max;
     }
 
-    public function minRankIndex() {
+    public function minRankIndex(): int {
         $heap = new \SplMinHeap();
         foreach ($this->arNodes as $node) {
             $heap->insert($node->getCangenStructure()->getRank());
@@ -281,22 +286,21 @@ class Graph {
         return $index;
     }
 
-    private function breakTies() {
+    private function breakTies(): void {
         foreach ($this->arNodes as $node) {
             $node->setInvariant($node->getCangenStructure()->getRank() * 2);
         }
-
         $minIndex = $this->minRankIndex();
         $rank = $this->arNodes[$minIndex]->getCangenStructure()->getRank() * 2 - 1;
         $this->arNodes[$minIndex]->setInvariant($rank);
         $this->rankInvariants();
     }
 
-    public function getNodes() {
+    public function getNodes(): array {
         return $this->arNodes;
     }
 
-    public function toString() {
+    public function toString(): string {
         $str = "";
         $intIndex = 0;
         /** @var Node $node */
@@ -317,7 +321,7 @@ class Graph {
      * and return index of the lowest rank, this point would be the starting point
      * @return int
      */
-    private function dfsInitialization() {
+    private function dfsInitialization(): int {
         $this->uniqueSmiles = "";
         $this->isCyclic = false;
         $this->digit = 1;
@@ -341,7 +345,7 @@ class Graph {
      * @param string $bond
      * @param int $lastNodeNumber
      */
-    private function dfs(int $nodeNumber, $branch = false, $bond = '', $lastNodeNumber = -1) {
+    private function dfs(int $nodeNumber, $branch = false, $bond = '', $lastNodeNumber = -1): void {
         $node = $this->arNodes[$nodeNumber];
         if ($node->getVertexState() === VertexStateEnum::OPEN) {
             $this->isCyclic = true;
@@ -354,13 +358,48 @@ class Graph {
         }
 
         $node->setVertexState(VertexStateEnum::OPEN);
-        if ($branch) {
-            $this->uniqueSmiles .= '(';
-        }
-        $this->uniqueSmiles .= $bond;
-        $this->uniqueSmiles .= $node->getAtom()->elementSmiles();
+        $this->printBracket($branch, '(');
+        $this->printBondAndAtom($bond, $node);
+        $printedDigits = $this->ringClosures($nodeNumber);
 
+        $heap = $this->initializeHeap($node);
+        foreach ($node->getBonds() as $bond) {
+            if ($lastNodeNumber == $bond->getNodeNumber()) {
+                continue;
+            }
+            $heap->insert(new NextNode($bond->getNodeNumber(), $bond->getBondTypeString(),
+                $this->arNodes[$bond->getNodeNumber()]->getCangenStructure()->getRank()));
+        }
+
+        while (!$heap->isEmpty()) {
+            /** @var NextNode $nextNode */
+            $heapCount = $heap->count();
+            $nextNode = $heap->extract();
+            $this->dfs($nextNode->getNodeIndex(), $heapCount - $printedDigits > 1, $nextNode->getBondType(), $nodeNumber);
+        }
+        $this->printBracket($branch, ')');
+        $node->setVertexState(VertexStateEnum::CLOSED);
+    }
+
+    /**
+     * Add bracket to Unique SMILES, if $branch is true
+     * @param bool $branch
+     * @param string $bracket
+     */
+    private function printBracket(bool $branch, string $bracket): void {
+        if ($branch) {
+            $this->uniqueSmiles .= $bracket;
+        }
+    }
+
+    /**
+     * Find rings and set nodes on ring to isInRing to true, then add digits on actual node to Unique SMILES
+     * @param int $nodeNumber number of actual node
+     * @return int number of printed numbers
+     */
+    private function ringClosures($nodeNumber): int {
         $printedDigits = 0;
+        $node = $this->arNodes[$nodeNumber];
         if (!$node->isDigitsEmpty()) {
             foreach ($node->getDigits() as $digit) {
                 foreach ($node->getBonds() as $bond) {
@@ -377,34 +416,24 @@ class Graph {
             foreach ($node->getDigits() as $digit) {
                 $this->uniqueSmiles .= $digit->printDigit();
                 $printedDigits++;
-
             }
         }
+        return $printedDigits;
+    }
 
-        $heap = null;
+    /**
+     * Return right type of heap
+     * when node in ring return RankBondMinHeap
+     * otherwise return RankMinHeap
+     * @param Node $node
+     * @return RankBondMinHeap|RankMinHeap
+     */
+    private function initializeHeap(Node $node): \SplMinHeap {
         if ($this->isSecondPass && $node->isInRing()) {
-            $heap = new RankBondMinHeap();
+            return new RankBondMinHeap();
         } else {
-            $heap = new RankMinHeap();
+            return new RankMinHeap();
         }
-        foreach ($node->getBonds() as $bond) {
-            if ($lastNodeNumber == $bond->getNodeNumber()) {
-                continue;
-            }
-            $heap->insert(new NextNode($bond->getNodeNumber(), $bond->getBondTypeString(),
-                $this->arNodes[$bond->getNodeNumber()]->getCangenStructure()->getRank()));
-        }
-
-        while (!$heap->isEmpty()) {
-            /** @var NextNode $nextNode */
-            $heapCount = $heap->count();
-            $nextNode = $heap->extract();
-            $this->dfs($nextNode->getNodeIndex(), $heapCount - $printedDigits > 1, $nextNode->getBondType(), $nodeNumber);
-        }
-        if ($branch) {
-            $this->uniqueSmiles .= ')';
-        }
-        $node->setVertexState(VertexStateEnum::CLOSED);
     }
 
     /**
@@ -413,7 +442,7 @@ class Graph {
      * @return Digit
      * @throws NotFoundException
      */
-    private function findDigit(int $digit, array $digits) {
+    private function findDigit(int $digit, array $digits): Digit {
         foreach ($digits as $aDigit) {
             if ($aDigit->getDigit() === $digit) {
                 return $aDigit;
@@ -427,7 +456,7 @@ class Graph {
      * @param Digit[] $digits
      * @return bool
      */
-    private function isDigitIn(int $digit, array $digits) {
+    private function isDigitIn(int $digit, array $digits): bool {
         foreach ($digits as $aDigit) {
             if ($aDigit->getDigit() === $digit) {
                 return true;
@@ -442,7 +471,7 @@ class Graph {
      * @param int[] $path node numbers
      * @return bool
      */
-    public function isAromaticRing($path) {
+    public function isAromaticRing($path): bool {
         foreach ($path as $nodeNumber) {
             if (!$this->arNodes[$nodeNumber]->getAtom()->isAromatic()) {
                 return false;
@@ -457,7 +486,7 @@ class Graph {
      * @return Bond
      * @throws NotFoundException
      */
-    private function findBondTo(int $from, int $to) {
+    private function findBondTo(int $from, int $to): Bond {
         foreach ($this->arNodes[$from]->getBonds() as $bond) {
             if ($bond->getNodeNumber() === $to) {
                 return $bond;
@@ -472,7 +501,7 @@ class Graph {
      * @param int $finish node number finish
      * @param Digit $digit
      */
-    public function findRings(int $start, int $finish, Digit $digit) {
+    public function findRings(int $start, int $finish, Digit $digit): void {
         if ($digit->isAccepted()) {
             return;
         }
@@ -480,69 +509,12 @@ class Graph {
         $firstPath = [$start];
         $queue->push($firstPath);
         $firstPass = true;
-
         while (!$queue->isEmpty()) {
             $path = $queue->pop();
             $last = end($path);
             if ($last === $finish) {
-                if ($this->isAromaticRing($path)) {
-                    $pathLength = sizeof($path);
-                    for ($index = 0; $index < $pathLength; ++$index) {
-                        $this->arNodes[$path[$index]]->getAtom()->asNonAromatic();
-                        if ($index % 2 === 0) {
-                            try {
-                                $bond = $this->findBondTo($path[$index], $path[$index + 1]);
-                                $bondBack = $this->findBondTo($path[$index + 1], $path[$index]);
-                            } catch (NotFoundException $exception) {
-                                throw new IllegalStateException();
-                            }
-                            $bond->setBondType(BondTypeEnum::DOUBLE);
-                            $bondBack->setBondType(BondTypeEnum::DOUBLE);
-                        }
-                    }
-                }
-
-                $nodeStart = $this->arNodes[$start];
-                foreach ($nodeStart->getBonds() as $bond) {
-                    if ($bond->getNodeNumber() === $finish) {
-                        if (BondTypeEnum::isMultipleBinding($bond->getBondTypeString())) {
-                            $this->arNodes[$finish]->deleteDigit($digit->getDigit());
-                            $index = 0;
-                            $setNumber = false;
-                            foreach ($this->arNodes[$path[$index]]->getBonds() as $nextBond) {
-                                if ($nextBond->getNodeNumber() === $path[$index + 1] && BondTypeEnum::isSimple($nextBond->getBondTypeString())) {
-                                    $this->arNodes[$start]->deleteDigit($digit->getDigit());
-                                    $newDigit = new Digit($digit->getDigit(), true);
-                                    $this->arNodes[$start]->addDigit($newDigit);
-                                    $this->arNodes[$path[$index + 1]]->addDigit($newDigit);
-                                    $setNumber = true;
-                                    break;
-                                }
-                            }
-                            if (!$setNumber) {
-                                $this->arNodes[$start]->deleteDigit($digit->getDigit());
-                                $newDigit = new Digit($digit->getDigit(), true, $bond->getBondTypeString());
-                                $this->arNodes[$start]->addDigit($newDigit);
-                                $this->arNodes[$finish]->addDigit($newDigit);
-                            }
-                        } else {
-                            $newDigit = new Digit($digit->getDigit(), true, $bond->getBondTypeString());
-                            try {
-                                if (!$this->findDigit($digit->getDigit(), $this->arNodes[$start]->getDigits())->isAccepted()) {
-                                    $this->arNodes[$start]->deleteDigit($digit->getDigit());
-                                    $this->arNodes[$start]->addDigit($newDigit);
-                                }
-                            if (!$this->findDigit($digit->getDigit(), $this->arNodes[$finish]->getDigits())->isAccepted()) {
-                                $this->arNodes[$finish]->deleteDigit($digit->getDigit());
-                                $this->arNodes[$finish]->addDigit($newDigit);
-                            }
-                            } catch (NotFoundException $exception) {
-                                throw new IllegalStateException();
-                            }
-                        }
-                        break;
-                    }
-                }
+                $this->aromaticRing($path);
+                $this->multipleBindingRing($start, $finish, $path, $digit->getDigit());
                 foreach ($path as $nodeNumber) {
                     $this->arNodes[$nodeNumber]->setInRing(true);
                 }
@@ -563,5 +535,98 @@ class Graph {
         }
 
     }
+
+    /**
+     * Add bond and atom to Unique SMILES
+     * @param string $bond
+     * @param Node $node
+     */
+    private function printBondAndAtom(string $bond, Node $node) {
+        $this->uniqueSmiles .= $bond;
+        $this->uniqueSmiles .= $node->getAtom()->elementSmiles();
+    }
+
+    /**
+     * Replace syntax in SMILES c1ccccc1 to C1=CC=CC=C1 in graph notation
+     * @param array $path
+     */
+    private function aromaticRing(array $path) {
+        if ($this->isAromaticRing($path)) {
+            $pathLength = sizeof($path);
+            for ($index = 0; $index < $pathLength; ++$index) {
+                $this->arNodes[$path[$index]]->getAtom()->asNonAromatic();
+                if ($index % 2 === 0) {
+                    try {
+                        $bond = $this->findBondTo($path[$index], $path[$index + 1]);
+                        $bondBack = $this->findBondTo($path[$index + 1], $path[$index]);
+                    } catch (NotFoundException $exception) {
+                        throw new IllegalStateException();
+                    }
+                    $bond->setBondType(BondTypeEnum::DOUBLE);
+                    $bondBack->setBondType(BondTypeEnum::DOUBLE);
+                }
+            }
+        }
+    }
+
+    /**
+     * @param int $nodeNumber
+     * @param int $digit
+     * @param string $bondType
+     */
+    private function setNewDigit(int $nodeNumber, int $digit, string $bondType) {
+        try {
+            if (!$this->findDigit($digit, $this->arNodes[$nodeNumber]->getDigits())->isAccepted()) {
+                $this->deleteAndAddDigit($nodeNumber, $digit, $bondType);
+            }
+        } catch (NotFoundException $exception) {
+            throw new IllegalStateException();
+        }
+    }
+
+    /**
+     * @param int $nodeNumber
+     * @param int $digit
+     * @param string $bondType
+     */
+    private function deleteAndAddDigit(int $nodeNumber, int $digit, string $bondType) {
+        $this->arNodes[$nodeNumber]->deleteDigit($digit);
+        $this->arNodes[$nodeNumber]->addDigit(new Digit($digit, true, $bondType));
+    }
+
+    /**
+     * @param int $start
+     * @param int $finish
+     * @param array $path
+     * @param int $digit
+     */
+    private function multipleBindingRing(int $start, int $finish, array $path, int $digit) {
+        $nodeStart = $this->arNodes[$start];
+        foreach ($nodeStart->getBonds() as $bond) {
+            if ($bond->getNodeNumber() === $finish) {
+                if (BondTypeEnum::isMultipleBinding($bond->getBondTypeString())) {
+                    $this->arNodes[$finish]->deleteDigit($digit);
+                    $setNumber = false;
+                    foreach ($this->arNodes[$path[self::ZERO]]->getBonds() as $nextBond) {
+                        if ($nextBond->getNodeNumber() === $path[self::ONE] && BondTypeEnum::isSimple($nextBond->getBondTypeString())) {
+                            $this->deleteAndAddDigit($start, $digit, BondTypeEnum::$values[BondTypeEnum::SIMPLE]);
+                            $this->arNodes[$path[self::ONE]]->addDigit(new Digit($digit, true));
+                            $setNumber = true;
+                            break;
+                        }
+                    }
+                    if (!$setNumber) {
+                        $this->deleteAndAddDigit($start, $digit, $bond->getBondTypeString());
+                        $this->arNodes[$finish]->addDigit(new Digit($digit, true, $bond->getBondTypeString()));
+                    }
+                } else {
+                    $this->setNewDigit($start, $digit, $bond->getBondTypeString());
+                    $this->setNewDigit($finish, $digit, $bond->getBondTypeString());
+                }
+                break;
+            }
+        }
+    }
+
 
 }
