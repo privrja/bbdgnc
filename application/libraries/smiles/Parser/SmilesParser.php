@@ -4,6 +4,7 @@ namespace Bbdgnc\Smiles\Parser;
 
 use Bbdgnc\Base\OneTimeReadable;
 use Bbdgnc\Exception\ReadOnlyOneTimeException;
+use Bbdgnc\Smiles\Digit;
 use Bbdgnc\Smiles\Enum\BondTypeEnum;
 use Bbdgnc\Smiles\Exception\RejectException;
 use Bbdgnc\Smiles\Graph;
@@ -83,7 +84,7 @@ class SmilesParser implements IParser {
         $this->elementParser = new ElementParser();
         $this->leftBracketParser = new LeftBracketParser();
         $this->rightBracketParser = new RightBracketParser();
-        $this->smilesNumberParser = new SmilesNumberParser();
+        $this->smilesNumberParser = new BondAndNumberParser();
     }
 
     /**
@@ -127,20 +128,25 @@ class SmilesParser implements IParser {
      * @param ParseResult $result
      * @param ParseResult $lastResult
      * @throws ReadOnlyOneTimeException
+     * @throws RejectException
      */
     private function tryNumberOk(ParseResult $result, ParseResult $lastResult) {
         $this->isLastParsedBond = false;
-        if (isset($this->arNumberBonds[$result->getResult()])) {
-            if ($this->arNumberBonds[$result->getResult()]->isRead()) {
-                $this->arNumberBonds[$result->getResult()] = new OneTimeReadable($this->intNodeIndex - 1);
+        if (isset($this->arNumberBonds[$result->getResult()->getDigit()])) {
+            if ($this->arNumberBonds[$result->getResult()->getDigit()]->isRead()) {
+                $this->arNumberBonds[$result->getResult()->getDigit()] = new OneTimeReadable(new Digit($this->intNodeIndex - 1, false, $result->getResult()->getBondType()));
                 $this->intWriting++;
             } else {
-                $intWhere = $this->arNumberBonds[$result->getResult()]->getObject();
-                $this->graph->addBidirectionalBond($intWhere, $this->intNodeIndex - 1, '');
+                /** @var Digit $digit */
+                $digit = $this->arNumberBonds[$result->getResult()->getDigit()]->getObject();
+                if ($digit->getBondType() !== $result->getResult()->getBondType()) {
+                    self::ko($result, $lastResult);
+                }
+                $this->graph->addBidirectionalBond($digit->getDigit(), $this->intNodeIndex - 1, $digit->getBondType());
                 $this->intReading++;
             }
         } else {
-            $this->arNumberBonds[$result->getResult()] = new OneTimeReadable($this->intNodeIndex - 1);
+            $this->arNumberBonds[$result->getResult()->getDigit()] = new OneTimeReadable(new Digit($this->intNodeIndex - 1, false, $result->getResult()->getBondType()));
             $this->intWriting++;
         }
         $this->parseAndCallBack($result, $this->smilesNumberParser, self::TRY_NUMBER, self::TRY_BOND);
