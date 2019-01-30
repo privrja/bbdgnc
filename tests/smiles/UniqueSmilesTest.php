@@ -196,7 +196,7 @@ final class UniqueSmilesTest extends TestCase {
         $this->assertEquals('C1CCN(CC1)C2CCCCO2', $graph->getUniqueSmiles());
     }
 
-    /** i think its unnecesarry */
+    /** i think its unnecessary */
     public function testCyclic11() {
         $graph = new Graph('CCC(C)C1C(=O)N(C(C(=O)N(C(C(=O)NCCC(=O)OC(C(=O)N2CCC(C2C(=O)N1)C)CC=C)C)C)C(C)C)C');
         $this->assertEquals('CCC(C)C1NC(=O)C2C(C)CCN2C(=O)C(CC=C)OC(=O)CCNC(=O)C(C)N(C)C(=O)C(C(C)C)N(C)C1=O', $graph->getUniqueSmiles());
