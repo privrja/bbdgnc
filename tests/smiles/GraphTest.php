@@ -455,6 +455,25 @@ final class GraphTest extends TestCase {
         new Graph('CCC[]');
     }
 
+    public function testGraphWrong17() {
+        $this->expectException(IllegalArgumentException::class);
+        new Graph('CCC=1CC');
+    }
+
+    public function testGraphWrong18() {
+        $this->expectException(IllegalArgumentException::class);
+        new Graph('CCC=1CC=2');
+    }
+
+    public function testgraphwrong19() {
+        $this->expectexception(illegalargumentexception::class);
+        new graph('ccc(=1)cc1');
+    }
+
+    public function testGraphWrong20() {
+        $this->expectException(IllegalArgumentException::class);
+        new Graph('CCC=1CC=CC1');
+    }
 
     public function testGraphRight18() {
         $graph = new Graph('OC(=O)C(Cc1ccccc1)N');
