@@ -11,7 +11,6 @@ class RankBondMinHeap extends \SplMinHeap {
      * @return int
      */
     protected function compare($value1, $value2) {
-        // TODO #, = than -, and - use normal rank
         if (BondTypeEnum::$backValues[$value1->getBondType()] > BondTypeEnum::$backValues[$value2->getBondType()]) {
             return 1;
         } else if (BondTypeEnum::$backValues[$value1->getBondType()] < BondTypeEnum::$backValues[$value2->getBondType()]) {
