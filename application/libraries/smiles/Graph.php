@@ -225,14 +225,6 @@ class Graph {
     }
 
     /**
-     * Return SMILES, now only the argument passed in constructor
-     * @return string
-     */
-    public function getSmiles() {
-
-    }
-
-    /**
      * Return true when ranks are same for all nodes
      * otherwise return false
      * @return bool
@@ -373,17 +365,18 @@ class Graph {
             foreach ($node->getDigits() as $digit) {
                 foreach ($node->getBonds() as $bond) {
                     if ($this->isDigitIn($digit->getDigit(), $this->arNodes[$bond->getNodeNumber()]->getDigits())) {
+                        var_dump($digit);
+                        var_dump("start" . $nodeNumber);
+                        var_dump("finish" . $bond->getNodeNumber());
                         $this->findRings($nodeNumber, $bond->getNodeNumber(), $digit);
+                        $digit = $this->findDigit($digit->getDigit(), $node->getDigits());
                     }
                 }
-                $newDigit = null;
-                try {
-                    $newDigit = $this->findDigit($digit->getDigit(), $this->arNodes[$nodeNumber]->getDigits());
-                } catch (NotFoundException $exception) {
-                    throw new IllegalStateException();
-                }
-                $this->uniqueSmiles .= $newDigit->printDigit();
+            }
+            foreach ($node->getDigits() as $digit) {
+                $this->uniqueSmiles .= $digit->printDigit();
                 $printedDigits++;
+
             }
         }
 
@@ -487,11 +480,14 @@ class Graph {
         $queue->push($firstPath);
         $firstPass = true;
 
+        var_dump("RRRR");
         while (!$queue->isEmpty()) {
+            var_dump("LL");
             $path = $queue->pop();
             $last = end($path);
             if ($last === $finish) {
                 var_dump("FINISH");
+                var_dump($path);
                 if ($this->isAromaticRing($path)) {
                     $pathLength = sizeof($path);
                     for ($index = 0; $index < $pathLength; ++$index) {
@@ -511,15 +507,21 @@ class Graph {
 
                 $nodeStart = $this->arNodes[$start];
                 foreach ($nodeStart->getBonds() as $bond) {
+                    var_dump("HERE");
                     if ($bond->getNodeNumber() === $finish) {
+                        var_dump("HERE 2");
                         if (BondTypeEnum::isMultipleBinding($bond->getBondTypeString())) {
                             $this->arNodes[$finish]->deleteDigit($digit->getDigit());
                             $index = 0;
                             $setNumber = false;
                             foreach ($this->arNodes[$path[$index]]->getBonds() as $nextBond) {
                                 if ($nextBond->getNodeNumber() === $path[$index + 1] && BondTypeEnum::isSimple($nextBond->getBondTypeString())) {
-                                    $this->arNodes[$path[$index + 1]]->addDigit(new Digit($digit->getDigit(), true));
+                                    $this->arNodes[$start]->deleteDigit($digit->getDigit());
+                                    $newDigit = new Digit($digit->getDigit(), true);
+                                    $this->arNodes[$start]->addDigit($newDigit);
+                                    $this->arNodes[$path[$index + 1]]->addDigit($newDigit);
                                     $setNumber = true;
+                                    var_dump("setdigit here");
                                     break;
                                 }
                             }
@@ -527,6 +529,20 @@ class Graph {
                                 $this->arNodes[$start]->deleteDigit($digit->getDigit());
                                 $newDigit = new Digit($digit->getDigit(), true, $bond->getBondTypeString());
                                 $this->arNodes[$start]->addDigit($newDigit);
+                                $this->arNodes[$finish]->addDigit($newDigit);
+                                var_dump("setdigit here 2");
+                            }
+                        } else {
+                            var_dump("ELSE");
+                            var_dump($this->arNodes[$start]->getDigits());
+                            var_dump($this->arNodes[$finish]->getDigits());
+                            $newDigit = new Digit($digit->getDigit(), true, $bond->getBondTypeString());
+                            if (!$this->findDigit($digit->getDigit(), $this->arNodes[$start]->getDigits())->isAccepted()) {
+                                $this->arNodes[$start]->deleteDigit($digit->getDigit());
+                                $this->arNodes[$start]->addDigit($newDigit);
+                            }
+                            if (!$this->findDigit($digit->getDigit(), $this->arNodes[$finish]->getDigits())->isAccepted()) {
+                                $this->arNodes[$finish]->deleteDigit($digit->getDigit());
                                 $this->arNodes[$finish]->addDigit($newDigit);
                             }
                         }

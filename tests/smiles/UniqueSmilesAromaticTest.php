@@ -13,7 +13,7 @@ final class UniqueSmilesAromaticTest extends TestCase {
         $this->assertEquals('NC(CC1=CC=CC=C1)C(O)=O', $smiles);
     }
 
-    public function testAromatic2() {
+    public function testAromatic() {
         $graph = new Graph('Cc1ccccc1');
         $smiles = $graph->getUniqueSmiles();
         $this->assertEquals('CC1=CC=CC=C1', $smiles);
