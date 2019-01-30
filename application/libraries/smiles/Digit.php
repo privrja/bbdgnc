@@ -17,6 +17,7 @@ class Digit {
      * Digit constructor.
      * @param int $digit
      * @param bool $accepted
+     * @param string $bondType
      */
     public function __construct(int $digit, bool $accepted = false, $bondType = '') {
         $this->digit = $digit;
