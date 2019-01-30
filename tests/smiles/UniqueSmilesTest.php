@@ -17,7 +17,6 @@ final class UniqueSmilesTest extends TestCase {
         $this->assertEquals('CCC(CO)CCC(CN)CN', $graph->getUniqueSmiles());
     }
 
-
     public function testAminobuturicAcid() {
         $graph = new Graph('OC(C(CC)N)=O');
         $this->assertEquals('CCC(N)C(O)=O', $graph->getUniqueSmiles());
