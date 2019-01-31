@@ -10,16 +10,20 @@ final class OpenNumbersSortTest extends TestCase {
 
     public function testCounter() {
         $structure = new OpenNumbersSort();
-        for ($index = 0; $index < 5; ++$index) {
-            $structure->addOpenNode();
-        }
-        $structure->addDigit(2);
-        $structure->addOpenNode();
-        $structure->addDigit(1);
-        $structure->addOpenNode();
-        $structure->addDigit(6);
-        $structure->addDigit(3);
         $expected = [0, 1, 2, 3, 3, 3, 4, 4, 4, 4, 4];
+        for ($index = 0; $index < 5; ++$index) {
+            $structure->addOpenNode($index);
+        }
+        $structure->addOpenNode(5);
+        $structure->addDigit(2, 5);
+        $structure->addOpenNode(6);
+        $structure->addOpenNode(7);
+        $structure->addDigit(1, 7);
+        $structure->addOpenNode(8);
+        $structure->addOpenNode(9);
+        $structure->addDigit(6, 9);
+        $structure->addOpenNode(10);
+        $structure->addDigit(3, 10);
         $actual = [];
         foreach ($structure->getNodes() as $node) {
             $actual[] = $node->getCounter();
@@ -30,15 +34,18 @@ final class OpenNumbersSortTest extends TestCase {
     public function testPairs() {
         $structure = new OpenNumbersSort();
         for ($index = 0; $index < 5; ++$index) {
-            $structure->addOpenNode();
+            $structure->addOpenNode($index);
         }
-        $structure->addDigit(2);
-        $structure->addOpenNode();
-        $structure->addDigit(1);
-        $structure->addOpenNode();
-        $structure->addDigit(6);
-        $structure->addDigit(3);
-
+        $structure->addOpenNode(5);
+        $structure->addDigit(2, 5);
+        $structure->addOpenNode(6);
+        $structure->addOpenNode(7);
+        $structure->addDigit(1, 7);
+        $structure->addOpenNode(8);
+        $structure->addOpenNode(9);
+        $structure->addDigit(6, 9);
+        $structure->addOpenNode(10);
+        $structure->addDigit(3, 10);
         $this->assertEquals(false, $structure->getNodes()[0]->isInPair());
         $this->assertEquals(true, $structure->getNodes()[1]->isInPair());
         $this->assertEquals(true, $structure->getNodes()[2]->isInPair());
@@ -55,14 +62,18 @@ final class OpenNumbersSortTest extends TestCase {
     public function testNumbers() {
         $structure = new OpenNumbersSort();
         for ($index = 0; $index < 5; ++$index) {
-            $structure->addOpenNode();
+            $structure->addOpenNode($index);
         }
-        $structure->addDigit(2);
-        $structure->addOpenNode();
-        $structure->addDigit(1);
-        $structure->addOpenNode();
-        $structure->addDigit(6);
-        $structure->addDigit(3);
+        $structure->addOpenNode(5);
+        $structure->addDigit(2, 5);
+        $structure->addOpenNode(6);
+        $structure->addOpenNode(7);
+        $structure->addDigit(1, 7);
+        $structure->addOpenNode(8);
+        $structure->addOpenNode(9);
+        $structure->addDigit(6, 9);
+        $structure->addOpenNode(10);
+        $structure->addDigit(3, 10);
         $this->assertEquals(1, $structure->getNodes()[1]->getNumber());
         $this->assertEquals(2, $structure->getNodes()[2]->getNumber());
         $this->assertEquals(3, $structure->getNodes()[3]->getNumber());
@@ -76,14 +87,18 @@ final class OpenNumbersSortTest extends TestCase {
     public function testException() {
         $structure = new OpenNumbersSort();
         for ($index = 0; $index < 5; ++$index) {
-            $structure->addOpenNode();
+            $structure->addOpenNode($index);
         }
-        $structure->addDigit(2);
-        $structure->addOpenNode();
-        $structure->addDigit(1);
-        $structure->addOpenNode();
-        $structure->addDigit(6);
-        $structure->addDigit(3);
+        $structure->addOpenNode(5);
+        $structure->addDigit(2, 5);
+        $structure->addOpenNode(6);
+        $structure->addOpenNode(7);
+        $structure->addDigit(1, 7);
+        $structure->addOpenNode(8);
+        $structure->addOpenNode(9);
+        $structure->addDigit(6, 9);
+        $structure->addOpenNode(10);
+        $structure->addDigit(3, 10);
         $this->expectException(IllegalStateException::class);
         $structure->getNodes()[0]->getNumber();
     }

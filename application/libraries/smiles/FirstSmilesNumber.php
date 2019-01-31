@@ -2,13 +2,10 @@
 
 namespace Bbdgnc\Smiles;
 
-class FirstSmilesNumber extends SmilesNumber {
-
-    public function isInPair(): bool {
-        return true;
-    }
+class FirstSmilesNumber extends PairSmilesNumber {
 
     public function getNumber(): int {
         return $this->getCounter();
     }
+
 }

@@ -28,6 +28,9 @@ class Graph {
     /** @var int $digit */
     private $digit = 1;
 
+    /** @var OpenNumbersSort $openNumbersSort */
+    private $openNumbersSort;
+
     /** @var int 0 */
     private const ZERO = 0;
 
@@ -124,11 +127,25 @@ class Graph {
     }
 
     public function genes(): void {
+        $this->openNumbersSort = new OpenNumbersSort();
         $startVertexIndex = $this->dfsInitialization();
         $this->dfs($startVertexIndex);
         if ($this->isCyclic) {
             $this->isSecondPass = true;
             $this->dfsInitialization();
+            foreach ($this->openNumbersSort->getNodes() as $number) {
+                if ($number->isInPair()) {
+                    for ($index = $number->getLength() - 1; $index == 0; --$index) {
+                        if ($number->getNexts()[$index]->getSecond() === -1) {
+                            $this->arNodes[$number->getNodeNumber()]->addDigit(new Digit($number->getNexts()[$index]->getFirst()));
+                        } else {
+                            $this->arNodes[$number->getNodeNumber()]->addDigit(new Digit($number->getNexts()[$index]->getFirst()));
+//                            $this->arNodes[$number->getNodeNumber()]->addDigit(new Digit($nextPair->getSecond()));
+                        }
+                    }
+                    $this->arNodes[$number->getNodeNumber()]->addDigit(new Digit($number->getNumber()));
+                }
+            }
             $this->dfs($startVertexIndex);
         }
     }
@@ -348,15 +365,19 @@ class Graph {
     private function dfs(int $nodeNumber, $branch = false, $bond = '', $lastNodeNumber = -1): void {
         $node = $this->arNodes[$nodeNumber];
         if ($node->getVertexState() === VertexStateEnum::OPEN) {
-            $this->isCyclic = true;
-            $node->addDigit(new Digit($this->digit));
-            $this->arNodes[$lastNodeNumber]->addDigit(new Digit($this->digit));
-            $this->digit++;
+            if (!$this->isSecondPass) {
+                $this->isCyclic = true;
+                $this->openNumbersSort->addDigit($nodeNumber, $lastNodeNumber);
+            }
+//            $node->addDigit(new Digit($this->digit));
+//            $this->arNodes[$lastNodeNumber]->addDigit(new Digit($this->digit));
+//            $this->digit++;
         }
         if ($node->getVertexState() !== VertexStateEnum::NOT_FOUND) {
             return;
         }
 
+        $this->openNumbersSort->addOpenNode($nodeNumber);
         $node->setVertexState(VertexStateEnum::OPEN);
         $this->printBracket($branch, '(');
         $this->printBondAndAtom($bond, $node);

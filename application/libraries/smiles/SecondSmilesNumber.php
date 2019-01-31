@@ -2,32 +2,39 @@
 
 namespace Bbdgnc\Smiles;
 
-class SecondSmilesNumber extends SmilesNumber {
+use Bbdgnc\Base\Pair;
 
-    /** @var int $pairNumber */
-    private $pairNumber = 0;
+class SecondSmilesNumber extends PairSmilesNumber {
 
     /** @var OpenNumbersSort */
     private $openNumbersSort;
 
     /**
      * SecondSmilesNumber constructor.
+     * @param int $nodeNumber
      * @param int $counter
      * @param int $pairNumber
      * @param OpenNumbersSort $openNumbersSort
      */
-    public function __construct(int $counter, int $pairNumber, OpenNumbersSort $openNumbersSort) {
-        parent::__construct($counter);
-        $this->pairNumber = $pairNumber;
+    public function __construct(int $nodeNumber, int $counter, int $pairNumber, OpenNumbersSort $openNumbersSort) {
+        parent::__construct($nodeNumber, $counter, $pairNumber);
         $this->openNumbersSort = $openNumbersSort;
     }
 
-    public function isInPair(): bool {
-        return true;
+    public function getNumber(): int {
+        foreach ($this->openNumbersSort->getNodes()[$this->pairNumber]->getNexts() as $pair) {
+            if ($pair->getSecond() === $this->nodeNumber) {
+                return $pair->getFirst();
+            }
+        }
+        return $this->openNumbersSort->getNodes()[$this->pairNumber]->getNumber();
     }
 
-    public function getNumber(): int {
-        return $this->openNumbersSort->getNodes()[$this->pairNumber]->getNumber();
+    public function next(int $pairNumber = -1) {
+        $this->nexts[] = new Pair($this->getNumber(), $pairNumber);
+        $this->pairNumber = $pairNumber;
+        $this->increment();
+        $this->length++;
     }
 
 }
