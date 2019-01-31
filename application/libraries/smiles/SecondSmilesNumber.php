@@ -30,7 +30,7 @@ class SecondSmilesNumber extends PairSmilesNumber {
         return $this->openNumbersSort->getNodes()[$this->pairNumber]->getNumber();
     }
 
-    public function next(int $pairNumber = -1, $secondPairNumber, $increment = true) {
+    public function next(int $pairNumber, $secondPairNumber, $increment = true) {
         $this->nexts[] = new Pair($this->getNumber(), $secondPairNumber);
         $this->pairNumber = $secondPairNumber;
         $this->length++;

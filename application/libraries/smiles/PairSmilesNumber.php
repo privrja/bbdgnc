@@ -4,7 +4,7 @@ namespace Bbdgnc\Smiles;
 
 use Bbdgnc\Base\Pair;
 
-class PairSmilesNumber extends SmilesNumber {
+abstract class PairSmilesNumber extends AbstractSmileNumber {
 
     /** @var Pair[] $nexts */
     protected $nexts = [];
@@ -24,29 +24,16 @@ class PairSmilesNumber extends SmilesNumber {
         return true;
     }
 
-    public function next(int $pairNumber = -1, $secondPairNumber, $increment = true) {
-        if ($increment) {
-            $this->nexts[] = new Pair($this->getNumber(), $this->pairNumber);
-        } else {
-            $this->nexts[] = new Pair($this->getNumber() - 1, $this->pairNumber);
-        }
-        $this->pairNumber = $pairNumber;
-        if ($increment) {
-            $this->increment();
-        }
-        $this->length++;
-    }
-
     public function getNexts(): array {
         return $this->nexts;
     }
 
-    public function getLength(): int {
-        return $this->length;
-    }
-    
     public function setNexts(array $nexts) {
         $this->nexts = $nexts;
+    }
+
+    public function getLength(): int {
+        return $this->length;
     }
 
     public function asSecond(int $nodeNumber, int $counter, int $pairNumber, OpenNumbersSort $openNumbersSort) {
@@ -54,5 +41,9 @@ class PairSmilesNumber extends SmilesNumber {
         $second->setNexts($this->nexts);
         return $second;
     }
+
+    public abstract function getNumber(): int;
+
+    public abstract function next(int $pairNumber, $secondPairNumber, $increment = true);
 
 }
