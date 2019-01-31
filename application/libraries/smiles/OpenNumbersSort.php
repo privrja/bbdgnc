@@ -29,24 +29,41 @@ class OpenNumbersSort {
         $last = array_pop($this->nodes);
         $this->length--;
         try {
+            $secondIndex = $this->findNode($second);
+        } catch(NotFoundException $exception) {
+            $secondIndex = $this->length;
+        }
+
+        try {
             $firstIndex = $this->findNode($first);
         } catch (NotFoundException $exception) {
             throw new IllegalStateException();
         }
 
         if ($this->nodes[$firstIndex]->isInPair()) {
-            $this->nodes[$firstIndex]->next($this->length);
+            $this->nodes[$firstIndex]->next($secondIndex, 0);
         } else {
-            $this->nodes[$firstIndex] = new FirstSmilesNumber($first, $this->nodes[$firstIndex]->getCounter() + 1, $this->length);
+            $this->nodes[$firstIndex] = new FirstSmilesNumber($first, $this->nodes[$firstIndex]->getCounter() + 1, $secondIndex);
         }
         for ($index = $firstIndex + 1; $index < $this->length; ++$index) {
             $this->nodes[$index]->increment();
         }
-        if ($last->isInPair()) {
-            $last->next($firstIndex);
-            $this->nodes[] = $last;
+
+        if ($secondIndex === $this->length) {
+            if ($last->isInPair()) {
+                $last->next(0, $firstIndex);
+                $this->nodes[] = $last;
+            } else {
+                $this->nodes[] = new SecondSmilesNumber($second, $this->getLastCounter(), $firstIndex, $this);
+            }
         } else {
-            $this->nodes[] = new SecondSmilesNumber($second, $this->getLastCounter(), $firstIndex, $this);
+            $this->nodes[] = $last;
+            if ($last->isInPair()) {
+                $this->nodes[$secondIndex]->next($secondIndex, $firstIndex, false);
+                $this->nodes[$secondIndex]->asSecond($second, $this->getLastCounter(), $firstIndex, $this);
+            } else {
+                $this->nodes[$secondIndex] = new SecondSmilesNumber($second, $this->getLastCounter(), $firstIndex, $this);
+            }
         }
         $this->length++;
     }

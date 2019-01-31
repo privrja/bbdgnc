@@ -42,7 +42,7 @@ class SmilesNumber {
         throw new IllegalStateException();
     }
 
-    public function next(int $pairNumber = -1) {
+    public function next(int $pairNumber = -1, $secondPairNumber) {
         throw new IllegalStateException();
     }
 

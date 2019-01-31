@@ -133,15 +133,11 @@ class Graph {
         if ($this->isCyclic) {
             $this->isSecondPass = true;
             $this->dfsInitialization();
+
             foreach ($this->openNumbersSort->getNodes() as $number) {
                 if ($number->isInPair()) {
                     for ($index = $number->getLength() - 1; $index == 0; --$index) {
-                        if ($number->getNexts()[$index]->getSecond() === -1) {
-                            $this->arNodes[$number->getNodeNumber()]->addDigit(new Digit($number->getNexts()[$index]->getFirst()));
-                        } else {
-                            $this->arNodes[$number->getNodeNumber()]->addDigit(new Digit($number->getNexts()[$index]->getFirst()));
-//                            $this->arNodes[$number->getNodeNumber()]->addDigit(new Digit($nextPair->getSecond()));
-                        }
+                        $this->arNodes[$number->getNodeNumber()]->addDigit(new Digit($number->getNexts()[$index]->getFirst()));
                     }
                     $this->arNodes[$number->getNodeNumber()]->addDigit(new Digit($number->getNumber()));
                 }
@@ -367,11 +363,11 @@ class Graph {
         if ($node->getVertexState() === VertexStateEnum::OPEN) {
             if (!$this->isSecondPass) {
                 $this->isCyclic = true;
+//                $node->addDigit(new Digit($this->digit));
+//                $this->arNodes[$lastNodeNumber]->addDigit(new Digit($this->digit));
+//                $this->digit++;
                 $this->openNumbersSort->addDigit($nodeNumber, $lastNodeNumber);
             }
-//            $node->addDigit(new Digit($this->digit));
-//            $this->arNodes[$lastNodeNumber]->addDigit(new Digit($this->digit));
-//            $this->digit++;
         }
         if ($node->getVertexState() !== VertexStateEnum::NOT_FOUND) {
             return;
@@ -381,7 +377,10 @@ class Graph {
         $node->setVertexState(VertexStateEnum::OPEN);
         $this->printBracket($branch, '(');
         $this->printBondAndAtom($bond, $node);
-        $printedDigits = $this->ringClosures($nodeNumber);
+        $printedDigits = 0;
+        if ($this->isSecondPass) {
+            $printedDigits = $this->ringClosures($nodeNumber);
+        }
 
         $heap = $this->initializeHeap($node);
         foreach ($node->getBonds() as $bond) {

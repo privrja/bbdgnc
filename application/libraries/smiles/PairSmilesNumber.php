@@ -24,18 +24,17 @@ class PairSmilesNumber extends SmilesNumber {
         return true;
     }
 
-    public function next(int $pairNumber = -1) {
-        $this->nexts[] = new Pair($this->getNumber(), $this->pairNumber);
-        $this->pairNumber = $pairNumber;
-        $this->increment();
-        $this->length++;
-    }
-
-    public function increment(): void {
-        parent::increment();
-        for ($index = 0; $index < $this->length; ++$index) {
-            $this->nexts[$index] = new Pair($this->nexts[$index]->getFirst() + 1, $this->nexts[$index]->getSecond());
+    public function next(int $pairNumber = -1, $secondPairNumber, $increment = true) {
+        if ($increment) {
+            $this->nexts[] = new Pair($this->getNumber(), $this->pairNumber);
+        } else {
+            $this->nexts[] = new Pair($this->getNumber() - 1, $this->pairNumber);
         }
+        $this->pairNumber = $pairNumber;
+        if ($increment) {
+            $this->increment();
+        }
+        $this->length++;
     }
 
     public function getNexts(): array {
@@ -44,6 +43,16 @@ class PairSmilesNumber extends SmilesNumber {
 
     public function getLength(): int {
         return $this->length;
+    }
+    
+    public function setNexts(array $nexts) {
+        $this->nexts = $nexts;
+    }
+
+    public function asSecond(int $nodeNumber, int $counter, int $pairNumber, OpenNumbersSort $openNumbersSort) {
+        $second = new SecondSmilesNumber($nodeNumber, $counter, $pairNumber, $openNumbersSort);
+        $second->setNexts($this->nexts);
+        return $second;
     }
 
 }
