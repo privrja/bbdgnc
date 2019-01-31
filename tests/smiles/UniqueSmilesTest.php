@@ -224,4 +224,9 @@ final class UniqueSmilesTest extends TestCase {
         $this->assertEquals('CC1=CC=CC=C1', $smiles);
     }
 
+    public function testCyclic14() {
+        $graph = new Graph('CC1C2(C54CC2)C3C1CC3C4C5');
+        $smiles = $graph->getUniqueSmiles();
+        $this->assertEquals('CC1C2CC3C4CC45CCC15C23', $smiles);
+    }
 }
