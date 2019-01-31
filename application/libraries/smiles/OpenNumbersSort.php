@@ -26,12 +26,10 @@ class OpenNumbersSort {
     }
 
     public function addDigit(int $first, int $second): void {
-        $last = array_pop($this->nodes);
-        $this->length--;
         try {
             $secondIndex = $this->findNode($second);
         } catch(NotFoundException $exception) {
-            $secondIndex = $this->length;
+            $secondIndex = $this->length - 1;
         }
 
         try {
@@ -50,22 +48,19 @@ class OpenNumbersSort {
         }
 
         if ($secondIndex === $this->length) {
-            if ($last->isInPair()) {
-                $last->next(0, $firstIndex);
-                $this->nodes[] = $last;
+            if ($this->nodes[$secondIndex]->isInPair()) {
+                $this->nodes[$secondIndex]->next(0, $firstIndex);
             } else {
-                $this->nodes[] = new SecondSmilesNumber($second, $this->getLastCounter(), $firstIndex, $this);
+                $this->nodes[$secondIndex] = new SecondSmilesNumber($second, $this->getLastCounter(), $firstIndex, $this);
             }
         } else {
-            $this->nodes[] = $last;
-            if ($last->isInPair()) {
+            if ($this->nodes[$secondIndex]->isInPair()) {
                 $this->nodes[$secondIndex]->next($secondIndex, $firstIndex, false);
                 $this->nodes[$secondIndex]->asSecond($second, $this->getLastCounter(), $firstIndex, $this);
             } else {
                 $this->nodes[$secondIndex] = new SecondSmilesNumber($second, $this->getLastCounter(), $firstIndex, $this);
             }
         }
-        $this->length++;
     }
 
     private function getLastCounter(): int {
