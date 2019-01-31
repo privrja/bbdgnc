@@ -26,18 +26,8 @@ class OpenNumbersSort {
     }
 
     public function addDigit(int $first, int $second): void {
-        try {
-            $secondIndex = $this->findNode($second);
-        } catch(NotFoundException $exception) {
-            $secondIndex = $this->length - 1;
-        }
-
-        try {
-            $firstIndex = $this->findNode($first);
-        } catch (NotFoundException $exception) {
-            throw new IllegalStateException();
-        }
-
+        $firstIndex = $this->findFirst($first);
+        $secondIndex = $this->findSecond($second);
         if ($this->nodes[$firstIndex]->isInPair()) {
             $this->nodes[$firstIndex]->next($secondIndex, 0);
         } else {
@@ -84,4 +74,22 @@ class OpenNumbersSort {
         throw new NotFoundException();
     }
 
+    private function findFirst($first) {
+        try {
+            return $this->findNode($first);
+        } catch (NotFoundException $exception) {
+            throw new IllegalStateException();
+        }
+    }
+
+    private function findSecond(int $second) {
+        if ($this->nodes[$this->length - 1]->getNodeNumber() === $second) {
+            return $this->length - 1;
+        }
+        try {
+            return $this->findNode($second);
+        } catch (NotFoundException $exception) {
+            throw new IllegalStateException();
+        }
+    }
 }
