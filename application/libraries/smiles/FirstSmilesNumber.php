@@ -2,7 +2,7 @@
 
 namespace Bbdgnc\Smiles;
 
-use Bbdgnc\Base\Pair;
+use Bbdgnc\Base\SmilesNumberPair;
 
 class FirstSmilesNumber extends PairSmilesNumber {
 
@@ -12,14 +12,12 @@ class FirstSmilesNumber extends PairSmilesNumber {
 
     public function next(int $pairNumber, int $secondPairNumber, $increment = true) {
         if ($increment) {
-            $this->nexts[] = new Pair($this->getNumber(), $this->pairNumber);
+            $this->nexts[] = new SmilesNumberPair($this->getNumber(), $this->pairNumber);
+            $this->increment();
         } else {
-            $this->nexts[] = new Pair($this->getNumber() - 1, $this->pairNumber);
+            $this->nexts[] = new SmilesNumberPair($this->getNumber() - 1, $this->pairNumber);
         }
         $this->pairNumber = $pairNumber;
-        if ($increment) {
-            $this->increment();
-        }
         $this->length++;
     }
 

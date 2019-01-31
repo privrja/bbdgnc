@@ -2,11 +2,11 @@
 
 namespace Bbdgnc\Smiles;
 
-use Bbdgnc\Base\Pair;
+use Bbdgnc\Base\SmilesNumberPair;
 
 abstract class PairSmilesNumber extends AbstractSmileNumber {
 
-    /** @var Pair[] $nexts */
+    /** @var SmilesNumberPair[] $nexts */
     protected $nexts = [];
 
     /** @var int $length */

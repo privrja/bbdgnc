@@ -2,22 +2,22 @@
 
 namespace Bbdgnc\Base;
 
-class Pair {
+class SmilesNumberPair {
 
     /** @var $smilesNumber */
     private $smilesNumber;
 
-    /** @var $second */
-    private $second;
+    /** @var $pairNumber */
+    private $pairNumber;
 
     /**
      * Pair constructor.
      * @param $smilesNumber
-     * @param $second
+     * @param $pairNumber
      */
-    public function __construct($smilesNumber, $second) {
+    public function __construct(int $smilesNumber, int $pairNumber) {
         $this->smilesNumber = $smilesNumber;
-        $this->second = $second;
+        $this->pairNumber = $pairNumber;
     }
 
     /**
@@ -30,8 +30,8 @@ class Pair {
     /**
      * @return mixed
      */
-    public function getSecond() {
-        return $this->second;
+    public function getPairNumber() {
+        return $this->pairNumber;
     }
 
 }
