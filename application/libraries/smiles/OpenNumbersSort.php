@@ -14,7 +14,7 @@ class OpenNumbersSort {
     private $length = 0;
 
     /**
-     * @return SmilesNumber[]
+     * @return AbstractSmileNumber[]
      */
     public function getNodes(): array {
         return $this->nodes;

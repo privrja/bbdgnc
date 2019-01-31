@@ -4,27 +4,27 @@ namespace Bbdgnc\Base;
 
 class Pair {
 
-    /** @var $first */
-    private $first;
+    /** @var $smilesNumber */
+    private $smilesNumber;
 
     /** @var $second */
     private $second;
 
     /**
      * Pair constructor.
-     * @param $first
+     * @param $smilesNumber
      * @param $second
      */
-    public function __construct($first, $second) {
-        $this->first = $first;
+    public function __construct($smilesNumber, $second) {
+        $this->smilesNumber = $smilesNumber;
         $this->second = $second;
     }
 
     /**
      * @return mixed
      */
-    public function getFirst() {
-        return $this->first;
+    public function getSmilesNumber() {
+        return $this->smilesNumber;
     }
 
     /**

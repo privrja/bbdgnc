@@ -137,7 +137,7 @@ class Graph {
             foreach ($this->openNumbersSort->getNodes() as $number) {
                 if ($number->isInPair()) {
                     for ($index = $number->getLength() - 1; $index == 0; --$index) {
-                        $this->arNodes[$number->getNodeNumber()]->addDigit(new Digit($number->getNexts()[$index]->getFirst()));
+                        $this->arNodes[$number->getNodeNumber()]->addDigit(new Digit($number->getNexts()[$index]->getSmilesNumber()));
                     }
                     $this->arNodes[$number->getNodeNumber()]->addDigit(new Digit($number->getNumber()));
                 }

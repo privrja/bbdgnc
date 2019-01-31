@@ -24,13 +24,13 @@ class SecondSmilesNumber extends PairSmilesNumber {
     public function getNumber(): int {
         foreach ($this->openNumbersSort->getNodes()[$this->pairNumber]->getNexts() as $pair) {
             if ($pair->getSecond() === $this->nodeNumber) {
-                return $pair->getFirst();
+                return $pair->getSmilesNumber();
             }
         }
         return $this->openNumbersSort->getNodes()[$this->pairNumber]->getNumber();
     }
 
-    public function next(int $pairNumber, $secondPairNumber, $increment = true) {
+    public function next(int $pairNumber, int $secondPairNumber, $increment = true) {
         $this->nexts[] = new Pair($this->getNumber(), $secondPairNumber);
         $this->pairNumber = $secondPairNumber;
         $this->length++;

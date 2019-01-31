@@ -44,6 +44,6 @@ abstract class PairSmilesNumber extends AbstractSmileNumber {
 
     public abstract function getNumber(): int;
 
-    public abstract function next(int $pairNumber, $secondPairNumber, $increment = true);
+    public abstract function next(int $pairNumber, int $secondPairNumber, $increment = true);
 
 }
