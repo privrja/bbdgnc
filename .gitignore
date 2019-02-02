@@ -38,3 +38,6 @@ readme.rst
 
 #Node modules
 /node_modules/*
+
+/application/db/data.sqlite
+

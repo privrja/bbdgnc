@@ -53,6 +53,7 @@ class Land extends CI_Controller {
     public function __construct() {
         parent::__construct();
         $this->load->helper(array(self::HELPER_FORM, self::HELPER_URL, self::HELPER_COOKIE));
+        $this->load->model('block_model');
     }
 
     /**
