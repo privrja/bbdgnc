@@ -1,15 +1,15 @@
 /**
  * Create DB
  */
-DROP DATABASE IF EXISTS bbdgnc;
-CREATE DATABASE bbdgnc CHARACTER SET utf8 COLLATE utf8_czech_ci;
-USE bbdgnc;
+-- DROP DATABASE IF EXISTS bbdgnc;
+-- CREATE DATABASE bbdgnc CHARACTER SET utf8 COLLATE utf8_czech_ci;
+-- USE bbdgnc;
 
 /**
  * Create user to use
  */
-CREATE USER IF NOT EXISTS 'hedgehog'@'*' IDENTIFIED BY 'vqnp7f1r';
-GRANT SELECT, UPDATE, DELETE, INSERT ON bbdgnc.* TO 'hedgehog'@'*';
+-- CREATE USER IF NOT EXISTS 'hedgehog'@'*' IDENTIFIED BY 'vqnp7f1r';
+-- GRANT SELECT, UPDATE, DELETE, INSERT ON bbdgnc.* TO 'hedgehog'@'*';
 
 /**
  * create tables
@@ -101,4 +101,4 @@ CREATE INDEX IX_SEQUENCE_NAME ON sequence (name);
 CREATE INDEX IX_MODIFICATION_NAME ON modification (name);
 CREATE UNIQUE INDEX UQ_USER_MAIL ON user (mail);
 
-COMMIT;
+-- COMMIT;
