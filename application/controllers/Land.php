@@ -1,5 +1,6 @@
 <?php
 
+use Bbdgnc\Base\HelperEnum;
 use Bbdgnc\Enum\ComputeEnum;
 use Bbdgnc\Enum\Front;
 use Bbdgnc\Enum\LoggerEnum;
@@ -22,13 +23,6 @@ class Land extends CI_Controller {
 
     const ERRORS = "errors";
 
-    const HELPER_FORM = "form";
-
-    const HELPER_URL = "url";
-
-    const HELPER_COOKIE = "cookie";
-
-    const HELPER_SESSION = "session";
 
     const COOKIE_BLOCKS = "cookie_blocks";
 
@@ -52,7 +46,7 @@ class Land extends CI_Controller {
      */
     public function __construct() {
         parent::__construct();
-        $this->load->helper(array(self::HELPER_FORM, self::HELPER_URL, self::HELPER_COOKIE));
+        $this->load->helper(array(HelperEnum::HELPER_FORM, HelperEnum::HELPER_URL, HelperEnum::HELPER_COOKIE));
         $this->load->model('block_model');
     }
 

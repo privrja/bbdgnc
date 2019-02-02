@@ -9,4 +9,9 @@ class Block_model extends CI_Model {
         $this->load->database();
     }
 
+    public function getAll() {
+        $query = $this->db->get('block');
+        return $query->result_array();
+    }
+
 }

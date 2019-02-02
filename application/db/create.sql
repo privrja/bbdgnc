@@ -27,8 +27,9 @@ CREATE TABLE block (
     name                TEXT            NOT NULL,
     acronym             TEXT            NOT NULL,
     residue             TEXT            NOT NULL,
-    mass                REAL
-    smile               text,
+    mass                REAL,
+    smiles              TEXT,
+    usmiles             TEXT,
     container_id        INTEGER,
     reference_id        INTEGER,
     FOREIGN KEY (container_id) REFERENCES container(id),
@@ -43,7 +44,8 @@ CREATE TABLE sequence (
     mass                REAL,
     sequence            TEXT      NOT NULL,
     branch_modification TEXT,
-    smile               TEXT,
+    smiles              TEXT,
+    usmiles             TEXT,
     container_id        INTEGER,
     reference_id        INTEGER,
     FOREIGN KEY (container_id) REFERENCES container(id),
@@ -71,7 +73,9 @@ CREATE TABLE b2s (
 CREATE UNIQUE INDEX UX_USER_MAIL ON user(mail);
 CREATE INDEX IX_BLOCK_ACRONYM ON block(acronym);
 CREATE INDEX IX_BLOCK_NAME ON block(name);
+CREATE UNIQUE INDEX UX_BLOCK_USMILE ON block(usmiles);
 CREATE INDEX IX_SEQUENCE_NAME ON sequence(name);
+CREATE UNIQUE INDEX UX_SEQUENCE_USMILE ON sequence(usmiles);
 CREATE INDEX IX_MODIFICATION_NAME ON modification(name);
 
 PRAGMA foreign_keys = ON;
