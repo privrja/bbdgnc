@@ -25,9 +25,6 @@ class Graph {
     /** @var bool $isSecondPass */
     private $isSecondPass = false;
 
-    /** @var int $digit */
-    private $digit = 1;
-
     /** @var OpenNumbersSort $openNumbersSort */
     private $openNumbersSort;
 
@@ -359,16 +356,13 @@ class Graph {
      */
     private function dfs(int $nodeNumber, $branch = false, $bond = '', $lastNodeNumber = -1): void {
         $node = $this->arNodes[$nodeNumber];
-        if ($node->getVertexState() === VertexStateEnum::OPEN) {
-            if (!$this->isSecondPass) {
-                $this->isCyclic = true;
-                $this->openNumbersSort->addDigit($nodeNumber, $lastNodeNumber);
-            }
+        if ($node->getVertexState() === VertexStateEnum::OPEN && !$this->isSecondPass) {
+            $this->isCyclic = true;
+            $this->openNumbersSort->addDigit($nodeNumber, $lastNodeNumber);
         }
         if ($node->getVertexState() !== VertexStateEnum::NOT_FOUND) {
             return;
         }
-
         $this->openNumbersSort->addOpenNode($nodeNumber);
         $node->setVertexState(VertexStateEnum::OPEN);
         $this->printBracket($branch, '(');
