@@ -189,4 +189,24 @@ class Node {
         $this->inRing = $inRing;
     }
 
+
+    public function sortDigits() {
+        usort($this->arDigits, [$this, 'cmp']);
+    }
+
+    /**
+     * @param Digit $a
+     * @param Digit $b
+     * @return int
+     */
+    public function cmp($a, $b) {
+        if ($a->getDigit() > $b->getDigit()) {
+            return 1;
+        } else if ($a->getDigit() < $b->getDigit()) {
+            return -1;
+        } else {
+            return 0;
+        }
+    }
+
 }

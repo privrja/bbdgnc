@@ -74,32 +74,13 @@ final class OpenNumbersSortTest extends TestCase {
         $structure->addDigit(6, 9);
         $structure->addOpenNode(10);
         $structure->addDigit(3, 10);
-        $this->assertEquals(1, $structure->getNodes()[1]->getNumber());
-        $this->assertEquals(2, $structure->getNodes()[2]->getNumber());
-        $this->assertEquals(3, $structure->getNodes()[3]->getNumber());
-        $this->assertEquals(2, $structure->getNodes()[5]->getNumber());
-        $this->assertEquals(4, $structure->getNodes()[6]->getNumber());
-        $this->assertEquals(1, $structure->getNodes()[7]->getNumber());
-        $this->assertEquals(4, $structure->getNodes()[9]->getNumber());
-        $this->assertEquals(3, $structure->getNodes()[10]->getNumber());
-    }
-
-    public function testException() {
-        $structure = new OpenNumbersSort();
-        for ($index = 0; $index < 5; ++$index) {
-            $structure->addOpenNode($index);
-        }
-        $structure->addOpenNode(5);
-        $structure->addDigit(2, 5);
-        $structure->addOpenNode(6);
-        $structure->addOpenNode(7);
-        $structure->addDigit(1, 7);
-        $structure->addOpenNode(8);
-        $structure->addOpenNode(9);
-        $structure->addDigit(6, 9);
-        $structure->addOpenNode(10);
-        $structure->addDigit(3, 10);
-        $this->expectException(IllegalStateException::class);
-        $structure->getNodes()[0]->getNumber();
+        $this->assertEquals(1, $structure->getNodes()[1]->getNexts()[0]->getSmilesNumber());
+        $this->assertEquals(2, $structure->getNodes()[2]->getNexts()[0]->getSmilesNumber());
+        $this->assertEquals(3, $structure->getNodes()[3]->getNexts()[0]->getSmilesNumber());
+        $this->assertEquals(2, $structure->getNodes()[5]->getNexts()[0]->getSmilesNumber());
+        $this->assertEquals(4, $structure->getNodes()[6]->getNexts()[0]->getSmilesNumber());
+        $this->assertEquals(1, $structure->getNodes()[7]->getNexts()[0]->getSmilesNumber());
+        $this->assertEquals(4, $structure->getNodes()[9]->getNexts()[0]->getSmilesNumber());
+        $this->assertEquals(3, $structure->getNodes()[10]->getNexts()[0]->getSmilesNumber());
     }
 }

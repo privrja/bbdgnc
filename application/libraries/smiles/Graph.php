@@ -136,10 +136,9 @@ class Graph {
 
             foreach ($this->openNumbersSort->getNodes() as $number) {
                 if ($number->isInPair()) {
-                    for ($index = $number->getLength() - 1; $index == 0; --$index) {
+                    for ($index = 0; $index < $number->getLength(); $index++) {
                         $this->arNodes[$number->getNodeNumber()]->addDigit(new Digit($number->getNexts()[$index]->getSmilesNumber()));
                     }
-                    $this->arNodes[$number->getNodeNumber()]->addDigit(new Digit($number->getNumber()));
                 }
             }
             $this->dfs($startVertexIndex);
@@ -363,9 +362,6 @@ class Graph {
         if ($node->getVertexState() === VertexStateEnum::OPEN) {
             if (!$this->isSecondPass) {
                 $this->isCyclic = true;
-//                $node->addDigit(new Digit($this->digit));
-//                $this->arNodes[$lastNodeNumber]->addDigit(new Digit($this->digit));
-//                $this->digit++;
                 $this->openNumbersSort->addDigit($nodeNumber, $lastNodeNumber);
             }
         }
@@ -433,6 +429,8 @@ class Graph {
                     }
                 }
             }
+
+            $node->sortDigits();
             foreach ($node->getDigits() as $digit) {
                 $this->uniqueSmiles .= $digit->printDigit();
                 $printedDigits++;

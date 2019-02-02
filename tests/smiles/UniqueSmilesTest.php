@@ -229,4 +229,41 @@ final class UniqueSmilesTest extends TestCase {
         $smiles = $graph->getUniqueSmiles();
         $this->assertEquals('CC1C2CC3C4CC45CCC15C23', $smiles);
     }
+
+    public function testCyclic15() {
+        $graph = new Graph('C1CC1C(C2CC2)C3CC3');
+        $smiles = $graph->getUniqueSmiles();
+        $this->assertEquals('C1CC1C(C2CC2)C3CC3', $smiles);
+    }
+
+    public function testCyclic16() {
+        $graph = new Graph('C1CC1C(C2CC24)C3CC3CCC4');
+        $smiles = $graph->getUniqueSmiles();
+        $this->assertEquals('C1CC2CC2C(C3CC3)C4CC4C1', $smiles);
+    }
+
+    public function testCyclic17() {
+        $graph = new Graph('C15CC1C(C2C(CCC5)C24)C3CC3CCC4');
+        $smiles = $graph->getUniqueSmiles();
+        $this->assertEquals('C1CC2CC2C3C4CC4CCCC5C(C1)C35', $smiles);
+    }
+
+    public function testCyclic18() {
+        $graph = new Graph('C15CC1C(C2C(C5)C24)C3CC3C4');
+        $smiles = $graph->getUniqueSmiles();
+        $this->assertEquals('C1C2CC3C4CC5CC5C(C12)C34', $smiles);
+    }
+
+    public function testCyclic19() {
+        $graph = new Graph('C15CC1C(C2C(C5)C624)C3CC3C4CC6');
+        $smiles = $graph->getUniqueSmiles();
+        $this->assertEquals('C1CC23C1C4CC4C5C6CC6CC3C25', $smiles);
+    }
+
+    public function testCyclic20() {
+        $graph = new Graph('C15CC1C(C2C(C5)C6724)C3CC3C4CC6CC7');
+        $smiles = $graph->getUniqueSmiles();
+        $this->assertEquals('C1CC234C1CC4C5CC5C6C7CC7CC3C26', $smiles);
+    }
+
 }

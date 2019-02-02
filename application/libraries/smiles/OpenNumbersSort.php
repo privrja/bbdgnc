@@ -7,57 +7,41 @@ use Bbdgnc\Exception\NotFoundException;
 
 class OpenNumbersSort {
 
-    /** @var SmilesNumber[] $nodes */
+    /** @var PairSmilesNumber[] $nodes */
     private $nodes = [];
 
     /** @var int $length */
     private $length = 0;
 
     /**
-     * @return AbstractSmileNumber[]
+     * @return PairSmilesNumber[]
      */
     public function getNodes(): array {
         return $this->nodes;
     }
 
     public function addOpenNode(int $nodeNumber): void {
-        $this->nodes[] = new SmilesNumber($nodeNumber, $this->getLastCounter());
+        $this->nodes[] = new PairSmilesNumber($nodeNumber, $this->getLastCounter($this->length - 1), $this->length, $this);
         $this->length++;
     }
 
     public function addDigit(int $first, int $second): void {
         $firstIndex = $this->findFirst($first);
         $secondIndex = $this->findSecond($second);
-        if ($this->nodes[$firstIndex]->isInPair()) {
-            $this->nodes[$firstIndex]->next($secondIndex, 0);
-        } else {
-            $this->nodes[$firstIndex] = new FirstSmilesNumber($first, $this->nodes[$firstIndex]->getCounter() + 1, $secondIndex);
-        }
-        for ($index = $firstIndex + 1; $index < $this->length; ++$index) {
-            $this->nodes[$index]->increment();
-        }
-
-        if ($secondIndex === $this->length) {
-            if ($this->nodes[$secondIndex]->isInPair()) {
-                $this->nodes[$secondIndex]->next(0, $firstIndex);
-            } else {
-                $this->nodes[$secondIndex] = new SecondSmilesNumber($second, $this->getLastCounter(), $firstIndex, $this);
-            }
-        } else {
-            if ($this->nodes[$secondIndex]->isInPair()) {
-                $this->nodes[$secondIndex]->next($secondIndex, $firstIndex, false);
-                $this->nodes[$secondIndex]->asSecond($second, $this->getLastCounter(), $firstIndex, $this);
-            } else {
-                $this->nodes[$secondIndex] = new SecondSmilesNumber($second, $this->getLastCounter(), $firstIndex, $this);
-            }
+        $nfsStructure = new NfsStructure($this->nodes[$firstIndex]->getCounter() + 1, $firstIndex, $secondIndex);
+        $this->nodes[$firstIndex]->add($nfsStructure);
+        $this->nodes[$firstIndex]->increment();
+        $increment = $this->nodes[$firstIndex]->getCounter();
+        for ($index = $firstIndex + 1 ; $index < $this->length; ++$index) {
+            $this->nodes[$index]->incrementAll($increment);
         }
     }
 
-    private function getLastCounter(): int {
+    private function getLastCounter($secondIndex): int {
         if ($this->length === 0) {
             return 0;
         }
-        return end($this->nodes)->getCounter();
+        return $this->nodes[$secondIndex]->getCounter();
     }
 
     /**

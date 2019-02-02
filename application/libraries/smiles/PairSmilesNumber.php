@@ -2,48 +2,86 @@
 
 namespace Bbdgnc\Smiles;
 
-use Bbdgnc\Base\SmilesNumberPair;
+class PairSmilesNumber {
 
-abstract class PairSmilesNumber extends AbstractSmileNumber {
-
-    /** @var SmilesNumberPair[] $nexts */
-    protected $nexts = [];
+    /** @var NfsStructure[] $nexts */
+    private $nexts = [];
 
     /** @var int $length */
-    protected $length = 0;
+    private $length = 0;
 
-    /** @var int $pairNumber */
-    protected $pairNumber = 0;
+    /** @var int $position */
+    private $position = 0;
 
-    public function __construct(int $nodeNumber, int $counter, int $pairNumber) {
-        parent::__construct($nodeNumber, $counter);
-        $this->pairNumber = $pairNumber;
+    /** @var OpenNumbersSort $openNumbersSort */
+    private $openNumbersSort;
+
+    /** @var int $nodeNumber */
+    private $nodeNumber = 0;
+
+    /** @var int $counter */
+    private $counter = 0;
+
+    /**
+     * PairSmilesNumber constructor.
+     * @param int $nodeNumber
+     * @param int $counter
+     * @param int $position
+     * @param OpenNumbersSort $openNumbersSort
+     */
+    public function __construct(int $nodeNumber, int $counter, int $position, OpenNumbersSort $openNumbersSort) {
+        $this->nodeNumber = $nodeNumber;
+        $this->counter = $counter;
+        $this->openNumbersSort = $openNumbersSort;
+        $this->position = $position;
+    }
+
+    public function getNodeNumber() {
+        return $this->nodeNumber;
+    }
+
+    public function getCounter(): int {
+        return $this->counter;
+    }
+
+    public function increment(): void {
+        $this->counter++;
     }
 
     public function isInPair(): bool {
-        return true;
+        return $this->length !== 0;
     }
 
+    public function add(NfsStructure $nfsStructure) {
+        $this->nexts[] = $nfsStructure;
+        $this->length++;
+        $this->openNumbersSort->getNodes()[$nfsStructure->getSecondNumber()]->addSecond($nfsStructure);
+    }
+
+    public function addSecond(NfsStructure $nfsStructure) {
+        $this->nexts[] = $nfsStructure;
+        $this->length++;
+    }
+
+    public function incrementAll(&$inc): void {
+        self::increment();
+            for ($index = 0; $index < $this->getLength(); $index++) {
+            if ($inc === $this->nexts[$index]->getSmilesNumber() && $this->nexts[$index]->getFirstNumber() === $this->position) {
+                $this->nexts[$index]->increment();
+                $inc++;
+            }
+        }
+    }
+
+    /**
+     * @return NfsStructure[]
+     */
     public function getNexts(): array {
         return $this->nexts;
-    }
-
-    public function setNexts(array $nexts) {
-        $this->nexts = $nexts;
     }
 
     public function getLength(): int {
         return $this->length;
     }
-
-    public function asSecond(int $nodeNumber, int $counter, int $pairNumber, OpenNumbersSort $openNumbersSort) {
-        $second = new SecondSmilesNumber($nodeNumber, $counter, $pairNumber, $openNumbersSort);
-        $second->setNexts($this->nexts);
-        return $second;
-    }
-
-    public abstract function getNumber(): int;
-
-    public abstract function next(int $pairNumber, int $secondPairNumber, $increment = true);
 
 }
