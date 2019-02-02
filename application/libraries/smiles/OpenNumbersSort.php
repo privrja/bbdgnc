@@ -20,11 +20,20 @@ class OpenNumbersSort {
         return $this->nodes;
     }
 
+    /**
+     * Add new open node
+     * @param int $nodeNumber
+     */
     public function addOpenNode(int $nodeNumber): void {
         $this->nodes[] = new PairSmilesNumber($nodeNumber, $this->getLastCounter($this->length - 1), $this->length, $this);
         $this->length++;
     }
 
+    /**
+     * Add new digit to nodes
+     * @param int $first node number of first node
+     * @param int $second node number of second node
+     */
     public function addDigit(int $first, int $second): void {
         $firstIndex = $this->findFirst($first);
         $secondIndex = $this->findSecond($second);
@@ -37,6 +46,11 @@ class OpenNumbersSort {
         }
     }
 
+    /**
+     * Get last counter in nodes array from specified node
+     * @param $secondIndex
+     * @return int
+     */
     private function getLastCounter($secondIndex): int {
         if ($this->length === 0) {
             return 0;
@@ -45,6 +59,7 @@ class OpenNumbersSort {
     }
 
     /**
+     * Find node in nodes with node number
      * @param int $nodeNumber
      * @return int
      * @throws NotFoundException
@@ -58,6 +73,11 @@ class OpenNumbersSort {
         throw new NotFoundException();
     }
 
+    /**
+     * Find first node ind nodes
+     * @param $first
+     * @return int
+     */
     private function findFirst($first) {
         try {
             return $this->findNode($first);
@@ -66,6 +86,11 @@ class OpenNumbersSort {
         }
     }
 
+    /**
+     * Find second node ind nodes
+     * @param int $second
+     * @return int
+     */
     private function findSecond(int $second) {
         if ($this->nodes[$this->length - 1]->getNodeNumber() === $second) {
             return $this->length - 1;
@@ -76,4 +101,5 @@ class OpenNumbersSort {
             throw new IllegalStateException();
         }
     }
+
 }

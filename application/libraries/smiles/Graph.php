@@ -430,7 +430,6 @@ class Graph {
                 }
             }
 
-            $node->sortDigits();
             foreach ($node->getDigits() as $digit) {
                 $this->uniqueSmiles .= $digit->printDigit();
                 $printedDigits++;

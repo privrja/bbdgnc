@@ -46,7 +46,10 @@ class NfsStructure {
         return $this->secondNumber;
     }
 
-    public function increment() {
+    /**
+     * Increment smilesNumber
+     */
+    public function increment(): void {
         $this->smilesNumber++;
     }
 
