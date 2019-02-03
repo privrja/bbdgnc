@@ -13,8 +13,6 @@ class BlockCycloBranch extends AbstractCycloBranch {
     const REFERENCE = 4;
     const LENGTH = 5;
 
-    // TODO to slucovani je jen u bloku?
-    // TODO je to vzdy v tom souboru ulozeny jako slouceny? pres ty lomitka?
     protected function parseLine(string $line) {
         $arItems = preg_split('/\t/', $line);
         if (empty($arItems) || sizeof($arItems) !== self::LENGTH) {
@@ -49,7 +47,6 @@ class BlockCycloBranch extends AbstractCycloBranch {
             $this->controller->block_model->insertBlock($blockTO);
             // TODO save to DB mozna by se hodilo vytvorit transakci kvuli chybe na radku asi neukladat ty co budou dobre
         }
-
     }
 
     public function export() {
