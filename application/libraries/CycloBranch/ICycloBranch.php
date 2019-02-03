@@ -2,7 +2,7 @@
 
 interface ICycloBranch {
 
-    public function import();
+    public function import(string $filePath);
 
     public function export();
 

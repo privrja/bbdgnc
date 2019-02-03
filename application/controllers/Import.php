@@ -29,11 +29,18 @@ class Import extends CI_Controller {
             $this->load->view('templates/footer');
         } else {
             $uploadData = $this->upload->data();
+            $type = $this->input->post('importType');
+            $this->import($uploadData['full_path'], $type);
             $data = ['upload_data' => $uploadData];
             $this->load->view('templates/header');
             $this->load->view('import/upload', $data);
             $this->load->view('templates/footer');
         }
+    }
+
+    private function import(string $filePath, int $type) {
+        $cycloBranch = new CycloBranch();
+        $cycloBranch->import($filePath, $type);
     }
 
 }
