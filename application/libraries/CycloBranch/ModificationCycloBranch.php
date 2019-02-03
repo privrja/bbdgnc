@@ -1,12 +1,13 @@
 <?php
 
-class ModificationCycloBranch implements ICycloBranch {
+class ModificationCycloBranch extends CycloBranchParser {
 
-    public function import(string $filePath) {
-        // TODO: Implement import() method.
+    protected function parseLine(string $line) {
+        // TODO: Implement parseLine() method.
     }
 
     public function export() {
         // TODO: Implement export() method.
     }
+
 }

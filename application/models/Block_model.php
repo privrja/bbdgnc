@@ -1,5 +1,7 @@
 <?php
 
+use Bbdgnc\TransportObjects\BlockTO;
+
 class Block_model extends CI_Model {
 
     /**
@@ -21,6 +23,10 @@ class Block_model extends CI_Model {
             return [];
         }
         return $result[0];
+    }
+
+
+    public function insertBlock(BlockTO $blockTO) {
 
     }
 
