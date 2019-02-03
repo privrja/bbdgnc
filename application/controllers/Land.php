@@ -94,9 +94,6 @@ class Land extends CI_Controller {
         $blockAcronym = $this->input->post(Front::BLOCK_ACRONYM);
         $blockName = $this->input->post(Front::BLOCK_NAME);
         $blockCount = $this->input->post(Front::BLOCK_COUNT);
-
-        // TODO value check
-
         $block = new BlockTO($blockIdentifier, $blockName, $blockAcronym, $blockSmile, ComputeEnum::NO);
         $block->formula = $this->input->post(Front::BLOCK_FORMULA);
         $block->mass = $this->input->post(Front::BLOCK_MASS);
