@@ -10,6 +10,7 @@ class Import extends CI_Controller {
     public function __construct() {
         parent::__construct();
         $this->load->helper(HelperEnum::HELPER_FORM, HelperEnum::HELPER_URL);
+        $this->load->model('block_model');
     }
 
     public function index() {
@@ -39,7 +40,7 @@ class Import extends CI_Controller {
     }
 
     private function import(string $filePath, int $type) {
-        $cycloBranch = new CycloBranch();
+        $cycloBranch = new CycloBranch($type, $this);
         $cycloBranch->import($filePath, $type);
     }
 

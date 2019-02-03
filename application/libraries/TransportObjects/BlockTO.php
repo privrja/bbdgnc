@@ -44,40 +44,47 @@ class BlockTO {
         $this->name = $name;
         $this->acronym = $acronym;
         $this->smiles = $smiles;
-        switch ($compute) {
-            case ComputeEnum::FORMULA_MASS:
-                $this->computeFormulaAndMass($smiles);
-                break;
-            case ComputeEnum::UNIQUE_SMILES:
-                $this->computeUniqueSmiles($smiles);
-                break;
-            case ComputeEnum::ALL:
-                $this->computeAll($smiles);
-                break;
+        if (!$smiles == "") {
+            switch ($compute) {
+                case ComputeEnum::FORMULA_MASS:
+                    $this->computeFormulaAndMass();
+                    break;
+                case ComputeEnum::UNIQUE_SMILES:
+                    $this->computeUniqueSmiles();
+                    break;
+                case ComputeEnum::ALL:
+                    $this->computeAll();
+                    break;
+            }
         }
         $this->reference = new ReferenceTO();
     }
 
-    private function computeAll($smiles) {
-        $graph = new Graph($smiles);
+    private function computeAll() {
+        $graph = new Graph($this->smiles);
         $this->uniqueSmiles = $graph->getUniqueSmiles();
         $this->formula = $graph->getFormula(LossesEnum::H2O);
         // TODO tohle by šlo asi přesunout do grafu, tam by to možná šlo spočítat bez formule, zalezi jestli by to bylo potřeba
         $this->mass = FormulaHelper::computeMass($this->formula);
     }
 
-    private function computeUniqueSmiles($smiles) {
-        $graph = new Graph($smiles);
+    private function computeUniqueSmiles() {
+        var_dump($this->smiles);
+        $graph = new Graph($this->smiles);
         $this->uniqueSmiles = $graph->getUniqueSmiles();
     }
 
-    private function computeFormulaAndMass($smiles) {
-        $this->formula = FormulaHelper::formulaFromSmiles($smiles, LossesEnum::H2O);
+    private function computeFormulaAndMass() {
+        $this->formula = FormulaHelper::formulaFromSmiles($this->smiles, LossesEnum::H2O);
         try {
             $this->mass = FormulaHelper::computeMass($this->formula);
         } catch (IllegalArgumentException $exception) {
             log_message(LoggerEnum::ERROR, $exception->getMessage());
         }
+    }
+
+    public function asBlock() {
+        return [$this->name, $this->acronym, $this->formula, $this->mass, $this->smiles, $this->uniqueSmiles];
     }
 
 }

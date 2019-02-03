@@ -1,6 +1,6 @@
 <?php
 
-class SequenceAbstractCycloBranch extends AbstractCycloBranch {
+class SequenceCycloBranch extends AbstractCycloBranch {
 
     protected function parseLine(string $line) {
         // TODO: Implement parseLine() method.

@@ -1,9 +1,10 @@
 <?php
 
+use Bbdgnc\Base\FormulaHelper;
 use Bbdgnc\Enum\ComputeEnum;
 use Bbdgnc\TransportObjects\BlockTO;
 
-class BlockAbstractCycloBranch extends AbstractCycloBranch {
+class BlockCycloBranch extends AbstractCycloBranch {
 
     // TODO to slucovani je jen u bloku?
     // TODO je to vzdy v tom souboru ulozeny jako slouceny? pres ty lomitka?
@@ -13,24 +14,24 @@ class BlockAbstractCycloBranch extends AbstractCycloBranch {
             return;
         }
         $itemsLength = sizeof($arItems);
-        $arBlocks = [];
         // TODO $itemsLength !== 5 ??? what to do
         var_dump($arItems);
         $arNames = explode('/', $arItems[0]);
         $length = sizeof($arNames);
-        // TODO jde to takhle?
-        $arSmiles = [$length];
+        $arSmiles = [];
         $arAcronyms = explode('/', $arItems[1]);
-        // TODO jak to je sreferencema, vzdy jen jedna? nebo i vice?
+        // TODO jak to je s referencema, vzdy jen jedna? nebo i vice?
         $arReference = explode('/', $arItems[4]);
         for ($index = 0; $index < $length; ++$index) {
             // TODO co kdyz tam in neni? co vraci explode?, arReference need to string
-            $arTmp = explode('in', $arReference);
-            if (empty($arTmp)) {
+            $arTmp = explode('in', $arReference[$index]);
+            var_dump($arTmp);
+            var_dump($arReference);
+            if (empty($arTmp) || $arTmp[0] === $arReference[$index]) {
                 $arSmiles[] = '';
             } else {
-                // TODO remove spaces -> nejspis je oriznout o posledni znak bude stacit
-                $arSmiles[] = $arTmp[0];
+                $smiles = substr($arTmp[0], 0, -1);
+                $arSmiles[] = FormulaHelper::genericSmiles($smiles);
             }
         }
 

@@ -277,6 +277,14 @@ function smileToEasy(smile) {
             case '/':
             case '\\':
                 break;
+            case ')':
+                let index = stack.length - 1;
+                if (stack[index] === '(') {
+                    stack.pop();
+                } else {
+                    stack.push(c);
+                }
+                break;
             default:
                 stack.push(c);
                 break;
@@ -293,20 +301,32 @@ function smileToEasy(smile) {
 function isoText(stack) {
     let text = [];
     let c = ']';
+    let last = '';
     while (c != '[') {
         switch (c) {
             case '@':
+                break;
             case 'H':
+                if (last !== '@') {
+                    text.unshift(c);
+                }
                 break;
             default:
                 text.unshift(c);
                 break;
         }
+        last = c;
         c = stack.pop();
     }
     text.unshift('[');
 
+    if (text.length === 3 && text[1] === 'H') {
+        text = [];
+    }
     if (text.length === 3) {
+        text = text[1];
+    }
+    if (text.length === 4) {
         text = text[1];
     }
 
