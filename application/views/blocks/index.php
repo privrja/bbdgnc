@@ -10,6 +10,7 @@
 
         <?php foreach ($blocks as $block): ?>
 
+            <?= $block['name']; ?>
             <?= $block['acronym']; ?>
             <br/>
 

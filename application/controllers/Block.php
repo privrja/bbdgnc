@@ -13,7 +13,6 @@ class Block extends CI_Controller {
         $this->load->helper(HelperEnum::HELPER_URL);
     }
 
-
     public function index() {
         $data['blocks'] = $this->block_model->getAll();
         $this->load->view('templates/header');

@@ -4,11 +4,11 @@ namespace Bbdgnc\TransportObjects;
 
 class ReferenceTO {
 
-    public $cid = 0;
+    public $cid;
 
-    public $csid = 0;
+    public $csid;
 
-    public $norine = 0;
+    public $norine;
 
     public $pdb = "";
 

@@ -49,6 +49,7 @@ class BlockTO {
                 log_message(LoggerEnum::ERROR, $exception->getMessage());
             }
         }
+        $this->reference = new ReferenceTO();
     }
 
 

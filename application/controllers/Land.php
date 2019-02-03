@@ -10,6 +10,7 @@ use Bbdgnc\Finder\Enum\ServerEnum;
 use Bbdgnc\Finder\FinderFactory;
 use Bbdgnc\Finder\IFinder;
 use Bbdgnc\Finder\PubChemFinder;
+use Bbdgnc\Smiles\Graph;
 use Bbdgnc\TransportObjects\BlockTO;
 use Bbdgnc\TransportObjects\ReferenceTO;
 
@@ -120,7 +121,8 @@ class Land extends CI_Controller {
             $blockTO->formula = $this->input->post(Front::BLOCK_FORMULA);
             $blockTO->mass = $this->input->post(Front::BLOCK_MASS);
             $blockTO->losses = $this->input->post(Front::BLOCK_NEUTRAL_LOSSES);
-            $blockTO->reference = $this->input->post(Front::BLOCK_REFERENCE);
+            $blockTO->reference = new ReferenceTO();
+            $blockTO->reference->cid = $this->input->post(Front::BLOCK_REFERENCE);
             $blocks[$blockIdentifier] = $blockTO;
             $data[Front::BLOCK_COUNT] = $this->input->post(Front::BLOCK_COUNT);
         } else {
@@ -129,25 +131,31 @@ class Land extends CI_Controller {
             $inputSmiles = $this->input->post(Front::BLOCK_SMILES);
             $smiles = explode(",", $inputSmiles);
             foreach ($smiles as $smile) {
-                $pubchemFinder = new PubChemFinder();
-                try {
-                    $result = $pubchemFinder->findBySmile($smile, $outArResult, $outArExtResult);
-                    switch ($result) {
-                        case ResultEnum::REPLY_OK_ONE:
-                            $blockTO = new BlockTO($intCounter, $outArResult[Front::CANVAS_INPUT_NAME], "", $smile, ComputeEnum::NO);
-                            $blockTO->formula = $outArResult[Front::CANVAS_INPUT_FORMULA];
-                            $blockTO->mass = $outArResult[Front::CANVAS_INPUT_MASS];
-                            $blockTO->reference = new ReferenceTO();
-                            $blockTO->reference->cid = $outArResult[Front::CANVAS_INPUT_IDENTIFIER];
-                            break;
-                        case ResultEnum::REPLY_OK_MORE:
-                        case ResultEnum::REPLY_NONE:
-                        default:
-                            $blockTO = new BlockTO($intCounter, "", "", $smile);
-                            break;
+                $graph = new Graph($smile);
+                $arResult = $this->block_model->getBlockByUniqueSmiles($graph->getUniqueSmiles());
+                if (!empty($arResult)) {
+                    $blockTO = new BlockTO($intCounter, $arResult['name'], $arResult['acronym'], $arResult['smiles'], ComputeEnum::YES);
+                } else {
+                    $pubchemFinder = new PubChemFinder();
+                    try {
+                        $result = $pubchemFinder->findBySmile($smile, $outArResult, $outArExtResult);
+                        switch ($result) {
+                            case ResultEnum::REPLY_OK_ONE:
+                                $blockTO = new BlockTO($intCounter, $outArResult[Front::CANVAS_INPUT_NAME], "", $smile, ComputeEnum::NO);
+                                $blockTO->formula = $outArResult[Front::CANVAS_INPUT_FORMULA];
+                                $blockTO->mass = $outArResult[Front::CANVAS_INPUT_MASS];
+                                $blockTO->reference = new ReferenceTO();
+                                $blockTO->reference->cid = $outArResult[Front::CANVAS_INPUT_IDENTIFIER];
+                                break;
+                            case ResultEnum::REPLY_OK_MORE:
+                            case ResultEnum::REPLY_NONE:
+                            default:
+                                $blockTO = new BlockTO($intCounter, "", "", $smile);
+                                break;
+                        }
+                    } catch (\Bbdgnc\Finder\Exception\BadTransferException $e) {
+                        $blockTO = new BlockTO($intCounter, "", "", $smile);
                     }
-                } catch (\Bbdgnc\Finder\Exception\BadTransferException $e) {
-                    $blockTO = new BlockTO($intCounter, "", "", $smile);
                 }
                 $blocks[] = $blockTO;
                 $intCounter++;

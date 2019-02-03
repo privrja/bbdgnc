@@ -1,3 +1,4 @@
+insert into block (name, acronym,residue, mass, smiles, usmiles) values ('Valine', 'Val', 'C5H11NO2', 117.079, 'CC(C)C(N)C(=O)O', 'CC(C)C(N)C(O)=O');
 INSERT INTO block (name, acronym, residue, mass) VALUES ('Ethanolamine', 'Eta', 'C2H5N', 43.0421991657);
 INSERT INTO block (name, acronym, residue, mass) VALUES ('Glycine', 'Gly', 'C2H3NO', 57.0214637236);
 INSERT INTO block (name, acronym, residue, mass) VALUES ('pyrrolidone', 'Pyr', 'C4H5N', 67.0421991657);
