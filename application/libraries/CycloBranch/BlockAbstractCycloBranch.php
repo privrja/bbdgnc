@@ -3,7 +3,7 @@
 use Bbdgnc\Enum\ComputeEnum;
 use Bbdgnc\TransportObjects\BlockTO;
 
-class BlockCycloBranch extends CycloBranchParser {
+class BlockAbstractCycloBranch extends AbstractCycloBranch {
 
     // TODO to slucovani je jen u bloku?
     // TODO je to vzdy v tom souboru ulozeny jako slouceny? pres ty lomitka?

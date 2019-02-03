@@ -1,6 +1,6 @@
 <?php
 
-abstract class CycloBranchParser implements ICycloBranch {
+abstract class AbstractCycloBranch implements ICycloBranch {
 
     public function import(string $filePath) {
         $handle = fopen($filePath, 'r');

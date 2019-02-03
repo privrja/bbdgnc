@@ -9,13 +9,13 @@ class ImportTypeFactory {
     public static function getCycloBranch(int $type) {
         switch ($type) {
             case ImportTypeEnum::SEQUENCE:
-                return new SequenceCycloBranch();
+                return new SequenceAbstractCycloBranch();
                 break;
             case ImportTypeEnum::BLOCK:
-                return new BlockCycloBranch();
+                return new BlockAbstractCycloBranch();
                 break;
             case ImportTypeEnum::MODIFICATION:
-                return new ModificationCycloBranch();
+                return new ModificationAbstractCycloBranch();
                 break;
         }
 
