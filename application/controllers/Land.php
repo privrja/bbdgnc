@@ -1,5 +1,7 @@
 <?php
 
+use Bbdgnc\Base\HelperEnum;
+use Bbdgnc\Enum\ComputeEnum;
 use Bbdgnc\Enum\Front;
 use Bbdgnc\Enum\LoggerEnum;
 use Bbdgnc\Finder\Enum\FindByEnum;
@@ -8,6 +10,9 @@ use Bbdgnc\Finder\Enum\ServerEnum;
 use Bbdgnc\Finder\FinderFactory;
 use Bbdgnc\Finder\IFinder;
 use Bbdgnc\Finder\PubChemFinder;
+use Bbdgnc\Smiles\Graph;
+use Bbdgnc\TransportObjects\BlockTO;
+use Bbdgnc\TransportObjects\ReferenceTO;
 
 class Land extends CI_Controller {
 
@@ -18,6 +23,9 @@ class Land extends CI_Controller {
     const COOKIE_EXPIRE_HOUR = 3600;
 
     const ERRORS = "errors";
+
+
+    const COOKIE_BLOCKS = "cookie_blocks";
 
     private $errors = "";
 
@@ -39,7 +47,8 @@ class Land extends CI_Controller {
      */
     public function __construct() {
         parent::__construct();
-        $this->load->helper(array("form", "url"));
+        $this->load->helper(array(HelperEnum::HELPER_FORM, HelperEnum::HELPER_URL, HelperEnum::HELPER_COOKIE));
+        $this->load->model('block_model');
     }
 
     /**
@@ -65,6 +74,104 @@ class Land extends CI_Controller {
         $this->load->view(Front::TEMPLATES_FOOTER);
     }
 
+
+    /**
+     * Render editor or blocks
+     */
+    public function block() {
+        $btnEditor = $this->input->post('editor');
+        $btnAccept = $this->input->post('accept');
+        if (isset($btnEditor)) {
+            $this->editor();
+        } else if (isset($btnAccept)) {
+            $this->blocks();
+        }
+    }
+
+    public function editor() {
+        $blockIdentifier = $this->input->post(Front::BLOCK_IDENTIFIER);
+        $blockSmile = $this->input->post(Front::BLOCK_SMILE);
+        $blockAcronym = $this->input->post(Front::BLOCK_ACRONYM);
+        $blockName = $this->input->post(Front::BLOCK_NAME);
+        $blockCount = $this->input->post(Front::BLOCK_COUNT);
+        $block = new BlockTO($blockIdentifier, $blockName, $blockAcronym, $blockSmile, ComputeEnum::NO);
+        $block->formula = $this->input->post(Front::BLOCK_FORMULA);
+        $block->mass = $this->input->post(Front::BLOCK_MASS);
+        $block->losses = $this->input->post(Front::BLOCK_NEUTRAL_LOSSES);
+        $block->reference = $this->input->post(Front::BLOCK_REFERENCE);
+        $data = $this->getLastData();
+        $data[Front::BLOCK] = $block;
+        $data[Front::BLOCK_COUNT] = $blockCount;
+        $this->load->view('templates/header');
+        $this->load->view('editor/index', $data);
+        $this->load->view('templates/footer');
+    }
+
+    public function blocks() {
+        $first = $this->input->post('first');
+        $data = $this->getLastData();
+        $cookieVal = get_cookie(self::COOKIE_BLOCKS);
+        if (!isset($first) && $cookieVal !== null) {
+            $blocks = json_decode($cookieVal);
+            $blockIdentifier = $this->input->post(Front::BLOCK_IDENTIFIER);
+            $blockTO = new BlockTO($blockIdentifier, $this->input->post(Front::BLOCK_NAME), $this->input->post(Front::BLOCK_ACRONYM), $this->input->post(Front::BLOCK_SMILE), ComputeEnum::NO);
+            $blockTO->formula = $this->input->post(Front::BLOCK_FORMULA);
+            $blockTO->mass = $this->input->post(Front::BLOCK_MASS);
+            $blockTO->losses = $this->input->post(Front::BLOCK_NEUTRAL_LOSSES);
+            $blockTO->reference = new ReferenceTO();
+            $blockTO->reference->cid = $this->input->post(Front::BLOCK_REFERENCE);
+            $blocks[$blockIdentifier] = $blockTO;
+            $data[Front::BLOCK_COUNT] = $this->input->post(Front::BLOCK_COUNT);
+        } else {
+            $blocks = [];
+            $intCounter = 0;
+            $inputSmiles = $this->input->post(Front::BLOCK_SMILES);
+            $smiles = explode(",", $inputSmiles);
+            foreach ($smiles as $smile) {
+                $graph = new Graph($smile);
+                $arResult = $this->block_model->getBlockByUniqueSmiles($graph->getUniqueSmiles());
+                if (!empty($arResult)) {
+                    $blockTO = new BlockTO($intCounter, $arResult['name'], $arResult['acronym'], $arResult['smiles'], ComputeEnum::NO);
+                    $blockTO->formula = $arResult['residue'];
+                    $blockTO->mass = $arResult['mass'];
+                } else {
+                    $pubchemFinder = new PubChemFinder();
+                    try {
+                        $result = $pubchemFinder->findBySmile($smile, $outArResult, $outArExtResult);
+                        switch ($result) {
+                            case ResultEnum::REPLY_OK_ONE:
+                                $blockTO = new BlockTO($intCounter, $outArResult[Front::CANVAS_INPUT_NAME], "", $smile, ComputeEnum::NO);
+                                $blockTO->formula = $outArResult[Front::CANVAS_INPUT_FORMULA];
+                                $blockTO->mass = $outArResult[Front::CANVAS_INPUT_MASS];
+                                $blockTO->reference->cid = $outArResult[Front::CANVAS_INPUT_IDENTIFIER];
+                                break;
+                            case ResultEnum::REPLY_OK_MORE:
+                            case ResultEnum::REPLY_NONE:
+                            default:
+                                $blockTO = new BlockTO($intCounter, "", "", $smile);
+                                break;
+                        }
+                    } catch (\Bbdgnc\Finder\Exception\BadTransferException $e) {
+                        $blockTO = new BlockTO($intCounter, "", "", $smile);
+                    }
+                }
+                $blocks[] = $blockTO;
+                $intCounter++;
+            }
+
+            $data[Front::BLOCK_COUNT] = $intCounter;
+        }
+        $data[Front::BLOCKS] = $blocks;
+
+        set_cookie(self::COOKIE_BLOCKS, json_encode($blocks), 3600);
+
+        $this->load->view(Front::TEMPLATES_HEADER);
+        $this->load->view(Front::PAGES_CANVAS);
+        $this->load->view(Front::PAGES_MAIN, $this->getLastData());
+        $this->load->view(Front::PAGES_BLOCKS, $data);
+        $this->load->view(Front::TEMPLATES_FOOTER);
+    }
+
     /**
      * Form
      * Find in specific database by specific param or save data to database
@@ -77,6 +184,7 @@ class Land extends CI_Controller {
         $btnFind = $this->input->post("find");
         $btnSave = $this->input->post("save");
         $btnLoad = $this->input->post("load");
+        $btnBlocks = $this->input->post("blocks");
         $intDatabase = $this->input->post(Front::CANVAS_INPUT_DATABASE);
         $intFindBy = $this->input->post(Front::CANVAS_INPUT_SEARCH_BY);
         $blMatch = $this->input->post(Front::CANVAS_INPUT_MATCH);
@@ -88,6 +196,9 @@ class Land extends CI_Controller {
             /* Save to database */
         } else if (isset($btnLoad)) {
             /* Load from database */
+        } else if (isset($btnBlocks)) {
+            /* Building Blocks */
+            $this->blocks();
         }
     }
 

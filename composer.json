@@ -11,20 +11,15 @@
 		"source": "https://github.com/bcit-ci/CodeIgniter"
 	},
 	"require": {
-		"php": ">=5.3.7"
+      "php": ">=7.2.0"
 	},
 	"autoload": {
-		"psr-4": {
-            "Bbdgnc\\Base\\" : "application/libraries/base",
-			"Bbdgnc\\Finder\\" : "application/libraries/finder",
-			"Bbdgnc\\Finder\\Enum\\" : "application/libraries/finder/enums",
-			"Bbdgnc\\Finder\\Exception\\" : "application/libraries/finder/exceptions",
-			"Bbdgnc\\Enum\\" : "application/libraries/enums",
-			"Bbdgnc\\Smiles\\" : "application/libraries/smiles",
-			"Bbdgnc\\Exception\\" : "application/libraries/exceptions"
-		}
+		"classmap": [
+			"application/libraries",
+			"tests"
+        ]
 	},
 	"require-dev": {
-		"phpunit/phpunit": "4.* || 5.*"
+		"phpunit/phpunit": "^7.5"
 	}
 }

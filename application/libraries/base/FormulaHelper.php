@@ -3,59 +3,57 @@
 namespace Bbdgnc\Base;
 
 use Bbdgnc\Enum\PeriodicTableSingleton;
+use Bbdgnc\Exception\IllegalArgumentException;
+use Bbdgnc\Smiles\Enum\LossesEnum;
+use Bbdgnc\Smiles\Graph;
+use Bbdgnc\Smiles\Parser\AtomParser;
+use Bbdgnc\Smiles\Parser\NatParser;
 
 class FormulaHelper {
 
     /**
      * Compute mass
-     * @param String $strFormula
+     * @param string $strFormula
      * @return float
      */
     public static function computeMass($strFormula) {
         if (!isset($strFormula) || empty($strFormula)) {
-            throw new \InvalidArgumentException();
+            throw new IllegalArgumentException();
         }
-        $intLength = strlen($strFormula);
-        if ($intLength == 1) {
-            throw new \InvalidArgumentException();
-        }
-        $mass = $intIndex = 0;
-        while ($intIndex < $intLength) {
-            $strName = self::readLiteral($strFormula, $intLength, $intIndex);
-            $strCount = self::readNumber($strFormula, $intLength, $intIndex);
+        $mass = 0;
+        while (!empty($strFormula)) {
+            $atomParser = new AtomParser();
+            $result = $atomParser->parse($strFormula);
+            if (!$result->isAccepted()) {
+                throw new IllegalArgumentException();
+            }
+            $strFormula = $result->getRemainder();
+            $strName = $result->getResult();
+            $strCount = 1;
+            $numberParser = new NatParser();
+            $numberResult = $numberParser->parse($strFormula);
+            if ($numberResult->isAccepted()) {
+                $strCount = $numberResult->getResult();
+                $strFormula = $numberResult->getRemainder();
+            }
             try {
                 $mass += (PeriodicTableSingleton::getInstance()->getAtoms())[$strName]->getMass() * $strCount;
             } catch (\Exception $exception) {
-                throw new \InvalidArgumentException();
+                throw new IllegalArgumentException();
             }
         }
         return $mass;
     }
 
-    private static function readNumber($strFormula, $intLength, &$intIndex) {
-        if($strFormula[$intIndex] == "0") {
-            throw new \InvalidArgumentException();
-        }
-        $strCount = "";
-        while (is_numeric($strFormula[$intIndex])) {
-            $strCount .= $strFormula[$intIndex];
-            $intIndex++;
-            if ($intIndex >= $intLength) {
-                break;
-            }
-        }
-        return $strCount;
+    /**
+     * Get Formula from SMILES
+     * @param string $strSmiles SMILES
+     * @param int $losses
+     * @return string formula
+     */
+    public static function formulaFromSmiles(string $strSmiles, int $losses = LossesEnum::NONE) {
+        $graph = new Graph($strSmiles);
+        return $graph->getFormula($losses);
     }
 
-    private static function readLiteral($strFormula, $intLength, &$intIndex) {
-        $strName = "";
-        while (!is_numeric($strFormula[$intIndex])) {
-            $strName .= $strFormula[$intIndex];
-            $intIndex++;
-            if ($intIndex >= $intLength) {
-                throw new \InvalidArgumentException();
-            }
-        }
-        return $strName;
-    }
 }

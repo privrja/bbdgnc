@@ -113,7 +113,6 @@ class ChebiFinder implements IFinder {
      */
     public function findByFormula($strFormula, &$outArResult, &$outArNextResult) {
         $result = $this->getLiteEntity($strFormula, ChebiSearchCategoryEnum::FORMULA, $outArResult, $outArNextResult);
-        // TODO i think its unnecessary
         switch ($result) {
             case ResultEnum::REPLY_NONE:
             case ResultEnum::REPLY_OK_ONE:

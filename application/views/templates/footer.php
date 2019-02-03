@@ -10,6 +10,9 @@
                 <a class="a-black" href="http://dx.doi.org/10.1021/acs.jcim.7b00425">JCIM</a>
             </li>
             <li class="footer">
+                <a class="a-black" href="https://jcheminf.biomedcentral.com/articles/10.1186/1758-2946-5-24">JSME</a>
+            </li>
+            <li class="footer">
                 <a class="a-black" href="https://www.codeigniter.com/">CodeIgniter</a>
             </li>
             <li class="footer">

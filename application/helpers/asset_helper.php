@@ -26,4 +26,8 @@ class AssetHelper {
         return AssetHelper::nodeModulesUrl() . 'smiles-drawer/dist/smiles-drawer.js';
     }
 
+    public static function jsJsme() {
+        return AssetHelper::jsUrl() . "jsme/jsme.nocache.js";
+    }
+
 }

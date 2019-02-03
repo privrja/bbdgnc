@@ -1,14 +1,14 @@
 <?php
 
-use Bbdgnc\Finder\Enum\ServerEnum;
-use Bbdgnc\Finder\Enum\FindByEnum;
 use Bbdgnc\Enum\Front;
+use Bbdgnc\Finder\Enum\FindByEnum;
+use Bbdgnc\Finder\Enum\ServerEnum;
 
 ?>
 
 <div id="div-right">
 
-    <?= form_open('land/form', array('class' => 'form')); ?>
+    <?= form_open('land/form', array('class' => 'form', 'id' => 'form-main')); ?>
 
     <label for="sel-canvas-database">Database</label>
     <?= form_dropdown(Front::CANVAS_INPUT_DATABASE, ServerEnum::$values, set_value(Front::CANVAS_INPUT_DATABASE),
@@ -47,8 +47,10 @@ use Bbdgnc\Enum\Front;
     <input type="submit" id="btn-canvas-find" class="btn-same" name="find" value="Find"/>
     <button type="button" id="btn-canvas-update" class="btn-same" onclick="resize()">Update</button>
     <button type="button" id="button-canvas-easy-smile" class="btn-same" onclick="easy()">Canonical SMILES</button>
-    <button type="button" id="btn-canvas-disintegrate" class="btn-same">Building Blocks</button>
-    <button type="button" id="btn-canvas-load" class="btn-same" name="load">Load</button>
+    <button type="button" id="btn-canvas-disintegrate" class="btn-same" name="blocks" value="Blocks"
+            onclick="disintegrate()">Building Blocks
+    </button>
+    <button type="submit" id="btn-canvas-load" class="btn-same" name="load" value="Load">Load</button>
     <input type="submit" class="btn-same" value="Save"/>
 
     </form>
@@ -59,7 +61,6 @@ use Bbdgnc\Enum\Front;
 </div>
 
 <!-- Smiles Drawer -->
-<!--<script src="https://unpkg.com/smiles-drawer@1.0.10/dist/smiles-drawer.min.js"></script>-->
 <script src="<?= AssetHelper::jsSmilesDrawer() ?>"></script>
 
 <script src="<?= AssetHelper::jsUrl() . "canvas.js" ?>"></script>

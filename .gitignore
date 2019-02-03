@@ -20,7 +20,7 @@ user_guide_src/cilexer/pycilexer.egg-info/*
 # IDE Files
 #-------------------------
 /nbproject/
-/.idea/*
+/.idea/
 
 ## Sublime Text cache files
 *.tmlanguage.cache
@@ -38,3 +38,6 @@ readme.rst
 
 #Node modules
 /node_modules/*
+
+/application/db/data.sqlite
+

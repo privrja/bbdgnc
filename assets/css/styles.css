@@ -15,7 +15,7 @@ header {
 }
 
 section {
-    min-height: 100%;
+    min-height: 94vh;
     margin-bottom: -4vh;
 }
 
@@ -32,6 +32,7 @@ footer {
 
 /** Drawing sketch div */
 #div-canvas {
+    z-index: 1;
     width: 75%;
     min-height: 90vh;
     float: left;
@@ -39,6 +40,8 @@ footer {
 
 /** Right menu */
 #div-right {
+    position: relative;
+    z-index: 2;
     width: 25%;
     min-height: 90vh;
     float: right;
@@ -48,18 +51,50 @@ footer {
 /* Drawing sketch canvas */
 #canvas-main {
     width: 100%;
-    /*height: 90vh;*/
     min-height: 100%;
     background-color: #fff;
 }
 
-#div-select {
+#div-select, #div-blocks {
     width: 100%;
     clear: both;
 }
 
+#div-sequence {
+    margin: 0 auto;
+    position: relative;
+    padding: 3vh 6vh 12vh 6vh;
+}
+
+#div-top-sequence {
+    width: 70%;
+}
+
+#div-editor {
+    width: 100%;
+    padding-top: 2vh;
+}
+
+.div-editor-left {
+    width: 60%;
+    float: right;
+    display: inline-block;
+}
+
+#div-editor-form {
+    vertical-align: top;
+    padding: 4vh;
+    width: 30%;
+    display: inline-block;
+}
+
 .canvas-small {
     cursor: pointer;
+}
+
+.div-modification {
+    width: 33%;
+    display: inline-block;
 }
 
 #canvas-large {

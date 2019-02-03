@@ -4,10 +4,16 @@ namespace Bbdgnc\Smiles;
 
 class Element {
 
-    private $name = "";
-    private $protons = 0;
-    private $bindings = 0;
-    private $mass = 0;
+    protected $name = "";
+    protected $protons = 0;
+    protected $bindings = 0;
+    protected $mass = 0;
+
+    /** @var bool $isAromatic */
+    protected $isAromatic;
+
+    /** @var Charge $charge */
+    protected $charge;
 
     /**
      * Element constructor.
@@ -18,8 +24,9 @@ class Element {
      * must be non negative number
      * @param float $mass
      * must be positive number
+     * @param bool $isAromatic
      */
-    public function __construct($name, $protons, $bindings, $mass) {
+    public function __construct(string $name, int $protons, int $bindings, float $mass, bool $isAromatic = false) {
         assert($protons >= 0);
         assert($bindings >= 0);
         assert($mass > 0);
@@ -27,6 +34,26 @@ class Element {
         $this->protons = $protons;
         $this->bindings = $bindings;
         $this->mass = $mass;
+        $this->isAromatic = $isAromatic;
+        $this->charge = new Charge();
+    }
+
+    public function elementSmiles() {
+        return $this->name;
+    }
+
+    /**
+     * @return Charge
+     */
+    public function getCharge(): Charge {
+        return $this->charge;
+    }
+
+    /**
+     * @param Charge $charge
+     */
+    public function setCharge(Charge $charge): void {
+        $this->charge = $charge;
     }
 
     /**
@@ -55,6 +82,29 @@ class Element {
      */
     public function getMass() {
         return $this->mass;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isAromatic(): bool {
+        return $this->isAromatic;
+    }
+
+    public function asNonAromatic() {
+        if ($this->isAromatic) {
+            $this->bindings++;
+            $this->isAromatic = false;
+        }
+    }
+
+    public function getHydrogensCount($actualBindings) {
+        $hydrogensCount = $this->bindings - $actualBindings;
+        return $hydrogensCount < 0 ? 0 : $hydrogensCount;
+    }
+
+    public function asBracketElement() {
+        return new BracketElement($this->name, $this->protons, $this->bindings, $this->mass, $this->isAromatic, new Charge(), 0);
     }
 
 }

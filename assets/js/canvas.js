@@ -4,6 +4,25 @@ const TXT_SMILE_ID = "txt-canvas-smile";
 const HIDDEN_SMILE_ID = "hidden-canvas-small-";
 const CANVAS_SMALL_ID = "canvas-small-";
 const CANVAS_LARGE_ID = "canvas-large";
+const FORM_MAIN = "form-main";
+const SEQUENCE_TYPE = "sel-sequence-type";
+const TXT_N_MODIFICATION = "txt-n-modification";
+const TXT_N_FORMULA = "txt-n-formula";
+const TXT_N_MASS = "txt-n-mass";
+const CHK_N_NTERMINAL = "chk-n-nterminal";
+const CHK_N_CTERMINAL = "chk-n-cterminal";
+const TXT_C_MODIFICATION = "txt-c-modification";
+const TXT_C_FORMULA = "txt-c-formula";
+const TXT_C_MASS = "txt-c-mass";
+const CHK_C_NTERMINAL = "chk-c-nterminal";
+const CHK_C_CTERMINAL = "chk-c-cterminal";
+const TXT_BRANCH_MODIFICATION = "txt-b-modification";
+const TXT_BRANCH_FORMULA = "txt-b-formula";
+const TXT_BRANCH_MASS = "txt-b-mass";
+const CHK_BRANCH_NTERMINAL = "chk-b-nterminal";
+const CHK_BRANCH_CTERMINAL = "chk-b-cterminal";
+
+const CAPTION_RESULTS = "#h-results";
 
 const WINDOW_MIN_WIDTH = 850;
 const WINDOW_MIN_HEIGHT = 575;
@@ -27,18 +46,30 @@ let mobile = false;
 let lastLargeSmilesId;
 
 /** default options for main drawer */
-let options = {width: getCanvasWidth(), height: getCanvasHeight(), themes: {light: {O: '#e67e22'}}};
+let options = {
+    width: getCanvasWidth(),
+    height: getCanvasHeight(),
+    themes: {light: {O: '#e67e22', DECAY: '#ff0000'}},
+    drawDecayPoints: true,
+    compactDrawing: false
+};
 
 /** Initialize the drawers */
 let smilesDrawer = getSmilesDrawer();
 let smallSmilesDrawer = getSmallSmilesDrawer();
 let largeSmilesDrawer = getLargeSmilesDrawer();
+let canvasRef = document.getElementById(CANVAS_ID);
+let offsetX = canvasRef.offsetLeft;
+let offsetY = canvasRef.offsetTop;
 
 /** events */
 document.addEventListener('DOMContentLoaded', function () {
     window.addEventListener('resize', resize);
     window.addEventListener('load', finder);
     document.getElementById(TXT_SMILE_ID).addEventListener('input', drawSmile);
+    canvasRef.addEventListener('click', function (e) {
+        smilesDrawer.handleMouseClick(e, offsetX, offsetY);
+    });
 });
 
 /**
@@ -50,7 +81,7 @@ function finder() {
         let elem = smallCanvases[i];
         drawSmallSmile(elem.getAttribute("data-canvas-small-id"));
         if (i === 0) {
-            document.location.href = "#h-results";
+            document.location.href = CAPTION_RESULTS;
         }
     }
     mobileVersion();
@@ -70,6 +101,12 @@ function resize() {
     drawSmile();
 }
 
+function disintegrate() {
+    let smiles = smilesDrawer.buildBlockSmiles();
+    let data = {blockSmiles: smiles, blocks: 'Blocks', first: true};
+    redirectWithData(FORM_MAIN, data);
+}
+
 /** default screen mode (dark/light) def = light */
 let DEFAULT_SCREEN_MODE = MODE_LIGHT;
 
@@ -82,12 +119,16 @@ function getSmilesDrawer() {
 
 /** Get SMILES Drawer instance for small preview */
 function getSmallSmilesDrawer() {
-    return new SmilesDrawer.Drawer({width: CANVAS_SMALL_SQUARE, height: CANVAS_SMALL_SQUARE });
+    return new SmilesDrawer.Drawer({width: CANVAS_SMALL_SQUARE, height: CANVAS_SMALL_SQUARE, compactDrawing: false});
 }
 
 /** Get SMILES Drawer instance for large preview */
 function getLargeSmilesDrawer() {
-    return new SmilesDrawer.Drawer({width: getWindowWidth() * PROCENT_SIXTY, height: getWindowHeight() + PIXEL_TWO });
+    return new SmilesDrawer.Drawer({
+        width: getWindowWidth() * PROCENT_SIXTY,
+        height: getWindowHeight() + PIXEL_TWO,
+        compactDrawing: false
+    });
 }
 
 /**
@@ -128,6 +169,87 @@ function getCanvasHeight() {
     return document.getElementById(CANVAS_ID).offsetHeight;
 }
 
+function sequenceTypeChanged() {
+    switch (document.getElementById(SEQUENCE_TYPE).value) {
+        case "0":
+        case "4":
+            enableModificationN();
+            enableModificationC();
+            disableModificationBranch();
+            break;
+        case "1":
+        case "5":
+            disableModificationN();
+            disableModificationC();
+            disableModificationBranch();
+            break;
+        case "3":
+            disableModificationN();
+            disableModificationC();
+            enableModificationBranch();
+            break;
+        case "2":
+        case "6":
+        default:
+            enableModificationN();
+            enableModificationC();
+            enableModificationBranch();
+            break;
+    }
+}
+
+function disableModificationN() {
+    enableOrDisableModificationN(true);
+}
+
+function enableModificationN() {
+    enableOrDisableModificationN(false);
+}
+
+function disableModificationC() {
+    enableOrDisableModificationC(true);
+}
+
+function enableModificationC() {
+    enableOrDisableModificationC(false);
+}
+
+function disableModificationBranch() {
+    enableOrDisableModificationBranch(true);
+}
+
+function enableModificationBranch() {
+    enableOrDisableModificationBranch(false);
+}
+
+function enableOrDisableModificationN(disable) {
+    disableOrEnableElement(TXT_N_MODIFICATION, disable);
+    disableOrEnableElement(TXT_N_FORMULA, disable);
+    disableOrEnableElement(TXT_N_MASS, disable);
+    disableOrEnableElement(CHK_N_NTERMINAL, disable);
+    disableOrEnableElement(CHK_N_CTERMINAL, disable);
+}
+
+function enableOrDisableModificationC(disable) {
+    disableOrEnableElement(TXT_C_MODIFICATION, disable);
+    disableOrEnableElement(TXT_C_FORMULA, disable);
+    disableOrEnableElement(TXT_C_MASS, disable);
+    disableOrEnableElement(CHK_C_NTERMINAL, disable);
+    disableOrEnableElement(CHK_C_CTERMINAL, disable);
+}
+
+function enableOrDisableModificationBranch(disable) {
+    disableOrEnableElement(TXT_BRANCH_MODIFICATION, disable);
+    disableOrEnableElement(TXT_BRANCH_FORMULA, disable);
+    disableOrEnableElement(TXT_BRANCH_MASS, disable);
+    disableOrEnableElement(CHK_BRANCH_NTERMINAL, disable);
+    disableOrEnableElement(CHK_BRANCH_CTERMINAL, disable);
+}
+
+function disableOrEnableElement(elementId, disable) {
+    document.getElementById(elementId).disabled = disable;
+}
+
 /**
  * Parse Isomeric SMILE to Canonical SMILES
  *
@@ -153,6 +275,7 @@ function smileToEasy(smile) {
                 stack = isoText(stack);
                 break;
             case '/':
+            case '\\':
                 break;
             default:
                 stack.push(c);
@@ -237,7 +360,9 @@ function drawSmile() {
         // Draw to the canvas
         activateScreenMode();
         smilesDrawer.draw(tree, CANVAS_ID, DEFAULT_SCREEN_MODE, false);
-        document.getElementById(TXT_CANVAS_FLE).value = smilesDrawer.getMolecularFormula();
+        // document.getElementById(TXT_CANVAS_FLE).value = smilesDrawer.getMolecularFormula();
+        canvasRef.style.width = '100%';
+        canvasRef.style.height = '100%';
     });
 }
 
@@ -284,4 +409,17 @@ function drawLarge(canvasId) {
         activateScreenMode();
         largeSmilesDrawer.draw(tree, CANVAS_LARGE_ID, DEFAULT_SCREEN_MODE, false);
     });
+}
+
+function redirectWithData(formId, data) {
+    let form = document.getElementById(formId);
+    form.method = 'post';
+    for (let name in data) {
+        let input = document.createElement('input');
+        input.type = 'hidden';
+        input.name = name;
+        input.value = data[name];
+        form.appendChild(input);
+    }
+    form.submit();
 }
