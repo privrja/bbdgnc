@@ -25,7 +25,7 @@ class BlockTO {
 
     public $smiles = "";
 
-    public $uniqueSmiles = "";
+    public $uniqueSmiles;
 
     /** @var ReferenceTO $reference */
     public $reference;
@@ -69,7 +69,6 @@ class BlockTO {
     }
 
     private function computeUniqueSmiles() {
-        var_dump($this->smiles);
         $graph = new Graph($this->smiles);
         $this->uniqueSmiles = $graph->getUniqueSmiles();
     }
@@ -84,7 +83,7 @@ class BlockTO {
     }
 
     public function asBlock() {
-        return [$this->name, $this->acronym, $this->formula, $this->mass, $this->smiles, $this->uniqueSmiles];
+        return ['name' => $this->name, 'acronym' => $this->acronym, 'residue' => $this->formula, 'mass' => $this->mass, 'smiles' => $this->smiles, 'usmiles' => $this->uniqueSmiles];
     }
 
 }

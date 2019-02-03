@@ -56,4 +56,64 @@ class FormulaHelper {
         return $graph->getFormula($losses);
     }
 
+    public static function genericSmiles(string $smiles) {
+        $stack = [];
+        $smilesNext = str_split($smiles);
+        foreach ($smilesNext as $smile) {
+            switch ($smile) {
+                case ']':
+                    $stack = self::isoText($stack);
+                    break;
+                case '/':
+                case '\\':
+                    break;
+                case ')':
+                    $index = sizeof($stack) - 1;
+                    if ($stack[$index] === '(') {
+                        array_pop($stack);
+                    } else {
+                        array_push($stack, $smile);
+                    }
+                    break;
+                default:
+                    array_push($stack, $smile);
+                    break;
+            }
+        }
+        return implode('', $stack);
+    }
+
+    public static function isoText($stack) {
+        $text = [];
+        $c = ']';
+        $last = '';
+        while ($c != '[') {
+            switch ($c) {
+                case '@':
+                    break;
+                case 'H':
+                    if ($last !== '@') {
+                        array_unshift($text, $c);
+                    }
+                    break;
+                default:
+                    array_unshift($text, $c);
+                    break;
+            }
+            $last = $c;
+            $c = array_pop($stack);
+        }
+        array_unshift($text, '[');
+        if (sizeof($text) === 3 && $text[1] === 'H') {
+            $text = [];
+        }
+        if (sizeof($text) === 3) {
+            $text = [$text[1]];
+        }
+        if (sizeof($text) === 4) {
+            $text = [$text[1]];
+        }
+        return array_merge($stack, $text);
+    }
+
 }

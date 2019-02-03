@@ -41,7 +41,7 @@ class Import extends CI_Controller {
 
     private function import(string $filePath, int $type) {
         $cycloBranch = new CycloBranch($type, $this);
-        $cycloBranch->import($filePath, $type);
+        $cycloBranch->import($filePath);
     }
 
 }

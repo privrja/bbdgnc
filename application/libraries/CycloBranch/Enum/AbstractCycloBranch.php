@@ -4,7 +4,7 @@ abstract class AbstractCycloBranch implements ICycloBranch {
     /**
      * @var CI_Controller
      */
-    private $controller;
+    protected $controller;
 
     /**
      * AbstractCycloBranch constructor.
@@ -15,6 +15,7 @@ abstract class AbstractCycloBranch implements ICycloBranch {
     }
 
     public function import(string $filePath) {
+        ini_set('max_execution_time', 120);
         $handle = fopen($filePath, 'r');
         if (!$handle) {
             return;
@@ -24,6 +25,7 @@ abstract class AbstractCycloBranch implements ICycloBranch {
         }
         fclose($handle);
         unlink($filePath);
+        ini_set('max_execution_time', 30);
     }
 
     public abstract function export();

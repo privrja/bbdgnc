@@ -6,27 +6,31 @@ use Bbdgnc\TransportObjects\BlockTO;
 
 class BlockCycloBranch extends AbstractCycloBranch {
 
+    const NAME = 0;
+    const ACRONYM = 1;
+    const FORMULA = 2;
+    const MASS = 3;
+    const REFERENCE = 4;
+    const LENGTH = 5;
+
     // TODO to slucovani je jen u bloku?
     // TODO je to vzdy v tom souboru ulozeny jako slouceny? pres ty lomitka?
     protected function parseLine(string $line) {
         $arItems = preg_split('/\t/', $line);
-        if (empty($arItems)) {
+        if (empty($arItems) || sizeof($arItems) !== self::LENGTH) {
             return;
         }
-        $itemsLength = sizeof($arItems);
-        // TODO $itemsLength !== 5 ??? what to do
-        var_dump($arItems);
-        $arNames = explode('/', $arItems[0]);
+        $arNames = explode('/', $arItems[self::NAME]);
         $length = sizeof($arNames);
         $arSmiles = [];
-        $arAcronyms = explode('/', $arItems[1]);
-        // TODO jak to je s referencema, vzdy jen jedna? nebo i vice?
-        $arReference = explode('/', $arItems[4]);
+        $arAcronyms = explode('/', $arItems[self::ACRONYM]);
+        // TODO v nove verzi CycloBranch přibude položka Neutral Losess a bude před references
+        $arReference = explode('/', $arItems[self::REFERENCE]);
+        if (sizeof($arAcronyms) !== $length || sizeof($arReference) !== $length) {
+            return;
+        }
         for ($index = 0; $index < $length; ++$index) {
-            // TODO co kdyz tam in neni? co vraci explode?, arReference need to string
             $arTmp = explode('in', $arReference[$index]);
-            var_dump($arTmp);
-            var_dump($arReference);
             if (empty($arTmp) || $arTmp[0] === $arReference[$index]) {
                 $arSmiles[] = '';
             } else {
@@ -40,6 +44,9 @@ class BlockCycloBranch extends AbstractCycloBranch {
         for ($index = 0; $index < $length; ++$index) {
             // TODO zjistit jak to je se SMILES v souboru, pravidla na parsovani
             $blockTO = new BlockTO(0, $arNames[$index], $arAcronyms[$index], $arSmiles[$index], ComputeEnum::UNIQUE_SMILES);
+            $blockTO->formula = $arItems[self::FORMULA];
+            $blockTO->mass = $arItems[self::MASS];
+            $this->controller->block_model->insertBlock($blockTO);
             // TODO save to DB mozna by se hodilo vytvorit transakci kvuli chybe na radku asi neukladat ty co budou dobre
         }
 
