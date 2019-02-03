@@ -134,7 +134,9 @@ class Land extends CI_Controller {
                 $graph = new Graph($smile);
                 $arResult = $this->block_model->getBlockByUniqueSmiles($graph->getUniqueSmiles());
                 if (!empty($arResult)) {
-                    $blockTO = new BlockTO($intCounter, $arResult['name'], $arResult['acronym'], $arResult['smiles'], ComputeEnum::YES);
+                    $blockTO = new BlockTO($intCounter, $arResult['name'], $arResult['acronym'], $arResult['smiles'], ComputeEnum::NO);
+                    $blockTO->formula = $arResult['residue'];
+                    $blockTO->mass = $arResult['mass'];
                 } else {
                     $pubchemFinder = new PubChemFinder();
                     try {
@@ -144,7 +146,6 @@ class Land extends CI_Controller {
                                 $blockTO = new BlockTO($intCounter, $outArResult[Front::CANVAS_INPUT_NAME], "", $smile, ComputeEnum::NO);
                                 $blockTO->formula = $outArResult[Front::CANVAS_INPUT_FORMULA];
                                 $blockTO->mass = $outArResult[Front::CANVAS_INPUT_MASS];
-                                $blockTO->reference = new ReferenceTO();
                                 $blockTO->reference->cid = $outArResult[Front::CANVAS_INPUT_IDENTIFIER];
                                 break;
                             case ResultEnum::REPLY_OK_MORE:
