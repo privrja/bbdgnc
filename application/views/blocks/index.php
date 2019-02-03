@@ -15,5 +15,5 @@
             <br/>
 
         <?php endforeach; ?>
-
+    </article>
 </div>
