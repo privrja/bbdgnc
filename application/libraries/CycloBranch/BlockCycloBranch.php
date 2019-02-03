@@ -11,7 +11,6 @@ class BlockCycloBranch implements ICycloBranch {
             $arItems = preg_split('/\t/', $line);
             var_dump($arItems);
             // TODO in name check for \
-
         }
         fclose($handle);
     }

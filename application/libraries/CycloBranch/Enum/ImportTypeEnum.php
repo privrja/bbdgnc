@@ -1,5 +1,6 @@
 <?php
 
+
 class ImportTypeEnum {
 
     const SEQUENCE = 0;
