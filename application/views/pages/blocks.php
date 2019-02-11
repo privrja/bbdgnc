@@ -85,9 +85,9 @@ use Bbdgnc\Finder\Enum\ServerEnum;
                 <div class="td"></div>
                 <div class="td">Name</div>
                 <div class="td">Acronym</div>
-                <div class="td">Formula</div>
+                <div class="td">Residue Formula</div>
                 <div class="td">Neutral loss</div>
-                <div class="td">Mass</div>
+                <div class="td">Residue Mass</div>
                 <div class="td">SMILES</div>
                 <div class="td">Reference</div>
                 <div class="td">Editor</div>

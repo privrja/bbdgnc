@@ -7,6 +7,7 @@ use Bbdgnc\Enum\LoggerEnum;
 use Bbdgnc\Finder\Enum\FindByEnum;
 use Bbdgnc\Finder\Enum\ResultEnum;
 use Bbdgnc\Finder\Enum\ServerEnum;
+use Bbdgnc\Finder\Exception\BadTransferException;
 use Bbdgnc\Finder\FinderFactory;
 use Bbdgnc\Finder\IFinder;
 use Bbdgnc\Finder\PubChemFinder;
@@ -142,9 +143,7 @@ class Land extends CI_Controller {
                         $result = $pubchemFinder->findBySmile($smile, $outArResult, $outArExtResult);
                         switch ($result) {
                             case ResultEnum::REPLY_OK_ONE:
-                                $blockTO = new BlockTO($intCounter, $outArResult[Front::CANVAS_INPUT_NAME], "", $smile, ComputeEnum::NO);
-                                $blockTO->formula = $outArResult[Front::CANVAS_INPUT_FORMULA];
-                                $blockTO->mass = $outArResult[Front::CANVAS_INPUT_MASS];
+                                $blockTO = new BlockTO($intCounter, $outArResult[Front::CANVAS_INPUT_NAME], "", $smile, ComputeEnum::FORMULA_MASS);
                                 $blockTO->reference = new ReferenceTO();
                                 $blockTO->reference->identifier = $outArResult[Front::CANVAS_INPUT_IDENTIFIER];
                                 $blockTO->reference->server = ServerEnum::PUBCHEM;
@@ -155,7 +154,7 @@ class Land extends CI_Controller {
                                 $blockTO = new BlockTO($intCounter, "", "", $smile);
                                 break;
                         }
-                    } catch (\Bbdgnc\Finder\Exception\BadTransferException $e) {
+                    } catch (BadTransferException $e) {
                         $blockTO = new BlockTO($intCounter, "", "", $smile);
                     }
                 }
@@ -339,7 +338,7 @@ class Land extends CI_Controller {
      * @param array $outArNextResult next results identifiers
      * @param array $arSearchOptions
      * @return int result code 0 => find none, 1 => find 1, 2 => find more than 1
-     * @throws \Bbdgnc\Finder\Exception\BadTransferException
+     * @throws BadTransferException
      */
     private function findBy($intDatabase, $intFindBy, &$outArResult = array(), &$outArNextResult = array(), $arSearchOptions = array()) {
         $finder = FinderFactory::getFinder($intDatabase, $arSearchOptions);
@@ -365,7 +364,7 @@ class Land extends CI_Controller {
      * @param array $outArResult output param with result
      * @return int result code 0 => find none, 1 => find 1, 2 => find more than 1
      * @see ResultEnum
-     * @throws \Bbdgnc\Finder\Exception\BadTransferException
+     * @throws BadTransferException
      */
     private function validateFormAndSearchByIdentifier($finder, &$outArResult) {
         $this->form_validation->set_rules(Front::CANVAS_INPUT_IDENTIFIER, "Identifier", Front::REQUIRED);
@@ -382,7 +381,7 @@ class Land extends CI_Controller {
      * @param array $outArNextResult output param with integers as identifiers of next results
      * @return int result code 0 => find none, 1 => find 1, 2 => find more than 1
      * @see ResultEnum
-     * @throws \Bbdgnc\Finder\Exception\BadTransferException
+     * @throws BadTransferException
      */
     private function validateFormAndSearchByName($finder, &$outArResult, &$outArNextResult) {
         $this->form_validation->set_rules(Front::CANVAS_INPUT_NAME, "Name", Front::REQUIRED);
@@ -399,7 +398,7 @@ class Land extends CI_Controller {
      * @param array $outArNextResult output param with integers as identifiers of next results
      * @return int result code 0 => find none, 1 => find 1, 2 => find more than 1
      * @see ResultEnum
-     * @throws \Bbdgnc\Finder\Exception\BadTransferException
+     * @throws BadTransferException
      */
     private function validateFormAndSearchByFormula($finder, &$outArResult, &$outArNextResult) {
         $this->form_validation->set_rules(Front::CANVAS_INPUT_FORMULA, "Formula", Front::REQUIRED);
@@ -416,7 +415,7 @@ class Land extends CI_Controller {
      * @param array $outArNextResult output param with integers as identifiers of next results
      * @return int result code 0 => find none, 1 => find 1, 2 => find more than 1
      * @see ResultEnum
-     * @throws \Bbdgnc\Finder\Exception\BadTransferException
+     * @throws BadTransferException
      */
     private function validateFormAndSearchBySmiles($finder, &$outArResult, &$outArNextResult) {
         $this->form_validation->set_rules(Front::CANVAS_INPUT_SMILE, "SMILES", Front::REQUIRED);
@@ -433,7 +432,7 @@ class Land extends CI_Controller {
      * @param array $outArNextResult output param with integers as identifiers of next results
      * @return int result code 0 => find none, 1 => find 1, 2 => find more than 1
      * @see ResultEnum
-     * @throws \Bbdgnc\Finder\Exception\BadTransferException
+     * @throws BadTransferException
      */
     private function validateFormAndSearchByMass($finder, &$outArResult, &$outArNextResult) {
         $this->form_validation->set_rules(Front::CANVAS_INPUT_MASS, "Mass", Front::REQUIRED);
