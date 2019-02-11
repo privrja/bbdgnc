@@ -17,6 +17,15 @@ abstract class ServerEnum {
         self::CHEBI => "ChEBI"
     ];
 
+    /** @var array mapping int code to string */
+    public static $allValues = [
+        self::PUBCHEM => "PubChem",
+        self::CHEMSPIDER => "ChemSpider",
+        self::NORINE => "Norine",
+        self::PDB => "PDB",
+        self::CHEBI => "ChEBI"
+    ];
+
     public static $backValues = [
         'CID: ' => self::PUBCHEM,
         'CSID: ' => self::CHEMSPIDER,
@@ -35,6 +44,8 @@ abstract class ServerEnum {
             default:
             case self::PUBCHEM:
                 return "https://pubchem.ncbi.nlm.nih.gov/compound/" . $strIdentifier;
+            case self::CHEMSPIDER:
+                return "http://www.chemspider.com/Chemical-Structure." . $strIdentifier . ".html";
             case self::CHEBI:
                 return "https://www.ebi.ac.uk/chebi/searchId.do?chebiId=" . $strIdentifier;
         }

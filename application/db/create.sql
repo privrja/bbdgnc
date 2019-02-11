@@ -15,15 +15,6 @@ CREATE TABLE container (
     FOREIGN KEY (user_id) REFERENCES user(id)
 );
 
-CREATE TABLE reference (
-    id                  INTEGER   PRIMARY KEY,
-    csid                INTEGER,
-    cid                 INTEGER,
-    nor                 INTEGER,
-    pdb                 TEXT,
-    cas                 TEXT
-);
-
 CREATE TABLE block (
     id                  INTEGER         PRIMARY KEY,
     name                TEXT            NOT NULL,
@@ -32,10 +23,10 @@ CREATE TABLE block (
     mass                REAL,
     smiles              TEXT,
     usmiles             TEXT,
+    database            INTEGER,
+    identifier          TEXT
     container_id        INTEGER,
-    reference_id        INTEGER,
     FOREIGN KEY (container_id) REFERENCES container(id),
-    FOREIGN KEY (reference_id) REFERENCES reference(id)
 );
 
 CREATE TABLE sequence (
@@ -48,10 +39,10 @@ CREATE TABLE sequence (
     branch_modification TEXT,
     smiles              TEXT,
     usmiles             TEXT,
+    database            INTEGER,
+    identifier          TEXT
     container_id        INTEGER,
-    reference_id        INTEGER,
     FOREIGN KEY (container_id) REFERENCES container(id),
-    FOREIGN KEY (reference_id) REFERENCES reference(id)
 );
 
 CREATE TABLE modification (
