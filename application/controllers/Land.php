@@ -12,7 +12,7 @@ use Bbdgnc\Finder\IFinder;
 use Bbdgnc\Finder\PubChemFinder;
 use Bbdgnc\Smiles\Graph;
 use Bbdgnc\TransportObjects\BlockTO;
-use Bbdgnc\TransportObjects\ReferenceTO;
+use Bbdgnc\TransportObjects\ReferencesTO;
 
 class Land extends CI_Controller {
 
@@ -118,7 +118,7 @@ class Land extends CI_Controller {
             $blockTO->formula = $this->input->post(Front::BLOCK_FORMULA);
             $blockTO->mass = $this->input->post(Front::BLOCK_MASS);
             $blockTO->losses = $this->input->post(Front::BLOCK_NEUTRAL_LOSSES);
-            $blockTO->reference = new ReferenceTO();
+            $blockTO->reference = new ReferencesTO();
             $blockTO->reference->cid = $this->input->post(Front::BLOCK_REFERENCE);
             $blocks[$blockIdentifier] = $blockTO;
             $data[Front::BLOCK_COUNT] = $this->input->post(Front::BLOCK_COUNT);

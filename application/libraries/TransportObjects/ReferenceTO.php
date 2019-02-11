@@ -2,14 +2,28 @@
 
 namespace Bbdgnc\TransportObjects;
 
+use Bbdgnc\Finder\Enum\ServerEnum;
+
 class ReferenceTO {
 
-    public $cid;
+    /** @var int $server
+     * @see ServerEnum
+     */
+    private $server;
 
-    public $csid;
+    /** @var mixed $identifier */
+    private $identifier;
 
-    public $norine;
-
-    public $pdb = "";
+    /**
+     * ReferenceTO constructor.
+     * @param int $server
+     * @param mixed $identifier
+     */
+    public function __construct(int $server, $identifier) {
+        assert($server <= ServerEnum::CHEBI);
+        assert($server >= 0);
+        $this->server = $server;
+        $this->identifier = $identifier;
+    }
 
 }

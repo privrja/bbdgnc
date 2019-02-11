@@ -37,7 +37,16 @@ class BlockCycloBranch extends AbstractCycloBranch {
             }
         }
 
+        for ($index = 0; $index < $length; ++$index) {
+            $arTmp = explode('in', $arReference[$index]);
+            if (sizeof($arTmp) === 2) {
+
+            } else {
+
+            }
+        }
         // TODO reference
+
 
         for ($index = 0; $index < $length; ++$index) {
             // TODO zjistit jak to je se SMILES v souboru, pravidla na parsovani

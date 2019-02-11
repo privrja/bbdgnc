@@ -6,13 +6,23 @@ abstract class ServerEnum {
 
     /** @var int servers */
     const PUBCHEM = 0;
+    const CHEMSPIDER = 1;
+    const NORINE = 2;
+    const PDB = 3;
     const CHEBI = 4;
 
     /** @var array mapping int code to string */
-    public static $values = array(
+    public static $values = [
         self::PUBCHEM => "PubChem",
         self::CHEBI => "ChEBI"
-    );
+    ];
+
+    public static $backValues = [
+        'CID: ' => self::PUBCHEM,
+        'CSID: ' => self::CHEMSPIDER,
+        ':' => self::NORINE,
+        'PDB: ' => self::PDB,
+    ];
 
     /**
      * Create link to web page to the molecule

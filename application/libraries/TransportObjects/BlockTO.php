@@ -27,7 +27,7 @@ class BlockTO {
 
     public $uniqueSmiles;
 
-    /** @var ReferenceTO $reference */
+    /** @var ReferencesTO $reference */
     public $reference;
 
     /**
@@ -57,7 +57,7 @@ class BlockTO {
                     break;
             }
         }
-        $this->reference = new ReferenceTO();
+        $this->reference = new ReferencesTO();
     }
 
     private function computeAll() {
