@@ -12,7 +12,7 @@ use Bbdgnc\Finder\IFinder;
 use Bbdgnc\Finder\PubChemFinder;
 use Bbdgnc\Smiles\Graph;
 use Bbdgnc\TransportObjects\BlockTO;
-use Bbdgnc\TransportObjects\ReferencesTO;
+use Bbdgnc\TransportObjects\ReferenceTO;
 
 class Land extends CI_Controller {
 
@@ -98,7 +98,8 @@ class Land extends CI_Controller {
         $block->formula = $this->input->post(Front::BLOCK_FORMULA);
         $block->mass = $this->input->post(Front::BLOCK_MASS);
         $block->losses = $this->input->post(Front::BLOCK_NEUTRAL_LOSSES);
-        $block->reference = $this->input->post(Front::BLOCK_REFERENCE);
+        $block->reference->identifier = $this->input->post(Front::BLOCK_REFERENCE);
+        $block->reference->server = $this->input->post(Front::BLOCK_REFERENCE_SERVER);
         $data = $this->getLastData();
         $data[Front::BLOCK] = $block;
         $data[Front::BLOCK_COUNT] = $blockCount;
@@ -118,8 +119,9 @@ class Land extends CI_Controller {
             $blockTO->formula = $this->input->post(Front::BLOCK_FORMULA);
             $blockTO->mass = $this->input->post(Front::BLOCK_MASS);
             $blockTO->losses = $this->input->post(Front::BLOCK_NEUTRAL_LOSSES);
-            $blockTO->reference = new ReferencesTO();
-            $blockTO->reference->cid = $this->input->post(Front::BLOCK_REFERENCE);
+            $blockTO->reference = new ReferenceTO();
+            $blockTO->reference->identifier = $this->input->post(Front::BLOCK_REFERENCE);
+            $blockTO->reference->server = $this->input->post(Front::BLOCK_REFERENCE_SERVER);
             $blocks[$blockIdentifier] = $blockTO;
             $data[Front::BLOCK_COUNT] = $this->input->post(Front::BLOCK_COUNT);
         } else {
@@ -143,7 +145,9 @@ class Land extends CI_Controller {
                                 $blockTO = new BlockTO($intCounter, $outArResult[Front::CANVAS_INPUT_NAME], "", $smile, ComputeEnum::NO);
                                 $blockTO->formula = $outArResult[Front::CANVAS_INPUT_FORMULA];
                                 $blockTO->mass = $outArResult[Front::CANVAS_INPUT_MASS];
-                                $blockTO->reference->cid = $outArResult[Front::CANVAS_INPUT_IDENTIFIER];
+                                $blockTO->reference = new ReferenceTO();
+                                $blockTO->reference->identifier = $outArResult[Front::CANVAS_INPUT_IDENTIFIER];
+                                $blockTO->reference->server = ServerEnum::PUBCHEM;
                                 break;
                             case ResultEnum::REPLY_OK_MORE:
                             case ResultEnum::REPLY_NONE:
@@ -158,13 +162,10 @@ class Land extends CI_Controller {
                 $blocks[] = $blockTO;
                 $intCounter++;
             }
-
             $data[Front::BLOCK_COUNT] = $intCounter;
         }
         $data[Front::BLOCKS] = $blocks;
-
         set_cookie(self::COOKIE_BLOCKS, json_encode($blocks), 3600);
-
         $this->load->view(Front::TEMPLATES_HEADER);
         $this->load->view(Front::PAGES_CANVAS);
         $this->load->view(Front::PAGES_MAIN, $this->getLastData());

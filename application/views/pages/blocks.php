@@ -2,6 +2,7 @@
 
 use Bbdgnc\Enum\Front;
 use Bbdgnc\Enum\SequenceTypeEnum;
+use Bbdgnc\Finder\Enum\ServerEnum;
 
 ?>
 
@@ -130,7 +131,9 @@ use Bbdgnc\Enum\SequenceTypeEnum;
                 </div>
 
                 <div class="td">
-                    <p><?= $block->reference->cid ?></p>
+                    <a target="_blank"
+                       href=<?= ServerEnum::getLink($block->reference->server, $block->reference->identifier) ?>>
+                        <?= ServerEnum::$allValues[$block->reference->server]; ?></a>
                 </div>
 
                 <input type="hidden" name="<?= Front::BLOCK_SMILE ?>"
@@ -143,7 +146,9 @@ use Bbdgnc\Enum\SequenceTypeEnum;
                 <input type="hidden" name="<?= Front::BLOCK_FORMULA ?>" value="<?= $block->formula ?>"/>
                 <input type="hidden" name="<?= Front::BLOCK_MASS ?>" value="<?= $block->mass ?>"/>
                 <input type="hidden" name="<?= Front::BLOCK_NEUTRAL_LOSSES ?>" value="<?= $block->losses ?>"/>
-                <input type="hidden" name="<?= Front::BLOCK_REFERENCE ?>" value="<?= $block->reference->cid ?>"/>
+                <input type="hidden" name="<?= Front::BLOCK_REFERENCE ?>" value="<?= $block->reference->identifier ?>"/>
+                <input type="hidden" name="<?= Front::BLOCK_REFERENCE_SERVER ?>"
+                       value="<?= $block->reference->server ?>"/>
                 <input type="hidden" name="<?= Front::BLOCK_COUNT ?>" value="<?= $blockCount ?>"/>
 
                 <div class="td">

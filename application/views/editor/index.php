@@ -1,6 +1,7 @@
 <?php
 
 use Bbdgnc\Enum\Front;
+use Bbdgnc\Finder\Enum\ServerEnum;
 
 ?>
 
@@ -64,9 +65,13 @@ use Bbdgnc\Enum\Front;
         <input type="text" id="txt-block-losses" name="<?= Front::BLOCK_NEUTRAL_LOSSES ?>"
                value="<?= $block->losses ?>"/>
 
-        <label for="txt-block-reference">References</label>
+        <label for="sel-block-reference-database">Reference Database</label>
+        <?= form_dropdown(Front::BLOCK_REFERENCE_SERVER, ServerEnum::$allValues, set_value(Front::BLOCK_REFERENCE_SERVER),
+            'id="sel-block-reference-database" class="select" title="Database"'); ?>
+
+        <label for="txt-block-reference">Reference Identifier</label>
         <input type="text" id="txt-block-reference" name="<?= Front::BLOCK_REFERENCE ?>"
-               value="<?= $block->reference ?>"/>
+               value="<?= $block->reference->identifier ?>"/>
 
         <button onclick="getSmiles()">Accept changes</button>
     </div>

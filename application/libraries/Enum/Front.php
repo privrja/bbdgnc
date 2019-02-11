@@ -28,6 +28,7 @@ abstract class Front {
     const BLOCK_NEUTRAL_LOSSES = "blockLosses";
     const BLOCK_MASS = "blockMass";
     const BLOCK_REFERENCE = "blockReference";
+    const BLOCK_REFERENCE_SERVER = "blockReferenceServer";
     const SEQUENCE_TYPE = "sequenceType";
     const SEQUENCE = "sequence";
 
