@@ -70,6 +70,19 @@ final class BlockCycloBranchTest extends TestCase {
         $this->assertEquals([$blockTO->asBlock()], $result->getResult());
     }
 
+    public function testWithRightData4() {
+        $parser = new BlockCycloBranch(null);
+        $result = $parser->parse("2-methyl-8-noneic acid\tC9:1(8)-Me(2)\tC10H16O\t152.1201151357\tCID: 17824924");
+        $blockTO = new BlockTO(0, "2-methyl-8-noneic acid", "C9:1(8)-Me(2)", "CC(CCCCCC=C)C(=O)O", ComputeEnum::NO);
+        $blockTO->mass = 152.1201151357;
+        $blockTO->formula = "C10H16O";
+        $blockTO->uniqueSmiles = "CC(CCCCCC=C)C(O)=O";
+        $blockTO->reference = new ReferenceTO();
+        $blockTO->reference->server = ServerEnum::PUBCHEM;
+        $blockTO->reference->identifier = 17824924;
+        $this->assertEquals([$blockTO->asBlock()], $result->getResult());
+    }
+
     public function testWithWrongData() {
         $parser = new BlockCycloBranch(null);
         $result = $parser->parse("Phenylalanine Phe C9H9NO 147.0684140000 CSID: 969");
