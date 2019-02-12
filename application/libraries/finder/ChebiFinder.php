@@ -3,6 +3,7 @@
 namespace Bbdgnc\Finder;
 
 use Bbdgnc\Base\FormulaHelper;
+use Bbdgnc\Base\Logger;
 use Bbdgnc\Enum\Front;
 use Bbdgnc\Enum\LoggerEnum;
 use Bbdgnc\Exception\IllegalStateException;
@@ -95,10 +96,10 @@ class ChebiFinder implements IFinder {
             }
             $this->findByIdentifiers($arIds, $outArResult);
         } catch (\Exception $ex) {
-            log_message(LoggerEnum::ERROR, self::ERROR_DURING_SOAP, $ex->getMessage());
+            Logger::log(LoggerEnum::ERROR, self::ERROR_DURING_SOAP . "\n" . $ex->getMessage());
             throw new BadTransferException(self::ERROR_DURING_SOAP);
         }
-        log_message(LoggerEnum::INFO, self::INFO_SOAP_OK);
+        Logger::log(LoggerEnum::INFO, self::INFO_SOAP_OK);
         return ResultEnum::REPLY_OK_MORE;
     }
 
@@ -180,10 +181,10 @@ class ChebiFinder implements IFinder {
                 return ResultEnum::REPLY_NONE;
             }
         } catch (\Exception $ex) {
-            log_message(LoggerEnum::ERROR, self::ERROR_DURING_SOAP, $ex->getMessage());
+            Logger::log(LoggerEnum::ERROR, self::ERROR_DURING_SOAP . "\n" . $ex->getMessage());
             throw new BadTransferException(self::ERROR_DURING_SOAP);
         }
-        log_message(LoggerEnum::INFO, self::INFO_SOAP_OK);
+        Logger::log(LoggerEnum::INFO, self::INFO_SOAP_OK);
         return ResultEnum::REPLY_OK_ONE;
     }
 
@@ -210,10 +211,10 @@ class ChebiFinder implements IFinder {
                 }
             }
         } catch (\Exception $ex) {
-            log_message(LoggerEnum::ERROR, self::ERROR_DURING_SOAP, $ex->getMessage());
+            Logger::log(LoggerEnum::ERROR, self::ERROR_DURING_SOAP . "\n" . $ex->getMessage());
             throw new BadTransferException(self::ERROR_DURING_SOAP);
         }
-        log_message(LoggerEnum::INFO, self::INFO_SOAP_OK);
+        Logger::log(LoggerEnum::INFO, self::INFO_SOAP_OK);
         return ResultEnum::REPLY_OK_MORE;
     }
 
@@ -261,10 +262,10 @@ class ChebiFinder implements IFinder {
             }
             $this->findByIdentifiers($arIds, $outArResult);
         } catch (\Exception $ex) {
-            log_message(LoggerEnum::ERROR, self::ERROR_DURING_SOAP, $ex->getMessage());
+            Logger::log(LoggerEnum::ERROR, self::ERROR_DURING_SOAP . "\n" . $ex->getMessage());
             throw new BadTransferException(self::ERROR_DURING_SOAP);
         }
-        log_message(LoggerEnum::INFO, self::INFO_SOAP_OK);
+        Logger::log(LoggerEnum::INFO, self::INFO_SOAP_OK);
         return ResultEnum::REPLY_OK_MORE;
     }
 
