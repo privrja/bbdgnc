@@ -1,7 +1,11 @@
 <?php
 
+namespace Bbdgnc\CycloBranch;
+
 use Bbdgnc\Base\FormulaHelper;
 use Bbdgnc\Enum\ComputeEnum;
+use Bbdgnc\Exception\IllegalArgumentException;
+use Bbdgnc\Smiles\Parser\ReferenceParser;
 use Bbdgnc\TransportObjects\BlockTO;
 
 class BlockCycloBranch extends AbstractCycloBranch {
@@ -13,10 +17,10 @@ class BlockCycloBranch extends AbstractCycloBranch {
     const REFERENCE = 4;
     const LENGTH = 5;
 
-    protected function parseLine(string $line) {
+    public function parseLine(string $line) {
         $arItems = preg_split('/\t/', $line);
         if (empty($arItems) || sizeof($arItems) !== self::LENGTH) {
-            return;
+            return [];
         }
         $arNames = explode('/', $arItems[self::NAME]);
         $length = sizeof($arNames);
@@ -24,8 +28,9 @@ class BlockCycloBranch extends AbstractCycloBranch {
         $arAcronyms = explode('/', $arItems[self::ACRONYM]);
         // TODO v nove verzi CycloBranch přibude položka Neutral Losess a bude před references
         $arReference = explode('/', $arItems[self::REFERENCE]);
+        $arDatabaseReference = [];
         if (sizeof($arAcronyms) !== $length || sizeof($arReference) !== $length) {
-            return;
+            return [];
         }
         for ($index = 0; $index < $length; ++$index) {
             $arTmp = explode('in', $arReference[$index]);
@@ -40,22 +45,28 @@ class BlockCycloBranch extends AbstractCycloBranch {
         for ($index = 0; $index < $length; ++$index) {
             $arTmp = explode('in', $arReference[$index]);
             if (sizeof($arTmp) === 2) {
-
+                $strReference = $arTmp[1];
             } else {
-
+                $strReference = $arTmp[0];
+            }
+            $referenceParser = new ReferenceParser();
+            $referenceResult = $referenceParser->parse($strReference);
+            if ($referenceResult->isAccepted()) {
+                $arDatabaseReference[] = $referenceResult->getResult();
+            } else {
+               throw new IllegalArgumentException();
             }
         }
-        // TODO reference
 
-
+        $arBlocks = [];
         for ($index = 0; $index < $length; ++$index) {
-            // TODO zjistit jak to je se SMILES v souboru, pravidla na parsovani
             $blockTO = new BlockTO(0, $arNames[$index], $arAcronyms[$index], $arSmiles[$index], ComputeEnum::UNIQUE_SMILES);
             $blockTO->formula = $arItems[self::FORMULA];
             $blockTO->mass = $arItems[self::MASS];
-            $this->controller->block_model->insertBlock($blockTO);
-            // TODO save to DB mozna by se hodilo vytvorit transakci kvuli chybe na radku asi neukladat ty co budou dobre
+            $blockTO->reference = $arDatabaseReference[$index];
+            $arBlocks[] = $blockTO->asBlock();
         }
+        return $arBlocks;
     }
 
     public function export() {

@@ -1,5 +1,7 @@
 <?php
 
+namespace Bbdgnc\CycloBranch;
+
 class SequenceCycloBranch extends AbstractCycloBranch {
 
     protected function parseLine(string $line) {

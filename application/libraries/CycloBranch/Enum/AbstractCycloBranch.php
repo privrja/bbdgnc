@@ -1,5 +1,7 @@
 <?php
 
+namespace Bbdgnc\CycloBranch;
+
 abstract class AbstractCycloBranch implements ICycloBranch {
     /**
      * @var CI_Controller
@@ -21,7 +23,8 @@ abstract class AbstractCycloBranch implements ICycloBranch {
             return;
         }
         while (($line = fgets($handle)) !== false) {
-            $this->parseLine($line);
+            $arBlocks = $this->parseLine($line);
+            $this->save($arBlocks);
         }
         fclose($handle);
         unlink($filePath);
@@ -30,6 +33,11 @@ abstract class AbstractCycloBranch implements ICycloBranch {
 
     public abstract function export();
 
-    protected abstract function parseLine(string $line);
+    public abstract function parseLine(string $line);
+
+    private function save($arBlocks) {
+        // TODO save to DB mozna by se hodilo vytvorit transakci kvuli chybe na radku asi neukladat ty co budou dobre
+        $this->controller->block_model->insertBlocks($arBlocks);
+    }
 
 }

@@ -1,5 +1,7 @@
 <?php
 
+namespace Bbdgnc\CycloBranch;
+
 class ImportTypeFactory {
 
     /**
