@@ -42,7 +42,7 @@ final class BlockCycloBranchTest extends TestCase
         $arExpected[] = new BlockTO(0, "D-Alanine", "D-Ala", "", ComputeEnum::NO);
         $arExpected[] = new BlockTO(0, "beta-Alanine", "bAla", "", ComputeEnum::NO);
         $arExpected[] = new BlockTO(0, "N-Methyl-Glycine", "NMe-Gly", "", ComputeEnum::NO);
-        for ($index = 0; $index < 5; ++$index) {
+        for ($index = 0; $index < 4; ++$index) {
             $arExpected[$index]->mass = 71.0371137878;
             $arExpected[$index]->formula = "C3H5NO";
             $arExpected[$index]->reference = new ReferenceTO();
@@ -56,6 +56,13 @@ final class BlockCycloBranchTest extends TestCase
     }
 
     public function testWithWrongData() {
+        $parser = new BlockCycloBranch(null);
+        $result = $parser->parseLine("Phenylalanine Phe C9H9NO 147.0684140000 CSID: 969");
+    }
+
+    public function testWithWrongData2() {
+        $parser = new BlockCycloBranch(null);
+        $result = $parser->parseLine("Phenylalanine     C9H9NO  147.0684140000  CSID: 969");
     }
 
 }
