@@ -22,27 +22,42 @@ final class ReferenceParserTest extends TestCase {
 
     public function testWithRightData() {
         $parser = new ReferenceParser();
-        $this->assertEquals(new Accept(new ReferenceTO(ServerEnum::NORINE, 'NOR00863'), ''), $parser->parse(': NOR00863'));
+        $reference = new ReferenceTO();
+        $reference->server = ServerEnum::NORINE;
+        $reference->identifier = 'NOR00863';
+        $this->assertEquals(new Accept($reference, ''), $parser->parse(': NOR00863'));
     }
 
     public function testWithRightData2() {
         $parser = new ReferenceParser();
-        $this->assertEquals(new Accept(new ReferenceTO(ServerEnum::NORINE, 'NOR00001'), ' 5'), $parser->parse(': NOR00001 5'));
+        $reference = new ReferenceTO();
+        $reference->server = ServerEnum::NORINE;
+        $reference->identifier = 'NOR00001';
+        $this->assertEquals(new Accept($reference, ' 5'), $parser->parse(': NOR00001 5'));
     }
 
     public function testWithRightData3() {
         $parser = new ReferenceParser();
-        $this->assertEquals(new Accept(new ReferenceTO(ServerEnum::PDB, 'FOR'), ''), $parser->parse('PDB: FOR'));
+        $reference = new ReferenceTO();
+        $reference->server = ServerEnum::PDB;
+        $reference->identifier = 'FOR';
+        $this->assertEquals(new Accept($reference, ''), $parser->parse('PDB: FOR'));
     }
 
     public function testWithRightData4() {
         $parser = new ReferenceParser();
-        $this->assertEquals(new Accept(new ReferenceTO(ServerEnum::PUBCHEM, '88'), ''), $parser->parse('CID: 88'));
+        $reference = new ReferenceTO();
+        $reference->server = ServerEnum::PUBCHEM;
+        $reference->identifier = 88;
+        $this->assertEquals(new Accept($reference, ''), $parser->parse('CID: 88'));
     }
 
     public function testWithRightData5() {
         $parser = new ReferenceParser();
-        $this->assertEquals(new Accept(new ReferenceTO(ServerEnum::CHEMSPIDER, '454123'), ''), $parser->parse('CSID: 454123'));
+        $reference = new ReferenceTO();
+        $reference->server = ServerEnum::CHEMSPIDER;
+        $reference->identifier = 454123;
+        $this->assertEquals(new Accept($reference, ''), $parser->parse('CSID: 454123'));
     }
 
     public function testWithWrongData() {

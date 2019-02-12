@@ -22,12 +22,18 @@ final class NorineReferenceParserTest extends TestCase {
 
     public function testWithRightData() {
         $parser = new NorineReferenceParser();
-        $this->assertEquals(new Accept(new ReferenceTO(ServerEnum::NORINE, 'NOR00863'), ''), $parser->parse(': NOR00863'));
+        $reference = new ReferenceTO();
+        $reference->server = ServerEnum::NORINE;
+        $reference->identifier = 'NOR00863';
+        $this->assertEquals(new Accept($reference, ''), $parser->parse(': NOR00863'));
     }
 
     public function testWithRightData2() {
         $parser = new NorineReferenceParser();
-        $this->assertEquals(new Accept(new ReferenceTO(ServerEnum::NORINE, 'NOR00001'), ' 5'), $parser->parse(': NOR00001 5'));
+        $reference = new ReferenceTO();
+        $reference->server = ServerEnum::NORINE;
+        $reference->identifier = 'NOR00001';
+        $this->assertEquals(new Accept($reference, ' 5'), $parser->parse(': NOR00001 5'));
     }
 
     public function testWithWrongData() {

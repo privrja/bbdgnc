@@ -22,17 +22,26 @@ final class ServerNumberParserTest extends TestCase {
 
     public function testWithRightData() {
         $parser = new ServerNumReferenceParser();
-        $this->assertEquals(new Accept(new ReferenceTO(ServerEnum::PUBCHEM, 15), ''), $parser->parse('CID: 15'));
+        $reference = new ReferenceTO();
+        $reference->server = ServerEnum::PUBCHEM;
+        $reference->identifier = 15;
+        $this->assertEquals(new Accept($reference, ''), $parser->parse('CID: 15'));
     }
 
     public function testWithRightData2() {
         $parser = new ServerNumReferenceParser();
-        $this->assertEquals(new Accept(new ReferenceTO(ServerEnum::CHEMSPIDER, 623546), ''), $parser->parse('CSID: 623546'));
+        $reference = new ReferenceTO();
+        $reference->server = ServerEnum::CHEMSPIDER;
+        $reference->identifier = 623546;
+        $this->assertEquals(new Accept($reference, ''), $parser->parse('CSID: 623546'));
     }
 
     public function testWithRightData3() {
         $parser = new ServerNumReferenceParser();
-        $this->assertEquals(new Accept(new ReferenceTO(ServerEnum::CHEMSPIDER, 1), ''), $parser->parse('CSID: 1'));
+        $reference = new ReferenceTO();
+        $reference->server = ServerEnum::CHEMSPIDER;
+        $reference->identifier = 1;
+        $this->assertEquals(new Accept($reference, ''), $parser->parse('CSID: 1'));
     }
 
     public function testWithWrongData() {

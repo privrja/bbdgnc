@@ -2,7 +2,10 @@
 
 namespace Bbdgnc\CycloBranch;
 
-abstract class AbstractCycloBranch implements ICycloBranch {
+use Bbdgnc\Smiles\Parser\IParser;
+use CI_Controller;
+
+abstract class AbstractCycloBranch implements ICycloBranch, IParser {
     /**
      * @var CI_Controller
      */
@@ -12,7 +15,7 @@ abstract class AbstractCycloBranch implements ICycloBranch {
      * AbstractCycloBranch constructor.
      * @param CI_Controller $controller
      */
-    public function __construct(CI_Controller $controller) {
+    public function __construct($controller) {
         $this->controller = $controller;
     }
 
@@ -23,7 +26,7 @@ abstract class AbstractCycloBranch implements ICycloBranch {
             return;
         }
         while (($line = fgets($handle)) !== false) {
-            $arBlocks = $this->parseLine($line);
+            $arBlocks = $this->parse($line);
             $this->save($arBlocks);
         }
         fclose($handle);
@@ -31,9 +34,11 @@ abstract class AbstractCycloBranch implements ICycloBranch {
         ini_set('max_execution_time', 30);
     }
 
-    public abstract function export();
+    public abstract function parse($strText);
 
-    public abstract function parseLine(string $line);
+    public abstract static function reject();
+
+    public abstract function export();
 
     private function save($arBlocks) {
         // TODO save to DB mozna by se hodilo vytvorit transakci kvuli chybe na radku asi neukladat ty co budou dobre

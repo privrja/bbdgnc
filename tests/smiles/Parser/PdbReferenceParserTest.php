@@ -22,12 +22,18 @@ final class PdbReferenceParserTest extends TestCase {
 
     public function testWithRightData() {
         $parser = new PdbReferenceParser();
-        $this->assertEquals(new Accept(new ReferenceTO(ServerEnum::PDB, 'FOR'), ''), $parser->parse('PDB: FOR'));
+        $reference = new ReferenceTO();
+        $reference->server = ServerEnum::PDB;
+        $reference->identifier = 'FOR';
+        $this->assertEquals(new Accept($reference, ''), $parser->parse('PDB: FOR'));
     }
 
     public function testWithRightData2() {
         $parser = new PdbReferenceParser();
-        $this->assertEquals(new Accept(new ReferenceTO(ServerEnum::PDB, 'MYR'), ' 5'), $parser->parse('PDB: MYR 5'));
+        $reference = new ReferenceTO();
+        $reference->server = ServerEnum::PDB;
+        $reference->identifier = 'MYR';
+        $this->assertEquals(new Accept($reference, ' 5'), $parser->parse('PDB: MYR 5'));
     }
 
     public function testWithWrongData() {

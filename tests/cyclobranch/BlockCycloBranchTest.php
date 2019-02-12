@@ -5,38 +5,37 @@ namespace Bbdgnc\Test\CycloBranch\Parser;
 use Bbdgnc\CycloBranch\BlockCycloBranch;
 use Bbdgnc\Enum\ComputeEnum;
 use Bbdgnc\Finder\Enum\ServerEnum;
-use Bbdgnc\Smiles\Parser\ReferenceParser;
 use Bbdgnc\TransportObjects\BlockTO;
 use Bbdgnc\TransportObjects\ReferenceTO;
+use PHPUnit\Framework\TestCase;
 
-final class BlockCycloBranchTest extends TestCase
-{
+final class BlockCycloBranchTest extends TestCase {
 
     public function testWithNull() {
         $parser = new BlockCycloBranch(null);
-        $parser->parseLine(null);
+        $this->assertEquals(BlockCycloBranch::reject(), $parser->parse(null));
     }
 
     public function testWithEmptyString() {
         $parser = new BlockCycloBranch(null);
-        $parser->parseLine("");
+        $this->assertEquals(BlockCycloBranch::reject(), $parser->parse(""));
     }
 
     public function testWithRightData() {
         $parser = new BlockCycloBranch(null);
-        $result = $parser->parseLine("Phenylalanine	Phe	C9H9NO	147.0684140000		CSID: 969");
-        $blockTO = new BlockTO(0, "Phenylalanine", "Phe", "NC(CC1=CC=CC=C1)C(O)=O", ComputeEnum::NO);
+        $result = $parser->parse("Phenylalanine\tPhe\tC9H9NO\t147.0684140000\tCSID: 969");
+        $blockTO = new BlockTO(0, "Phenylalanine", "Phe", "", ComputeEnum::NO);
         $blockTO->mass = 147.0684140000;
         $blockTO->formula = "C9H9NO";
         $blockTO->reference = new ReferenceTO();
         $blockTO->reference->server = ServerEnum::CHEMSPIDER;
         $blockTO->reference->identifier = 969;
-        $this->assert($blockTO, $result[0]);
+        $this->assertEquals([$blockTO->asBlock()], $result->getResult());
     }
 
     public function testWithRightData2() {
         $parser = new BlockCycloBranch(null);
-        $result = $parser->parseLine("DL-Alanine/D-Alanine/beta-Alanine/N-Methyl-Glycine	Ala/D-Ala/bAla/NMe-Gly	C3H5NO	71.0371137878	CSID: 582/CSID: 64234/CSID: 234/CSID: 1057");
+        $result = $parser->parse("DL-Alanine/D-Alanine/beta-Alanine/N-Methyl-Glycine	Ala/D-Ala/bAla/NMe-Gly\tC3H5NO\t71.0371137878\tCSID: 582/CSID: 64234/CSID: 234/CSID: 1057");
         $arExpected = [];
         $arExpected[] = new BlockTO(0, "DL-Alanine", "Ala", "", ComputeEnum::NO);
         $arExpected[] = new BlockTO(0, "D-Alanine", "D-Ala", "", ComputeEnum::NO);
@@ -52,17 +51,35 @@ final class BlockCycloBranchTest extends TestCase
         $arExpected[1]->reference->identifier = 64234;
         $arExpected[2]->reference->identifier = 234;
         $arExpected[3]->reference->identifier = 1057;
-        $this->assert($arExpected, $result);
+        for ($index = 0; $index < 4; ++$index) {
+            $arExpected[$index] = $arExpected[$index]->asBlock();
+        }
+        $this->assertEquals($arExpected, $result->getResult());
+    }
+
+    public function testWithRightData3() {
+        $parser = new BlockCycloBranch(null);
+        $result = $parser->parse("5.5-dimethyl-2-oxo-hexanoic acid\tC6:0-Me(5.5)-oxo(2)\tC8H12O2\t140.0837296294\tCID: 21197379");
+        $blockTO = new BlockTO(0, "5.5-dimethyl-2-oxo-hexanoic acid", "C6:0-Me(5.5)-oxo(2)", "CC(C)(C)CCC(=O)C(=O)O", ComputeEnum::NO);
+        $blockTO->mass = 140.0837296294;
+        $blockTO->formula = "C8H12O2";
+        $blockTO->uniqueSmiles = "CC(C)(C)CCC(=O)C(O)=O";
+        $blockTO->reference = new ReferenceTO();
+        $blockTO->reference->server = ServerEnum::PUBCHEM;
+        $blockTO->reference->identifier = 21197379;
+        $this->assertEquals([$blockTO->asBlock()], $result->getResult());
     }
 
     public function testWithWrongData() {
         $parser = new BlockCycloBranch(null);
-        $result = $parser->parseLine("Phenylalanine Phe C9H9NO 147.0684140000 CSID: 969");
+        $result = $parser->parse("Phenylalanine Phe C9H9NO 147.0684140000 CSID: 969");
+        $this->assertEquals(BlockCycloBranch::reject(), $result);
     }
 
     public function testWithWrongData2() {
         $parser = new BlockCycloBranch(null);
-        $result = $parser->parseLine("Phenylalanine     C9H9NO  147.0684140000  CSID: 969");
+        $result = $parser->parse("Phenylalanine\t\tC9H9NO\t147.0684140000\tCSID: 969");
+        $this->assertEquals(BlockCycloBranch::reject(), $result);
     }
 
 }
