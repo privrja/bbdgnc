@@ -63,19 +63,19 @@ use Bbdgnc\Finder\Enum\ServerEnum;
         <div class="div-modification">
             <h4>Branch Modification</h4>
             <label for="txt-b-modification">Name</label>
-            <input type="text" id="txt-b-modification" name="bModification" value=""/>
+            <input type="text" id="txt-b-modification" name="bModification" value="" disabled/>
 
             <label for="txt-b-formula">Formula</label>
-            <input type="text" id="txt-b-formula" name="bFormula" value=""/>
+            <input type="text" id="txt-b-formula" name="bFormula" value="" disabled/>
 
             <label for="txt-b-mass">Monoisotopic Mass</label>
-            <input type="text" id="txt-b-mass" name="bMass" value=""/>
+            <input type="text" id="txt-b-mass" name="bMass" value="" disabled/>
 
             <label for="chk-b-nterminal" class="chk">N-terminal</label>
-            <input type="checkbox" id="chk-b-nterminal" name="bnTerminal" value=""/>
+            <input type="checkbox" id="chk-b-nterminal" name="bnTerminal" value="" disabled/>
 
             <label for="chk-b-cterminal" class="chk">C-terminal</label>
-            <input type="checkbox" id="chk-b-cterminal" name="bcTerminal" value=""/>
+            <input type="checkbox" id="chk-b-cterminal" name="bcTerminal" value="" disabled/>
         </div>
     </div>
 

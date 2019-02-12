@@ -106,4 +106,5 @@ class BlockCycloBranch extends AbstractCycloBranch {
     public static function reject() {
         return new Reject('Not match blocks in right format');
     }
+
 }

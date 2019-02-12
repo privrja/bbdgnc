@@ -59,5 +59,5 @@ Tested on XAMPP 5.6.38 / PHP 5.6.38
 
 ## Database
 
-    sqlite3 application/db/data.db
+    sqlite3 application/db/data.sqlite
     .read application/db/create.sql
