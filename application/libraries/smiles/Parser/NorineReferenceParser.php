@@ -2,7 +2,6 @@
 
 namespace Bbdgnc\Smiles\Parser;
 
-use Bbdgnc\Finder\Enum\ServerEnum;
 use Bbdgnc\TransportObjects\ReferenceTO;
 
 class NorineReferenceParser implements IParser {
@@ -23,7 +22,10 @@ class NorineReferenceParser implements IParser {
         if (!$norineIdResult->isAccepted()) {
             return self::reject();
         }
-        return new Accept(new ReferenceTO(ServerEnum::NORINE, $norineIdResult->getResult()), $norineIdResult->getRemainder());
+        $reference = new ReferenceTO();
+        $reference->server = $norineResult->getResult();
+        $reference->identifier = $norineIdResult->getResult();
+        return new Accept($reference, $norineIdResult->getRemainder());
     }
 
     /**

@@ -2,7 +2,6 @@
 
 namespace Bbdgnc\Smiles\Parser;
 
-use Bbdgnc\Finder\Enum\ServerEnum;
 use Bbdgnc\TransportObjects\ReferenceTO;
 
 class PdbReferenceParser implements IParser {
@@ -23,7 +22,10 @@ class PdbReferenceParser implements IParser {
         if (!$pdbIdResult->isAccepted()) {
             return self::reject();
         }
-        return new Accept(new ReferenceTO(ServerEnum::PDB, $pdbIdResult->getResult()), $pdbIdResult->getRemainder());
+        $reference = new ReferenceTO();
+        $reference->server = $pdbResult->getResult();
+        $reference->identifier = $pdbIdResult->getResult();
+        return new Accept($reference, $pdbIdResult->getRemainder());
     }
 
     /**

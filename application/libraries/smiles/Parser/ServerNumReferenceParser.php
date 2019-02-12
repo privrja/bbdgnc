@@ -22,7 +22,10 @@ class ServerNumReferenceParser implements IParser {
         if (!$numberResult->isAccepted()) {
             return self::reject();
         }
-        return new Accept(new ReferenceTO($serverResult->getResult(), $numberResult->getResult()), $numberResult->getRemainder());
+        $reference = new ReferenceTO();
+        $reference->server = $serverResult->getResult();
+        $reference->identifier = $numberResult->getResult();
+        return new Accept($reference, $numberResult->getRemainder());
     }
 
     /**
