@@ -24,9 +24,11 @@ CREATE TABLE block (
     smiles              TEXT,
     usmiles             TEXT,
     database            INTEGER,
-    identifier          TEXT
+    identifier          TEXT,
     container_id        INTEGER,
+    losses_id           INTEGER,
     FOREIGN KEY (container_id) REFERENCES container(id),
+    FOREIGN KEY (losses_id) REFERENCES losses(id)
 );
 
 CREATE TABLE sequence (
@@ -40,9 +42,9 @@ CREATE TABLE sequence (
     smiles              TEXT,
     usmiles             TEXT,
     database            INTEGER,
-    identifier          TEXT
+    identifier          TEXT,
     container_id        INTEGER,
-    FOREIGN KEY (container_id) REFERENCES container(id),
+    FOREIGN KEY (container_id) REFERENCES container(id)
 );
 
 CREATE TABLE modification (
@@ -54,6 +56,11 @@ CREATE TABLE modification (
     cterminal           INTEGER      NOT NULL    DEFAULT 0,
     container_id        INTEGER,
     FOREIGN KEY (container_id) REFERENCES container(id)
+);
+
+CREATE TABLE losses (
+    id    INTEGER   PRIMARY_KEY,
+    name  TEXT      NOT NULL
 );
 
 CREATE TABLE b2s (
