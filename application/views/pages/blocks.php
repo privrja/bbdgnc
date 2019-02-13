@@ -131,9 +131,11 @@ use Bbdgnc\Finder\Enum\ServerEnum;
                 </div>
 
                 <div class="td">
-                    <a target="_blank"
-                       href=<?= ServerEnum::getLink($block->reference->server, $block->reference->identifier) ?>>
-                        <?= ServerEnum::$allValues[$block->reference->server]; ?></a>
+                    <?php if ($block->reference->server !== null): ?>
+                        <a target="_blank"
+                           href=<?= ServerEnum::getLink($block->reference->server, $block->reference->identifier) ?>>
+                            <?= ServerEnum::$allValues[$block->reference->server]; ?></a>
+                    <?php endif; ?>
                 </div>
 
                 <input type="hidden" name="<?= Front::BLOCK_SMILE ?>"
