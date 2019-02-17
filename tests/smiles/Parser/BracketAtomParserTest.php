@@ -56,6 +56,12 @@ final class BracketAtomParserTest extends TestCase {
         $this->assertEquals(new Accept($atom, ''), $parser->parse('[O]'));
     }
 
+    public function testWithRightData6() {
+        $parser = new BracketAtomParser();
+        $atom = PeriodicTableSingleton::getInstance()->getAtoms()['Fe']->asBracketElement();
+        $this->assertEquals(new Accept($atom, ''), $parser->parse('[Fe]'));
+    }
+
     public function testWithWrongData() {
         $parser = new BracketAtomParser();
         $this->assertEquals(BracketAtomParser::reject(), $parser->parse('nH-5]'));
