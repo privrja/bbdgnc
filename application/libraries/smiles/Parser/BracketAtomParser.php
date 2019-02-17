@@ -2,6 +2,7 @@
 
 namespace Bbdgnc\Smiles\Parser;
 
+use Bbdgnc\Enum\PeriodicTableSingleton;
 use Bbdgnc\Smiles\BracketElement;
 
 class BracketAtomParser implements IParser {
@@ -20,13 +21,13 @@ class BracketAtomParser implements IParser {
             return self::reject();
         }
 
-        $orgParser = new OrganicSubsetParser();
+        $orgParser = new AtomParser();
         $orgResult = $orgParser->parse($leftResult->getRemainder());
         if (!$orgResult->isAccepted()) {
             return self::reject();
         }
 
-        $element = $orgResult->getResult()->asBracketElement();
+        $element = clone(PeriodicTableSingleton::getInstance()->getAtoms()[$orgResult->getResult()])->asBracketElement();
         $strRemainder = $orgResult->getRemainder();
         $hydrogensParser = new HydrogensParser();
         $hydrogensResult = $hydrogensParser->parse($strRemainder);
