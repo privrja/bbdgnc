@@ -95,6 +95,8 @@ class Land extends CI_Controller {
         $blockAcronym = $this->input->post(Front::BLOCK_ACRONYM);
         $blockName = $this->input->post(Front::BLOCK_NAME);
         $blockCount = $this->input->post(Front::BLOCK_COUNT);
+        $sequence = $this->input->post(Front::SEQUENCE);
+        $sequenceType = $this->input->post(Front::SEQUENCE_TYPE);
         $block = new BlockTO($blockIdentifier, $blockName, $blockAcronym, $blockSmile, ComputeEnum::NO);
         $block->formula = $this->input->post(Front::BLOCK_FORMULA);
         $block->mass = $this->input->post(Front::BLOCK_MASS);
@@ -104,6 +106,8 @@ class Land extends CI_Controller {
         $data = $this->getLastData();
         $data[Front::BLOCK] = $block;
         $data[Front::BLOCK_COUNT] = $blockCount;
+        $data[Front::SEQUENCE] = $sequence;
+        $data[Front::SEQUENCE_TYPE] = $sequenceType;
         $this->load->view('templates/header');
         $this->load->view('editor/index', $data);
         $this->load->view('templates/footer');

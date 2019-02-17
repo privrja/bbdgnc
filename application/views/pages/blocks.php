@@ -165,6 +165,8 @@ use Bbdgnc\Finder\Enum\ServerEnum;
                 <input type="hidden" name="<?= Front::CANVAS_INPUT_MASS ?>" value="<?= $mass ?>"/>
                 <input type="hidden" name="<?= Front::CANVAS_INPUT_DEFLECTION ?>" value="<?= $deflection ?>"/>
                 <input type="hidden" name="<?= Front::CANVAS_INPUT_IDENTIFIER ?>" value="<?= $identifier ?>"/>
+                <input type="hidden" name="<?= Front::SEQUENCE ?>" value="<?= $sequence ?>"/>
+                <input type="hidden" name="<?= Front::SEQUENCE_TYPE ?>" value="<?= $sequenceType ?>"/>
                 </form>
             <?php endforeach; ?>
         </div>

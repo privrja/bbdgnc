@@ -6,7 +6,6 @@ use Bbdgnc\Finder\Enum\ServerEnum;
 ?>
 
 <script src="<?= AssetHelper::jsJsme() ?>"></script>
-
 <script>
 
     /**
@@ -23,7 +22,25 @@ use Bbdgnc\Finder\Enum\ServerEnum;
      */
     function getSmiles() {
         let smile = jsmeApplet.nonisomericSmiles();
-        redirectWithData({blockIdentifier: <?= $block->id ?>, blockSmile: smile, blocks: 'Blocks'});
+        let blockId = '<?= $block->id ?>';
+        let lastAcronym = '<?= $block->acronym ?>';
+        let acronym = document.getElementById('txt-block-acronym').value;
+        let sequence = document.getElementById('hdn-sequence').value;
+        if ("" === lastAcronym) {
+            sequence = sequenceReplace(blockId, acronym, sequence);
+        } else {
+            sequence = sequenceReplace(lastAcronym, acronym, sequence);
+        }
+        document.getElementById('hdn-sequence').value = sequence;
+        redirectWithData({blockIdentifier: blockId, blockSmile: smile, blocks: 'Blocks'});
+    }
+
+    function sequenceReplace(id, acronym, sequence) {
+        console.log(id);
+        let index = sequence.indexOf(`[${id}]`) + 1;
+        let left = sequence.substr(0, index);
+        let right = sequence.substr(index + 1);
+        return left + acronym + right;
     }
 
     /**
@@ -86,5 +103,7 @@ use Bbdgnc\Finder\Enum\ServerEnum;
 <input type="hidden" name="<?= Front::CANVAS_INPUT_DEFLECTION ?>" value="<?= $deflection ?>"/>
 <input type="hidden" name="<?= Front::CANVAS_INPUT_IDENTIFIER ?>" value="<?= $identifier ?>"/>
 <input type="hidden" name="<?= Front::BLOCK_COUNT ?>" value="<?= $blockCount ?>"/>
+<input type="hidden" name="<?= Front::SEQUENCE ?>" value="<?= $sequence ?>" id="hdn-sequence"/>
+<input type="hidden" name="<?= Front::SEQUENCE_TYPE ?>" value="<?= $sequenceType ?>"/>
 
 </form>
