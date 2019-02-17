@@ -103,7 +103,13 @@ function resize() {
 
 function disintegrate() {
     let smilesAndSequence = smilesDrawer.buildBlockSmiles();
-    let data = {blockSmiles: smilesAndSequence[0], blocks: 'Blocks', first: true, sequence: smilesAndSequence[1]};
+    let data = {
+        blockSmiles: smilesAndSequence[0],
+        blocks: 'Blocks',
+        first: true,
+        sequence: smilesAndSequence[1],
+        sequenceType: smilesAndSequence[2]
+    };
     redirectWithData(FORM_MAIN, data);
 }
 

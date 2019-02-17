@@ -15,7 +15,7 @@ use Bbdgnc\Finder\Enum\ServerEnum;
             <p>Number of blocks: <?= $blockCount ?></p>
 
             <label for="sel-sequence-type">Type</label>
-            <?= form_dropdown(Front::CANVAS_INPUT_DATABASE, SequenceTypeEnum::$values, set_value(Front::SEQUENCE_TYPE),
+            <?= form_dropdown(Front::SEQUENCE_TYPE, SequenceTypeEnum::$values, SequenceTypeEnum::$backValues[$sequenceType],
                 'id="sel-sequence-type" class="select" title="Type" onchange="sequenceTypeChanged()"'); ?>
 
             <label for="txt-sequence">Sequence</label>
