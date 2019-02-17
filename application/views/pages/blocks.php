@@ -19,7 +19,7 @@ use Bbdgnc\Finder\Enum\ServerEnum;
                 'id="sel-sequence-type" class="select" title="Type" onchange="sequenceTypeChanged()"'); ?>
 
             <label for="txt-sequence">Sequence</label>
-            <input type="text" id="txt-sequence" name="sequence" value=""/>
+            <input type="text" id="txt-sequence" name="sequence" value="<?= $sequence ?>"/>
         </div>
 
         <div class="div-modification">

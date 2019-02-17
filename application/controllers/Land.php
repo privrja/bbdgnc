@@ -164,6 +164,7 @@ class Land extends CI_Controller {
             $data[Front::BLOCK_COUNT] = $intCounter;
         }
         $data[Front::BLOCKS] = $blocks;
+        $data[Front::SEQUENCE] = $this->input->post(Front::SEQUENCE);
         set_cookie(self::COOKIE_BLOCKS, json_encode($blocks), 3600);
         $this->load->view(Front::TEMPLATES_HEADER);
         $this->load->view(Front::PAGES_CANVAS);
