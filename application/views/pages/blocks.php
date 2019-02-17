@@ -131,7 +131,7 @@ use Bbdgnc\Finder\Enum\ServerEnum;
                 </div>
 
                 <div class="td">
-                    <?php if ($block->reference->server !== null): ?>
+                    <?php if ($block->reference->server !== null && !empty($block->reference->identifier)): ?>
                         <a target="_blank"
                            href=<?= ServerEnum::getLink($block->reference->server, $block->reference->identifier) ?>>
                             <?= ServerEnum::$allValues[$block->reference->server]; ?></a>
