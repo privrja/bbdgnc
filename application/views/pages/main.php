@@ -51,7 +51,7 @@ use Bbdgnc\Finder\Enum\ServerEnum;
             onclick="disintegrate()">Building Blocks
     </button>
     <button type="submit" id="btn-canvas-load" class="btn-same" name="load" value="Load">Load</button>
-    <input type="submit" class="btn-same" value="Save"/>
+    <button type="button" id="btn-canvas-save" class="btn-same" onclick="save()">Save</button>
 
     </form>
 

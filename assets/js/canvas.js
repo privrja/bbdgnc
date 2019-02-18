@@ -175,6 +175,9 @@ function getCanvasHeight() {
     return document.getElementById(CANVAS_ID).offsetHeight;
 }
 
+/**
+ * enable/disable input for modification on type of sequence selected
+ */
 function sequenceTypeChanged() {
     switch (document.getElementById(SEQUENCE_TYPE).value) {
         case "0":
@@ -436,6 +439,16 @@ function drawLarge(canvasId) {
         largeSmilesDrawer.draw(tree, CANVAS_LARGE_ID, DEFAULT_SCREEN_MODE, false);
     });
 }
+
+function save() {
+    // TODO if sequence element is null return error
+    let sequence = document.getElementById("txt-sequence").value;
+    let sequenceType = document.getElementById("sel-sequence-type").value;
+
+    let data = {sequence: sequence, sequenceType: sequenceType, save: 'Save'};
+    redirectWithData(FORM_MAIN, data);
+}
+
 
 function redirectWithData(formId, data) {
     let form = document.getElementById(formId);

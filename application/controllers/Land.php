@@ -200,6 +200,7 @@ class Land extends CI_Controller {
             $this->find($intDatabase, $intFindBy, $blMatch);
         } else if (isset($btnSave)) {
             /* Save to database */
+            $this->save();
         } else if (isset($btnLoad)) {
             /* Load from database */
         } else if (isset($btnBlocks)) {
@@ -446,6 +447,17 @@ class Land extends CI_Controller {
             return ResultEnum::REPLY_NONE;
         }
         return $finder->findByMass($this->input->post(Front::CANVAS_INPUT_MASS), $this->input->post(Front::CANVAS_INPUT_DEFLECTION), $outArResult, $outArNextResult);
+    }
+
+    private function save() {
+        var_dump($this->input->post("sequence"));
+        var_dump($this->input->post("sequenceType"));
+        // TODO save
+        $this->load->view(Front::TEMPLATES_HEADER);
+        $this->load->view(Front::PAGES_CANVAS);
+        $this->load->view(Front::PAGES_MAIN, $this->getLastData());
+        $this->load->view(Front::PAGES_BLOCKS, []);
+        $this->load->view(Front::TEMPLATES_FOOTER);
     }
 
 }
