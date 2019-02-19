@@ -26,9 +26,7 @@ CREATE TABLE block (
     database            INTEGER,
     identifier          TEXT,
     container_id        INTEGER,
-    losses_id           INTEGER,
-    FOREIGN KEY (container_id) REFERENCES container(id),
-    FOREIGN KEY (losses_id) REFERENCES losses(id)
+    FOREIGN KEY (container_id) REFERENCES container(id)
 );
 
 CREATE TABLE sequence (
@@ -38,7 +36,6 @@ CREATE TABLE sequence (
     formula             TEXT      NOT NULL,
     mass                REAL,
     sequence            TEXT      NOT NULL,
-    branch_modification TEXT,
     smiles              TEXT,
     usmiles             TEXT,
     database            INTEGER,
@@ -55,13 +52,22 @@ CREATE TABLE modification (
     nterminal           INTEGER      NOT NULL    DEFAULT 0,
     cterminal           INTEGER      NOT NULL    DEFAULT 0,
     container_id        INTEGER,
-    FOREIGN KEY (container_id) REFERENCES container(id)
+    nblock_id           INTEGER,
+    cblock_id           INTEGER,
+    bblock_id           INTEGER,
+    FOREIGN KEY (container_id) REFERENCES container(id),
+    FOREIGN KEY (nblock_id) REFERENCES block(id),
+    FOREIGN KEY (cblock_id) REFERENCES block(id),
+    FOREIGN KEY (bblock_id) REFERENCES block(id)
 );
 
-CREATE TABLE losses (
-    id    INTEGER   PRIMARY_KEY,
-    name  TEXT      NOT NULL
-);
+-- CREATE TABLE losses (
+--     id        INTEGER   PRIMARY_KEY,
+--     name      TEXT      NOT NULL,
+--     block_id  INTEGER,
+--     FOREIGN KEY (block_id) REFERENCES block(id)
+--
+-- );
 
 CREATE TABLE b2s (
     block_id            INTEGER,

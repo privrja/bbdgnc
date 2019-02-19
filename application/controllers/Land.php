@@ -450,8 +450,18 @@ class Land extends CI_Controller {
     }
 
     private function save() {
-        var_dump($this->input->post("sequence"));
-        var_dump($this->input->post("sequenceType"));
+//        var_dump($this->input->post("sequence"));
+//        var_dump($this->input->post("sequenceType"));
+//        var_dump($this->input->post("bFormula"));
+
+        $cookieVal = get_cookie(self::COOKIE_BLOCKS);
+        if ($cookieVal === null) {
+            // TODO eroror
+        }
+
+        $blocks = json_decode($cookieVal);
+//        var_dump($blocks);
+
         // TODO save
         $this->load->view(Front::TEMPLATES_HEADER);
         $this->load->view(Front::PAGES_CANVAS);

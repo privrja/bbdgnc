@@ -443,9 +443,23 @@ function drawLarge(canvasId) {
 function save() {
     // TODO if sequence element is null return error
     let sequence = document.getElementById("txt-sequence").value;
-    let sequenceType = document.getElementById("sel-sequence-type").value;
-
-    let data = {sequence: sequence, sequenceType: sequenceType, save: 'Save'};
+    let data = {sequence: sequence, save: 'Save'};
+    data.sequenceType = document.getElementById("sel-sequence-type").value;
+    data.nModification = document.getElementById("txt-n-modification").value;
+    data.nFormula = document.getElementById("txt-n-formula").value;
+    data.nMass = document.getElementById("txt-n-mass").value;
+    data.nTerminalN = document.getElementById("chk-n-nterminal").value;
+    data.nTerminalC = document.getElementById("chk-n-cterminal").value;
+    data.cModification = document.getElementById("txt-c-modification").value;
+    data.cFormula = document.getElementById("txt-c-formula").value;
+    data.cMass = document.getElementById("txt-c-mass").value;
+    data.cTerminalN = document.getElementById("chk-c-nterminal").value;
+    data.cTerminalC = document.getElementById("chk-c-cterminal").value;
+    data.bModification = document.getElementById("txt-b-modification").value;
+    data.bFormula = document.getElementById("txt-b-formula").value;
+    data.bMass = document.getElementById("txt-b-mass").value;
+    data.bTerminalN = document.getElementById("chk-b-nterminal").value;
+    data.bTerminalC = document.getElementById("chk-b-cterminal").value;
     redirectWithData(FORM_MAIN, data);
 }
 
