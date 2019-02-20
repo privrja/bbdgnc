@@ -477,7 +477,8 @@ class Land extends CI_Controller {
 
     private function validateSequenceString() {
         $sequence = $this->input->post(Front::SEQUENCE);
-        if (!preg_match('/\[\\d+\]/', $sequence)) {
+        if (preg_match('/\[\\d+\]/', $sequence)) {
+            $this->errors = "Sequence problem";
             throw new IllegalArgumentException();
         }
     }
@@ -508,6 +509,7 @@ class Land extends CI_Controller {
             $this->validateBlocks();
         } catch (IllegalArgumentException $exception) {
             $this->renderBlocks($this->getLastBlocksData());
+            var_dump("ERROR");
             return;
         }
 
@@ -521,15 +523,26 @@ class Land extends CI_Controller {
         $sequenceIdentifier = $this->input->post(Front::CANVAS_INPUT_NAME);
         $cookieVal = get_cookie(self::COOKIE_BLOCKS);
         $blocks = json_decode($cookieVal);
+        $lengthBlocks = sizeof($blocks);
+        for ($index = 0; $index < $lengthBlocks; ++$index) {
+            $blockTO = new BlockTO($blocks[$index]->id, $blocks[$index]->name, $blocks[$index]->acronym, ComputeEnum::NO);
+            $blockTO->formula = $blocks[$index]->formula;
+            $blockTO->mass = $blocks[$index]->mass;
+            $blockTO->losses = $blocks[$index]->losses;
+            $blockTO->smiles = $blocks[$index]->smiles;
+            $blockTO->uniqueSmiles = $blocks[$index]->uniqueSmiles;
+            var_dump($blocks[$index]->uniqueSmiles);
+            $blocks[$index] = $blockTO;
+        }
         $sequenceTO = new SequenceTO($sequenceDatabase, $sequenceName, $sequenceSmiles, $sequenceFormula, $sequenceMass, $sequenceIdentifier, $sequence, $sequenceType);
-
+        $sequenceDatabase = new SequenceDatabase($this);
 
         // TODO save
+        $sequenceDatabase->save($sequenceTO, $blocks, []);
 
         $this->load->view(Front::TEMPLATES_HEADER);
         $this->load->view(Front::PAGES_CANVAS);
         $this->load->view(Front::PAGES_MAIN, $this->getLastData());
-        $this->load->view(Front::PAGES_BLOCKS, []);
         $this->load->view(Front::TEMPLATES_FOOTER);
     }
 

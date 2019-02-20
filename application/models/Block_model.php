@@ -33,4 +33,12 @@ class Block_model extends CI_Model {
         $this->db->insert_batch(self::TABLE_NAME, $blocks);
     }
 
+    public function startTransaction() {
+        $this->db->trans_start();
+    }
+
+    public function endTransaction() {
+        $this->db->trans_complete();
+    }
+
 }

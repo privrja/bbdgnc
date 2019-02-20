@@ -5,8 +5,7 @@ namespace Bbdgnc\TransportObjects;
 use Bbdgnc\Enum\SequenceTypeEnum;
 use Bbdgnc\Finder\Enum\ServerEnum;
 
-class SequenceTO
-{
+class SequenceTO {
 
     public $database = ServerEnum::PUBCHEM;
 
@@ -24,7 +23,11 @@ class SequenceTO
 
     public $sequenceType = SequenceTypeEnum::LINEAR;
 
-public $
+    public $nModification;
+
+    public $cModification;
+
+    public $bModification;
 
     /**
      * SequenceTO constructor.
