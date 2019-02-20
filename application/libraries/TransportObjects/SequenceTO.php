@@ -17,7 +17,7 @@ class SequenceTO {
 
     public $mass = "";
 
-    public $identifier = "";
+    public $identifier;
 
     public $sequence = "";
 
@@ -41,12 +41,14 @@ class SequenceTO {
      * @param int $sequenceType
      */
     public function __construct(int $database, string $name, string $smiles, string $formula, string $mass, string $identifier, string $sequence, int $sequenceType) {
-        $this->database = $database;
+        if ($database !== null && $identifier !== "" && $identifier !== null) {
+            $this->database = $database;
+            $this->identifier = $identifier;
+        }
         $this->name = $name;
         $this->smiles = $smiles;
         $this->formula = $formula;
         $this->mass = $mass;
-        $this->identifier = $identifier;
         $this->sequence = $sequence;
         $this->sequenceType = $sequenceType;
     }

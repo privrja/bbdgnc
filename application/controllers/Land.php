@@ -520,18 +520,15 @@ class Land extends CI_Controller {
         $sequence = $this->input->post(Front::SEQUENCE);
         $sequenceSmiles = $this->input->post(Front::CANVAS_INPUT_SMILE);
         $sequenceDatabase = $this->input->post(Front::CANVAS_INPUT_DATABASE);
-        $sequenceIdentifier = $this->input->post(Front::CANVAS_INPUT_NAME);
+        $sequenceIdentifier = $this->input->post(Front::CANVAS_INPUT_IDENTIFIER);
         $cookieVal = get_cookie(self::COOKIE_BLOCKS);
         $blocks = json_decode($cookieVal);
         $lengthBlocks = sizeof($blocks);
         for ($index = 0; $index < $lengthBlocks; ++$index) {
-            $blockTO = new BlockTO($blocks[$index]->id, $blocks[$index]->name, $blocks[$index]->acronym, ComputeEnum::NO);
+            $blockTO = new BlockTO($blocks[$index]->id, $blocks[$index]->name, $blocks[$index]->acronym, $blocks[$index]->smiles, ComputeEnum::UNIQUE_SMILES);
             $blockTO->formula = $blocks[$index]->formula;
             $blockTO->mass = $blocks[$index]->mass;
             $blockTO->losses = $blocks[$index]->losses;
-            $blockTO->smiles = $blocks[$index]->smiles;
-            $blockTO->uniqueSmiles = $blocks[$index]->uniqueSmiles;
-            var_dump($blocks[$index]->uniqueSmiles);
             $blocks[$index] = $blockTO;
         }
         $sequenceTO = new SequenceTO($sequenceDatabase, $sequenceName, $sequenceSmiles, $sequenceFormula, $sequenceMass, $sequenceIdentifier, $sequence, $sequenceType);

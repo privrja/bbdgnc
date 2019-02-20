@@ -15,7 +15,7 @@ CREATE TABLE block (
     smiles              TEXT,
     usmiles             TEXT,
     database            INTEGER,
-    identifier          TEXT,
+    identifier          TEXT
 );
 
 CREATE TABLE sequence (
@@ -42,7 +42,7 @@ CREATE TABLE modification (
     formula             TEXT         NOT NULL,
     mass                REAL,
     nterminal           INTEGER      NOT NULL    DEFAULT 0,
-    cterminal           INTEGER      NOT NULL    DEFAULT 0,
+    cterminal           INTEGER      NOT NULL    DEFAULT 0
 );
 
 -- CREATE TABLE losses (
