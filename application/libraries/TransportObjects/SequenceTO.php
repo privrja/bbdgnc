@@ -23,6 +23,30 @@ class SequenceTO {
 
     public $sequenceType = SequenceTypeEnum::LINEAR;
 
+    /**
+     * SequenceTO constructor.
+     * @param int $database
+     * @param string $name
+     * @param string $smiles
+     * @param string $formula
+     * @param string $mass
+     * @param string $identifier
+     * @param string $sequence
+     * @param int $sequenceType
+     */
+    public function __construct(int $database, string $name, string $smiles, string $formula, string $mass, string $identifier, string $sequence, int $sequenceType)
+    {
+        $this->database = $database;
+        $this->name = $name;
+        $this->smiles = $smiles;
+        $this->formula = $formula;
+        $this->mass = $mass;
+        $this->identifier = $identifier;
+        $this->sequence = $sequence;
+        $this->sequenceType = $sequenceType;
+    }
+
+
     public function asSequence() {
         return [
             'type' => $this->sequenceType,
@@ -31,7 +55,6 @@ class SequenceTO {
             'mass' => $this->mass,
             'sequence' => $this->sequence,
             'smiles' => $this->smiles,
-            'usmiles' => $this->usmiles,
             'database' => $this->database,
             'identifier' => $this->identifier,
         ];

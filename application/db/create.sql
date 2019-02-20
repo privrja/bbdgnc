@@ -37,7 +37,6 @@ CREATE TABLE sequence (
     mass                REAL,
     sequence            TEXT      NOT NULL,
     smiles              TEXT,
-    usmiles             TEXT,
     database            INTEGER,
     identifier          TEXT,
     container_id        INTEGER,

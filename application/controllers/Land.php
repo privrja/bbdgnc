@@ -14,6 +14,7 @@ use Bbdgnc\Finder\PubChemFinder;
 use Bbdgnc\Smiles\Graph;
 use Bbdgnc\TransportObjects\BlockTO;
 use Bbdgnc\TransportObjects\ReferenceTO;
+use Bbdgnc\TransportObjects\SequenceTO;
 
 class Land extends CI_Controller {
 
@@ -27,6 +28,9 @@ class Land extends CI_Controller {
 
 
     const COOKIE_BLOCKS = "cookie_blocks";
+    const BLOCK_MODEL = 'block_model';
+    const SEQUENCE_MODEL = "sequence_model";
+    const MODIFICATION_MODEL = "modification_model";
 
     private $errors = "";
 
@@ -49,7 +53,7 @@ class Land extends CI_Controller {
     public function __construct() {
         parent::__construct();
         $this->load->helper(array(HelperEnum::HELPER_FORM, HelperEnum::HELPER_URL, HelperEnum::HELPER_COOKIE));
-        $this->load->model('block_model');
+        $this->load->model(self::BLOCK_MODEL, self::SEQUENCE_MODEL, self::MODIFICATION_MODEL);
     }
 
     /**
@@ -461,6 +465,9 @@ class Land extends CI_Controller {
 
         $blocks = json_decode($cookieVal);
 //        var_dump($blocks);
+
+        $sequenceTO = new SequenceTO();
+
 
         // TODO save
         $this->load->view(Front::TEMPLATES_HEADER);
