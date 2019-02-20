@@ -4,6 +4,8 @@ use Bbdgnc\Base\HelperEnum;
 use Bbdgnc\Enum\ComputeEnum;
 use Bbdgnc\Enum\Front;
 use Bbdgnc\Enum\LoggerEnum;
+use Bbdgnc\Enum\SequenceTypeEnum;
+use Bbdgnc\Exception\IllegalArgumentException;
 use Bbdgnc\Finder\Enum\FindByEnum;
 use Bbdgnc\Finder\Enum\ResultEnum;
 use Bbdgnc\Finder\Enum\ServerEnum;
@@ -53,7 +55,9 @@ class Land extends CI_Controller {
     public function __construct() {
         parent::__construct();
         $this->load->helper(array(HelperEnum::HELPER_FORM, HelperEnum::HELPER_URL, HelperEnum::HELPER_COOKIE));
-        $this->load->model(self::BLOCK_MODEL, self::SEQUENCE_MODEL, self::MODIFICATION_MODEL);
+        $this->load->model(self::BLOCK_MODEL);
+        $this->load->model(self::SEQUENCE_MODEL);
+        $this->load->model(self::MODIFICATION_MODEL);
     }
 
     /**
@@ -175,11 +179,16 @@ class Land extends CI_Controller {
         $data[Front::SEQUENCE] = $this->input->post(Front::SEQUENCE);
         $data[Front::SEQUENCE_TYPE] = $this->input->post(Front::SEQUENCE_TYPE);
         set_cookie(self::COOKIE_BLOCKS, json_encode($blocks), 3600);
+        $this->renderBlocks($data);
+    }
+
+    private function renderBlocks($data) {
         $this->load->view(Front::TEMPLATES_HEADER);
         $this->load->view(Front::PAGES_CANVAS);
         $this->load->view(Front::PAGES_MAIN, $this->getLastData());
         $this->load->view(Front::PAGES_BLOCKS, $data);
         $this->load->view(Front::TEMPLATES_FOOTER);
+
     }
 
     /**
@@ -460,10 +469,49 @@ class Land extends CI_Controller {
         $this->form_validation->set_rules(Front::CANVAS_INPUT_MASS, 'Sequence Mass', 'required');
         $this->form_validation->set_rules(Front::SEQUENCE, 'Sequence', 'required');
         $this->form_validation->set_rules(Front::CANVAS_INPUT_SMILE, 'Sequence SMILES', 'required');
-
+        if ($this->form_validation->run() === false) {
+            throw new IllegalArgumentException();
+        }
+        $this->validateSequenceString();
     }
 
+    private function validateSequenceString() {
+        $sequence = $this->input->post(Front::SEQUENCE);
+        if (!preg_match('/\[\\d+\]/', $sequence)) {
+            throw new IllegalArgumentException();
+        }
+    }
+
+    private function validateBlocks() {
+        $cookieVal = get_cookie(self::COOKIE_BLOCKS);
+        if ($cookieVal === null) {
+            $this->errors = "Blocks data problem";
+            throw new IllegalArgumentException();
+        }
+    }
+
+    private function getLastBlocksData() {
+        $cookieVal = get_cookie(self::COOKIE_BLOCKS);
+        if ($cookieVal !== null) {
+            $blocks = json_decode($cookieVal);
+            $data[Front::BLOCKS] = $blocks;
+        }
+        $data[Front::BLOCK_COUNT] = sizeof($blocks);
+        $data[Front::SEQUENCE] = $this->input->post(Front::SEQUENCE);
+        $data[Front::SEQUENCE_TYPE] = SequenceTypeEnum::$values[$this->input->post(Front::SEQUENCE_TYPE)];
+        return $data;
+    }
+
+
     private function save() {
+        try {
+            $this->validateSequence();
+            $this->validateBlocks();
+        } catch (IllegalArgumentException $exception) {
+            $this->renderBlocks($this->getLastBlocksData());
+            return;
+        }
+
         $sequenceType = $this->input->post(Front::SEQUENCE_TYPE);
         $sequenceName = $this->input->post(Front::CANVAS_INPUT_NAME);
         $sequenceFormula = $this->input->post(Front::CANVAS_INPUT_FORMULA);
@@ -472,19 +520,14 @@ class Land extends CI_Controller {
         $sequenceSmiles = $this->input->post(Front::CANVAS_INPUT_SMILE);
         $sequenceDatabase = $this->input->post(Front::CANVAS_INPUT_DATABASE);
         $sequenceIdentifier = $this->input->post(Front::CANVAS_INPUT_NAME);
-
         $cookieVal = get_cookie(self::COOKIE_BLOCKS);
-        if ($cookieVal === null) {
-            // TODO eroror
-        }
-
         $blocks = json_decode($cookieVal);
-//        var_dump($blocks);
-
-        $sequenceTO = new SequenceTO();
-
+        $sequenceTO = new SequenceTO($sequenceDatabase, $sequenceName, $sequenceSmiles, $sequenceFormula, $sequenceMass, $sequenceIdentifier, $sequence, $sequenceType);
+        var_dump($sequenceTO->asSequence());
 
         // TODO save
+
+
         $this->load->view(Front::TEMPLATES_HEADER);
         $this->load->view(Front::PAGES_CANVAS);
         $this->load->view(Front::PAGES_MAIN, $this->getLastData());
