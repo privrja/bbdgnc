@@ -18,6 +18,8 @@ class SequenceDatabase {
 
     private $modificationIds = [];
 
+    private $sequenceId;
+
     /**
      * SequenceDatabase constructor.
      */
@@ -25,13 +27,13 @@ class SequenceDatabase {
         $this->controller = $controller;
     }
 
-    public function saveSequence(SequenceTO $sequenceTO, array $blocks, array $modifications = []) {
+    public function save(SequenceTO $sequenceTO, array $blocks, array $modifications = []) {
         $this->sequenceTO = $sequenceTO;
         $this->blocks = $blocks;
         $this->modifications = $modifications;
         $this->saveBlocks();
         $this->saveModifications();
-
+        $this->saveSequence();
 
     }
 
@@ -46,8 +48,11 @@ class SequenceDatabase {
         /** @var ModificationTO $modificationTO */
         foreach ($this->modifications as $key => $modificationTO) {
             $this->modificationIds[$key] = $this->controller->modification->insertModification($modificationTO->asModification());
-
         }
+    }
+
+    private function saveSequence() {
+
     }
 
 }
