@@ -24,11 +24,12 @@ class Block_model extends CI_Model {
         return $result[0];
     }
 
-    public function insertBlock(BlockTO $blockTO) {
+    public function insert(BlockTO $blockTO) {
         $this->db->insert(self::TABLE_NAME, $blockTO->asBlock());
+        return $this->db->insert_id();
     }
 
-    public function insertBlocks(array $blocks) {
+    public function insertMore(array $blocks) {
         $this->db->insert_batch(self::TABLE_NAME, $blocks);
     }
 

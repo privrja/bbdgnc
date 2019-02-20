@@ -502,7 +502,6 @@ class Land extends CI_Controller {
         return $data;
     }
 
-
     private function save() {
         try {
             $this->validateSequence();
@@ -523,10 +522,9 @@ class Land extends CI_Controller {
         $cookieVal = get_cookie(self::COOKIE_BLOCKS);
         $blocks = json_decode($cookieVal);
         $sequenceTO = new SequenceTO($sequenceDatabase, $sequenceName, $sequenceSmiles, $sequenceFormula, $sequenceMass, $sequenceIdentifier, $sequence, $sequenceType);
-        var_dump($sequenceTO->asSequence());
+
 
         // TODO save
-
 
         $this->load->view(Front::TEMPLATES_HEADER);
         $this->load->view(Front::PAGES_CANVAS);

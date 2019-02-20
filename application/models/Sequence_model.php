@@ -15,7 +15,7 @@ class Sequence_model extends CI_Model {
         return $query->result_array();
     }
 
-    public function insertSequence(SequenceTO $sequenceTO) {
+    public function insert(SequenceTO $sequenceTO) {
         $this->db->insert(self::TABLE_NAME, $sequenceTO->asSequence());
     }
 

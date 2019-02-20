@@ -15,7 +15,7 @@ class Modification_model extends CI_Model {
         return $query->result_array();
     }
 
-    public function insertBlock(ModificationTO $modificationTO) {
+    public function insert(ModificationTO $modificationTO) {
         $this->db->insert(self::TABLE_NAME, $modificationTO->asModification());
     }
 
