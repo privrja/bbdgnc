@@ -24,6 +24,8 @@ class SequenceTO
 
     public $sequenceType = SequenceTypeEnum::LINEAR;
 
+public $
+
     /**
      * SequenceTO constructor.
      * @param int $database

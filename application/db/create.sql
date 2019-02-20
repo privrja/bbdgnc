@@ -6,15 +6,6 @@ CREATE TABLE user (
     password            BLOB          NOT NULL
 );
 
-CREATE TABLE container (
-    id                  INTEGER       PRIMARY KEY,
-    name                TEXT          NOT NULL,
-    share               INTEGER       NOT NULL    DEFAULT 0,
-    write_access        INTEGER       NOT NULL    DEFAULT 0,
-    user_id             INTEGER,
-    FOREIGN KEY (user_id) REFERENCES user(id)
-);
-
 CREATE TABLE block (
     id                  INTEGER         PRIMARY KEY,
     name                TEXT            NOT NULL,
@@ -25,8 +16,6 @@ CREATE TABLE block (
     usmiles             TEXT,
     database            INTEGER,
     identifier          TEXT,
-    container_id        INTEGER,
-    FOREIGN KEY (container_id) REFERENCES container(id)
 );
 
 CREATE TABLE sequence (
@@ -39,8 +28,12 @@ CREATE TABLE sequence (
     smiles              TEXT,
     database            INTEGER,
     identifier          TEXT,
-    container_id        INTEGER,
-    FOREIGN KEY (container_id) REFERENCES container(id)
+    n_modification_id   INTEGER,
+    c_modification_id   INTEGER,
+    b_modification_id   INTEGER,
+    FOREIGN KEY (n_modification_id) REFERENCES modification(id),
+    FOREIGN KEY (c_modification_id) REFERENCES modification(id),
+    FOREIGN KEY (b_modification_id) REFERENCES modification(id)
 );
 
 CREATE TABLE modification (
@@ -50,14 +43,6 @@ CREATE TABLE modification (
     mass                REAL,
     nterminal           INTEGER      NOT NULL    DEFAULT 0,
     cterminal           INTEGER      NOT NULL    DEFAULT 0,
-    container_id        INTEGER,
-    nblock_id           INTEGER,
-    cblock_id           INTEGER,
-    bblock_id           INTEGER,
-    FOREIGN KEY (container_id) REFERENCES container(id),
-    FOREIGN KEY (nblock_id) REFERENCES block(id),
-    FOREIGN KEY (cblock_id) REFERENCES block(id),
-    FOREIGN KEY (bblock_id) REFERENCES block(id)
 );
 
 -- CREATE TABLE losses (

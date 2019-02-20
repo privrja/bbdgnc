@@ -8,6 +8,7 @@ class SequenceDatabase {
 
     private $controller;
 
+    /** @var SequenceTO $sequenceTO */
     private $sequenceTO;
 
     private $blocks;
@@ -34,7 +35,7 @@ class SequenceDatabase {
         $this->saveBlocks();
         $this->saveModifications();
         $this->saveSequence();
-
+        $this->saveBlocksToSequence();
     }
 
     private function saveBlocks() {
@@ -44,15 +45,18 @@ class SequenceDatabase {
         }
     }
 
-    private function saveModifications() {
+    private function saveModifications(): void {
         /** @var ModificationTO $modificationTO */
         foreach ($this->modifications as $key => $modificationTO) {
             $this->modificationIds[$key] = $this->controller->modification->insertModification($modificationTO->asModification());
         }
     }
 
-    private function saveSequence() {
+    private function saveSequence(): void {
+        $this->sequenceId = $this->controller->sequence_model->insert($this->sequenceTO->asSequence());
+    }
 
+    private function saveBlocksToSequence(): void {
     }
 
 }
