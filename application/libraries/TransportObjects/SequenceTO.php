@@ -5,7 +5,8 @@ namespace Bbdgnc\TransportObjects;
 use Bbdgnc\Enum\SequenceTypeEnum;
 use Bbdgnc\Finder\Enum\ServerEnum;
 
-class SequenceTO {
+class SequenceTO
+{
 
     public $database = ServerEnum::PUBCHEM;
 
@@ -34,8 +35,7 @@ class SequenceTO {
      * @param string $sequence
      * @param int $sequenceType
      */
-    public function __construct(int $database, string $name, string $smiles, string $formula, string $mass, string $identifier, string $sequence, int $sequenceType)
-    {
+    public function __construct(int $database, string $name, string $smiles, string $formula, string $mass, string $identifier, string $sequence, int $sequenceType) {
         $this->database = $database;
         $this->name = $name;
         $this->smiles = $smiles;

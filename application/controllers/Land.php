@@ -453,10 +453,25 @@ class Land extends CI_Controller {
         return $finder->findByMass($this->input->post(Front::CANVAS_INPUT_MASS), $this->input->post(Front::CANVAS_INPUT_DEFLECTION), $outArResult, $outArNextResult);
     }
 
+    private function validateSequence() {
+        $this->form_validation->set_rules(Front::SEQUENCE_TYPE, 'Sequence Type', 'required');
+        $this->form_validation->set_rules(Front::CANVAS_INPUT_NAME, 'Sequence Name', 'required');
+        $this->form_validation->set_rules(Front::CANVAS_INPUT_FORMULA, 'Sequence Formula', 'required');
+        $this->form_validation->set_rules(Front::CANVAS_INPUT_MASS, 'Sequence Mass', 'required');
+        $this->form_validation->set_rules(Front::SEQUENCE, 'Sequence', 'required');
+        $this->form_validation->set_rules(Front::CANVAS_INPUT_SMILE, 'Sequence SMILES', 'required');
+
+    }
+
     private function save() {
-//        var_dump($this->input->post("sequence"));
-//        var_dump($this->input->post("sequenceType"));
-//        var_dump($this->input->post("bFormula"));
+        $sequenceType = $this->input->post(Front::SEQUENCE_TYPE);
+        $sequenceName = $this->input->post(Front::CANVAS_INPUT_NAME);
+        $sequenceFormula = $this->input->post(Front::CANVAS_INPUT_FORMULA);
+        $sequenceMass = $this->input->post(Front::CANVAS_INPUT_MASS);
+        $sequence = $this->input->post(Front::SEQUENCE);
+        $sequenceSmiles = $this->input->post(Front::CANVAS_INPUT_SMILE);
+        $sequenceDatabase = $this->input->post(Front::CANVAS_INPUT_DATABASE);
+        $sequenceIdentifier = $this->input->post(Front::CANVAS_INPUT_NAME);
 
         $cookieVal = get_cookie(self::COOKIE_BLOCKS);
         if ($cookieVal === null) {
