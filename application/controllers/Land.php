@@ -529,7 +529,9 @@ class Land extends CI_Controller {
             $blockTO->formula = $blocks[$index]->formula;
             $blockTO->mass = $blocks[$index]->mass;
             $blockTO->losses = $blocks[$index]->losses;
-            $blocks[$index] = $blockTO;
+            if (!isset($blocks[$blockTO->acronym])) {
+                $blocks[$blockTO->acronym] = $blockTO;
+            }
         }
         $sequenceTO = new SequenceTO($sequenceDatabase, $sequenceName, $sequenceSmiles, $sequenceFormula, $sequenceMass, $sequenceIdentifier, $sequence, $sequenceType);
         $sequenceDatabase = new SequenceDatabase($this);
