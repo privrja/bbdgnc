@@ -8,6 +8,7 @@ use Bbdgnc\Enum\Front;
 use Bbdgnc\Enum\LoggerEnum;
 use Bbdgnc\Enum\SequenceTypeEnum;
 use Bbdgnc\Exception\IllegalArgumentException;
+use Bbdgnc\Exception\SequenceInDatabaseException;
 use Bbdgnc\Finder\Enum\FindByEnum;
 use Bbdgnc\Finder\Enum\ResultEnum;
 use Bbdgnc\Finder\Enum\ServerEnum;
@@ -545,8 +546,11 @@ class Land extends CI_Controller {
         $sequenceTO = new SequenceTO($sequenceDatabase, $sequenceName, $sequenceSmiles, $sequenceFormula, $sequenceMass, $sequenceIdentifier, $sequence, $sequenceType);
         $sequenceDatabase = new SequenceDatabase($this);
 
-//         TODO save
-        $sequenceDatabase->save($sequenceTO, $mapBlocks, []);
+        try {
+            $sequenceDatabase->save($sequenceTO, $mapBlocks, []);
+        } catch (SequenceInDatabaseException $exception) {
+            var_dump($exception->getMessage());
+        }
 
         $this->load->view(Front::TEMPLATES_HEADER);
         $this->load->view(Front::PAGES_CANVAS);

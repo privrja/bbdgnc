@@ -2,8 +2,10 @@
 
 namespace Bbdgnc\Base;
 
+use Bbdgnc\Exception\UniqueConstraintException;
 use Bbdgnc\TransportObjects\IEntity;
 use CI_Model;
+use mysql_xdevapi\Exception;
 
 abstract class CrudModel extends CI_Model {
 
@@ -36,9 +38,15 @@ abstract class CrudModel extends CI_Model {
      * Insert entity to database
      * @param IEntity $entity
      * @return mixed id of new record
+     * @throws UniqueConstraintException
      */
     public function insert(IEntity $entity) {
-        $this->db->insert($this->getTableName(), $entity->asEntity());
+        if (!$this->db->insert($this->getTableName(), $entity->asEntity())) {
+            $error = $this->db->error(); // Has keys 'code' and 'message'
+            if ($error['code'] === "23000/19") {
+                throw new UniqueConstraintException("On entity: " . implode(" ", $entity->asEntity()));
+            }
+        }
         return $this->db->insert_id();
     }
 

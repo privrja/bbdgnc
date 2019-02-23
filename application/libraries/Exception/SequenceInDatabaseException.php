@@ -2,5 +2,5 @@
 
 namespace Bbdgnc\Exception;
 
-class SequenceInDatabaseException extends \Exception {
+class SequenceInDatabaseException extends DatabaseException {
 }

@@ -1,7 +1,10 @@
 <?php
 
 use Bbdgnc\Enum\ModificationTypeEnum;
+use Bbdgnc\Exception\DatabaseException;
 use Bbdgnc\Exception\IllegalArgumentException;
+use Bbdgnc\Exception\SequenceInDatabaseException;
+use Bbdgnc\Exception\UniqueConstraintException;
 use Bbdgnc\TransportObjects\BlockTO;
 use Bbdgnc\TransportObjects\BlockToSequenceTO;
 use Bbdgnc\TransportObjects\ModificationTO;
@@ -33,22 +36,33 @@ class SequenceDatabase {
         $this->controller = $controller;
     }
 
+    /**
+     * @param SequenceTO $sequenceTO
+     * @param SplObjectStorage $blocks
+     * @param array $modifications
+     * @throws Exception
+     */
     public function save(SequenceTO $sequenceTO, SplObjectStorage $blocks, array $modifications = []) {
-        $this->sequenceTO = $sequenceTO;
-        $this->blocks = $blocks;
-        $this->modifications = $modifications;
-        $this->controller->block_model->startTransaction();
-        $this->saveBlocks();
-        $this->saveModifications();
-        $this->saveSequence();
-        $this->saveBlocksToSequence();
-        $this->controller->block_model->endTransaction();
+        try {
+            $this->sequenceTO = $sequenceTO;
+            $this->blocks = $blocks;
+            $this->modifications = $modifications;
+            $this->controller->block_model->startTransaction();
+            $this->saveBlocks();
+            $this->saveModifications();
+            $this->saveSequence();
+            $this->saveBlocksToSequence();
+        } catch (DatabaseException $exception) {
+            throw $exception;
+        } finally {
+            $this->controller->block_model->endTransaction();
+        }
     }
 
     private function saveBlocks() {
         /** @var BlockTO $blockTO */
         foreach ($this->blocks as $blockTO) {
-            if (isset($blockTO->databaseId)) {
+            if (isset($blockTO->databaseId) && "" !== $blockTO->databaseId) {
                 $this->blockIds[] = $blockTO->databaseId;
             } else {
                 $this->blockIds[] = $this->controller->block_model->insert($blockTO);
@@ -63,8 +77,15 @@ class SequenceDatabase {
         }
     }
 
+    /**
+     * @throws SequenceInDatabaseException
+     */
     private function saveSequence(): void {
-        $this->sequenceId = $this->controller->sequence_model->insert($this->sequenceTO);
+        try {
+            $this->sequenceId = $this->controller->sequence_model->insert($this->sequenceTO);
+        } catch (UniqueConstraintException $exception) {
+            throw new SequenceInDatabaseException();
+        }
     }
 
     private function saveBlocksToSequence(): void {
