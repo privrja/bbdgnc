@@ -2,6 +2,7 @@
 
 use Bbdgnc\Base\BlockSplObjectStorage;
 use Bbdgnc\Base\HelperEnum;
+use Bbdgnc\Base\SequenceHelper;
 use Bbdgnc\Base\StringObject;
 use Bbdgnc\Enum\ComputeEnum;
 use Bbdgnc\Enum\Front;
@@ -161,6 +162,8 @@ class Land extends CI_Controller
                     $blockTO = new BlockTO($intCounter, $arResult['name'], $arResult['acronym'], $arResult['smiles'], ComputeEnum::NO);
                     $blockTO->formula = $arResult['residue'];
                     $blockTO->mass = $arResult['mass'];
+                    $data[Front::SEQUENCE] = SequenceHelper::replaceSequence($data[Front::SEQUENCE], $blockTO->id, $blockTO->acronym);
+
                 } else {
                     $pubchemFinder = new PubChemFinder();
                     try {

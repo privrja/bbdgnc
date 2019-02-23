@@ -37,7 +37,11 @@ use Bbdgnc\Finder\Enum\ServerEnum;
 
     function sequenceReplace(id, acronym, sequence) {
         let length = id.toString().length;
-        let index = sequence.indexOf(`[${id}]`) + 1;
+        let index = sequence.indexOf(`[${id}]`);
+        if (index === -1) {
+            return sequence;
+        }
+        index++;
         let left = sequence.substr(0, index);
         let right = sequence.substr(index + length);
         return left + acronym + right;
