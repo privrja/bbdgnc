@@ -3,6 +3,7 @@
 use Bbdgnc\Enum\ModificationTypeEnum;
 use Bbdgnc\Exception\IllegalArgumentException;
 use Bbdgnc\TransportObjects\BlockTO;
+use Bbdgnc\TransportObjects\BlockToSequenceTO;
 use Bbdgnc\TransportObjects\ModificationTO;
 use Bbdgnc\TransportObjects\SequenceTO;
 
@@ -19,6 +20,7 @@ class SequenceDatabase {
     /** @var ModificationTO[] */
     private $modifications;
 
+    /** @var int[] */
     private $blockIds = [];
 
     private $sequenceId;
@@ -61,6 +63,10 @@ class SequenceDatabase {
     }
 
     private function saveBlocksToSequence(): void {
+        foreach ($this->blockIds as $blockId) {
+            $blockToSequence = new BlockToSequenceTO($blockId, $this->sequenceId);
+            $this->controller->blockToSequence_model->insert($blockToSequence);
+        }
     }
 
     private function setupModifications(int $key, $id) {

@@ -13,6 +13,8 @@ class BlockTO implements IEntity {
 
     public $id = 0;
 
+    public $databaseId;
+
     public $name = "";
 
     public $acronym = "";

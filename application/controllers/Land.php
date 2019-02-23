@@ -20,8 +20,7 @@ use Bbdgnc\TransportObjects\BlockTO;
 use Bbdgnc\TransportObjects\ReferenceTO;
 use Bbdgnc\TransportObjects\SequenceTO;
 
-class Land extends CI_Controller
-{
+class Land extends CI_Controller {
 
     /** @var string cookie identifier for next results */
     const COOKIE_NEXT_RESULTS = 'find-next-results';
@@ -31,11 +30,11 @@ class Land extends CI_Controller
 
     const ERRORS = "errors";
 
-
     const COOKIE_BLOCKS = "cookie_blocks";
     const BLOCK_MODEL = 'block_model';
     const SEQUENCE_MODEL = "sequence_model";
     const MODIFICATION_MODEL = "modification_model";
+    const BLOCK_TO_SEQUENCE_MODEL = "blockToSequence_model";
 
     private $errors = "";
 
@@ -43,8 +42,7 @@ class Land extends CI_Controller
      * Get Default data for view
      * @return array
      */
-    private function getData()
-    {
+    private function getData() {
         return array(
             Front::CANVAS_INPUT_NAME => "", Front::CANVAS_INPUT_SMILE => "",
             Front::CANVAS_INPUT_FORMULA => "", Front::CANVAS_INPUT_MASS => "",
@@ -56,21 +54,20 @@ class Land extends CI_Controller
     /**
      * Land constructor.
      */
-    public function __construct()
-    {
+    public function __construct() {
         parent::__construct();
         $this->load->helper(array(HelperEnum::HELPER_FORM, HelperEnum::HELPER_URL, HelperEnum::HELPER_COOKIE));
         $this->load->model(self::BLOCK_MODEL);
         $this->load->model(self::SEQUENCE_MODEL);
         $this->load->model(self::MODIFICATION_MODEL);
+        $this->load->model(self::BLOCK_TO_SEQUENCE_MODEL);
     }
 
     /**
      * Index - default view
      * @param array $viewData default null, data for view to print
      */
-    public function index($viewData = null)
-    {
+    public function index($viewData = null) {
         $this->load->view(Front::TEMPLATES_HEADER);
         $this->load->view(Front::PAGES_CANVAS);
         if (isset($viewData)) {
@@ -81,8 +78,7 @@ class Land extends CI_Controller
         $this->load->view(Front::TEMPLATES_FOOTER);
     }
 
-    private function renderSelect($viewSelectData, $viewData)
-    {
+    private function renderSelect($viewSelectData, $viewData) {
         $this->load->view(Front::TEMPLATES_HEADER);
         $this->load->view(Front::PAGES_CANVAS);
         $this->load->view(Front::PAGES_MAIN, $viewData);
@@ -94,8 +90,7 @@ class Land extends CI_Controller
     /**
      * Render editor or blocks
      */
-    public function block()
-    {
+    public function block() {
         $btnEditor = $this->input->post('editor');
         $btnAccept = $this->input->post('accept');
         if (isset($btnEditor)) {
@@ -105,8 +100,7 @@ class Land extends CI_Controller
         }
     }
 
-    public function editor()
-    {
+    public function editor() {
         $blockIdentifier = $this->input->post(Front::BLOCK_IDENTIFIER);
         $blockSmile = $this->input->post(Front::BLOCK_SMILE);
         $blockAcronym = $this->input->post(Front::BLOCK_ACRONYM);
@@ -130,8 +124,7 @@ class Land extends CI_Controller
         $this->load->view('templates/footer');
     }
 
-    public function blocks()
-    {
+    public function blocks() {
         $first = $this->input->post('first');
         $data = $this->getLastData();
         $cookieVal = get_cookie(self::COOKIE_BLOCKS);
@@ -159,6 +152,7 @@ class Land extends CI_Controller
                 $arResult = $this->block_model->getBlockByUniqueSmiles($graph->getUniqueSmiles());
                 if (!empty($arResult)) {
                     $blockTO = new BlockTO($intCounter, $arResult['name'], $arResult['acronym'], $arResult['smiles'], ComputeEnum::NO);
+                    $blockTO->databaseId = $arResult['id'];
                     $blockTO->formula = $arResult['residue'];
                     $blockTO->mass = $arResult['mass'];
                     $data[Front::SEQUENCE] = SequenceHelper::replaceSequence($data[Front::SEQUENCE], $blockTO->id, $blockTO->acronym);
@@ -194,8 +188,7 @@ class Land extends CI_Controller
         $this->renderBlocks($data);
     }
 
-    private function renderBlocks($data)
-    {
+    private function renderBlocks($data) {
         $this->load->view(Front::TEMPLATES_HEADER);
         $this->load->view(Front::PAGES_CANVAS);
         $this->load->view(Front::PAGES_MAIN, $this->getLastData());
@@ -208,8 +201,7 @@ class Land extends CI_Controller
      * Form
      * Find in specific database by specific param or save data to database
      */
-    public function form()
-    {
+    public function form() {
         /* load form validation library */
         $this->load->library("form_validation");
 
@@ -242,8 +234,7 @@ class Land extends CI_Controller
      * @param int $intFindBy find by seleceted input
      * @param boolean $blMatch if exact match selected
      */
-    private function find($intDatabase, $intFindBy, $blMatch)
-    {
+    private function find($intDatabase, $intFindBy, $blMatch) {
         /* input check */
         $this->form_validation->set_rules(Front::CANVAS_INPUT_DATABASE, "Database", Front::REQUIRED);
         $this->form_validation->set_rules(Front::CANVAS_INPUT_SEARCH_BY, "Search by", Front::REQUIRED);
@@ -300,8 +291,7 @@ class Land extends CI_Controller
     /**
      * Render default view with canvas and form. Select data from list and set them to form
      */
-    public function select()
-    {
+    public function select() {
         $data = $this->getLastData();
 
         /* Problem with name */
@@ -322,8 +312,7 @@ class Land extends CI_Controller
     /**
      * Render view for next values from finding
      */
-    public function next()
-    {
+    public function next() {
         $arNext = @unserialize($this->input->post(Front::CANVAS_HIDDEN_NEXT_RESULTS));
         $intDatabase = $this->input->post(Front::CANVAS_INPUT_DATABASE);
         $data = $this->getLastData();
@@ -353,8 +342,7 @@ class Land extends CI_Controller
      * Get last data from input and set it to array for view
      * @return array data for view
      */
-    private function getLastData()
-    {
+    private function getLastData() {
         $arViewData = array();
         $arViewData[Front::CANVAS_INPUT_DATABASE] = $this->input->post(Front::CANVAS_INPUT_DATABASE);
         $arViewData[Front::CANVAS_INPUT_SEARCH_BY] = $this->input->post(Front::CANVAS_INPUT_SEARCH_BY);
@@ -378,8 +366,7 @@ class Land extends CI_Controller
      * @return int result code 0 => find none, 1 => find 1, 2 => find more than 1
      * @throws BadTransferException
      */
-    private function findBy($intDatabase, $intFindBy, &$outArResult = array(), &$outArNextResult = array(), $arSearchOptions = array())
-    {
+    private function findBy($intDatabase, $intFindBy, &$outArResult = array(), &$outArNextResult = array(), $arSearchOptions = array()) {
         $finder = FinderFactory::getFinder($intDatabase, $arSearchOptions);
         switch ($intFindBy) {
             case FindByEnum::IDENTIFIER:
@@ -405,8 +392,7 @@ class Land extends CI_Controller
      * @see ResultEnum
      * @throws BadTransferException
      */
-    private function validateFormAndSearchByIdentifier($finder, &$outArResult)
-    {
+    private function validateFormAndSearchByIdentifier($finder, &$outArResult) {
         $this->form_validation->set_rules(Front::CANVAS_INPUT_IDENTIFIER, "Identifier", Front::REQUIRED);
         if ($this->form_validation->run() === false) {
             return ResultEnum::REPLY_NONE;
@@ -423,8 +409,7 @@ class Land extends CI_Controller
      * @see ResultEnum
      * @throws BadTransferException
      */
-    private function validateFormAndSearchByName($finder, &$outArResult, &$outArNextResult)
-    {
+    private function validateFormAndSearchByName($finder, &$outArResult, &$outArNextResult) {
         $this->form_validation->set_rules(Front::CANVAS_INPUT_NAME, "Name", Front::REQUIRED);
         if ($this->form_validation->run() === false) {
             return ResultEnum::REPLY_NONE;
@@ -441,8 +426,7 @@ class Land extends CI_Controller
      * @see ResultEnum
      * @throws BadTransferException
      */
-    private function validateFormAndSearchByFormula($finder, &$outArResult, &$outArNextResult)
-    {
+    private function validateFormAndSearchByFormula($finder, &$outArResult, &$outArNextResult) {
         $this->form_validation->set_rules(Front::CANVAS_INPUT_FORMULA, "Formula", Front::REQUIRED);
         if ($this->form_validation->run() === false) {
             return ResultEnum::REPLY_NONE;
@@ -459,8 +443,7 @@ class Land extends CI_Controller
      * @see ResultEnum
      * @throws BadTransferException
      */
-    private function validateFormAndSearchBySmiles($finder, &$outArResult, &$outArNextResult)
-    {
+    private function validateFormAndSearchBySmiles($finder, &$outArResult, &$outArNextResult) {
         $this->form_validation->set_rules(Front::CANVAS_INPUT_SMILE, "SMILES", Front::REQUIRED);
         if ($this->form_validation->run() === false) {
             return ResultEnum::REPLY_NONE;
@@ -477,8 +460,7 @@ class Land extends CI_Controller
      * @see ResultEnum
      * @throws BadTransferException
      */
-    private function validateFormAndSearchByMass($finder, &$outArResult, &$outArNextResult)
-    {
+    private function validateFormAndSearchByMass($finder, &$outArResult, &$outArNextResult) {
         $this->form_validation->set_rules(Front::CANVAS_INPUT_MASS, "Mass", Front::REQUIRED);
         if ($this->form_validation->run() === false) {
             return ResultEnum::REPLY_NONE;
@@ -486,8 +468,7 @@ class Land extends CI_Controller
         return $finder->findByMass($this->input->post(Front::CANVAS_INPUT_MASS), $this->input->post(Front::CANVAS_INPUT_DEFLECTION), $outArResult, $outArNextResult);
     }
 
-    private function validateSequence()
-    {
+    private function validateSequence() {
         $this->form_validation->set_rules(Front::SEQUENCE_TYPE, 'Sequence Type', 'required');
         $this->form_validation->set_rules(Front::CANVAS_INPUT_NAME, 'Sequence Name', 'required');
         $this->form_validation->set_rules(Front::CANVAS_INPUT_FORMULA, 'Sequence Formula', 'required');
@@ -500,8 +481,7 @@ class Land extends CI_Controller
         $this->validateSequenceString();
     }
 
-    private function validateSequenceString()
-    {
+    private function validateSequenceString() {
         $sequence = $this->input->post(Front::SEQUENCE);
         if (preg_match('/\[\\d+\]/', $sequence)) {
             $this->errors = "Sequence problem";
@@ -509,8 +489,7 @@ class Land extends CI_Controller
         }
     }
 
-    private function validateBlocks()
-    {
+    private function validateBlocks() {
         $cookieVal = get_cookie(self::COOKIE_BLOCKS);
         if ($cookieVal === null) {
             $this->errors = "Blocks data problem";
@@ -518,8 +497,7 @@ class Land extends CI_Controller
         }
     }
 
-    private function getLastBlocksData()
-    {
+    private function getLastBlocksData() {
         $cookieVal = get_cookie(self::COOKIE_BLOCKS);
         if ($cookieVal !== null) {
             $blocks = json_decode($cookieVal);
@@ -531,8 +509,7 @@ class Land extends CI_Controller
         return $data;
     }
 
-    private function save()
-    {
+    private function save() {
         try {
             $this->validateSequence();
             $this->validateBlocks();

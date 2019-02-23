@@ -1,11 +1,5 @@
 BEGIN TRANSACTION;
 
-CREATE TABLE user (
-    id                  INTEGER       PRIMARY KEY,
-    mail                TEXT          NOT NULL,
-    password            BLOB          NOT NULL
-);
-
 CREATE TABLE block (
     id                  INTEGER         PRIMARY KEY,
     name                TEXT            NOT NULL,
@@ -60,7 +54,6 @@ CREATE TABLE b2s (
     FOREIGN KEY (sequence_id) REFERENCES sequence(id)
 );
 
-CREATE UNIQUE INDEX UX_USER_MAIL ON user(mail);
 CREATE UNIQUE INDEX UX_BLOCK_ACRONYM ON block(acronym);
 CREATE INDEX IX_BLOCK_NAME ON block(name);
 CREATE INDEX IX_BLOCK_RESIDUE ON block(residue);
