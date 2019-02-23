@@ -26,7 +26,7 @@ use Bbdgnc\Finder\Enum\ServerEnum;
         let lastAcronym = '<?= $block->acronym ?>';
         let acronym = document.getElementById('txt-block-acronym').value;
         let sequence = document.getElementById('hdn-sequence').value;
-        if ("" === lastAcronym) {
+        if ("" === lastAcronym || !sequence.includes(`[${lastAcronym}]`)) {
             sequence = sequenceReplace(blockId, acronym, sequence);
         } else {
             sequence = sequenceReplace(lastAcronym, acronym, sequence);
@@ -36,10 +36,10 @@ use Bbdgnc\Finder\Enum\ServerEnum;
     }
 
     function sequenceReplace(id, acronym, sequence) {
-        console.log(id);
+        let length = id.toString().length;
         let index = sequence.indexOf(`[${id}]`) + 1;
         let left = sequence.substr(0, index);
-        let right = sequence.substr(index + 1);
+        let right = sequence.substr(index + length);
         return left + acronym + right;
     }
 
