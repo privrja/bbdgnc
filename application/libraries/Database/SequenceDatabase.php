@@ -46,8 +46,13 @@ class SequenceDatabase {
     }
 
     private function saveBlocks() {
+        /** @var BlockTO $blockTO */
         foreach ($this->blocks as $blockTO) {
-            $this->blockIds[] = $this->controller->block_model->insert($blockTO);
+            if (isset($blockTO->databaseId)) {
+                $this->blockIds[] = $blockTO->databaseId;
+            } else {
+                $this->blockIds[] = $this->controller->block_model->insert($blockTO);
+            }
         }
     }
 

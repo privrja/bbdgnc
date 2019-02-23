@@ -109,6 +109,7 @@ class Land extends CI_Controller {
         $sequence = $this->input->post(Front::SEQUENCE);
         $sequenceType = $this->input->post(Front::SEQUENCE_TYPE);
         $block = new BlockTO($blockIdentifier, $blockName, $blockAcronym, $blockSmile, ComputeEnum::NO);
+        $block->databaseId = $this->input->post(Front::BLOCK_DATABASE_ID);
         $block->formula = $this->input->post(Front::BLOCK_FORMULA);
         $block->mass = $this->input->post(Front::BLOCK_MASS);
         $block->losses = $this->input->post(Front::BLOCK_NEUTRAL_LOSSES);
@@ -134,6 +135,7 @@ class Land extends CI_Controller {
             $blocks = json_decode($cookieVal);
             $blockIdentifier = $this->input->post(Front::BLOCK_IDENTIFIER);
             $blockTO = new BlockTO($blockIdentifier, $this->input->post(Front::BLOCK_NAME), $this->input->post(Front::BLOCK_ACRONYM), $this->input->post(Front::BLOCK_SMILE), ComputeEnum::NO);
+            $blockTO->databaseId = $this->input->post(Front::BLOCK_DATABASE_ID);
             $blockTO->formula = $this->input->post(Front::BLOCK_FORMULA);
             $blockTO->mass = $this->input->post(Front::BLOCK_MASS);
             $blockTO->losses = $this->input->post(Front::BLOCK_NEUTRAL_LOSSES);
@@ -533,10 +535,10 @@ class Land extends CI_Controller {
         $lengthBlocks = sizeof($blocks);
         for ($index = 0; $index < $lengthBlocks; ++$index) {
             $blockTO = new BlockTO($blocks[$index]->id, $blocks[$index]->name, $blocks[$index]->acronym, $blocks[$index]->smiles, ComputeEnum::UNIQUE_SMILES);
+            $blockTO->databaseId = $blocks[$index]->databaseId;
             $blockTO->formula = $blocks[$index]->formula;
             $blockTO->mass = $blocks[$index]->mass;
             $blockTO->losses = $blocks[$index]->losses;
-//            $stringAcronym = new StringObject($blockTO->acronym);
             $mapBlocks->attach($blockTO);
         }
 
