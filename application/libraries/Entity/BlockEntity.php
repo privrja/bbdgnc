@@ -1,6 +1,6 @@
 <?php
 
-namespace Bbdgnc\TransportObjects;
+namespace Bbdgnc\Entity;
 
 use Bbdgnc\Base\FormulaHelper;
 use Bbdgnc\Enum\ComputeEnum;
@@ -8,10 +8,14 @@ use Bbdgnc\Enum\LoggerEnum;
 use Bbdgnc\Exception\IllegalArgumentException;
 use Bbdgnc\Smiles\Enum\LossesEnum;
 use Bbdgnc\Smiles\Graph;
+use Bbdgnc\TransportObjects\IEntity;
+use Bbdgnc\TransportObjects\ReferenceTO;
 
-class BlockTO implements ITransportObject {
+class BlockEntity implements IEntity {
 
-    public $id = 0;
+    public $id;
+
+    public $dbid;
 
     public $name = "";
 
@@ -82,7 +86,7 @@ class BlockTO implements ITransportObject {
         }
     }
 
-    public function asBlock() {
+    function asEntity() {
         return ['name' => $this->name, 'acronym' => $this->acronym, 'residue' => $this->formula, 'mass' => $this->mass, 'smiles' => $this->smiles, 'usmiles' => $this->uniqueSmiles];
     }
 

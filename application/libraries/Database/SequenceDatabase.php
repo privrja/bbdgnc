@@ -13,7 +13,7 @@ class SequenceDatabase {
     /** @var SequenceTO $sequenceTO */
     private $sequenceTO;
 
-    /** @var BlockTO[] */
+    /** @var SplObjectStorage $blocks */
     private $blocks;
 
     /** @var ModificationTO[] */
@@ -31,7 +31,7 @@ class SequenceDatabase {
         $this->controller = $controller;
     }
 
-    public function save(SequenceTO $sequenceTO, array $blocks, array $modifications = []) {
+    public function save(SequenceTO $sequenceTO, SplObjectStorage $blocks, array $modifications = []) {
         $this->sequenceTO = $sequenceTO;
         $this->blocks = $blocks;
         $this->modifications = $modifications;
