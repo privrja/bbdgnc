@@ -1,22 +1,16 @@
 <?php
 
-use Bbdgnc\TransportObjects\ModificationTO;
+use Bbdgnc\Base\CrudModel;
 
-class Modification_model extends CI_Model {
+class Modification_model extends CrudModel {
 
     const TABLE_NAME = 'modification';
 
-    public function __construct() {
-        $this->load->database();
+    /**
+     * Get table name in database
+     * @return string table name in database
+     */
+    protected function getTableName(): string {
+        return self::TABLE_NAME;
     }
-
-    public function getAll() {
-        $query = $this->db->get(self::TABLE_NAME);
-        return $query->result_array();
-    }
-
-    public function insert(ModificationTO $modificationTO) {
-        $this->db->insert(self::TABLE_NAME, $modificationTO->asModification());
-    }
-
 }

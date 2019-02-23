@@ -3,7 +3,6 @@
 use Bbdgnc\Base\BlockSplObjectStorage;
 use Bbdgnc\Base\HelperEnum;
 use Bbdgnc\Base\SequenceHelper;
-use Bbdgnc\Base\StringObject;
 use Bbdgnc\Enum\ComputeEnum;
 use Bbdgnc\Enum\Front;
 use Bbdgnc\Enum\LoggerEnum;

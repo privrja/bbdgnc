@@ -5,7 +5,7 @@ namespace Bbdgnc\TransportObjects;
 use Bbdgnc\Enum\SequenceTypeEnum;
 use Bbdgnc\Finder\Enum\ServerEnum;
 
-class SequenceTO {
+class SequenceTO implements IEntity {
 
     public $database = ServerEnum::PUBCHEM;
 
@@ -54,7 +54,7 @@ class SequenceTO {
     }
 
 
-    public function asSequence() {
+    public function asEntity() {
         return [
             'type' => $this->sequenceType,
             'name' => $this->name,

@@ -1,22 +1,17 @@
 <?php
 
-use Bbdgnc\TransportObjects\SequenceTO;
+use Bbdgnc\Base\CrudModel;
 
-class Sequence_model extends CI_Model {
+class Sequence_model extends CrudModel {
 
     const TABLE_NAME = 'sequence';
 
-    public function __construct() {
-        $this->load->database();
-    }
 
-    public function getAll() {
-        $query = $this->db->get(self::TABLE_NAME);
-        return $query->result_array();
+    /**
+     * Get table name in database
+     * @return string table name in database
+     */
+    protected function getTableName(): string {
+        return self::TABLE_NAME;
     }
-
-    public function insert(SequenceTO $sequenceTO) {
-        $this->db->insert(self::TABLE_NAME, $sequenceTO->asSequence());
-    }
-
 }

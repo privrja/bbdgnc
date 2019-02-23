@@ -9,7 +9,7 @@ use Bbdgnc\Exception\IllegalArgumentException;
 use Bbdgnc\Smiles\Enum\LossesEnum;
 use Bbdgnc\Smiles\Graph;
 
-class BlockTO implements ITransportObject {
+class BlockTO implements IEntity {
 
     public $id = 0;
 
@@ -82,7 +82,7 @@ class BlockTO implements ITransportObject {
         }
     }
 
-    public function asBlock() {
+    public function asEntity() {
         return ['name' => $this->name, 'acronym' => $this->acronym, 'residue' => $this->formula, 'mass' => $this->mass, 'smiles' => $this->smiles, 'usmiles' => $this->uniqueSmiles];
     }
 

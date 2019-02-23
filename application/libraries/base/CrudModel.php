@@ -1,6 +1,9 @@
 <?php
 
+namespace Bbdgnc\Base;
+
 use Bbdgnc\TransportObjects\IEntity;
+use CI_Model;
 
 abstract class CrudModel extends CI_Model {
 
@@ -12,19 +15,19 @@ abstract class CrudModel extends CI_Model {
      * Get table name in database
      * @return string table name in database
      */
-    protected abstract function getTableName(): string ;
+    protected abstract function getTableName(): string;
 
     /**
      * Get all entities from database
      * @return array
      */
     public function findAll() {
-        $query = $this->db->get(self::getTableName());
+        $query = $this->db->get($this->getTableName());
         return $query->result_array();
     }
 
     public function findById($id) {
-        $query = $this->db->get_where(self::getTableName(), array('id' => $id));
+        $query = $this->db->get_where($this->getTableName(), array('id' => $id));
         // TODO result only one result
         return $query->result_array();
     }
@@ -35,7 +38,7 @@ abstract class CrudModel extends CI_Model {
      * @return mixed id of new record
      */
     public function insert(IEntity $entity) {
-        $this->db->insert(self::getTableName(), $entity->asEntity());
+        $this->db->insert($this->getTableName(), $entity->asEntity());
         return $this->db->insert_id();
     }
 
@@ -43,7 +46,7 @@ abstract class CrudModel extends CI_Model {
      * Insert blocks to database
      */
     public function insertMore(array $blocks) {
-        $this->db->insert_batch(self::getTableName(), $blocks);
+        $this->db->insert_batch($this->getTableName(), $blocks);
     }
 
 
