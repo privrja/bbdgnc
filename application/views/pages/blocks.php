@@ -143,6 +143,7 @@ use Bbdgnc\Finder\Enum\ServerEnum;
                        value="<?= $block->smiles ?>"/>
 
                 <input type="hidden" name="<?= Front::BLOCK_IDENTIFIER ?>" value="<?= $block->id ?>"/>
+                <input type="hidden" name="<?= Front::BLOCK_DATABASE_ID ?>" value="<?= $block->databaseId ?>"/>
                 <input type="hidden" name="<?= Front::BLOCK_NAME ?>" value="<?= $block->name ?>"/>
                 <input type="hidden" name="<?= Front::BLOCK_ACRONYM ?>" value="<?= $block->acronym ?>"/>
                 <input type="hidden" name="<?= Front::BLOCK_FORMULA ?>" value="<?= $block->formula ?>"/>

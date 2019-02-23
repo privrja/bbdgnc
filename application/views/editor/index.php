@@ -31,8 +31,12 @@ use Bbdgnc\Finder\Enum\ServerEnum;
         } else {
             sequence = sequenceReplace(lastAcronym, acronym, sequence);
         }
+        let databaseId = '<?= $block->databaseId ?>';
+        if (lastAcronym !== acronym) {
+            databaseId = null;
+        }
         document.getElementById('hdn-sequence').value = sequence;
-        redirectWithData({blockIdentifier: blockId, blockSmile: smile, blocks: 'Blocks'});
+        redirectWithData({blockIdentifier: blockId, blockDatabaseId: databaseId, blockSmile: smile, blocks: 'Blocks'});
     }
 
     function sequenceReplace(id, acronym, sequence) {
