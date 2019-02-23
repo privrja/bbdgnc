@@ -30,7 +30,7 @@ final class BlockCycloBranchTest extends TestCase {
         $blockTO->reference = new ReferenceTO();
         $blockTO->reference->server = ServerEnum::CHEMSPIDER;
         $blockTO->reference->identifier = 969;
-        $this->assertEquals([$blockTO->asBlock()], $result->getResult());
+        $this->assertEquals([$blockTO->asEntity()], $result->getResult());
     }
 
     public function testWithRightData2() {
@@ -52,7 +52,7 @@ final class BlockCycloBranchTest extends TestCase {
         $arExpected[2]->reference->identifier = 234;
         $arExpected[3]->reference->identifier = 1057;
         for ($index = 0; $index < 4; ++$index) {
-            $arExpected[$index] = $arExpected[$index]->asBlock();
+            $arExpected[$index] = $arExpected[$index]->asEntity();
         }
         $this->assertEquals($arExpected, $result->getResult());
     }
@@ -67,7 +67,7 @@ final class BlockCycloBranchTest extends TestCase {
         $blockTO->reference = new ReferenceTO();
         $blockTO->reference->server = ServerEnum::PUBCHEM;
         $blockTO->reference->identifier = 21197379;
-        $this->assertEquals([$blockTO->asBlock()], $result->getResult());
+        $this->assertEquals([$blockTO->asEntity()], $result->getResult());
     }
 
     public function testWithRightData4() {
@@ -80,7 +80,7 @@ final class BlockCycloBranchTest extends TestCase {
         $blockTO->reference = new ReferenceTO();
         $blockTO->reference->server = ServerEnum::PUBCHEM;
         $blockTO->reference->identifier = 17824924;
-        $this->assertEquals([$blockTO->asBlock()], $result->getResult());
+        $this->assertEquals([$blockTO->asEntity()], $result->getResult());
     }
 
     public function testWithWrongData() {

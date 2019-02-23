@@ -90,7 +90,7 @@ class BlockCycloBranch extends AbstractCycloBranch {
             $blockTO->formula = $arItems[self::FORMULA];
             $blockTO->mass = (float)$arItems[self::MASS];
             $blockTO->reference = $arDatabaseReference[$index];
-            $arBlocks[] = $blockTO->asBlock();
+            $arBlocks[] = $blockTO->asEntity();
         }
         return new Accept($arBlocks, '');
     }
