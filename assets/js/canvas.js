@@ -449,18 +449,18 @@ function save() {
     data.nModification = document.getElementById("txt-n-modification").value;
     data.nFormula = document.getElementById("txt-n-formula").value;
     data.nMass = document.getElementById("txt-n-mass").value;
-    data.nTerminalN = document.getElementById("chk-n-nterminal").value;
-    data.nTerminalC = document.getElementById("chk-n-cterminal").value;
+    data.nTerminalN = document.getElementById("chk-n-nterminal").checked;
+    data.nTerminalC = document.getElementById("chk-n-cterminal").checked;
     data.cModification = document.getElementById("txt-c-modification").value;
     data.cFormula = document.getElementById("txt-c-formula").value;
     data.cMass = document.getElementById("txt-c-mass").value;
-    data.cTerminalN = document.getElementById("chk-c-nterminal").value;
-    data.cTerminalC = document.getElementById("chk-c-cterminal").value;
+    data.cTerminalN = document.getElementById("chk-c-nterminal").checked;
+    data.cTerminalC = document.getElementById("chk-c-cterminal").checked;
     data.bModification = document.getElementById("txt-b-modification").value;
     data.bFormula = document.getElementById("txt-b-formula").value;
     data.bMass = document.getElementById("txt-b-mass").value;
-    data.bTerminalN = document.getElementById("chk-b-nterminal").value;
-    data.bTerminalC = document.getElementById("chk-b-cterminal").value;
+    data.bTerminalN = document.getElementById("chk-b-nterminal").checked;
+    data.bTerminalC = document.getElementById("chk-b-cterminal").checked;
     redirectWithData(FORM_MAIN, data);
 }
 

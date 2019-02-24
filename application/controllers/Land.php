@@ -18,6 +18,7 @@ use Bbdgnc\Finder\IFinder;
 use Bbdgnc\Finder\PubChemFinder;
 use Bbdgnc\Smiles\Graph;
 use Bbdgnc\TransportObjects\BlockTO;
+use Bbdgnc\TransportObjects\ModificationTO;
 use Bbdgnc\TransportObjects\ReferenceTO;
 use Bbdgnc\TransportObjects\SequenceTO;
 
@@ -535,6 +536,7 @@ class Land extends CI_Controller {
         try {
             $this->validateSequence();
             $this->validateBlocks();
+            // TODO validate modification
         } catch (IllegalArgumentException $exception) {
             $this->renderBlocks($this->getLastBlocksData());
             var_dump("ERROR");
@@ -561,11 +563,29 @@ class Land extends CI_Controller {
             $mapBlocks->attach($blockTO);
         }
 
+        $modifications = [];
+        $branchChar = 'n';
+        for ($index = 0; $index < 3; ++$index) {
+            $modificationName = $this->input->post("nModification");
+            if (isset($modificationName)) {
+                $modificationFormula = $this->input->post("nFormula");
+                $modificationMass = $this->input->post("nMass");
+                $modificationTerminalN = $this->input->post("nTerminalN");
+                $modificationTerminalC = $this->input->post("nTerminalC");
+                $modification = new ModificationTO($modificationName, $modificationFormula, $modificationMass, $modificationTerminalN, $modificationTerminalC);
+                $modifications[] = $modification;
+                $branchChar = $this->changeBranchChar($branchChar, $sequenceType);
+                if ($branchChar === 'e') {
+                    break;
+                }
+            }
+        }
+
         $sequenceTO = new SequenceTO($sequenceDatabase, $sequenceName, $sequenceSmiles, $sequenceFormula, $sequenceMass, $sequenceIdentifier, $sequence, $sequenceType);
         $sequenceDatabase = new SequenceDatabase($this);
 
         try {
-            $sequenceDatabase->save($sequenceTO, $mapBlocks, []);
+            $sequenceDatabase->save($sequenceTO, $mapBlocks, $modifications);
         } catch (SequenceInDatabaseException $e) {
             var_dump("Sequence in database");
         } catch (Exception $e) {
@@ -576,6 +596,10 @@ class Land extends CI_Controller {
         $this->load->view(Front::PAGES_CANVAS);
         $this->load->view(Front::PAGES_MAIN, $this->getLastData());
         $this->load->view(Front::TEMPLATES_FOOTER);
+    }
+
+    private function changeBranchChar($branchChar, $sequenceType) {
+        return 'e';
     }
 
 }
