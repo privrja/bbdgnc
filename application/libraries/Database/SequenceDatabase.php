@@ -80,7 +80,6 @@ class SequenceDatabase {
     }
 
     private function saveModifications(): void {
-        var_dump($this->modifications);
         foreach ($this->modifications as $key => $modificationTO) {
             $id = $this->controller->modification_model->insert($modificationTO);
             $this->setupModifications($key, $id);
