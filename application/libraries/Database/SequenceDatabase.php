@@ -1,5 +1,7 @@
 <?php
 
+use Bbdgnc\Base\Logger;
+use Bbdgnc\Enum\LoggerEnum;
 use Bbdgnc\Enum\ModificationTypeEnum;
 use Bbdgnc\Exception\DatabaseException;
 use Bbdgnc\Exception\IllegalArgumentException;
@@ -52,8 +54,11 @@ class SequenceDatabase {
             $this->saveModifications();
             $this->saveSequence();
             $this->saveBlocksToSequence();
-        } catch (DatabaseException $exception) {
-            throw $exception;
+        } catch (DatabaseException $e) {
+            Logger::log(LoggerEnum::ERROR, "Database exception: " . $e->getMessage() . " Trace: " . $e->getTraceAsString());
+            throw $e;
+        } catch (Exception $e) {
+            Logger::log(LoggerEnum::ERROR, $e->getMessage() . " Trace: " . $e->getTraceAsString());
         } finally {
             $this->controller->block_model->endTransaction();
         }
@@ -84,6 +89,7 @@ class SequenceDatabase {
         try {
             $this->sequenceId = $this->controller->sequence_model->insert($this->sequenceTO);
         } catch (UniqueConstraintException $exception) {
+            Logger::log(LoggerEnum::ERROR, "Sequence already in database. Sequence id: " . $this->sequenceId);
             throw new SequenceInDatabaseException();
         }
     }
@@ -91,7 +97,11 @@ class SequenceDatabase {
     private function saveBlocksToSequence(): void {
         foreach ($this->blockIds as $blockId) {
             $blockToSequence = new BlockToSequenceTO($blockId, $this->sequenceId);
-            $this->controller->blockToSequence_model->insert($blockToSequence);
+            try {
+                $this->controller->blockToSequence_model->insert($blockToSequence);
+            } catch (UniqueConstraintException $e) {
+                Logger::log(LoggerEnum::WARNING, "Block to sequence already in database. Sequence id: " . $this->sequenceId . " block id: " . $blockId);
+            }
         }
     }
 

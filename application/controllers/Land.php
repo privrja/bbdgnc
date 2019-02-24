@@ -550,7 +550,6 @@ class Land extends CI_Controller {
         $sequenceDatabase = $this->input->post(Front::CANVAS_INPUT_DATABASE);
         $sequenceIdentifier = $this->input->post(Front::CANVAS_INPUT_IDENTIFIER);
         $lengthBlocks = $this->input->post(Front::BLOCK_COUNT);
-        var_dump($lengthBlocks);
         $blocks = $this->loadCookies($lengthBlocks);
         $mapBlocks = new BlockSplObjectStorage();
         for ($index = 0; $index < $lengthBlocks; ++$index) {

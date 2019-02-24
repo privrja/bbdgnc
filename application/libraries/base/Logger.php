@@ -10,6 +10,11 @@ class Logger {
 
     const FILE = "./application/logs/log-";
 
+    /**
+     * @param int $lvl
+     * @param string $msg
+     * @see LoggerEnum
+     */
     public static function log(int $lvl, string $msg) {
         if ($lvl === LoggerEnum::DISABLE || $lvl < self::LEVEL) {
             return;
