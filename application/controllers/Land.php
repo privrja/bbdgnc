@@ -6,6 +6,7 @@ use Bbdgnc\Base\SequenceHelper;
 use Bbdgnc\Enum\ComputeEnum;
 use Bbdgnc\Enum\Front;
 use Bbdgnc\Enum\LoggerEnum;
+use Bbdgnc\Enum\ModificationHelperTypeEnum;
 use Bbdgnc\Enum\SequenceTypeEnum;
 use Bbdgnc\Exception\IllegalArgumentException;
 use Bbdgnc\Exception\SequenceInDatabaseException;
@@ -564,7 +565,7 @@ class Land extends CI_Controller {
         }
 
         $modifications = [];
-        $branchChar = $this->changeBranchChar('s', $sequenceType);
+        $branchChar = ModificationHelperTypeEnum::startModification($sequenceType);
         for ($index = 0; $index < 3; ++$index) {
             $modificationName = $this->input->post($branchChar . Front::MODIFICATION_NAME);
             if (isset($modificationName)) {
@@ -574,8 +575,8 @@ class Land extends CI_Controller {
                 $modificationTerminalC = $this->input->post($branchChar . Front::MODIFICATION_TERMINAL_C);
                 $modification = new ModificationTO($modificationName, $modificationFormula, $modificationMass, $modificationTerminalN, $modificationTerminalC);
                 $modifications[] = $modification;
-                $branchChar = $this->changeBranchChar($branchChar, $sequenceType);
-                if ($branchChar === 'e') {
+                $branchChar = ModificationHelperTypeEnum::changeBranchChar($branchChar, $sequenceType);
+                if (ModificationHelperTypeEnum::isEnd($branchChar)) {
                     break;
                 }
             }
@@ -598,21 +599,5 @@ class Land extends CI_Controller {
         $this->load->view(Front::TEMPLATES_FOOTER);
     }
 
-    private function changeBranchChar($branchChar, $sequenceType) {
-        if ($branchChar === 's' && ($sequenceType === SequenceTypeEnum::LINEAR || $sequenceType === SequenceTypeEnum::LINEAR_POLYKETIDE)) {
-            return 'n';
-        } else if ($branchChar === 'n' && ($sequenceType === SequenceTypeEnum::LINEAR || $sequenceType === SequenceTypeEnum::LINEAR_POLYKETIDE)) {
-            return 'c';
-        } else if ($branchChar === 's' && ($sequenceType === SequenceTypeEnum::BRANCH) || $sequenceType === SequenceTypeEnum::OTHER) {
-            return 'n';
-        } else if ($branchChar === 'n' && ($sequenceType === SequenceTypeEnum::BRANCH) || $sequenceType === SequenceTypeEnum::OTHER) {
-            return 'c';
-        } else if ($branchChar === 'c' && ($sequenceType === SequenceTypeEnum::BRANCH) || $sequenceType === SequenceTypeEnum::OTHER) {
-            return 'b';
-        } else if ($branchChar === 's' && $sequenceType === SequenceTypeEnum::BRANCH_CYCLIC) {
-            return 'b';
-        }
-        return 'e';
-    }
 
 }
