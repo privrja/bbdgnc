@@ -196,9 +196,9 @@ class Land extends CI_Controller {
      * @param BlockTO[] $blocks
      */
     private function saveCookies(array $blocks) {
-       foreach ($blocks as $block) {
-           set_cookie(self::COOKIE_BLOCKS . $block->id, json_encode($block), self::COOKIE_EXPIRE_HOUR);
-       }
+        foreach ($blocks as $block) {
+            set_cookie(self::COOKIE_BLOCKS . $block->id, json_encode($block), self::COOKIE_EXPIRE_HOUR);
+        }
     }
 
     private function loadCookies($blocksCount) {
@@ -564,14 +564,14 @@ class Land extends CI_Controller {
         }
 
         $modifications = [];
-        $branchChar = 'n';
+        $branchChar = $this->changeBranchChar('s', $sequenceType);
         for ($index = 0; $index < 3; ++$index) {
-            $modificationName = $this->input->post("nModification");
+            $modificationName = $this->input->post($branchChar . "Modification");
             if (isset($modificationName)) {
-                $modificationFormula = $this->input->post("nFormula");
-                $modificationMass = $this->input->post("nMass");
-                $modificationTerminalN = $this->input->post("nTerminalN");
-                $modificationTerminalC = $this->input->post("nTerminalC");
+                $modificationFormula = $this->input->post($branchChar . "Formula");
+                $modificationMass = $this->input->post($branchChar . "Mass");
+                $modificationTerminalN = $this->input->post($branchChar . "TerminalN");
+                $modificationTerminalC = $this->input->post($branchChar . "TerminalC");
                 $modification = new ModificationTO($modificationName, $modificationFormula, $modificationMass, $modificationTerminalN, $modificationTerminalC);
                 $modifications[] = $modification;
                 $branchChar = $this->changeBranchChar($branchChar, $sequenceType);
@@ -599,6 +599,19 @@ class Land extends CI_Controller {
     }
 
     private function changeBranchChar($branchChar, $sequenceType) {
+        if ($branchChar === 's' && ($sequenceType === SequenceTypeEnum::LINEAR || $sequenceType === SequenceTypeEnum::LINEAR_POLYKETIDE)) {
+            return 'n';
+        } else if ($branchChar === 'n' && ($sequenceType === SequenceTypeEnum::LINEAR || $sequenceType === SequenceTypeEnum::LINEAR_POLYKETIDE)) {
+            return 'c';
+        } else if ($branchChar === 's' && ($sequenceType === SequenceTypeEnum::BRANCH) || $sequenceType === SequenceTypeEnum::OTHER) {
+            return 'n';
+        } else if ($branchChar === 'n' && ($sequenceType === SequenceTypeEnum::BRANCH) || $sequenceType === SequenceTypeEnum::OTHER) {
+            return 'c';
+        } else if ($branchChar === 'c' && ($sequenceType === SequenceTypeEnum::BRANCH) || $sequenceType === SequenceTypeEnum::OTHER) {
+            return 'b';
+        } else if ($branchChar === 's' && $sequenceType === SequenceTypeEnum::BRANCH_CYCLIC) {
+            return 'b';
+        }
         return 'e';
     }
 
