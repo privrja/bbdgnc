@@ -445,6 +445,7 @@ function save() {
     let sequence = document.getElementById("txt-sequence").value;
     let data = {sequence: sequence, save: 'Save'};
     data.sequenceType = document.getElementById("sel-sequence-type").value;
+    data.blockCount = document.getElementsByClassName("block-count")[0].value;
     data.nModification = document.getElementById("txt-n-modification").value;
     data.nFormula = document.getElementById("txt-n-formula").value;
     data.nMass = document.getElementById("txt-n-mass").value;

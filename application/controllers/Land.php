@@ -129,11 +129,12 @@ class Land extends CI_Controller {
     public function blocks() {
         $first = $this->input->post('first');
         $data = $this->getLastData();
-        $cookieVal = get_cookie(self::COOKIE_BLOCKS);
+        $cookieVal = get_cookie(self::COOKIE_BLOCKS . "0");
         $data[Front::SEQUENCE] = $this->input->post(Front::SEQUENCE);
         $data[Front::SEQUENCE_TYPE] = $this->input->post(Front::SEQUENCE_TYPE);
         if (!isset($first) && $cookieVal !== null) {
-            $blocks = json_decode($cookieVal);
+            $data[Front::BLOCK_COUNT] = $this->input->post(Front::BLOCK_COUNT);
+            $blocks = $this->loadCookies($data[Front::BLOCK_COUNT]);
             $blockIdentifier = $this->input->post(Front::BLOCK_IDENTIFIER);
             $blockTO = new BlockTO($blockIdentifier, $this->input->post(Front::BLOCK_NAME), $this->input->post(Front::BLOCK_ACRONYM), $this->input->post(Front::BLOCK_SMILE), ComputeEnum::NO);
             $blockTO->databaseId = $this->input->post(Front::BLOCK_DATABASE_ID);
@@ -144,7 +145,6 @@ class Land extends CI_Controller {
             $blockTO->reference->identifier = $this->input->post(Front::BLOCK_REFERENCE);
             $blockTO->reference->server = $this->input->post(Front::BLOCK_REFERENCE_SERVER);
             $blocks[$blockIdentifier] = $blockTO;
-            $data[Front::BLOCK_COUNT] = $this->input->post(Front::BLOCK_COUNT);
         } else {
             $blocks = [];
             $intCounter = 0;
@@ -159,7 +159,6 @@ class Land extends CI_Controller {
                     $blockTO->formula = $arResult['residue'];
                     $blockTO->mass = $arResult['mass'];
                     $data[Front::SEQUENCE] = SequenceHelper::replaceSequence($data[Front::SEQUENCE], $blockTO->id, $blockTO->acronym);
-
                 } else {
                     $pubchemFinder = new PubChemFinder();
                     try {
@@ -187,8 +186,27 @@ class Land extends CI_Controller {
             $data[Front::BLOCK_COUNT] = $intCounter;
         }
         $data[Front::BLOCKS] = $blocks;
-        set_cookie(self::COOKIE_BLOCKS, json_encode($blocks), 3600);
+        $this->saveCookies($blocks);
         $this->renderBlocks($data);
+    }
+
+
+    /**
+     * @param BlockTO[] $blocks
+     */
+    private function saveCookies(array $blocks) {
+       foreach ($blocks as $block) {
+           set_cookie(self::COOKIE_BLOCKS . $block->id, json_encode($block), self::COOKIE_EXPIRE_HOUR);
+       }
+    }
+
+    private function loadCookies($blocksCount) {
+        $blocks = [];
+        for ($index = 0; $index < $blocksCount; ++$index) {
+            $cookieVal = get_cookie(self::COOKIE_BLOCKS . $index);
+            $blocks[] = json_decode($cookieVal);
+        }
+        return $blocks;
     }
 
     private function renderBlocks($data) {
@@ -493,20 +511,21 @@ class Land extends CI_Controller {
     }
 
     private function validateBlocks() {
-        $cookieVal = get_cookie(self::COOKIE_BLOCKS);
+        $cookieVal = get_cookie(self::COOKIE_BLOCKS . "0");
         if ($cookieVal === null) {
             $this->errors = "Blocks data problem";
             throw new IllegalArgumentException();
         }
+        // TODO validate
     }
 
     private function getLastBlocksData() {
-        $cookieVal = get_cookie(self::COOKIE_BLOCKS);
+        $data[Front::BLOCK_COUNT] = $this->input->post(Front::BLOCK_COUNT);
+        $cookieVal = get_cookie(self::COOKIE_BLOCKS . "0");
         if ($cookieVal !== null) {
-            $blocks = json_decode($cookieVal);
+            $blocks = $this->loadCookies($data[Front::BLOCK_COUNT]);
             $data[Front::BLOCKS] = $blocks;
         }
-        $data[Front::BLOCK_COUNT] = sizeof($blocks);
         $data[Front::SEQUENCE] = $this->input->post(Front::SEQUENCE);
         $data[Front::SEQUENCE_TYPE] = SequenceTypeEnum::$values[$this->input->post(Front::SEQUENCE_TYPE)];
         return $data;
@@ -530,10 +549,10 @@ class Land extends CI_Controller {
         $sequenceSmiles = $this->input->post(Front::CANVAS_INPUT_SMILE);
         $sequenceDatabase = $this->input->post(Front::CANVAS_INPUT_DATABASE);
         $sequenceIdentifier = $this->input->post(Front::CANVAS_INPUT_IDENTIFIER);
-        $cookieVal = get_cookie(self::COOKIE_BLOCKS);
-        $blocks = json_decode($cookieVal);
+        $lengthBlocks = $this->input->post(Front::BLOCK_COUNT);
+        var_dump($lengthBlocks);
+        $blocks = $this->loadCookies($lengthBlocks);
         $mapBlocks = new BlockSplObjectStorage();
-        $lengthBlocks = sizeof($blocks);
         for ($index = 0; $index < $lengthBlocks; ++$index) {
             $blockTO = new BlockTO($blocks[$index]->id, $blocks[$index]->name, $blocks[$index]->acronym, $blocks[$index]->smiles, ComputeEnum::UNIQUE_SMILES);
             $blockTO->databaseId = $blocks[$index]->databaseId;
@@ -548,8 +567,10 @@ class Land extends CI_Controller {
 
         try {
             $sequenceDatabase->save($sequenceTO, $mapBlocks, []);
-        } catch (SequenceInDatabaseException $exception) {
-            var_dump($exception->getMessage());
+        } catch (SequenceInDatabaseException $e) {
+            var_dump("Sequence in database");
+        } catch (Exception $e) {
+            var_dump($e->getMessage());
         }
 
         $this->load->view(Front::TEMPLATES_HEADER);

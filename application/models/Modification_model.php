@@ -13,4 +13,5 @@ class Modification_model extends CrudModel {
     protected function getTableName(): string {
         return self::TABLE_NAME;
     }
+
 }

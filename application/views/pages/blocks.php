@@ -142,6 +142,10 @@ use Bbdgnc\Finder\Enum\ServerEnum;
                        id="hidden-canvas-small-<?= $block->id ?>"
                        value="<?= $block->smiles ?>"/>
 
+                <div class="td">
+                    <input type="submit" title="SMILES Editor" name="editor" value="Edit"/>
+                </div>
+
                 <input type="hidden" name="<?= Front::BLOCK_IDENTIFIER ?>" value="<?= $block->id ?>"/>
                 <input type="hidden" name="<?= Front::BLOCK_DATABASE_ID ?>" value="<?= $block->databaseId ?>"/>
                 <input type="hidden" name="<?= Front::BLOCK_NAME ?>" value="<?= $block->name ?>"/>
@@ -152,12 +156,7 @@ use Bbdgnc\Finder\Enum\ServerEnum;
                 <input type="hidden" name="<?= Front::BLOCK_REFERENCE ?>" value="<?= $block->reference->identifier ?>"/>
                 <input type="hidden" name="<?= Front::BLOCK_REFERENCE_SERVER ?>"
                        value="<?= $block->reference->server ?>"/>
-                <input type="hidden" name="<?= Front::BLOCK_COUNT ?>" value="<?= $blockCount ?>"/>
-
-                <div class="td">
-                    <input type="submit" title="SMILES Editor" name="editor" value="Edit"/>
-                </div>
-
+                <input type="hidden" name="<?= Front::BLOCK_COUNT ?>" value="<?= $blockCount ?>" class="block-count"/>
                 <input type="hidden" name="<?= Front::CANVAS_INPUT_DATABASE ?>" value="<?= $database ?>"/>
                 <input type="hidden" name="<?= Front::CANVAS_INPUT_SEARCH_BY ?>" value="<?= $search ?>"/>
                 <input type="hidden" name="<?= Front::CANVAS_INPUT_NAME ?>" value="<?= $name ?>"/>
