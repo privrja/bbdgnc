@@ -80,4 +80,18 @@ abstract class CrudModel extends CI_Model {
         $this->db->trans_complete();
     }
 
+    /**
+     * Commit
+     */
+    public function commit() {
+        $this->db->trans_commit();
+    }
+
+    /**
+     * Rollback
+     */
+    public function rollback() {
+        $this->db->trans_rollback();
+    }
+
 }

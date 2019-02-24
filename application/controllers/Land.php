@@ -566,6 +566,7 @@ class Land extends CI_Controller {
 
         $modifications = [];
         $branchChar = ModificationHelperTypeEnum::startModification($sequenceType);
+        var_dump($branchChar);
         for ($index = 0; $index < 3; ++$index) {
             $modificationName = $this->input->post($branchChar . Front::MODIFICATION_NAME);
             if (isset($modificationName)) {
@@ -575,10 +576,11 @@ class Land extends CI_Controller {
                 $modificationTerminalC = $this->input->post($branchChar . Front::MODIFICATION_TERMINAL_C);
                 $modification = new ModificationTO($modificationName, $modificationFormula, $modificationMass, $modificationTerminalN, $modificationTerminalC);
                 $modifications[] = $modification;
-                $branchChar = ModificationHelperTypeEnum::changeBranchChar($branchChar, $sequenceType);
-                if (ModificationHelperTypeEnum::isEnd($branchChar)) {
-                    break;
-                }
+                var_dump($modification);
+            }
+            $branchChar = ModificationHelperTypeEnum::changeBranchChar($branchChar, $sequenceType);
+            if (ModificationHelperTypeEnum::isEnd($branchChar)) {
+                break;
             }
         }
 
@@ -589,8 +591,12 @@ class Land extends CI_Controller {
             $sequenceDatabase->save($sequenceTO, $mapBlocks, $modifications);
         } catch (SequenceInDatabaseException $e) {
             var_dump("Sequence in database");
+            $this->renderBlocks($this->getLastBlocksData());
+            return;
         } catch (Exception $e) {
             var_dump($e->getMessage());
+            $this->renderBlocks($this->getLastBlocksData());
+            return;
         }
 
         $this->load->view(Front::TEMPLATES_HEADER);

@@ -11,7 +11,7 @@ class ModificationHelperTypeEnum {
     const E = 'e';
 
     public static function startModification(int $sequenceType) {
-        return self::changeBranchChar(self::E, $sequenceType);
+        return self::changeBranchChar(self::S, $sequenceType);
     }
 
     public static function isEnd(string $branchChar) {

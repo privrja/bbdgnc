@@ -3,6 +3,7 @@
 use Bbdgnc\Base\Logger;
 use Bbdgnc\Enum\LoggerEnum;
 use Bbdgnc\Enum\ModificationTypeEnum;
+use Bbdgnc\Exception\BlockToSequenceInDatabaseException;
 use Bbdgnc\Exception\DatabaseException;
 use Bbdgnc\Exception\IllegalArgumentException;
 use Bbdgnc\Exception\SequenceInDatabaseException;
@@ -54,12 +55,15 @@ class SequenceDatabase {
             $this->saveModifications();
             $this->saveSequence();
             $this->saveBlocksToSequence();
+            $this->controller->block_model->endTransaction();
+        } catch (BlockToSequenceInDatabaseException $e) {
+            $this->controller->block_model->commit();
         } catch (DatabaseException $e) {
             Logger::log(LoggerEnum::ERROR, "Database exception: " . $e->getMessage() . " Trace: " . $e->getTraceAsString());
+            $this->controller->block_model->endTransaction();
             throw $e;
         } catch (Exception $e) {
             Logger::log(LoggerEnum::ERROR, $e->getMessage() . " Trace: " . $e->getTraceAsString());
-        } finally {
             $this->controller->block_model->endTransaction();
         }
     }
@@ -76,6 +80,7 @@ class SequenceDatabase {
     }
 
     private function saveModifications(): void {
+        var_dump($this->modifications);
         foreach ($this->modifications as $key => $modificationTO) {
             $id = $this->controller->modification_model->insert($modificationTO);
             $this->setupModifications($key, $id);
@@ -94,14 +99,22 @@ class SequenceDatabase {
         }
     }
 
+    /**
+     * @throws BlockToSequenceInDatabaseException
+     */
     private function saveBlocksToSequence(): void {
+        $exThrown = false;
         foreach ($this->blockIds as $blockId) {
             $blockToSequence = new BlockToSequenceTO($blockId, $this->sequenceId);
             try {
                 $this->controller->blockToSequence_model->insert($blockToSequence);
             } catch (UniqueConstraintException $e) {
                 Logger::log(LoggerEnum::WARNING, "Block to sequence already in database. Sequence id: " . $this->sequenceId . " block id: " . $blockId);
+                $exThrown = true;
             }
+        }
+        if ($exThrown) {
+            throw new BlockToSequenceInDatabaseException();
         }
     }
 
