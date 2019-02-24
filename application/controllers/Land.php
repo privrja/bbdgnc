@@ -566,12 +566,12 @@ class Land extends CI_Controller {
         $modifications = [];
         $branchChar = $this->changeBranchChar('s', $sequenceType);
         for ($index = 0; $index < 3; ++$index) {
-            $modificationName = $this->input->post($branchChar . "Modification");
+            $modificationName = $this->input->post($branchChar . Front::MODIFICATION_NAME);
             if (isset($modificationName)) {
-                $modificationFormula = $this->input->post($branchChar . "Formula");
-                $modificationMass = $this->input->post($branchChar . "Mass");
-                $modificationTerminalN = $this->input->post($branchChar . "TerminalN");
-                $modificationTerminalC = $this->input->post($branchChar . "TerminalC");
+                $modificationFormula = $this->input->post($branchChar . Front::MODIFICATION_FORMULA);
+                $modificationMass = $this->input->post($branchChar . Front::MODIFICATION_MASS);
+                $modificationTerminalN = $this->input->post($branchChar . Front::MODIFICATION_TERMINAL_N);
+                $modificationTerminalC = $this->input->post($branchChar . Front::MODIFICATION_TERMINAL_C);
                 $modification = new ModificationTO($modificationName, $modificationFormula, $modificationMass, $modificationTerminalN, $modificationTerminalC);
                 $modifications[] = $modification;
                 $branchChar = $this->changeBranchChar($branchChar, $sequenceType);
