@@ -512,7 +512,6 @@ class Land extends CI_Controller {
             $this->errors = "Blocks data problem";
             throw new IllegalArgumentException();
         }
-        // TODO validate
     }
 
     private function getLastBlocksData() {
@@ -531,7 +530,6 @@ class Land extends CI_Controller {
         try {
             $this->validateSequence();
             $this->validateBlocks();
-            // TODO validate modification
         } catch (IllegalArgumentException $exception) {
             $this->renderBlocks($this->getLastBlocksData());
             $this->errors = "Sequence is already in database";
