@@ -67,9 +67,10 @@ class BlockCycloBranch extends AbstractCycloBranch {
             if ($referenceResult->isAccepted()) {
                 $arDatabaseReference[] = $referenceResult->getResult();
                 if ($arSmiles[$index] === "") {
-                    if ($referenceResult->getResult()->server === ServerEnum::PUBCHEM || $referenceResult->getResult()->server === ServerEnum::CHEBI) {
-                        $finder = FinderFactory::getFinder($referenceResult->getResult()->server);
+                    if ($referenceResult->getResult()->database === ServerEnum::PUBCHEM || $referenceResult->getResult()->database === ServerEnum::CHEBI) {
+                        $finder = FinderFactory::getFinder($referenceResult->getResult()->database);
                         $findResult = null;
+                        $outArResult = [];
                         try {
                             $findResult = $finder->findByIdentifier($referenceResult->getResult()->identifier, $outArResult);
                         } catch (BadTransferException $e) {
@@ -89,7 +90,8 @@ class BlockCycloBranch extends AbstractCycloBranch {
             $blockTO = new BlockTO(0, $arNames[$index], $arAcronyms[$index], $arSmiles[$index], ComputeEnum::UNIQUE_SMILES);
             $blockTO->formula = $arItems[self::FORMULA];
             $blockTO->mass = (float)$arItems[self::MASS];
-            $blockTO->reference = $arDatabaseReference[$index];
+            $blockTO->database = $arDatabaseReference[$index]->database;
+            $blockTO->identifier = $arDatabaseReference[$index]->identifier;
             $arBlocks[] = $blockTO->asEntity();
         }
         return new Accept($arBlocks, '');

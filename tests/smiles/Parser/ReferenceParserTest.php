@@ -23,7 +23,7 @@ final class ReferenceParserTest extends TestCase {
     public function testWithRightData() {
         $parser = new ReferenceParser();
         $reference = new ReferenceTO();
-        $reference->server = ServerEnum::NORINE;
+        $reference->database = ServerEnum::NORINE;
         $reference->identifier = 'NOR00863';
         $this->assertEquals(new Accept($reference, ''), $parser->parse(': NOR00863'));
     }
@@ -31,7 +31,7 @@ final class ReferenceParserTest extends TestCase {
     public function testWithRightData2() {
         $parser = new ReferenceParser();
         $reference = new ReferenceTO();
-        $reference->server = ServerEnum::NORINE;
+        $reference->database = ServerEnum::NORINE;
         $reference->identifier = 'NOR00001';
         $this->assertEquals(new Accept($reference, ' 5'), $parser->parse(': NOR00001 5'));
     }
@@ -39,7 +39,7 @@ final class ReferenceParserTest extends TestCase {
     public function testWithRightData3() {
         $parser = new ReferenceParser();
         $reference = new ReferenceTO();
-        $reference->server = ServerEnum::PDB;
+        $reference->database = ServerEnum::PDB;
         $reference->identifier = 'FOR';
         $this->assertEquals(new Accept($reference, ''), $parser->parse('PDB: FOR'));
     }
@@ -47,7 +47,7 @@ final class ReferenceParserTest extends TestCase {
     public function testWithRightData4() {
         $parser = new ReferenceParser();
         $reference = new ReferenceTO();
-        $reference->server = ServerEnum::PUBCHEM;
+        $reference->database = ServerEnum::PUBCHEM;
         $reference->identifier = 88;
         $this->assertEquals(new Accept($reference, ''), $parser->parse('CID: 88'));
     }
@@ -55,7 +55,7 @@ final class ReferenceParserTest extends TestCase {
     public function testWithRightData5() {
         $parser = new ReferenceParser();
         $reference = new ReferenceTO();
-        $reference->server = ServerEnum::CHEMSPIDER;
+        $reference->database = ServerEnum::CHEMSPIDER;
         $reference->identifier = 454123;
         $this->assertEquals(new Accept($reference, ''), $parser->parse('CSID: 454123'));
     }

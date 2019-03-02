@@ -6,7 +6,6 @@ use Bbdgnc\CycloBranch\BlockCycloBranch;
 use Bbdgnc\Enum\ComputeEnum;
 use Bbdgnc\Finder\Enum\ServerEnum;
 use Bbdgnc\TransportObjects\BlockTO;
-use Bbdgnc\TransportObjects\ReferenceTO;
 use PHPUnit\Framework\TestCase;
 
 final class BlockCycloBranchTest extends TestCase {
@@ -27,9 +26,8 @@ final class BlockCycloBranchTest extends TestCase {
         $blockTO = new BlockTO(0, "Phenylalanine", "Phe", "", ComputeEnum::NO);
         $blockTO->mass = 147.0684140000;
         $blockTO->formula = "C9H9NO";
-        $blockTO->reference = new ReferenceTO();
-        $blockTO->reference->server = ServerEnum::CHEMSPIDER;
-        $blockTO->reference->identifier = 969;
+        $blockTO->database = ServerEnum::CHEMSPIDER;
+        $blockTO->identifier = 969;
         $this->assertEquals([$blockTO->asEntity()], $result->getResult());
     }
 
@@ -44,13 +42,12 @@ final class BlockCycloBranchTest extends TestCase {
         for ($index = 0; $index < 4; ++$index) {
             $arExpected[$index]->mass = 71.0371137878;
             $arExpected[$index]->formula = "C3H5NO";
-            $arExpected[$index]->reference = new ReferenceTO();
-            $arExpected[$index]->reference->server = ServerEnum::CHEMSPIDER;
+            $arExpected[$index]->database = ServerEnum::CHEMSPIDER;
         }
-        $arExpected[0]->reference->identifier = 582;
-        $arExpected[1]->reference->identifier = 64234;
-        $arExpected[2]->reference->identifier = 234;
-        $arExpected[3]->reference->identifier = 1057;
+        $arExpected[0]->identifier = 582;
+        $arExpected[1]->identifier = 64234;
+        $arExpected[2]->identifier = 234;
+        $arExpected[3]->identifier = 1057;
         for ($index = 0; $index < 4; ++$index) {
             $arExpected[$index] = $arExpected[$index]->asEntity();
         }
@@ -64,9 +61,8 @@ final class BlockCycloBranchTest extends TestCase {
         $blockTO->mass = 140.0837296294;
         $blockTO->formula = "C8H12O2";
         $blockTO->uniqueSmiles = "CC(C)(C)CCC(=O)C(O)=O";
-        $blockTO->reference = new ReferenceTO();
-        $blockTO->reference->server = ServerEnum::PUBCHEM;
-        $blockTO->reference->identifier = 21197379;
+        $blockTO->database = ServerEnum::PUBCHEM;
+        $blockTO->identifier = 21197379;
         $this->assertEquals([$blockTO->asEntity()], $result->getResult());
     }
 
@@ -77,9 +73,8 @@ final class BlockCycloBranchTest extends TestCase {
         $blockTO->mass = 152.1201151357;
         $blockTO->formula = "C10H16O";
         $blockTO->uniqueSmiles = "CC(CCCCCC=C)C(O)=O";
-        $blockTO->reference = new ReferenceTO();
-        $blockTO->reference->server = ServerEnum::PUBCHEM;
-        $blockTO->reference->identifier = 17824924;
+        $blockTO->database = ServerEnum::PUBCHEM;
+        $blockTO->identifier = 17824924;
         $this->assertEquals([$blockTO->asEntity()], $result->getResult());
     }
 
