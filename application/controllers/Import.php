@@ -1,6 +1,9 @@
 <?php
 
 use Bbdgnc\Base\HelperEnum;
+use Bbdgnc\Base\ModelEnum;
+use Bbdgnc\CycloBranch\CycloBranch;
+use Bbdgnc\Enum\Front;
 
 class Import extends CI_Controller {
 
@@ -10,13 +13,13 @@ class Import extends CI_Controller {
     public function __construct() {
         parent::__construct();
         $this->load->helper(HelperEnum::HELPER_FORM, HelperEnum::HELPER_URL);
-        $this->load->model('block_model');
+        $this->load->model(ModelEnum::BLOCK_MODEL);
     }
 
     public function index() {
-        $this->load->view('templates/header');
+        $this->load->view(Front::TEMPLATES_HEADER);
         $this->load->view('import/index', ['error' => '']);
-        $this->load->view('templates/footer');
+        $this->load->view(Front::TEMPLATES_FOOTER);
     }
 
     public function upload() {

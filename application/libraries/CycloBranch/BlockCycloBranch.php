@@ -3,8 +3,10 @@
 namespace Bbdgnc\CycloBranch;
 
 use Bbdgnc\Base\FormulaHelper;
+use Bbdgnc\Base\Logger;
 use Bbdgnc\Enum\ComputeEnum;
 use Bbdgnc\Enum\Front;
+use Bbdgnc\Enum\LoggerEnum;
 use Bbdgnc\Finder\Enum\ResultEnum;
 use Bbdgnc\Finder\Enum\ServerEnum;
 use Bbdgnc\Finder\Exception\BadTransferException;
@@ -74,6 +76,7 @@ class BlockCycloBranch extends AbstractCycloBranch {
                         try {
                             $findResult = $finder->findByIdentifier($referenceResult->getResult()->identifier, $outArResult);
                         } catch (BadTransferException $e) {
+                            Logger::log(LoggerEnum::WARNING, "Block not found");
                         }
                         if ($findResult === ResultEnum::REPLY_OK_ONE) {
                             $arSmiles[$index] = $outArResult[Front::CANVAS_INPUT_SMILE];

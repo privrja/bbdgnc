@@ -41,8 +41,9 @@ abstract class AbstractCycloBranch implements ICycloBranch, IParser {
     public abstract function export();
 
     private function save($arBlocks) {
-        // TODO save to DB mozna by se hodilo vytvorit transakci kvuli chybe na radku asi neukladat ty co budou dobre
+        $this->controller->block_model->startTransaction();
         $this->controller->block_model->insertMore($arBlocks);
+        $this->controller->block_model->endTransaction();
     }
 
 }

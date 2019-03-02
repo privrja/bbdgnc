@@ -2,6 +2,7 @@
 
 use Bbdgnc\Base\BlockSplObjectStorage;
 use Bbdgnc\Base\HelperEnum;
+use Bbdgnc\Base\ModelEnum;
 use Bbdgnc\Base\SequenceHelper;
 use Bbdgnc\Enum\ComputeEnum;
 use Bbdgnc\Enum\Front;
@@ -33,10 +34,6 @@ class Land extends CI_Controller {
     const ERRORS = "errors";
 
     const COOKIE_BLOCKS = "cookie_blocks";
-    const BLOCK_MODEL = 'block_model';
-    const SEQUENCE_MODEL = "sequence_model";
-    const MODIFICATION_MODEL = "modification_model";
-    const BLOCK_TO_SEQUENCE_MODEL = "blockToSequence_model";
 
     private $errors = "";
 
@@ -59,10 +56,10 @@ class Land extends CI_Controller {
     public function __construct() {
         parent::__construct();
         $this->load->helper(array(HelperEnum::HELPER_FORM, HelperEnum::HELPER_URL, HelperEnum::HELPER_COOKIE));
-        $this->load->model(self::BLOCK_MODEL);
-        $this->load->model(self::SEQUENCE_MODEL);
-        $this->load->model(self::MODIFICATION_MODEL);
-        $this->load->model(self::BLOCK_TO_SEQUENCE_MODEL);
+        $this->load->model(ModelEnum::BLOCK_MODEL);
+        $this->load->model(ModelEnum::SEQUENCE_MODEL);
+        $this->load->model(ModelEnum::MODIFICATION_MODEL);
+        $this->load->model(ModelEnum::BLOCK_TO_SEQUENCE_MODEL);
     }
 
     /**

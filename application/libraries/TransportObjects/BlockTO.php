@@ -47,7 +47,7 @@ class BlockTO implements IEntity {
         $this->name = $name;
         $this->acronym = $acronym;
         $this->smiles = $smiles;
-        if (!$smiles == "") {
+        if ($smiles !== "") {
             switch ($compute) {
                 case ComputeEnum::FORMULA_MASS:
                     $this->computeFormulaAndMass();
