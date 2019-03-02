@@ -540,7 +540,7 @@ class Land extends CI_Controller {
             // TODO validate modification
         } catch (IllegalArgumentException $exception) {
             $this->renderBlocks($this->getLastBlocksData());
-            var_dump("ERROR");
+            $this->errors = "Sequence is already in database";
             return;
         }
 
@@ -568,7 +568,7 @@ class Land extends CI_Controller {
         $branchChar = ModificationHelperTypeEnum::startModification($sequenceType);
         for ($index = 0; $index < 3; ++$index) {
             $modificationName = $this->input->post($branchChar . Front::MODIFICATION_NAME);
-            if (isset($modificationName)) {
+            if (isset($modificationName) && $modificationName != '') {
                 $modificationFormula = $this->input->post($branchChar . Front::MODIFICATION_FORMULA);
                 $modificationMass = $this->input->post($branchChar . Front::MODIFICATION_MASS);
                 $modificationTerminalN = $this->input->post($branchChar . Front::MODIFICATION_TERMINAL_N);
