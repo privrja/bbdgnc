@@ -11,36 +11,31 @@
             <div class="thead t">
                 <div class="tr t">
                     <div class="td">Name</div>
-                    <div class="td">Acronym</div>
-                    <div class="td">Residue Formula</div>
-                    <div class="td">Neutral loss</div>
-                    <div class="td">Residue Mass</div>
-                    <div class="td">SMILES</div>
+                    <div class="td">Summary Formula</div>
+                    <div class="td">Monoisotopic Mass</div>
+                    <div class="td">N-terminal</div>
+                    <div class="td">C-terminal</div>
                     <div class="td">Reference</div>
                     <div class="td">Editor</div>
                 </div>
             </div>
             <div class="tbody">
-
-                <?php foreach ($blocks as $block): ?>
+                <?php foreach ($modifications as $modification): ?>
                     <?= form_open('land/block', array('class' => 'tr')); ?>
-                    <!--            --><? //= var_dump($block); ?><!--s-->
                     <div class="td">
-                        <?= $block['name']; ?>
+                        <?= $modification['name']; ?>
                     </div>
                     <div class="td">
-                        <?= $block['acronym']; ?>
+                        <?= $modification['formula'] ?>
                     </div>
                     <div class="td">
-                        <?= $block['residue'] ?>
+                        <?= $modification['mass'] ?>
                     </div>
                     <div class="td">
+                        <?= $modification['nterminal'] ?>
                     </div>
                     <div class="td">
-                        <?= $block['mass'] ?>
-                    </div>
-                    <div class="td">
-                        <?= $block['smiles'] ?>
+                        <?= $modification['cterminal'] ?>
                     </div>
                     </form>
                 <?php endforeach; ?>
@@ -48,3 +43,4 @@
         </div>
     </article>
 </div>
+

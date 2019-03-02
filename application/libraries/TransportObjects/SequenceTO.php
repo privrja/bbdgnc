@@ -64,6 +64,9 @@ class SequenceTO implements IEntity {
             'smiles' => $this->smiles,
             'database' => $this->database,
             'identifier' => $this->identifier,
+            'c_modification_id' => $this->cModification,
+            'n_modification_id' => $this->nModification,
+            'b_modification_id' => $this->bModification,
         ];
     }
 

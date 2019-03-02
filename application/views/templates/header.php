@@ -20,22 +20,32 @@
         <ul>
             <a class="a-menu" href="<?= site_url("land") ?>">BBDGNC</a>
             <li class="main-menu">
-                <i class="fa fa-database"></i> My Database
+                <a href="<?= site_url("sequence") ?>" class="a-menu">
+                    <i class="fa fa-database"></i> Sequence
+                </a>
             </li>
+            <li class="main-menu">
+                <a href="<?= site_url("block") ?>" class="a-menu">
+                    <i class="fa fa-puzzle-piece"></i> Block
+                </a>
+            </li>
+            <li class="main-menu">
+                <a href="<?= site_url("modification") ?>" class="a-menu">
+                    <i class="fa fa-filter"></i> Modification
+                </a>
+            </li>
+        </ul>
+        <ul class="main-menu-right">
             <li class="main-menu">
                 <i class="fa fa-upload"></i> Import
             </li>
             <li class="main-menu">
                 <i class="fa fa-download"></i> Export
             </li>
-        </ul>
-        <ul class="main-menu-right">
-            <li class="main-menu">
-                <a href="<?= site_url("settings") ?>" class="a-menu"><i class="fa fa-cogs"></i> Settings</a>
-            </li>
-            <li class="main-menu">
-                <i class="fa fa-sign-out"></i> Sign Out
-            </li>
+            <!--            <li class="main-menu">-->
+            <!--                <a href="-->
+            <? //= site_url("settings") ?><!--" class="a-menu"><i class="fa fa-cogs"></i> Settings</a>-->
+            <!--            </li>-->
         </ul>
     </nav>
 
