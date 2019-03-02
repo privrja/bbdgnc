@@ -558,6 +558,8 @@ class Land extends CI_Controller {
             $blockTO->formula = $blocks[$index]->formula;
             $blockTO->mass = $blocks[$index]->mass;
             $blockTO->losses = $blocks[$index]->losses;
+            $blockTO->database = $blocks[$index]->database;
+            $blockTO->identifier = $blocks[$index]->identifier;
             $mapBlocks->attach($blockTO);
         }
 
@@ -571,7 +573,7 @@ class Land extends CI_Controller {
                 $modificationTerminalN = $this->input->post($branchChar . Front::MODIFICATION_TERMINAL_N);
                 $modificationTerminalC = $this->input->post($branchChar . Front::MODIFICATION_TERMINAL_C);
                 $modification = new ModificationTO($modificationName, $modificationFormula, $modificationMass, $modificationTerminalN, $modificationTerminalC);
-                $modifications[] = $modification;
+                $modifications[$index] = $modification;
             }
             $branchChar = ModificationHelperTypeEnum::changeBranchChar($branchChar, $sequenceType);
             if (ModificationHelperTypeEnum::isEnd($branchChar)) {

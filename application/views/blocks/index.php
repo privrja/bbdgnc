@@ -1,5 +1,7 @@
 <?php
 
+use Bbdgnc\Finder\Enum\ServerEnum;
+
 ?>
 
 
@@ -23,7 +25,6 @@
             <div class="tbody">
                 <?php foreach ($blocks as $block): ?>
                     <?= form_open('land/block', array('class' => 'tr')); ?>
-                    <!--            --><? //= var_dump($block); ?><!--s-->
                     <div class="td">
                         <?= $block['name']; ?>
                     </div>
@@ -42,9 +43,12 @@
                         <?= $block['smiles'] ?>
                     </div>
                     <div class="td">
-                        <?= $block['identifier'] ?>
+                        <?php if ($block['database'] !== null && !empty($block['identifier'])): ?>
+                            <a target="_blank"
+                               href=<?= ServerEnum::getLink($block['database'], $block['identifier']) ?>>
+                                <?= ServerEnum::$allValues[$block['database']]; ?></a>
+                        <?php endif; ?>
                     </div>
-                    <!--                --><? //= var_dump($block) ?>
                     </form>
                 <?php endforeach; ?>
             </div>

@@ -60,7 +60,6 @@ class BlockTO implements IEntity {
                     break;
             }
         }
-        $this->reference = new ReferenceTO();
     }
 
     private function computeAll() {
@@ -86,7 +85,16 @@ class BlockTO implements IEntity {
     }
 
     public function asEntity() {
-        return ['name' => $this->name, 'acronym' => $this->acronym, 'residue' => $this->formula, 'mass' => $this->mass, 'smiles' => $this->smiles, 'usmiles' => $this->uniqueSmiles];
+        return [
+            'name' => $this->name,
+            'acronym' => $this->acronym,
+            'residue' => $this->formula,
+            'mass' => $this->mass,
+            'smiles' => $this->smiles,
+            'usmiles' => $this->uniqueSmiles,
+            'database' => $this->database,
+            'identifier' => $this->identifier,
+        ];
     }
 
 }
