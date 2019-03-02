@@ -3,7 +3,7 @@ BEGIN TRANSACTION;
 CREATE TABLE block (
     id                  INTEGER         PRIMARY KEY,
     name                TEXT            NOT NULL,
-    acronym             TEXT            NOT NULL,
+    acronym             TEXT            NOT NULL      CHECK(length(acronym) > 0),
     residue             TEXT            NOT NULL,
     mass                REAL,
     smiles              TEXT,
