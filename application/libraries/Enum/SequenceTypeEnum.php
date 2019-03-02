@@ -29,4 +29,15 @@ class SequenceTypeEnum {
         self::OTHER => "other",
     );
 
+    /** @var array mapping int code to string */
+    public static $backValues = array(
+        "linear" => self::LINEAR,
+        "cyclic" => self::CYCLIC,
+        "branched" => self::BRANCH,
+        "branch-cyclic" => self::BRANCH_CYCLIC,
+        "linear-polyketide" => self::LINEAR_POLYKETIDE,
+        "cyclic-polyketide" => self::CYCLIC_POLYKETIDE,
+        "other" => self::OTHER,
+    );
+
 }

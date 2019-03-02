@@ -1,3 +1,4 @@
+BEGIN TRANSACTION;
 insert into block (name, acronym,residue, mass, smiles, usmiles) values ('Valine', 'Val', 'C5H11NO2', 117.079, 'CC(C)C(N)C(=O)O', 'CC(C)C(N)C(O)=O');
 INSERT INTO block (name, acronym, residue, mass) VALUES ('Ethanolamine', 'Eta', 'C2H5N', 43.0421991657);
 INSERT INTO block (name, acronym, residue, mass) VALUES ('Glycine', 'Gly', 'C2H3NO', 57.0214637236);
@@ -105,3 +106,4 @@ INSERT INTO block (name, acronym, residue, mass) VALUES ('beta-methoxy-tyrosine'
 INSERT INTO block (name, acronym, residue, mass, smiles) VALUES ('O-sulfate-2-hydroxy-3-methylpentanoic acid', 'OSu-Hmp', 'C6H10O5S', 194.0248941215, 'C(C(C(CC)C)O[S](=O)(=O)O)(=O)O');
 INSERT INTO block (name, acronym, residue, mass, smiles) VALUES ('methyloxazoline-isoleucine', 'MeOx-Ile', 'C11H18N2O', 194.1419132103, 'C(N)(C(C)CC)C1=NC(C(C1)C)C(=O)O');
 INSERT INTO block (name, acronym, residue, mass, smiles) VALUES ('di-chloro-N-methyl-Leucine', 'Cl2-NMe-Leu', 'C7H11Cl2NO', 195.0217699804, 'C(C(O)=O)(NC)CC(C)C(Cl)Cl');
+COMMIT;

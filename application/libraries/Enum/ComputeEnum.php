@@ -4,8 +4,12 @@ namespace Bbdgnc\Enum;
 
 class ComputeEnum {
 
-    const YES = 1;
-
     const NO = 0;
+
+    const ALL = 1;
+
+    const FORMULA_MASS = 2;
+
+    const UNIQUE_SMILES = 3;
 
 }

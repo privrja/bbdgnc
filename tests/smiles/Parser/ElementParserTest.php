@@ -84,6 +84,11 @@ final class ElementParserTest extends TestCase {
         $this->assertEquals(new Accept(PeriodicTableSingleton::getInstance()->getAtoms()['b'], 'r'), $parser->parse('br'));
     }
 
+    public function testWithRightData11() {
+        $parser = new ElementParser();
+        $this->assertEquals(new Accept(PeriodicTableSingleton::getInstance()->getAtoms()['Si']->asBracketElement(), ''), $parser->parse('[Si]'));
+    }
+
     public function testWithWrongData() {
         $parser = new ElementParser();
         $this->assertEquals(ElementParser::reject(), $parser->parse('H-5]'));

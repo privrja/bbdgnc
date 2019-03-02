@@ -1,39 +1,15 @@
-CREATE TABLE user (
-    id                  INTEGER       PRIMARY KEY,
-    mail                TEXT          NOT NULL,
-    password            BLOB          NOT NULL
-);
-
-CREATE TABLE container (
-    id                  INTEGER       PRIMARY KEY,
-    name                TEXT          NOT NULL,
-    share               INTEGER       NOT NULL    DEFAULT 0,
-    write_access        INTEGER       NOT NULL    DEFAULT 0,
-    user_id             INTEGER,
-    FOREIGN KEY (user_id) REFERENCES user(id)
-);
-
-CREATE TABLE reference (
-    id                  INTEGER   PRIMARY KEY,
-    csid                INTEGER,
-    cid                 INTEGER,
-    nor                 INTEGER,
-    pdb                 TEXT,
-    cas                 TEXT
-);
+BEGIN TRANSACTION;
 
 CREATE TABLE block (
     id                  INTEGER         PRIMARY KEY,
     name                TEXT            NOT NULL,
-    acronym             TEXT            NOT NULL,
+    acronym             TEXT            NOT NULL      CHECK(length(acronym) > 0),
     residue             TEXT            NOT NULL,
     mass                REAL,
     smiles              TEXT,
     usmiles             TEXT,
-    container_id        INTEGER,
-    reference_id        INTEGER,
-    FOREIGN KEY (container_id) REFERENCES container(id),
-    FOREIGN KEY (reference_id) REFERENCES reference(id)
+    database            INTEGER,
+    identifier          TEXT
 );
 
 CREATE TABLE sequence (
@@ -43,13 +19,15 @@ CREATE TABLE sequence (
     formula             TEXT      NOT NULL,
     mass                REAL,
     sequence            TEXT      NOT NULL,
-    branch_modification TEXT,
     smiles              TEXT,
-    usmiles             TEXT,
-    container_id        INTEGER,
-    reference_id        INTEGER,
-    FOREIGN KEY (container_id) REFERENCES container(id),
-    FOREIGN KEY (reference_id) REFERENCES reference(id)
+    database            INTEGER,
+    identifier          TEXT,
+    n_modification_id   INTEGER,
+    c_modification_id   INTEGER,
+    b_modification_id   INTEGER,
+    FOREIGN KEY (n_modification_id) REFERENCES modification(id),
+    FOREIGN KEY (c_modification_id) REFERENCES modification(id),
+    FOREIGN KEY (b_modification_id) REFERENCES modification(id)
 );
 
 CREATE TABLE modification (
@@ -58,24 +36,32 @@ CREATE TABLE modification (
     formula             TEXT         NOT NULL,
     mass                REAL,
     nterminal           INTEGER      NOT NULL    DEFAULT 0,
-    cterminal           INTEGER      NOT NULL    DEFAULT 0,
-    container_id        INTEGER,
-    FOREIGN KEY (container_id) REFERENCES container(id)
+    cterminal           INTEGER      NOT NULL    DEFAULT 0
 );
+
+-- CREATE TABLE losses (
+--     id        INTEGER   PRIMARY_KEY,
+--     name      TEXT      NOT NULL,
+--     block_id  INTEGER,
+--     FOREIGN KEY (block_id) REFERENCES block(id)
+--
+-- );
 
 CREATE TABLE b2s (
     block_id            INTEGER,
     sequence_id         INTEGER,
+    PRIMARY KEY (block_id, sequence_id),
     FOREIGN KEY (block_id) REFERENCES block(id),
     FOREIGN KEY (sequence_id) REFERENCES sequence(id)
 );
 
-CREATE UNIQUE INDEX UX_USER_MAIL ON user(mail);
-CREATE INDEX IX_BLOCK_ACRONYM ON block(acronym);
+CREATE UNIQUE INDEX UX_BLOCK_ACRONYM ON block(acronym);
 CREATE INDEX IX_BLOCK_NAME ON block(name);
-CREATE UNIQUE INDEX UX_BLOCK_USMILE ON block(usmiles);
-CREATE INDEX IX_SEQUENCE_NAME ON sequence(name);
-CREATE UNIQUE INDEX UX_SEQUENCE_USMILE ON sequence(usmiles);
+CREATE INDEX IX_BLOCK_RESIDUE ON block(residue);
+CREATE INDEX IX_BLOCK_USMILE ON block(usmiles);
+CREATE UNIQUE INDEX UX_SEQUENCE_NAME ON sequence(name);
 CREATE INDEX IX_MODIFICATION_NAME ON modification(name);
 
 PRAGMA foreign_keys = ON;
+
+COMMIT;

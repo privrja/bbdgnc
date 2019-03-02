@@ -1,11 +1,11 @@
 <?php
 
 use Bbdgnc\Enum\Front;
+use Bbdgnc\Finder\Enum\ServerEnum;
 
 ?>
 
 <script src="<?= AssetHelper::jsJsme() ?>"></script>
-
 <script>
 
     /**
@@ -22,7 +22,33 @@ use Bbdgnc\Enum\Front;
      */
     function getSmiles() {
         let smile = jsmeApplet.nonisomericSmiles();
-        redirectWithData({blockIdentifier: <?= $block->id ?>, blockSmile: smile, blocks: 'Blocks'});
+        let blockId = '<?= $block->id ?>';
+        let lastAcronym = '<?= $block->acronym ?>';
+        let acronym = document.getElementById('txt-block-acronym').value;
+        let sequence = document.getElementById('hdn-sequence').value;
+        if ("" === lastAcronym || !sequence.includes(`[${lastAcronym}]`)) {
+            sequence = sequenceReplace(blockId, acronym, sequence);
+        } else {
+            sequence = sequenceReplace(lastAcronym, acronym, sequence);
+        }
+        let databaseId = '<?= $block->databaseId ?>';
+        if (lastAcronym !== acronym) {
+            databaseId = null;
+        }
+        document.getElementById('hdn-sequence').value = sequence;
+        redirectWithData({blockIdentifier: blockId, blockDatabaseId: databaseId, blockSmile: smile, blocks: 'Blocks'});
+    }
+
+    function sequenceReplace(id, acronym, sequence) {
+        let length = id.toString().length;
+        let index = sequence.indexOf(`[${id}]`);
+        if (index === -1) {
+            return sequence;
+        }
+        index++;
+        let left = sequence.substr(0, index);
+        let right = sequence.substr(index + length);
+        return left + acronym + right;
     }
 
     /**
@@ -64,9 +90,13 @@ use Bbdgnc\Enum\Front;
         <input type="text" id="txt-block-losses" name="<?= Front::BLOCK_NEUTRAL_LOSSES ?>"
                value="<?= $block->losses ?>"/>
 
-        <label for="txt-block-reference">References</label>
+        <label for="sel-block-reference-database">Reference Database</label>
+        <?= form_dropdown(Front::BLOCK_REFERENCE_SERVER, ServerEnum::$allValues, set_value(Front::BLOCK_REFERENCE_SERVER),
+            'id="sel-block-reference-database" class="select" title="Database"'); ?>
+
+        <label for="txt-block-reference">Reference Identifier</label>
         <input type="text" id="txt-block-reference" name="<?= Front::BLOCK_REFERENCE ?>"
-               value="<?= $block->reference ?>"/>
+               value="<?= $block->identifier ?>"/>
 
         <button onclick="getSmiles()">Accept changes</button>
     </div>
@@ -81,5 +111,7 @@ use Bbdgnc\Enum\Front;
 <input type="hidden" name="<?= Front::CANVAS_INPUT_DEFLECTION ?>" value="<?= $deflection ?>"/>
 <input type="hidden" name="<?= Front::CANVAS_INPUT_IDENTIFIER ?>" value="<?= $identifier ?>"/>
 <input type="hidden" name="<?= Front::BLOCK_COUNT ?>" value="<?= $blockCount ?>"/>
+<input type="hidden" name="<?= Front::SEQUENCE ?>" value="<?= $sequence ?>" id="hdn-sequence"/>
+<input type="hidden" name="<?= Front::SEQUENCE_TYPE ?>" value="<?= $sequenceType ?>"/>
 
 </form>

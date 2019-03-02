@@ -445,10 +445,10 @@ final class GraphTest extends TestCase {
         new Graph('CCC[C---]');
     }
 
-    public function testGraphWrong15() {
-        $this->expectException(IllegalArgumentException::class);
-        new Graph('CCC[H]');
-    }
+//    public function testGraphWrong15() {
+//        $this->expectException(IllegalArgumentException::class);
+//        new Graph('CCC[H]');
+//    }
 
     public function testGraphWrong16() {
         $this->expectException(IllegalArgumentException::class);

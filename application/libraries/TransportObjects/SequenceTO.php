@@ -3,18 +3,13 @@
 namespace Bbdgnc\TransportObjects;
 
 use Bbdgnc\Enum\SequenceTypeEnum;
-use Bbdgnc\Finder\Enum\FindByEnum;
 use Bbdgnc\Finder\Enum\ServerEnum;
 
-class SequenceTO {
+class SequenceTO implements IEntity {
 
     public $database = ServerEnum::PUBCHEM;
 
-    public $search = FindByEnum::NAME;
-
     public $name = "";
-
-    public $match = false;
 
     public $smiles = "";
 
@@ -22,18 +17,57 @@ class SequenceTO {
 
     public $mass = "";
 
-    public $deflection = "";
+    public $identifier;
 
-    public $identifier = "";
-
-    public $blockCount = 0;
+    public $sequence = "";
 
     public $sequenceType = SequenceTypeEnum::LINEAR;
 
-    public $nTerminalModification = "";
+    public $nModification;
 
-    public $cTerminalModification = "";
+    public $cModification;
 
-    public $branchModification = "";
+    public $bModification;
+
+    /**
+     * SequenceTO constructor.
+     * @param int $database
+     * @param string $name
+     * @param string $smiles
+     * @param string $formula
+     * @param string $mass
+     * @param string $identifier
+     * @param string $sequence
+     * @param int $sequenceType
+     */
+    public function __construct(int $database, string $name, string $smiles, string $formula, string $mass, string $identifier, string $sequence, int $sequenceType) {
+        if ($database !== null && $identifier !== "" && $identifier !== null) {
+            $this->database = $database;
+            $this->identifier = $identifier;
+        }
+        $this->name = $name;
+        $this->smiles = $smiles;
+        $this->formula = $formula;
+        $this->mass = $mass;
+        $this->sequence = $sequence;
+        $this->sequenceType = $sequenceType;
+    }
+
+
+    public function asEntity() {
+        return [
+            'type' => $this->sequenceType,
+            'name' => $this->name,
+            'formula' => $this->formula,
+            'mass' => $this->mass,
+            'sequence' => $this->sequence,
+            'smiles' => $this->smiles,
+            'database' => $this->database,
+            'identifier' => $this->identifier,
+            'c_modification_id' => $this->cModification,
+            'n_modification_id' => $this->nModification,
+            'b_modification_id' => $this->bModification,
+        ];
+    }
 
 }

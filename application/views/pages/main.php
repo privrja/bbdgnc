@@ -46,12 +46,12 @@ use Bbdgnc\Finder\Enum\ServerEnum;
 
     <input type="submit" id="btn-canvas-find" class="btn-same" name="find" value="Find"/>
     <button type="button" id="btn-canvas-update" class="btn-same" onclick="resize()">Update</button>
-    <button type="button" id="button-canvas-easy-smile" class="btn-same" onclick="easy()">Canonical SMILES</button>
+    <button type="button" id="button-canvas-easy-smile" class="btn-same" onclick="easy()">Generic SMILES</button>
     <button type="button" id="btn-canvas-disintegrate" class="btn-same" name="blocks" value="Blocks"
             onclick="disintegrate()">Building Blocks
     </button>
     <button type="submit" id="btn-canvas-load" class="btn-same" name="load" value="Load">Load</button>
-    <input type="submit" class="btn-same" value="Save"/>
+    <button type="button" id="btn-canvas-save" class="btn-same" onclick="save()">Save</button>
 
     </form>
 

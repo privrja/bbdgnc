@@ -1,6 +1,8 @@
 <?php
 
 use Bbdgnc\Base\HelperEnum;
+use Bbdgnc\Base\ModelEnum;
+use Bbdgnc\Enum\Front;
 
 class Block extends CI_Controller {
 
@@ -9,14 +11,14 @@ class Block extends CI_Controller {
      */
     public function __construct() {
         parent::__construct();
-        $this->load->model('block_model');
-        $this->load->helper(HelperEnum::HELPER_URL);
+        $this->load->model(ModelEnum::BLOCK_MODEL);
+        $this->load->helper([HelperEnum::HELPER_URL, HelperEnum::HELPER_FORM]);
     }
 
     public function index() {
-        $data['blocks'] = $this->block_model->getAll();
-        $this->load->view('templates/header');
+        $data['blocks'] = $this->block_model->findAll();
+        $this->load->view(Front::TEMPLATES_HEADER);
         $this->load->view('blocks/index', $data);
-        $this->load->view('templates/footer');
+        $this->load->view(Front::TEMPLATES_FOOTER);
     }
 }

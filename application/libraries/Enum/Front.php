@@ -28,8 +28,15 @@ abstract class Front {
     const BLOCK_NEUTRAL_LOSSES = "blockLosses";
     const BLOCK_MASS = "blockMass";
     const BLOCK_REFERENCE = "blockReference";
+    const BLOCK_REFERENCE_SERVER = "blockReferenceServer";
+    const BLOCK_DATABASE_ID = "blockDatabaseId";
     const SEQUENCE_TYPE = "sequenceType";
     const SEQUENCE = "sequence";
+    const MODIFICATION_NAME = "Modification";
+    const MODIFICATION_FORMULA = "Formula";
+    const MODIFICATION_MASS = "Mass";
+    const MODIFICATION_TERMINAL_N = "TerminalN";
+    const MODIFICATION_TERMINAL_C = "TerminalC";
 
     const PAGES_MAIN = "pages/main";
     const PAGES_CANVAS = "pages/canvas";
@@ -37,6 +44,7 @@ abstract class Front {
     const PAGES_SELECT = "pages/select";
     const TEMPLATES_FOOTER = "templates/footer";
     const TEMPLATES_HEADER = "templates/header";
+
 
     const MAX_LENGTH_TEXT = 20;
     const STRING_TREE_DOTS = "...";

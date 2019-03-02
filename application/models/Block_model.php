@@ -1,27 +1,39 @@
 <?php
 
-class Block_model extends CI_Model {
+use Bbdgnc\Base\CrudModel;
+use Bbdgnc\TransportObjects\BlockTO;
+
+class Block_model extends CrudModel {
+
+    const TABLE_NAME = 'block';
 
     /**
-     * Block_model constructor.
+     * Get blocks from database with specific unique SMILES
+     * @param string $usmiles unique SMILES
+     * @return array
      */
-    public function __construct() {
-        $this->load->database();
-    }
-
-    public function getAll() {
-        $query = $this->db->get('block');
-        return $query->result_array();
-    }
-
     public function getBlockByUniqueSmiles(string $usmiles) {
-        $query = $this->db->get_where('block', array('usmiles' => $usmiles));
+        $query = $this->db->get_where(self::TABLE_NAME, array('usmiles' => $usmiles));
         $result = $query->result_array();
         if (empty($result)) {
             return [];
         }
         return $result[0];
-
     }
 
+    /**
+     * Insert blocks to database
+     * @param BlockTO[] $blocks array with blocks
+     */
+    public function insertMore(array $blocks) {
+        $this->db->insert_batch(self::TABLE_NAME, $blocks);
+    }
+
+    /**
+     * Get table name in database
+     * @return string table name in database
+     */
+    protected function getTableName(): string {
+        return self::TABLE_NAME;
+    }
 }

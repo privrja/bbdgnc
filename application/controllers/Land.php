@@ -1,18 +1,27 @@
 <?php
 
+use Bbdgnc\Base\BlockSplObjectStorage;
 use Bbdgnc\Base\HelperEnum;
+use Bbdgnc\Base\ModelEnum;
+use Bbdgnc\Base\SequenceHelper;
 use Bbdgnc\Enum\ComputeEnum;
 use Bbdgnc\Enum\Front;
 use Bbdgnc\Enum\LoggerEnum;
+use Bbdgnc\Enum\ModificationHelperTypeEnum;
+use Bbdgnc\Enum\SequenceTypeEnum;
+use Bbdgnc\Exception\IllegalArgumentException;
+use Bbdgnc\Exception\SequenceInDatabaseException;
 use Bbdgnc\Finder\Enum\FindByEnum;
 use Bbdgnc\Finder\Enum\ResultEnum;
 use Bbdgnc\Finder\Enum\ServerEnum;
+use Bbdgnc\Finder\Exception\BadTransferException;
 use Bbdgnc\Finder\FinderFactory;
 use Bbdgnc\Finder\IFinder;
 use Bbdgnc\Finder\PubChemFinder;
 use Bbdgnc\Smiles\Graph;
 use Bbdgnc\TransportObjects\BlockTO;
-use Bbdgnc\TransportObjects\ReferenceTO;
+use Bbdgnc\TransportObjects\ModificationTO;
+use Bbdgnc\TransportObjects\SequenceTO;
 
 class Land extends CI_Controller {
 
@@ -20,10 +29,9 @@ class Land extends CI_Controller {
     const COOKIE_NEXT_RESULTS = 'find-next-results';
 
     /** @var int expire time of cookie 1 hour */
-    const COOKIE_EXPIRE_HOUR = 3600;
+    const COOKIE_EXPIRE_HOUR = 360000;
 
     const ERRORS = "errors";
-
 
     const COOKIE_BLOCKS = "cookie_blocks";
 
@@ -48,7 +56,10 @@ class Land extends CI_Controller {
     public function __construct() {
         parent::__construct();
         $this->load->helper(array(HelperEnum::HELPER_FORM, HelperEnum::HELPER_URL, HelperEnum::HELPER_COOKIE));
-        $this->load->model('block_model');
+        $this->load->model(ModelEnum::BLOCK_MODEL);
+        $this->load->model(ModelEnum::SEQUENCE_MODEL);
+        $this->load->model(ModelEnum::MODIFICATION_MODEL);
+        $this->load->model(ModelEnum::BLOCK_TO_SEQUENCE_MODEL);
     }
 
     /**
@@ -94,14 +105,20 @@ class Land extends CI_Controller {
         $blockAcronym = $this->input->post(Front::BLOCK_ACRONYM);
         $blockName = $this->input->post(Front::BLOCK_NAME);
         $blockCount = $this->input->post(Front::BLOCK_COUNT);
+        $sequence = $this->input->post(Front::SEQUENCE);
+        $sequenceType = $this->input->post(Front::SEQUENCE_TYPE);
         $block = new BlockTO($blockIdentifier, $blockName, $blockAcronym, $blockSmile, ComputeEnum::NO);
+        $block->databaseId = $this->input->post(Front::BLOCK_DATABASE_ID);
         $block->formula = $this->input->post(Front::BLOCK_FORMULA);
         $block->mass = $this->input->post(Front::BLOCK_MASS);
         $block->losses = $this->input->post(Front::BLOCK_NEUTRAL_LOSSES);
-        $block->reference = $this->input->post(Front::BLOCK_REFERENCE);
+        $block->identifier = $this->input->post(Front::BLOCK_REFERENCE);
+        $block->database = $this->input->post(Front::BLOCK_REFERENCE_SERVER);
         $data = $this->getLastData();
         $data[Front::BLOCK] = $block;
         $data[Front::BLOCK_COUNT] = $blockCount;
+        $data[Front::SEQUENCE] = $sequence;
+        $data[Front::SEQUENCE_TYPE] = $sequenceType;
         $this->load->view('templates/header');
         $this->load->view('editor/index', $data);
         $this->load->view('templates/footer');
@@ -110,18 +127,21 @@ class Land extends CI_Controller {
     public function blocks() {
         $first = $this->input->post('first');
         $data = $this->getLastData();
-        $cookieVal = get_cookie(self::COOKIE_BLOCKS);
+        $cookieVal = get_cookie(self::COOKIE_BLOCKS . "0");
+        $data[Front::SEQUENCE] = $this->input->post(Front::SEQUENCE);
+        $data[Front::SEQUENCE_TYPE] = $this->input->post(Front::SEQUENCE_TYPE);
         if (!isset($first) && $cookieVal !== null) {
-            $blocks = json_decode($cookieVal);
+            $data[Front::BLOCK_COUNT] = $this->input->post(Front::BLOCK_COUNT);
+            $blocks = $this->loadCookies($data[Front::BLOCK_COUNT]);
             $blockIdentifier = $this->input->post(Front::BLOCK_IDENTIFIER);
             $blockTO = new BlockTO($blockIdentifier, $this->input->post(Front::BLOCK_NAME), $this->input->post(Front::BLOCK_ACRONYM), $this->input->post(Front::BLOCK_SMILE), ComputeEnum::NO);
+            $blockTO->databaseId = $this->input->post(Front::BLOCK_DATABASE_ID);
             $blockTO->formula = $this->input->post(Front::BLOCK_FORMULA);
             $blockTO->mass = $this->input->post(Front::BLOCK_MASS);
             $blockTO->losses = $this->input->post(Front::BLOCK_NEUTRAL_LOSSES);
-            $blockTO->reference = new ReferenceTO();
-            $blockTO->reference->cid = $this->input->post(Front::BLOCK_REFERENCE);
+            $blockTO->identifier = $this->input->post(Front::BLOCK_REFERENCE);
+            $blockTO->database = $this->input->post(Front::BLOCK_REFERENCE_SERVER);
             $blocks[$blockIdentifier] = $blockTO;
-            $data[Front::BLOCK_COUNT] = $this->input->post(Front::BLOCK_COUNT);
         } else {
             $blocks = [];
             $intCounter = 0;
@@ -132,18 +152,19 @@ class Land extends CI_Controller {
                 $arResult = $this->block_model->getBlockByUniqueSmiles($graph->getUniqueSmiles());
                 if (!empty($arResult)) {
                     $blockTO = new BlockTO($intCounter, $arResult['name'], $arResult['acronym'], $arResult['smiles'], ComputeEnum::NO);
+                    $blockTO->databaseId = $arResult['id'];
                     $blockTO->formula = $arResult['residue'];
                     $blockTO->mass = $arResult['mass'];
+                    $data[Front::SEQUENCE] = SequenceHelper::replaceSequence($data[Front::SEQUENCE], $blockTO->id, $blockTO->acronym);
                 } else {
                     $pubchemFinder = new PubChemFinder();
                     try {
                         $result = $pubchemFinder->findBySmile($smile, $outArResult, $outArExtResult);
                         switch ($result) {
                             case ResultEnum::REPLY_OK_ONE:
-                                $blockTO = new BlockTO($intCounter, $outArResult[Front::CANVAS_INPUT_NAME], "", $smile, ComputeEnum::NO);
-                                $blockTO->formula = $outArResult[Front::CANVAS_INPUT_FORMULA];
-                                $blockTO->mass = $outArResult[Front::CANVAS_INPUT_MASS];
-                                $blockTO->reference->cid = $outArResult[Front::CANVAS_INPUT_IDENTIFIER];
+                                $blockTO = new BlockTO($intCounter, $outArResult[Front::CANVAS_INPUT_NAME], "", $smile, ComputeEnum::FORMULA_MASS);
+                                $blockTO->identifier = $outArResult[Front::CANVAS_INPUT_IDENTIFIER];
+                                $blockTO->database = ServerEnum::PUBCHEM;
                                 break;
                             case ResultEnum::REPLY_OK_MORE:
                             case ResultEnum::REPLY_NONE:
@@ -151,25 +172,46 @@ class Land extends CI_Controller {
                                 $blockTO = new BlockTO($intCounter, "", "", $smile);
                                 break;
                         }
-                    } catch (\Bbdgnc\Finder\Exception\BadTransferException $e) {
+                    } catch (BadTransferException $e) {
                         $blockTO = new BlockTO($intCounter, "", "", $smile);
                     }
                 }
                 $blocks[] = $blockTO;
                 $intCounter++;
             }
-
             $data[Front::BLOCK_COUNT] = $intCounter;
         }
         $data[Front::BLOCKS] = $blocks;
+        $this->saveCookies($blocks);
+        $this->renderBlocks($data);
+    }
 
-        set_cookie(self::COOKIE_BLOCKS, json_encode($blocks), 3600);
 
+    /**
+     * @param BlockTO[] $blocks
+     */
+    private function saveCookies(array $blocks) {
+        foreach ($blocks as $block) {
+            set_cookie(self::COOKIE_BLOCKS . $block->id, json_encode($block), self::COOKIE_EXPIRE_HOUR);
+        }
+    }
+
+    private function loadCookies($blocksCount) {
+        $blocks = [];
+        for ($index = 0; $index < $blocksCount; ++$index) {
+            $cookieVal = get_cookie(self::COOKIE_BLOCKS . $index);
+            $blocks[] = json_decode($cookieVal);
+        }
+        return $blocks;
+    }
+
+    private function renderBlocks($data) {
         $this->load->view(Front::TEMPLATES_HEADER);
         $this->load->view(Front::PAGES_CANVAS);
         $this->load->view(Front::PAGES_MAIN, $this->getLastData());
         $this->load->view(Front::PAGES_BLOCKS, $data);
         $this->load->view(Front::TEMPLATES_FOOTER);
+
     }
 
     /**
@@ -194,6 +236,7 @@ class Land extends CI_Controller {
             $this->find($intDatabase, $intFindBy, $blMatch);
         } else if (isset($btnSave)) {
             /* Save to database */
+            $this->save();
         } else if (isset($btnLoad)) {
             /* Load from database */
         } else if (isset($btnBlocks)) {
@@ -338,7 +381,7 @@ class Land extends CI_Controller {
      * @param array $outArNextResult next results identifiers
      * @param array $arSearchOptions
      * @return int result code 0 => find none, 1 => find 1, 2 => find more than 1
-     * @throws \Bbdgnc\Finder\Exception\BadTransferException
+     * @throws BadTransferException
      */
     private function findBy($intDatabase, $intFindBy, &$outArResult = array(), &$outArNextResult = array(), $arSearchOptions = array()) {
         $finder = FinderFactory::getFinder($intDatabase, $arSearchOptions);
@@ -364,7 +407,7 @@ class Land extends CI_Controller {
      * @param array $outArResult output param with result
      * @return int result code 0 => find none, 1 => find 1, 2 => find more than 1
      * @see ResultEnum
-     * @throws \Bbdgnc\Finder\Exception\BadTransferException
+     * @throws BadTransferException
      */
     private function validateFormAndSearchByIdentifier($finder, &$outArResult) {
         $this->form_validation->set_rules(Front::CANVAS_INPUT_IDENTIFIER, "Identifier", Front::REQUIRED);
@@ -381,7 +424,7 @@ class Land extends CI_Controller {
      * @param array $outArNextResult output param with integers as identifiers of next results
      * @return int result code 0 => find none, 1 => find 1, 2 => find more than 1
      * @see ResultEnum
-     * @throws \Bbdgnc\Finder\Exception\BadTransferException
+     * @throws BadTransferException
      */
     private function validateFormAndSearchByName($finder, &$outArResult, &$outArNextResult) {
         $this->form_validation->set_rules(Front::CANVAS_INPUT_NAME, "Name", Front::REQUIRED);
@@ -398,7 +441,7 @@ class Land extends CI_Controller {
      * @param array $outArNextResult output param with integers as identifiers of next results
      * @return int result code 0 => find none, 1 => find 1, 2 => find more than 1
      * @see ResultEnum
-     * @throws \Bbdgnc\Finder\Exception\BadTransferException
+     * @throws BadTransferException
      */
     private function validateFormAndSearchByFormula($finder, &$outArResult, &$outArNextResult) {
         $this->form_validation->set_rules(Front::CANVAS_INPUT_FORMULA, "Formula", Front::REQUIRED);
@@ -415,7 +458,7 @@ class Land extends CI_Controller {
      * @param array $outArNextResult output param with integers as identifiers of next results
      * @return int result code 0 => find none, 1 => find 1, 2 => find more than 1
      * @see ResultEnum
-     * @throws \Bbdgnc\Finder\Exception\BadTransferException
+     * @throws BadTransferException
      */
     private function validateFormAndSearchBySmiles($finder, &$outArResult, &$outArNextResult) {
         $this->form_validation->set_rules(Front::CANVAS_INPUT_SMILE, "SMILES", Front::REQUIRED);
@@ -432,7 +475,7 @@ class Land extends CI_Controller {
      * @param array $outArNextResult output param with integers as identifiers of next results
      * @return int result code 0 => find none, 1 => find 1, 2 => find more than 1
      * @see ResultEnum
-     * @throws \Bbdgnc\Finder\Exception\BadTransferException
+     * @throws BadTransferException
      */
     private function validateFormAndSearchByMass($finder, &$outArResult, &$outArNextResult) {
         $this->form_validation->set_rules(Front::CANVAS_INPUT_MASS, "Mass", Front::REQUIRED);
@@ -440,6 +483,120 @@ class Land extends CI_Controller {
             return ResultEnum::REPLY_NONE;
         }
         return $finder->findByMass($this->input->post(Front::CANVAS_INPUT_MASS), $this->input->post(Front::CANVAS_INPUT_DEFLECTION), $outArResult, $outArNextResult);
+    }
+
+    private function validateSequence() {
+        $this->form_validation->set_rules(Front::SEQUENCE_TYPE, 'Sequence Type', Front::REQUIRED);
+        $this->form_validation->set_rules(Front::CANVAS_INPUT_NAME, 'Sequence Name', Front::REQUIRED);
+        $this->form_validation->set_rules(Front::CANVAS_INPUT_FORMULA, 'Sequence Formula', Front::REQUIRED);
+        $this->form_validation->set_rules(Front::CANVAS_INPUT_MASS, 'Sequence Mass', Front::REQUIRED);
+        $this->form_validation->set_rules(Front::SEQUENCE, 'Sequence', Front::REQUIRED);
+        $this->form_validation->set_rules(Front::CANVAS_INPUT_SMILE, 'Sequence SMILES', Front::REQUIRED);
+        if ($this->form_validation->run() === false) {
+            throw new IllegalArgumentException();
+        }
+        $this->validateSequenceString();
+    }
+
+    private function validateSequenceString() {
+        $sequence = $this->input->post(Front::SEQUENCE);
+        if (preg_match('/\[\\d+\]/', $sequence)) {
+            $this->errors = "Sequence problem";
+            throw new IllegalArgumentException();
+        }
+    }
+
+    private function validateBlocks() {
+        $cookieVal = get_cookie(self::COOKIE_BLOCKS . "0");
+        if ($cookieVal === null) {
+            $this->errors = "Blocks data problem";
+            throw new IllegalArgumentException();
+        }
+    }
+
+    private function getLastBlocksData() {
+        $data[Front::BLOCK_COUNT] = $this->input->post(Front::BLOCK_COUNT);
+        $cookieVal = get_cookie(self::COOKIE_BLOCKS . "0");
+        if ($cookieVal !== null) {
+            $blocks = $this->loadCookies($data[Front::BLOCK_COUNT]);
+            $data[Front::BLOCKS] = $blocks;
+        }
+        $data[Front::SEQUENCE] = $this->input->post(Front::SEQUENCE);
+        $data[Front::SEQUENCE_TYPE] = SequenceTypeEnum::$values[$this->input->post(Front::SEQUENCE_TYPE)];
+        return $data;
+    }
+
+    private function save() {
+        try {
+            $this->validateSequence();
+            $this->validateBlocks();
+        } catch (IllegalArgumentException $exception) {
+            $this->renderBlocks($this->getLastBlocksData());
+            $this->errors = "Sequence is already in database";
+            return;
+        }
+
+        $sequenceType = $this->input->post(Front::SEQUENCE_TYPE);
+        $sequenceName = $this->input->post(Front::CANVAS_INPUT_NAME);
+        $sequenceFormula = $this->input->post(Front::CANVAS_INPUT_FORMULA);
+        $sequenceMass = $this->input->post(Front::CANVAS_INPUT_MASS);
+        $sequence = $this->input->post(Front::SEQUENCE);
+        $sequenceSmiles = $this->input->post(Front::CANVAS_INPUT_SMILE);
+        $sequenceDatabase = $this->input->post(Front::CANVAS_INPUT_DATABASE);
+        $sequenceIdentifier = $this->input->post(Front::CANVAS_INPUT_IDENTIFIER);
+        $lengthBlocks = $this->input->post(Front::BLOCK_COUNT);
+        $blocks = $this->loadCookies($lengthBlocks);
+        $mapBlocks = new BlockSplObjectStorage();
+        for ($index = 0; $index < $lengthBlocks; ++$index) {
+            $blockTO = new BlockTO($blocks[$index]->id, $blocks[$index]->name, $blocks[$index]->acronym, $blocks[$index]->smiles, ComputeEnum::UNIQUE_SMILES);
+            $blockTO->databaseId = $blocks[$index]->databaseId;
+            $blockTO->formula = $blocks[$index]->formula;
+            $blockTO->mass = $blocks[$index]->mass;
+            $blockTO->losses = $blocks[$index]->losses;
+            $blockTO->database = $blocks[$index]->database;
+            $blockTO->identifier = $blocks[$index]->identifier;
+            $mapBlocks->attach($blockTO);
+        }
+
+        $modifications = [];
+        $branchChar = ModificationHelperTypeEnum::startModification($sequenceType);
+        for ($index = 0; $index < 3; ++$index) {
+            $modificationName = $this->input->post($branchChar . Front::MODIFICATION_NAME);
+            if (isset($modificationName) && $modificationName != '') {
+                $modificationFormula = $this->input->post($branchChar . Front::MODIFICATION_FORMULA);
+                $modificationMass = $this->input->post($branchChar . Front::MODIFICATION_MASS);
+                $modificationTerminalN = $this->input->post($branchChar . Front::MODIFICATION_TERMINAL_N);
+                $modificationTerminalC = $this->input->post($branchChar . Front::MODIFICATION_TERMINAL_C);
+                $modification = new ModificationTO($modificationName, $modificationFormula, $modificationMass, $modificationTerminalN, $modificationTerminalC);
+                $modifications[$index] = $modification;
+            }
+            $branchChar = ModificationHelperTypeEnum::changeBranchChar($branchChar, $sequenceType);
+            if (ModificationHelperTypeEnum::isEnd($branchChar)) {
+                break;
+            }
+        }
+
+        $sequenceTO = new SequenceTO($sequenceDatabase, $sequenceName, $sequenceSmiles, $sequenceFormula, $sequenceMass, $sequenceIdentifier, $sequence, $sequenceType);
+        $sequenceTO->identifier = $sequenceIdentifier;
+        $sequenceTO->database = $sequenceDatabase;
+        $sequenceDatabase = new SequenceDatabase($this);
+
+        try {
+            $sequenceDatabase->save($sequenceTO, $mapBlocks, $modifications);
+        } catch (SequenceInDatabaseException $e) {
+            $this->errors = "Sequence is already in database";
+            $this->renderBlocks($this->getLastBlocksData());
+            return;
+        } catch (Exception $e) {
+            $this->errors = $e->getMessage();
+            $this->renderBlocks($this->getLastBlocksData());
+            return;
+        }
+
+        $this->load->view(Front::TEMPLATES_HEADER);
+        $this->load->view(Front::PAGES_CANVAS);
+        $this->load->view(Front::PAGES_MAIN, $this->getLastData());
+        $this->load->view(Front::TEMPLATES_FOOTER);
     }
 
 }

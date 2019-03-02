@@ -102,8 +102,14 @@ function resize() {
 }
 
 function disintegrate() {
-    let smiles = smilesDrawer.buildBlockSmiles();
-    let data = {blockSmiles: smiles, blocks: 'Blocks', first: true};
+    let smilesAndSequence = smilesDrawer.buildBlockSmiles();
+    let data = {
+        blockSmiles: smilesAndSequence[0],
+        blocks: 'Blocks',
+        first: true,
+        sequence: smilesAndSequence[1],
+        sequenceType: smilesAndSequence[2]
+    };
     redirectWithData(FORM_MAIN, data);
 }
 
@@ -169,6 +175,9 @@ function getCanvasHeight() {
     return document.getElementById(CANVAS_ID).offsetHeight;
 }
 
+/**
+ * enable/disable input for modification on type of sequence selected
+ */
 function sequenceTypeChanged() {
     switch (document.getElementById(SEQUENCE_TYPE).value) {
         case "0":
@@ -277,6 +286,14 @@ function smileToEasy(smile) {
             case '/':
             case '\\':
                 break;
+            case ')':
+                let index = stack.length - 1;
+                if (stack[index] === '(') {
+                    stack.pop();
+                } else {
+                    stack.push(c);
+                }
+                break;
             default:
                 stack.push(c);
                 break;
@@ -293,20 +310,32 @@ function smileToEasy(smile) {
 function isoText(stack) {
     let text = [];
     let c = ']';
+    let last = '';
     while (c != '[') {
         switch (c) {
             case '@':
+                break;
             case 'H':
+                if (last !== '@') {
+                    text.unshift(c);
+                }
                 break;
             default:
                 text.unshift(c);
                 break;
         }
+        last = c;
         c = stack.pop();
     }
     text.unshift('[');
 
+    if (text.length === 3 && text[1] === 'H') {
+        text = [];
+    }
     if (text.length === 3) {
+        text = text[1];
+    }
+    if (text.length === 4) {
         text = text[1];
     }
 
@@ -410,6 +439,31 @@ function drawLarge(canvasId) {
         largeSmilesDrawer.draw(tree, CANVAS_LARGE_ID, DEFAULT_SCREEN_MODE, false);
     });
 }
+
+function save() {
+    // TODO if sequence element is null return error
+    let sequence = document.getElementById("txt-sequence").value;
+    let data = {sequence: sequence, save: 'Save'};
+    data.sequenceType = document.getElementById("sel-sequence-type").value;
+    data.blockCount = document.getElementsByClassName("block-count")[0].value;
+    data.nModification = document.getElementById("txt-n-modification").value;
+    data.nFormula = document.getElementById("txt-n-formula").value;
+    data.nMass = document.getElementById("txt-n-mass").value;
+    data.nTerminalN = document.getElementById("chk-n-nterminal").checked;
+    data.nTerminalC = document.getElementById("chk-n-cterminal").checked;
+    data.cModification = document.getElementById("txt-c-modification").value;
+    data.cFormula = document.getElementById("txt-c-formula").value;
+    data.cMass = document.getElementById("txt-c-mass").value;
+    data.cTerminalN = document.getElementById("chk-c-nterminal").checked;
+    data.cTerminalC = document.getElementById("chk-c-cterminal").checked;
+    data.bModification = document.getElementById("txt-b-modification").value;
+    data.bFormula = document.getElementById("txt-b-formula").value;
+    data.bMass = document.getElementById("txt-b-mass").value;
+    data.bTerminalN = document.getElementById("chk-b-nterminal").checked;
+    data.bTerminalC = document.getElementById("chk-b-cterminal").checked;
+    redirectWithData(FORM_MAIN, data);
+}
+
 
 function redirectWithData(formId, data) {
     let form = document.getElementById(formId);

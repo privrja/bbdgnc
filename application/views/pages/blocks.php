@@ -2,6 +2,7 @@
 
 use Bbdgnc\Enum\Front;
 use Bbdgnc\Enum\SequenceTypeEnum;
+use Bbdgnc\Finder\Enum\ServerEnum;
 
 ?>
 
@@ -14,11 +15,11 @@ use Bbdgnc\Enum\SequenceTypeEnum;
             <p>Number of blocks: <?= $blockCount ?></p>
 
             <label for="sel-sequence-type">Type</label>
-            <?= form_dropdown(Front::CANVAS_INPUT_DATABASE, SequenceTypeEnum::$values, set_value(Front::SEQUENCE_TYPE),
+            <?= form_dropdown(Front::SEQUENCE_TYPE, SequenceTypeEnum::$values, SequenceTypeEnum::$backValues[$sequenceType],
                 'id="sel-sequence-type" class="select" title="Type" onchange="sequenceTypeChanged()"'); ?>
 
             <label for="txt-sequence">Sequence</label>
-            <input type="text" id="txt-sequence" name="sequence" value=""/>
+            <input type="text" id="txt-sequence" name="sequence" value="<?= $sequence ?>"/>
         </div>
 
         <div class="div-modification">
@@ -62,19 +63,19 @@ use Bbdgnc\Enum\SequenceTypeEnum;
         <div class="div-modification">
             <h4>Branch Modification</h4>
             <label for="txt-b-modification">Name</label>
-            <input type="text" id="txt-b-modification" name="bModification" value=""/>
+            <input type="text" id="txt-b-modification" name="bModification" value="" disabled/>
 
             <label for="txt-b-formula">Formula</label>
-            <input type="text" id="txt-b-formula" name="bFormula" value=""/>
+            <input type="text" id="txt-b-formula" name="bFormula" value="" disabled/>
 
             <label for="txt-b-mass">Monoisotopic Mass</label>
-            <input type="text" id="txt-b-mass" name="bMass" value=""/>
+            <input type="text" id="txt-b-mass" name="bMass" value="" disabled/>
 
             <label for="chk-b-nterminal" class="chk">N-terminal</label>
-            <input type="checkbox" id="chk-b-nterminal" name="bnTerminal" value=""/>
+            <input type="checkbox" id="chk-b-nterminal" name="bnTerminal" value="" disabled/>
 
             <label for="chk-b-cterminal" class="chk">C-terminal</label>
-            <input type="checkbox" id="chk-b-cterminal" name="bcTerminal" value=""/>
+            <input type="checkbox" id="chk-b-cterminal" name="bcTerminal" value="" disabled/>
         </div>
     </div>
 
@@ -84,9 +85,9 @@ use Bbdgnc\Enum\SequenceTypeEnum;
                 <div class="td"></div>
                 <div class="td">Name</div>
                 <div class="td">Acronym</div>
-                <div class="td">Formula</div>
+                <div class="td">Residue Formula</div>
                 <div class="td">Neutral loss</div>
-                <div class="td">Mass</div>
+                <div class="td">Residue Mass</div>
                 <div class="td">SMILES</div>
                 <div class="td">Reference</div>
                 <div class="td">Editor</div>
@@ -130,26 +131,32 @@ use Bbdgnc\Enum\SequenceTypeEnum;
                 </div>
 
                 <div class="td">
-                    <p><?= $block->reference->cid ?></p>
+                    <?php if ($block->database !== null && !empty($block->identifier)): ?>
+                        <a target="_blank"
+                           href=<?= ServerEnum::getLink($block->database, $block->identifier) ?>>
+                            <?= ServerEnum::$allValues[$block->database]; ?></a>
+                    <?php endif; ?>
                 </div>
 
                 <input type="hidden" name="<?= Front::BLOCK_SMILE ?>"
                        id="hidden-canvas-small-<?= $block->id ?>"
                        value="<?= $block->smiles ?>"/>
 
+                <div class="td">
+                    <input type="submit" title="SMILES Editor" name="editor" value="Edit"/>
+                </div>
+
                 <input type="hidden" name="<?= Front::BLOCK_IDENTIFIER ?>" value="<?= $block->id ?>"/>
+                <input type="hidden" name="<?= Front::BLOCK_DATABASE_ID ?>" value="<?= $block->databaseId ?>"/>
                 <input type="hidden" name="<?= Front::BLOCK_NAME ?>" value="<?= $block->name ?>"/>
                 <input type="hidden" name="<?= Front::BLOCK_ACRONYM ?>" value="<?= $block->acronym ?>"/>
                 <input type="hidden" name="<?= Front::BLOCK_FORMULA ?>" value="<?= $block->formula ?>"/>
                 <input type="hidden" name="<?= Front::BLOCK_MASS ?>" value="<?= $block->mass ?>"/>
                 <input type="hidden" name="<?= Front::BLOCK_NEUTRAL_LOSSES ?>" value="<?= $block->losses ?>"/>
-                <input type="hidden" name="<?= Front::BLOCK_REFERENCE ?>" value="<?= $block->reference->cid ?>"/>
-                <input type="hidden" name="<?= Front::BLOCK_COUNT ?>" value="<?= $blockCount ?>"/>
-
-                <div class="td">
-                    <input type="submit" title="SMILES Editor" name="editor" value="Edit"/>
-                </div>
-
+                <input type="hidden" name="<?= Front::BLOCK_REFERENCE ?>" value="<?= $block->identifier ?>"/>
+                <input type="hidden" name="<?= Front::BLOCK_REFERENCE_SERVER ?>"
+                       value="<?= $block->database ?>"/>
+                <input type="hidden" name="<?= Front::BLOCK_COUNT ?>" value="<?= $blockCount ?>" class="block-count"/>
                 <input type="hidden" name="<?= Front::CANVAS_INPUT_DATABASE ?>" value="<?= $database ?>"/>
                 <input type="hidden" name="<?= Front::CANVAS_INPUT_SEARCH_BY ?>" value="<?= $search ?>"/>
                 <input type="hidden" name="<?= Front::CANVAS_INPUT_NAME ?>" value="<?= $name ?>"/>
@@ -158,6 +165,8 @@ use Bbdgnc\Enum\SequenceTypeEnum;
                 <input type="hidden" name="<?= Front::CANVAS_INPUT_MASS ?>" value="<?= $mass ?>"/>
                 <input type="hidden" name="<?= Front::CANVAS_INPUT_DEFLECTION ?>" value="<?= $deflection ?>"/>
                 <input type="hidden" name="<?= Front::CANVAS_INPUT_IDENTIFIER ?>" value="<?= $identifier ?>"/>
+                <input type="hidden" name="<?= Front::SEQUENCE ?>" value="<?= $sequence ?>"/>
+                <input type="hidden" name="<?= Front::SEQUENCE_TYPE ?>" value="<?= $sequenceType ?>"/>
                 </form>
             <?php endforeach; ?>
         </div>

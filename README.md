@@ -12,6 +12,8 @@ PHP components need: libcurl, libxml, soap
 
 npm
 
+SQLite3
+
 ## Install
 Clone this repository
     
@@ -55,4 +57,11 @@ In php.ini only need to uncomment one line:
 Tested on XAMPP 5.6.38 / PHP 5.6.38
 
 
-    
+## Database
+
+Application use sqlite3 database.
+For creating database you'l need to create database file and run create script.
+
+    sqlite3 application/db/data.sqlite
+    .read application/db/create.sql
+
