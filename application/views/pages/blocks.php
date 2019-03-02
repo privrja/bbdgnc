@@ -131,10 +131,10 @@ use Bbdgnc\Finder\Enum\ServerEnum;
                 </div>
 
                 <div class="td">
-                    <?php if ($block->reference->server !== null && !empty($block->reference->identifier)): ?>
+                    <?php if ($block->database !== null && !empty($block->identifier)): ?>
                         <a target="_blank"
-                           href=<?= ServerEnum::getLink($block->reference->server, $block->reference->identifier) ?>>
-                            <?= ServerEnum::$allValues[$block->reference->server]; ?></a>
+                           href=<?= ServerEnum::getLink($block->database, $block->identifier) ?>>
+                            <?= ServerEnum::$allValues[$block->database]; ?></a>
                     <?php endif; ?>
                 </div>
 
@@ -153,9 +153,9 @@ use Bbdgnc\Finder\Enum\ServerEnum;
                 <input type="hidden" name="<?= Front::BLOCK_FORMULA ?>" value="<?= $block->formula ?>"/>
                 <input type="hidden" name="<?= Front::BLOCK_MASS ?>" value="<?= $block->mass ?>"/>
                 <input type="hidden" name="<?= Front::BLOCK_NEUTRAL_LOSSES ?>" value="<?= $block->losses ?>"/>
-                <input type="hidden" name="<?= Front::BLOCK_REFERENCE ?>" value="<?= $block->reference->identifier ?>"/>
+                <input type="hidden" name="<?= Front::BLOCK_REFERENCE ?>" value="<?= $block->identifier ?>"/>
                 <input type="hidden" name="<?= Front::BLOCK_REFERENCE_SERVER ?>"
-                       value="<?= $block->reference->server ?>"/>
+                       value="<?= $block->database ?>"/>
                 <input type="hidden" name="<?= Front::BLOCK_COUNT ?>" value="<?= $blockCount ?>" class="block-count"/>
                 <input type="hidden" name="<?= Front::CANVAS_INPUT_DATABASE ?>" value="<?= $database ?>"/>
                 <input type="hidden" name="<?= Front::CANVAS_INPUT_SEARCH_BY ?>" value="<?= $search ?>"/>

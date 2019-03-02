@@ -1,6 +1,7 @@
 <?php
 
 use Bbdgnc\Enum\SequenceTypeEnum;
+use Bbdgnc\Finder\Enum\ServerEnum;
 
 ?>
 
@@ -16,7 +17,6 @@ use Bbdgnc\Enum\SequenceTypeEnum;
                     <div class="td">Summary Formula</div>
                     <div class="td">Monoisotopic Mass</div>
                     <div class="td">Sequence</div>
-                    <div class="td">SMILES</div>
                     <div class="td">N-terminal</div>
                     <div class="td">C-terminal</div>
                     <div class="td">Branch</div>
@@ -50,6 +50,13 @@ use Bbdgnc\Enum\SequenceTypeEnum;
                     </div>
                     <div class="td">
                         <?= $sequence['b_modification_id'] ?>
+                    </div>
+                    <div class="td">
+                        <?php if ($sequence['database'] !== null && !empty($sequence['identifier'])): ?>
+                            <a target="_blank"
+                               href=<?= ServerEnum::getLink($sequence['database'], $sequence['identifier']) ?>>
+                                <?= ServerEnum::$allValues[$sequence['database']]; ?></a>
+                        <?php endif; ?>
                     </div>
                     </form>
                 <?php endforeach; ?>

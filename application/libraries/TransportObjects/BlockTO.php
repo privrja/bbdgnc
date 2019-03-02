@@ -29,8 +29,9 @@ class BlockTO implements IEntity {
 
     public $uniqueSmiles;
 
-    /** @var ReferenceTO $reference */
-    public $reference;
+    public $database;
+
+    public $identifier;
 
     /**
      * BlockTO constructor.

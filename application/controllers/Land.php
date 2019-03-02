@@ -20,7 +20,6 @@ use Bbdgnc\Finder\PubChemFinder;
 use Bbdgnc\Smiles\Graph;
 use Bbdgnc\TransportObjects\BlockTO;
 use Bbdgnc\TransportObjects\ModificationTO;
-use Bbdgnc\TransportObjects\ReferenceTO;
 use Bbdgnc\TransportObjects\SequenceTO;
 
 class Land extends CI_Controller {
@@ -29,7 +28,7 @@ class Land extends CI_Controller {
     const COOKIE_NEXT_RESULTS = 'find-next-results';
 
     /** @var int expire time of cookie 1 hour */
-    const COOKIE_EXPIRE_HOUR = 3600;
+    const COOKIE_EXPIRE_HOUR = 360000;
 
     const ERRORS = "errors";
 
@@ -116,8 +115,8 @@ class Land extends CI_Controller {
         $block->formula = $this->input->post(Front::BLOCK_FORMULA);
         $block->mass = $this->input->post(Front::BLOCK_MASS);
         $block->losses = $this->input->post(Front::BLOCK_NEUTRAL_LOSSES);
-        $block->reference->identifier = $this->input->post(Front::BLOCK_REFERENCE);
-        $block->reference->server = $this->input->post(Front::BLOCK_REFERENCE_SERVER);
+        $block->identifier = $this->input->post(Front::BLOCK_REFERENCE);
+        $block->database = $this->input->post(Front::BLOCK_REFERENCE_SERVER);
         $data = $this->getLastData();
         $data[Front::BLOCK] = $block;
         $data[Front::BLOCK_COUNT] = $blockCount;
@@ -143,9 +142,8 @@ class Land extends CI_Controller {
             $blockTO->formula = $this->input->post(Front::BLOCK_FORMULA);
             $blockTO->mass = $this->input->post(Front::BLOCK_MASS);
             $blockTO->losses = $this->input->post(Front::BLOCK_NEUTRAL_LOSSES);
-            $blockTO->reference = new ReferenceTO();
-            $blockTO->reference->identifier = $this->input->post(Front::BLOCK_REFERENCE);
-            $blockTO->reference->server = $this->input->post(Front::BLOCK_REFERENCE_SERVER);
+            $blockTO->identifier = $this->input->post(Front::BLOCK_REFERENCE);
+            $blockTO->database = $this->input->post(Front::BLOCK_REFERENCE_SERVER);
             $blocks[$blockIdentifier] = $blockTO;
         } else {
             $blocks = [];
@@ -168,9 +166,8 @@ class Land extends CI_Controller {
                         switch ($result) {
                             case ResultEnum::REPLY_OK_ONE:
                                 $blockTO = new BlockTO($intCounter, $outArResult[Front::CANVAS_INPUT_NAME], "", $smile, ComputeEnum::FORMULA_MASS);
-                                $blockTO->reference = new ReferenceTO();
-                                $blockTO->reference->identifier = $outArResult[Front::CANVAS_INPUT_IDENTIFIER];
-                                $blockTO->reference->server = ServerEnum::PUBCHEM;
+                                $blockTO->identifier = $outArResult[Front::CANVAS_INPUT_IDENTIFIER];
+                                $blockTO->database = ServerEnum::PUBCHEM;
                                 break;
                             case ResultEnum::REPLY_OK_MORE:
                             case ResultEnum::REPLY_NONE:
@@ -583,6 +580,8 @@ class Land extends CI_Controller {
         }
 
         $sequenceTO = new SequenceTO($sequenceDatabase, $sequenceName, $sequenceSmiles, $sequenceFormula, $sequenceMass, $sequenceIdentifier, $sequence, $sequenceType);
+        $sequenceTO->identifier = $sequenceIdentifier;
+        $sequenceTO->database = $sequenceDatabase;
         $sequenceDatabase = new SequenceDatabase($this);
 
         try {

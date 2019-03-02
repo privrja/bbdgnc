@@ -96,7 +96,7 @@ use Bbdgnc\Finder\Enum\ServerEnum;
 
         <label for="txt-block-reference">Reference Identifier</label>
         <input type="text" id="txt-block-reference" name="<?= Front::BLOCK_REFERENCE ?>"
-               value="<?= $block->reference->identifier ?>"/>
+               value="<?= $block->identifier ?>"/>
 
         <button onclick="getSmiles()">Accept changes</button>
     </div>

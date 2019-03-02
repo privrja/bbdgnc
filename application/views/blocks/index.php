@@ -21,7 +21,6 @@
                 </div>
             </div>
             <div class="tbody">
-
                 <?php foreach ($blocks as $block): ?>
                     <?= form_open('land/block', array('class' => 'tr')); ?>
                     <!--            --><? //= var_dump($block); ?><!--s-->
@@ -42,6 +41,10 @@
                     <div class="td">
                         <?= $block['smiles'] ?>
                     </div>
+                    <div class="td">
+                        <?= $block['identifier'] ?>
+                    </div>
+                    <!--                --><? //= var_dump($block) ?>
                     </form>
                 <?php endforeach; ?>
             </div>
