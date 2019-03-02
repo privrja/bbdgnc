@@ -23,7 +23,7 @@ class NorineReferenceParser implements IParser {
             return self::reject();
         }
         $reference = new ReferenceTO();
-        $reference->server = $norineResult->getResult();
+        $reference->database = $norineResult->getResult();
         $reference->identifier = $norineIdResult->getResult();
         return new Accept($reference, $norineIdResult->getRemainder());
     }

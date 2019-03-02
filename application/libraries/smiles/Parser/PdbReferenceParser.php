@@ -23,7 +23,7 @@ class PdbReferenceParser implements IParser {
             return self::reject();
         }
         $reference = new ReferenceTO();
-        $reference->server = $pdbResult->getResult();
+        $reference->database = $pdbResult->getResult();
         $reference->identifier = $pdbIdResult->getResult();
         return new Accept($reference, $pdbIdResult->getRemainder());
     }
