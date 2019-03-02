@@ -2,6 +2,7 @@
 
 use Bbdgnc\Base\HelperEnum;
 use Bbdgnc\Base\ModelEnum;
+use Bbdgnc\Enum\Front;
 
 class Sequence extends CI_Controller {
 
@@ -13,9 +14,9 @@ class Sequence extends CI_Controller {
 
     public function index() {
         $data['sequences'] = $this->sequence_model->findAll();
-        $this->load->view('templates/header');
+        $this->load->view(Front::TEMPLATES_HEADER);
         $this->load->view('sequences/index', $data);
-        $this->load->view('templates/footer');
+        $this->load->view(Front::TEMPLATES_FOOTER);
     }
 
 }

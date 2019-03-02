@@ -45,6 +45,7 @@ abstract class Front {
     const TEMPLATES_FOOTER = "templates/footer";
     const TEMPLATES_HEADER = "templates/header";
 
+
     const MAX_LENGTH_TEXT = 20;
     const STRING_TREE_DOTS = "...";
     const REQUIRED = "required";

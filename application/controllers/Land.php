@@ -492,12 +492,12 @@ class Land extends CI_Controller {
     }
 
     private function validateSequence() {
-        $this->form_validation->set_rules(Front::SEQUENCE_TYPE, 'Sequence Type', 'required');
-        $this->form_validation->set_rules(Front::CANVAS_INPUT_NAME, 'Sequence Name', 'required');
-        $this->form_validation->set_rules(Front::CANVAS_INPUT_FORMULA, 'Sequence Formula', 'required');
-        $this->form_validation->set_rules(Front::CANVAS_INPUT_MASS, 'Sequence Mass', 'required');
-        $this->form_validation->set_rules(Front::SEQUENCE, 'Sequence', 'required');
-        $this->form_validation->set_rules(Front::CANVAS_INPUT_SMILE, 'Sequence SMILES', 'required');
+        $this->form_validation->set_rules(Front::SEQUENCE_TYPE, 'Sequence Type', Front::REQUIRED);
+        $this->form_validation->set_rules(Front::CANVAS_INPUT_NAME, 'Sequence Name', Front::REQUIRED);
+        $this->form_validation->set_rules(Front::CANVAS_INPUT_FORMULA, 'Sequence Formula', Front::REQUIRED);
+        $this->form_validation->set_rules(Front::CANVAS_INPUT_MASS, 'Sequence Mass', Front::REQUIRED);
+        $this->form_validation->set_rules(Front::SEQUENCE, 'Sequence', Front::REQUIRED);
+        $this->form_validation->set_rules(Front::CANVAS_INPUT_SMILE, 'Sequence SMILES', Front::REQUIRED);
         if ($this->form_validation->run() === false) {
             throw new IllegalArgumentException();
         }

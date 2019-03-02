@@ -2,6 +2,7 @@
 
 use Bbdgnc\Base\HelperEnum;
 use Bbdgnc\Base\ModelEnum;
+use Bbdgnc\Enum\Front;
 
 class Modification extends CI_Controller {
 
@@ -13,10 +14,9 @@ class Modification extends CI_Controller {
 
     public function index() {
         $data['modifications'] = $this->modification_model->findAll();
-        $this->load->view('templates/header');
+        $this->load->view(Front::TEMPLATES_HEADER);
         $this->load->view('modifications/index', $data);
-        $this->load->view('templates/footer');
+        $this->load->view(Front::TEMPLATES_FOOTER);
     }
-
 
 }
