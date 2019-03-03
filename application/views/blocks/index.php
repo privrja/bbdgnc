@@ -9,6 +9,11 @@ use Bbdgnc\Finder\Enum\ServerEnum;
 
     <article>
         <h2>Blocks</h2>
+
+        <a href="<?= site_url("block/new") ?>">
+            Add New Block
+        </a>
+
         <div class="table t">
             <div class="thead t">
                 <div class="tr t">
@@ -49,7 +54,7 @@ use Bbdgnc\Finder\Enum\ServerEnum;
                                 <?= ServerEnum::$allValues[$block['database']]; ?></a>
                         <?php endif; ?>
                     </div>
-                    </form>
+                    <?= form_close(); ?>
                 <?php endforeach; ?>
             </div>
         </div>

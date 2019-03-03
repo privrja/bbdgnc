@@ -57,7 +57,6 @@ abstract class CrudModel extends CI_Model {
         $this->db->insert_batch($this->getTableName(), $blocks);
     }
 
-
     public function update() {
         // TODO
     }

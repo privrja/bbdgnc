@@ -21,4 +21,11 @@ class Block extends CI_Controller {
         $this->load->view('blocks/index', $data);
         $this->load->view(Front::TEMPLATES_FOOTER);
     }
+
+    public function new() {
+        $this->load->view(Front::TEMPLATES_HEADER);
+        $this->load->view('blocks/new');
+        $this->load->view(Front::TEMPLATES_FOOTER);
+    }
+
 }

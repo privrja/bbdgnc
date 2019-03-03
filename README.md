@@ -28,6 +28,10 @@ For install dev packages run
 
     composer install
     
+For install javascript dependencies run:
+    
+    npm install    
+    
 Configure base url in application/config/config.php
 Default value is http://localhost/ already set
 
