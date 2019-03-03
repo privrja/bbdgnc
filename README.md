@@ -50,8 +50,6 @@ Add a path to certificate in php.ini
 
     curl.cainfo="<path to certificate>\cacert.pem"
     
-Tested on DEVSERVER 17.0 
-
 ## XAMPP Windows configuration
 
 In php.ini only need to uncomment one line:
