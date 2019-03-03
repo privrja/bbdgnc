@@ -24,7 +24,7 @@ class ModificationTO implements IEntity {
      * @param $cTerminal
      * @param $nTerminal
      */
-    public function __construct($name, $formula, $mass, $cTerminal, $nTerminal) {
+    public function __construct(string $name, string $formula, $mass, bool $cTerminal, bool $nTerminal) {
         $this->name = $name;
         $this->formula = $formula;
         $this->mass = $mass;

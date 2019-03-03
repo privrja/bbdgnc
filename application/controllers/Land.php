@@ -2,6 +2,7 @@
 
 use Bbdgnc\Base\BlockSplObjectStorage;
 use Bbdgnc\Base\HelperEnum;
+use Bbdgnc\Base\LibraryEnum;
 use Bbdgnc\Base\ModelEnum;
 use Bbdgnc\Base\SequenceHelper;
 use Bbdgnc\Enum\ComputeEnum;
@@ -51,6 +52,7 @@ class Land extends CI_Controller {
         $this->load->model(ModelEnum::SEQUENCE_MODEL);
         $this->load->model(ModelEnum::MODIFICATION_MODEL);
         $this->load->model(ModelEnum::BLOCK_TO_SEQUENCE_MODEL);
+        $this->load->library(LibraryEnum::FORM_VALIDATION);
     }
 
     private function getData() {
@@ -260,8 +262,6 @@ class Land extends CI_Controller {
      * Find in specific database by specific param or save data to database
      */
     public function form() {
-        /* load form validation library */
-        $this->load->library("form_validation");
 
         /* get important input data */
         $btnFind = $this->input->post("find");
@@ -410,7 +410,7 @@ class Land extends CI_Controller {
         $arViewData[Front::CANVAS_INPUT_MASS] = $this->input->post(Front::CANVAS_INPUT_MASS);
         $arViewData[Front::CANVAS_INPUT_DEFLECTION] = $this->input->post(Front::CANVAS_INPUT_DEFLECTION);
         $arViewData[Front::CANVAS_INPUT_IDENTIFIER] = $this->input->post(Front::CANVAS_INPUT_IDENTIFIER);
-        $arViewData[self::ERRORS] = $this->errors;
+        $arViewData[Front::ERRORS] = $this->errors;
         return $arViewData;
     }
 
@@ -602,7 +602,6 @@ class Land extends CI_Controller {
         $modifications = [];
         $branchChar = ModificationHelperTypeEnum::startModification($sequenceType);
         for ($index = 0; $index < 3; ++$index) {
-            var_dump($branchChar);
             $modificationName = $this->input->post($branchChar . Front::MODIFICATION_NAME);
             if (isset($modificationName) && $modificationName != '') {
                 $modificationFormula = $this->input->post($branchChar . Front::MODIFICATION_FORMULA);
@@ -617,7 +616,6 @@ class Land extends CI_Controller {
                 break;
             }
         }
-        var_dump($modifications);
 
         $sequenceTO = new SequenceTO($sequenceDatabase, $sequenceName, $sequenceSmiles, $sequenceFormula, $sequenceMass, $sequenceIdentifier, $sequence, $sequenceType);
         $sequenceTO->identifier = $sequenceIdentifier;

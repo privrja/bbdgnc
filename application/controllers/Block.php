@@ -1,6 +1,7 @@
 <?php
 
 use Bbdgnc\Base\HelperEnum;
+use Bbdgnc\Base\LibraryEnum;
 use Bbdgnc\Base\Logger;
 use Bbdgnc\Base\ModelEnum;
 use Bbdgnc\Enum\ComputeEnum;
@@ -20,7 +21,7 @@ class Block extends CI_Controller {
         parent::__construct();
         $this->load->model(ModelEnum::BLOCK_MODEL);
         $this->load->helper([HelperEnum::HELPER_URL, HelperEnum::HELPER_FORM]);
-        $this->load->library('form_validation');
+        $this->load->library(LibraryEnum::FORM_VALIDATION);
     }
 
     public function index() {
