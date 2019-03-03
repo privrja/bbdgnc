@@ -19,4 +19,11 @@ class Sequence extends CI_Controller {
         $this->load->view(Front::TEMPLATES_FOOTER);
     }
 
+    public function detail($id = 1) {
+        $data['sequence'] = $this->sequence_model->findById($id);
+        $this->load->view(Front::TEMPLATES_HEADER);
+        $this->load->view('sequences/detail', $data);
+        $this->load->view(Front::TEMPLATES_FOOTER);
+    }
+
 }

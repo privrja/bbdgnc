@@ -28,4 +28,13 @@ class Block extends CI_Controller {
         $this->load->view(Front::TEMPLATES_FOOTER);
     }
 
+    public function detail($id = 1) {
+        $data['block'] = $this->block_model->findById($id);
+        $this->load->view(Front::TEMPLATES_HEADER);
+        $this->load->view('blocks/detail', $data);
+        $this->load->view(Front::TEMPLATES_FOOTER);
+    }
+
+
+
 }

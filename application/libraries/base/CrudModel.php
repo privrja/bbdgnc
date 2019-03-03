@@ -30,8 +30,7 @@ abstract class CrudModel extends CI_Model {
 
     public function findById($id) {
         $query = $this->db->get_where($this->getTableName(), array('id' => $id));
-        // TODO result only one result
-        return $query->result_array();
+        return $query->row_array();
     }
 
     /**

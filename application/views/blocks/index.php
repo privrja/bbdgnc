@@ -34,7 +34,7 @@ use Bbdgnc\Finder\Enum\ServerEnum;
                             <?= $block['name']; ?>
                         </div>
                         <div class="td">
-                            <a href="<?= site_url("block/" . $block['id']) ?>">
+                            <a href="<?= site_url("block/detail/" . $block['id']) ?>">
                                 <?= $block['acronym']; ?>
                             </a>
                         </div>

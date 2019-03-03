@@ -25,7 +25,7 @@
                 <?php foreach ($modifications as $modification): ?>
                     <div class='tr'>
                         <div class="td">
-                            <a href="<?= site_url("modification/" . $modification['id']) ?>">
+                            <a href="<?= site_url("modification/detail/" . $modification['id']) ?>">
                                 <?= $modification['name']; ?>
                             </a>
                         </div>

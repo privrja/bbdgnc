@@ -34,7 +34,7 @@ use Bbdgnc\Finder\Enum\ServerEnum;
                             <?= SequenceTypeEnum::$values[$sequence['type']]; ?>
                         </div>
                         <div class="td">
-                            <a href="<?= site_url("sequence/" . $sequence['id']) ?>">
+                            <a href="<?= site_url("sequence/detail/" . $sequence['id']) ?>">
                                 <?= $sequence['name']; ?>
                             </a>
                         </div>
