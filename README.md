@@ -4,7 +4,7 @@ Building Blocks Database Generator of Natural Compounds
 ## Requirements
 Apache or other similar server
 
-PHP 5.6 or higher
+PHP 7.2 or higher
 
 PHP components need: libcurl, libxml, soap
 
@@ -58,8 +58,6 @@ In php.ini only need to uncomment one line:
 
     extension=php_soap.dll
     
-Tested on XAMPP 5.6.38 / PHP 5.6.38
-
 
 ## Database
 
