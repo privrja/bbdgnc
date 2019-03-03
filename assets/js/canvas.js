@@ -70,6 +70,10 @@ document.addEventListener('DOMContentLoaded', function () {
     canvasRef.addEventListener('click', function (e) {
         smilesDrawer.handleMouseClick(e, offsetX, offsetY);
     });
+
+    if (document.getElementById(SEQUENCE_TYPE)) {
+        window.addEventListener('load', sequenceTypeChanged);
+    }
 });
 
 /**
