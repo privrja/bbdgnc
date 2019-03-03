@@ -11,7 +11,7 @@ use Bbdgnc\Finder\Enum\ServerEnum;
         <h2>Block Detail</h2>
 
         <div>
-            <a href="<?= site_url("block/edit") ?>">Edit</a>
+            <a href="<?= site_url("block/edit/" . $block['id']) ?>">Edit</a>
         </div>
         <div>Name: <?= $block['name']; ?></div>
         <div>Acronym <?= $block['acronym']; ?></div>

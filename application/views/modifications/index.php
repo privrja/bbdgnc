@@ -42,7 +42,7 @@
                             <?= $modification['cterminal'] ?>
                         </div>
                         <div class="td">
-                            <a href="<?= site_url("modification/edit") ?>">
+                            <a href="<?= site_url("modification/edit/" . $modification['id']) ?>">
                                 Edit
                             </a>
                         </div>

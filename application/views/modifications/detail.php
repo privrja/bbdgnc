@@ -9,7 +9,7 @@
         <h2>Modification Detail</h2>
 
         <div>
-            <a href="<?= site_url("modification/edit") ?>">Edit</a>
+            <a href="<?= site_url("modification/edit/" . $modification['id']) ?>">Edit</a>
         </div>
         <div>Name: <?= $modification['name']; ?></div>
         <div>Formula: <?= $modification['formula'] ?></div>

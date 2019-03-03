@@ -1,9 +1,12 @@
 <?php
 
 use Bbdgnc\Base\HelperEnum;
+use Bbdgnc\Base\Logger;
 use Bbdgnc\Base\ModelEnum;
 use Bbdgnc\Enum\ComputeEnum;
 use Bbdgnc\Enum\Front;
+use Bbdgnc\Enum\LoggerEnum;
+use Bbdgnc\Exception\UniqueConstraintException;
 use Bbdgnc\TransportObjects\BlockTO;
 
 class Block extends CI_Controller {
@@ -76,8 +79,14 @@ class Block extends CI_Controller {
 
         try {
             $this->block_model->insert($blockTO);
+        } catch (UniqueConstraintException $exception) {
+            $data[Front::ERRORS] = "Block with this acronym already in database";
+            Logger::log(LoggerEnum::WARNING, $exception->getMessage());
+            $this->renderNew($data);
+            return;
         } catch (Exception $exception) {
             $data[Front::ERRORS] = $exception->getMessage();
+            Logger::log(LoggerEnum::ERROR, $exception->getTraceAsString());
             $this->renderNew($data);
             return;
         }
@@ -94,6 +103,13 @@ class Block extends CI_Controller {
         $data['block'] = $this->block_model->findById($id);
         $this->load->view(Front::TEMPLATES_HEADER);
         $this->load->view('blocks/detail', $data);
+        $this->load->view(Front::TEMPLATES_FOOTER);
+    }
+
+    public function edit($id = 1) {
+        $data['block'] = $this->block_model->findById($id);
+        $this->load->view(Front::TEMPLATES_HEADER);
+        $this->load->view('blocks/edit', $data);
         $this->load->view(Front::TEMPLATES_FOOTER);
     }
 

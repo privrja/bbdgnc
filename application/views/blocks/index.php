@@ -57,7 +57,7 @@ use Bbdgnc\Finder\Enum\ServerEnum;
                             <?php endif; ?>
                         </div>
                         <div class="td">
-                            <a href="<?= site_url("block/edit") ?>">
+                            <a href="<?= site_url("block/edit/" . $block['id']) ?>">
                                 Edit
                             </a>
                         </div>

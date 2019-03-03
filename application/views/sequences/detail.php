@@ -9,7 +9,7 @@ use Bbdgnc\Finder\Enum\ServerEnum;
         <h2>Sequence Detail</h2>
 
         <div>
-            <a href="<?= site_url("sequence/edit") ?>">Edit</a>
+            <a href="<?= site_url("sequence/edit/" . $sequence['id']) ?>">Edit</a>
         </div>
         <div>Type: <?= $sequence['type']; ?></div>
         <div>Name: <?= $sequence['name']; ?></div>
