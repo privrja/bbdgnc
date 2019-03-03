@@ -44,7 +44,6 @@ class Block extends CI_Controller {
             return;
         }
         $formula = $this->input->post(Front::BLOCK_FORMULA);
-        $smiles = $this->input->post(Front::BLOCK_SMILES);
         $mass = $this->input->post(Front::BLOCK_MASS);
 
         $blockTO = new BlockTO(0, $this->input->post(Front::BLOCK_NAME),
@@ -76,7 +75,8 @@ class Block extends CI_Controller {
             }
             $blockTO->computeUniqueSmiles();
         }
-
+        $blockTO->database = $this->input->post(Front::BLOCK_IDENTIFIER);
+        $blockTO->identifier = $this->input->post(Front::BLOCK_REFERENCE_SERVER);
         try {
             $this->block_model->insert($blockTO);
         } catch (UniqueConstraintException $exception) {
@@ -108,6 +108,36 @@ class Block extends CI_Controller {
 
     public function edit($id = 1) {
         $data['block'] = $this->block_model->findById($id);
+        $this->form_validation->set_rules(Front::BLOCK_NAME, 'Name', Front::REQUIRED);
+        $this->form_validation->set_rules(Front::BLOCK_ACRONYM, 'Acronym', Front::REQUIRED);
+        $this->form_validation->set_rules(Front::BLOCK_FORMULA, 'Formula', Front::REQUIRED);
+        if ($this->form_validation->run() === false) {
+            $data[Front::ERRORS] = $this->errors;
+            $this->renderEditForm($data);
+            return;
+        }
+        $blockTO = new BlockTO(0,
+            $this->input->post(Front::BLOCK_NAME),
+            $this->input->post(Front::BLOCK_ACRONYM),
+            $this->input->post(Front::BLOCK_SMILES),
+            ComputeEnum::UNIQUE_SMILES);
+        $blockTO->formula = $this->input->post(Front::BLOCK_FORMULA);
+        $blockTO->mass = $this->input->post(Front::BLOCK_MASS);
+        $blockTO->database = $this->input->post(Front::BLOCK_REFERENCE_SERVER);
+        $blockTO->identifier = $this->input->post(Front::BLOCK_IDENTIFIER);
+
+        try {
+            $this->block_model->update($id, $blockTO);
+        } catch (Exception $exception) {
+            $data[Front::ERRORS] = $exception->getMessage();
+            Logger::log(LoggerEnum::ERROR, $exception->getTraceAsString());
+            $this->renderEditForm($data);
+            return;
+        }
+        $this->renderEditForm($data);
+    }
+
+    private function renderEditForm($data) {
         $this->load->view(Front::TEMPLATES_HEADER);
         $this->load->view('blocks/edit', $data);
         $this->load->view(Front::TEMPLATES_FOOTER);

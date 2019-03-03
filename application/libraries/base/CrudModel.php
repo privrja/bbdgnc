@@ -9,6 +9,8 @@ use mysql_xdevapi\Exception;
 
 abstract class CrudModel extends CI_Model {
 
+    const ID = 'id';
+
     public function __construct() {
         $this->load->database();
     }
@@ -29,7 +31,7 @@ abstract class CrudModel extends CI_Model {
     }
 
     public function findById($id) {
-        $query = $this->db->get_where($this->getTableName(), array('id' => $id));
+        $query = $this->db->get_where($this->getTableName(), array(self::ID => $id));
         return $query->row_array();
     }
 
@@ -56,8 +58,9 @@ abstract class CrudModel extends CI_Model {
         $this->db->insert_batch($this->getTableName(), $blocks);
     }
 
-    public function update() {
-        // TODO
+    public function update($id, IEntity $entity) {
+        $this->db->where(self::ID, $id);
+        $this->db->update($this->getTableName(), $entity->asEntity());
     }
 
     public function delete() {
