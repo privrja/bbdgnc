@@ -4,10 +4,10 @@ namespace Bbdgnc\Enum;
 
 class ModificationTypeEnum {
 
-    const N_MODIFICATION = 0;
+    const N_MODIFICATION = 'n';
 
-    const C_MODIFICATION = 1;
+    const C_MODIFICATION = 'c';
 
-    const BRANCH_MODIFICATION = 2;
+    const BRANCH_MODIFICATION = 'b';
 
 }

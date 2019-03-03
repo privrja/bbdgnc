@@ -113,5 +113,20 @@ use Bbdgnc\Finder\Enum\ServerEnum;
 <input type="hidden" name="<?= Front::BLOCK_COUNT ?>" value="<?= $blockCount ?>"/>
 <input type="hidden" name="<?= Front::SEQUENCE ?>" value="<?= $sequence ?>" id="hdn-sequence"/>
 <input type="hidden" name="<?= Front::SEQUENCE_TYPE ?>" value="<?= $sequenceType ?>"/>
+<input type="hidden" name="<?= Front::N_MODIFICATION_NAME ?>" value="<?= $nModification ?>"/>
+<input type="hidden" name="<?= Front::N_MODIFICATION_FORMULA ?>" value="<?= $nFormula ?>"/>
+<input type="hidden" name="<?= Front::N_MODIFICATION_MASS ?>" value="<?= $nMass ?>"/>
+<input type="hidden" name="<?= Front::N_MODIFICATION_TERMINAL_N ?>" value="<?= $nTerminalN ?>"/>
+<input type="hidden" name="<?= Front::N_MODIFICATION_TERMINAL_C ?>" value="<?= $nTerminalC ?>"/>
+<input type="hidden" name="<?= Front::C_MODIFICATION_NAME ?>" value="<?= $cModification ?>"/>
+<input type="hidden" name="<?= Front::C_MODIFICATION_FORMULA ?>" value="<?= $cFormula ?>"/>
+<input type="hidden" name="<?= Front::C_MODIFICATION_MASS ?>" value="<?= $cMass ?>"/>
+<input type="hidden" name="<?= Front::C_MODIFICATION_TERMINAL_N ?>" value="<?= $cTerminalN ?>"/>
+<input type="hidden" name="<?= Front::C_MODIFICATION_TERMINAL_C ?>" value="<?= $cTerminalC ?>"/>
+<input type="hidden" name="<?= Front::B_MODIFICATION_NAME ?>" value="<?= $bModification ?>"/>
+<input type="hidden" name="<?= Front::B_MODIFICATION_FORMULA ?>" value="<?= $bFormula ?>"/>
+<input type="hidden" name="<?= Front::B_MODIFICATION_MASS ?>" value="<?= $bMass ?>"/>
+<input type="hidden" name="<?= Front::B_MODIFICATION_TERMINAL_N ?>" value="<?= $bTerminalN ?>"/>
+<input type="hidden" name="<?= Front::B_MODIFICATION_TERMINAL_C ?>" value="<?= $bTerminalC ?>"/>
 
 </form>

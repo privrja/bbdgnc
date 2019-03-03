@@ -15,7 +15,7 @@ use Bbdgnc\Finder\Enum\ServerEnum;
             <p>Number of blocks: <?= $blockCount ?></p>
 
             <label for="sel-sequence-type">Type</label>
-            <?= form_dropdown(Front::SEQUENCE_TYPE, SequenceTypeEnum::$values, SequenceTypeEnum::$backValues[$sequenceType],
+            <?= form_dropdown(Front::SEQUENCE_TYPE, SequenceTypeEnum::$values, $sequenceType,
                 'id="sel-sequence-type" class="select" title="Type" onchange="sequenceTypeChanged()"'); ?>
 
             <label for="txt-sequence">Sequence</label>
@@ -26,56 +26,56 @@ use Bbdgnc\Finder\Enum\ServerEnum;
             <h4>N-terminal Modification</h4>
 
             <label for="txt-n-modification">Name</label>
-            <input type="text" id="txt-n-modification" name="nModification" value=""/>
+            <input type="text" id="txt-n-modification" name="nModification" value="<?= $nModification ?>"/>
 
             <label for="txt-n-formula">Formula</label>
-            <input type="text" id="txt-n-formula" name="nFormula" value=""/>
+            <input type="text" id="txt-n-formula" name="nFormula" value="<?= $nFormula ?>"/>
 
             <label for="txt-n-mass">Monoisotopic Mass</label>
-            <input type="text" id="txt-n-mass" name="nMass" value=""/>
+            <input type="text" id="txt-n-mass" name="nMass" value="<?= $nMass ?>"/>
 
             <label for="chk-n-nterminal" class="chk">N-terminal</label>
-            <input type="checkbox" id="chk-n-nterminal" name="nnTerminal" value=""/>
+            <input type="checkbox" id="chk-n-nterminal" name="nnTerminal" <?= Front::checked($nTerminalN) ?> />
 
             <label for="chk-n-cterminal" class="chk">C-terminal</label>
-            <input type="checkbox" id="chk-n-cterminal" name="ncTerminal" value=""/>
+            <input type="checkbox" id="chk-n-cterminal" name="ncTerminal" <?= Front::checked($nTerminalC) ?> />
         </div>
 
         <div class="div-modification">
             <h4>C-terminal Modification</h4>
 
             <label for="txt-c-modification">Name</label>
-            <input type="text" id="txt-c-modification" name="cModification" value=""/>
+            <input type="text" id="txt-c-modification" name="cModification" value="<?= $cModification ?>"/>
 
             <label for="txt-c-formula">Formula</label>
-            <input type="text" id="txt-c-formula" name="cFormula" value=""/>
+            <input type="text" id="txt-c-formula" name="cFormula" value="<?= $cFormula ?>"/>
 
             <label for="txt-c-mass">Monoisotopic Mass</label>
-            <input type="text" id="txt-c-mass" name="cMass" value=""/>
+            <input type="text" id="txt-c-mass" name="cMass" value="<?= $cMass ?>"/>
 
             <label for="chk-c-nterminal" class="chk">N-terminal</label>
-            <input type="checkbox" id="chk-c-nterminal" name="cnTerminal" value=""/>
+            <input type="checkbox" id="chk-c-nterminal" name="cnTerminal" <?= Front::checked($cTerminalN) ?>/>
 
             <label for="chk-c-cterminal" class="chk">C-terminal</label>
-            <input type="checkbox" id="chk-c-cterminal" name="ccTerminal" value=""/>
+            <input type="checkbox" id="chk-c-cterminal" name="ccTerminal" <?= Front::checked($cTerminalC) ?> />
         </div>
 
         <div class="div-modification">
             <h4>Branch Modification</h4>
             <label for="txt-b-modification">Name</label>
-            <input type="text" id="txt-b-modification" name="bModification" value="" disabled/>
+            <input type="text" id="txt-b-modification" name="bModification" value="<?= $bModification ?>" disabled/>
 
             <label for="txt-b-formula">Formula</label>
-            <input type="text" id="txt-b-formula" name="bFormula" value="" disabled/>
+            <input type="text" id="txt-b-formula" name="bFormula" value="<?= $bModification ?>" disabled/>
 
             <label for="txt-b-mass">Monoisotopic Mass</label>
-            <input type="text" id="txt-b-mass" name="bMass" value="" disabled/>
+            <input type="text" id="txt-b-mass" name="bMass" value="<?= $bModification ?>" disabled/>
 
             <label for="chk-b-nterminal" class="chk">N-terminal</label>
-            <input type="checkbox" id="chk-b-nterminal" name="bnTerminal" value="" disabled/>
+            <input type="checkbox" id="chk-b-nterminal" name="bnTerminal" <?= Front::checked($bTerminalN) ?> disabled/>
 
             <label for="chk-b-cterminal" class="chk">C-terminal</label>
-            <input type="checkbox" id="chk-b-cterminal" name="bcTerminal" value="" disabled/>
+            <input type="checkbox" id="chk-b-cterminal" name="bcTerminal" <?= Front::checked($bTerminalC) ?> disabled/>
         </div>
     </div>
 
@@ -96,7 +96,7 @@ use Bbdgnc\Finder\Enum\ServerEnum;
         <div class="tbody">
             <?php foreach ($blocks as $block): ?>
 
-                <?= form_open('land/block', array('class' => 'tr')); ?>
+                <?= form_open('land/block', array('class' => 'tr', 'id' => 'form-block-edit' . $block->id)); ?>
                 <div class="td">
                     <canvas id="canvas-small-<?= $block->id; ?>"
                             data-canvas-small-id="<?= $block->id ?>"
@@ -143,7 +143,7 @@ use Bbdgnc\Finder\Enum\ServerEnum;
                        value="<?= $block->smiles ?>"/>
 
                 <div class="td">
-                    <input type="submit" title="SMILES Editor" name="editor" value="Edit"/>
+                    <input type="submit" title="SMILES Editor" onclick="editorBlock('<?= $block->id ?>')"/>
                 </div>
 
                 <input type="hidden" name="<?= Front::BLOCK_IDENTIFIER ?>" value="<?= $block->id ?>"/>
@@ -157,6 +157,7 @@ use Bbdgnc\Finder\Enum\ServerEnum;
                 <input type="hidden" name="<?= Front::BLOCK_REFERENCE_SERVER ?>"
                        value="<?= $block->database ?>"/>
                 <input type="hidden" name="<?= Front::BLOCK_COUNT ?>" value="<?= $blockCount ?>" class="block-count"/>
+
                 <input type="hidden" name="<?= Front::CANVAS_INPUT_DATABASE ?>" value="<?= $database ?>"/>
                 <input type="hidden" name="<?= Front::CANVAS_INPUT_SEARCH_BY ?>" value="<?= $search ?>"/>
                 <input type="hidden" name="<?= Front::CANVAS_INPUT_NAME ?>" value="<?= $name ?>"/>
@@ -167,7 +168,8 @@ use Bbdgnc\Finder\Enum\ServerEnum;
                 <input type="hidden" name="<?= Front::CANVAS_INPUT_IDENTIFIER ?>" value="<?= $identifier ?>"/>
                 <input type="hidden" name="<?= Front::SEQUENCE ?>" value="<?= $sequence ?>"/>
                 <input type="hidden" name="<?= Front::SEQUENCE_TYPE ?>" value="<?= $sequenceType ?>"/>
-                </form>
+
+                <?= form_close(); ?>
             <?php endforeach; ?>
         </div>
     </div>

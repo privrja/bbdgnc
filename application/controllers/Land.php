@@ -41,14 +41,7 @@ class Land extends CI_Controller {
      * Get Default data for view
      * @return array
      */
-    private function getData() {
-        return array(
-            Front::CANVAS_INPUT_NAME => "", Front::CANVAS_INPUT_SMILE => "",
-            Front::CANVAS_INPUT_FORMULA => "", Front::CANVAS_INPUT_MASS => "",
-            Front::CANVAS_INPUT_DEFLECTION => "", Front::CANVAS_INPUT_IDENTIFIER => "",
-            self::ERRORS => ""
-        );
-    }
+    const ZERO = "0";
 
     /**
      * Land constructor.
@@ -61,6 +54,54 @@ class Land extends CI_Controller {
         $this->load->model(ModelEnum::MODIFICATION_MODEL);
         $this->load->model(ModelEnum::BLOCK_TO_SEQUENCE_MODEL);
     }
+
+    private function getData() {
+        return array(
+            Front::CANVAS_INPUT_NAME => "", Front::CANVAS_INPUT_SMILE => "",
+            Front::CANVAS_INPUT_FORMULA => "", Front::CANVAS_INPUT_MASS => "",
+            Front::CANVAS_INPUT_DEFLECTION => "", Front::CANVAS_INPUT_IDENTIFIER => "",
+            self::ERRORS => ""
+        );
+    }
+
+    private function getModificationEmptyData($data) {
+        $data[Front::N_MODIFICATION_NAME] = "";
+        $data[Front::N_MODIFICATION_FORMULA] = "";
+        $data[Front::N_MODIFICATION_MASS] = "";
+        $data[Front::N_MODIFICATION_TERMINAL_N] = "";
+        $data[Front::N_MODIFICATION_TERMINAL_C] = "";
+        $data[Front::C_MODIFICATION_NAME] = "";
+        $data[Front::C_MODIFICATION_FORMULA] = "";
+        $data[Front::C_MODIFICATION_MASS] = "";
+        $data[Front::C_MODIFICATION_TERMINAL_N] = "";
+        $data[Front::C_MODIFICATION_TERMINAL_C] = "";
+        $data[Front::B_MODIFICATION_NAME] = "";
+        $data[Front::B_MODIFICATION_FORMULA] = "";
+        $data[Front::B_MODIFICATION_MASS] = "";
+        $data[Front::B_MODIFICATION_TERMINAL_N] = "";
+        $data[Front::B_MODIFICATION_TERMINAL_C] = "";
+        return $data;
+    }
+
+    private function getModificationData($data) {
+        $data[Front::N_MODIFICATION_NAME] = $this->input->post(Front::N_MODIFICATION_NAME);
+        $data[Front::N_MODIFICATION_FORMULA] = $this->input->post(Front::N_MODIFICATION_FORMULA);
+        $data[Front::N_MODIFICATION_MASS] = $this->input->post(Front::N_MODIFICATION_MASS);
+        $data[Front::N_MODIFICATION_TERMINAL_N] = $this->input->post(Front::N_MODIFICATION_TERMINAL_N);
+        $data[Front::N_MODIFICATION_TERMINAL_C] = $this->input->post(Front::N_MODIFICATION_TERMINAL_C);
+        $data[Front::C_MODIFICATION_NAME] = $this->input->post(Front::C_MODIFICATION_NAME);
+        $data[Front::C_MODIFICATION_FORMULA] = $this->input->post(Front::C_MODIFICATION_FORMULA);
+        $data[Front::C_MODIFICATION_MASS] = $this->input->post(Front::C_MODIFICATION_MASS);
+        $data[Front::C_MODIFICATION_TERMINAL_N] = $this->input->post(Front::C_MODIFICATION_TERMINAL_N);
+        $data[Front::C_MODIFICATION_TERMINAL_C] = $this->input->post(Front::C_MODIFICATION_TERMINAL_C);
+        $data[Front::B_MODIFICATION_NAME] = $this->input->post(Front::B_MODIFICATION_NAME);
+        $data[Front::B_MODIFICATION_FORMULA] = $this->input->post(Front::B_MODIFICATION_FORMULA);
+        $data[Front::B_MODIFICATION_MASS] = $this->input->post(Front::B_MODIFICATION_MASS);
+        $data[Front::B_MODIFICATION_TERMINAL_N] = $this->input->post(Front::B_MODIFICATION_TERMINAL_N);
+        $data[Front::B_MODIFICATION_TERMINAL_C] = $this->input->post(Front::B_MODIFICATION_TERMINAL_C);
+        return $data;
+    }
+
 
     /**
      * Index - default view
@@ -84,7 +125,6 @@ class Land extends CI_Controller {
         $this->load->view(Front::PAGES_SELECT, $viewSelectData);
         $this->load->view(Front::TEMPLATES_FOOTER);
     }
-
 
     /**
      * Render editor or blocks
@@ -119,15 +159,16 @@ class Land extends CI_Controller {
         $data[Front::BLOCK_COUNT] = $blockCount;
         $data[Front::SEQUENCE] = $sequence;
         $data[Front::SEQUENCE_TYPE] = $sequenceType;
-        $this->load->view('templates/header');
+        $data = $this->getModificationData($data);
+        $this->load->view(Front::TEMPLATES_HEADER);
         $this->load->view('editor/index', $data);
-        $this->load->view('templates/footer');
+        $this->load->view(Front::TEMPLATES_FOOTER);
     }
 
     public function blocks() {
         $first = $this->input->post('first');
         $data = $this->getLastData();
-        $cookieVal = get_cookie(self::COOKIE_BLOCKS . "0");
+        $cookieVal = get_cookie(self::COOKIE_BLOCKS . self::ZERO);
         $data[Front::SEQUENCE] = $this->input->post(Front::SEQUENCE);
         $data[Front::SEQUENCE_TYPE] = $this->input->post(Front::SEQUENCE_TYPE);
         if (!isset($first) && $cookieVal !== null) {
@@ -142,6 +183,7 @@ class Land extends CI_Controller {
             $blockTO->identifier = $this->input->post(Front::BLOCK_REFERENCE);
             $blockTO->database = $this->input->post(Front::BLOCK_REFERENCE_SERVER);
             $blocks[$blockIdentifier] = $blockTO;
+            $data = $this->getModificationData($data);
         } else {
             $blocks = [];
             $intCounter = 0;
@@ -180,6 +222,7 @@ class Land extends CI_Controller {
                 $intCounter++;
             }
             $data[Front::BLOCK_COUNT] = $intCounter;
+            $data = $this->getModificationEmptyData($data);
         }
         $data[Front::BLOCKS] = $blocks;
         $this->saveCookies($blocks);
@@ -507,7 +550,7 @@ class Land extends CI_Controller {
     }
 
     private function validateBlocks() {
-        $cookieVal = get_cookie(self::COOKIE_BLOCKS . "0");
+        $cookieVal = get_cookie(self::COOKIE_BLOCKS . self::ZERO);
         if ($cookieVal === null) {
             $this->errors = "Blocks data problem";
             throw new IllegalArgumentException();
@@ -516,7 +559,7 @@ class Land extends CI_Controller {
 
     private function getLastBlocksData() {
         $data[Front::BLOCK_COUNT] = $this->input->post(Front::BLOCK_COUNT);
-        $cookieVal = get_cookie(self::COOKIE_BLOCKS . "0");
+        $cookieVal = get_cookie(self::COOKIE_BLOCKS . self::ZERO);
         if ($cookieVal !== null) {
             $blocks = $this->loadCookies($data[Front::BLOCK_COUNT]);
             $data[Front::BLOCKS] = $blocks;
@@ -531,8 +574,8 @@ class Land extends CI_Controller {
             $this->validateSequence();
             $this->validateBlocks();
         } catch (IllegalArgumentException $exception) {
-            $this->renderBlocks($this->getLastBlocksData());
             $this->errors = "Sequence is already in database";
+            $this->renderBlocksError();
             return;
         }
 
@@ -561,6 +604,7 @@ class Land extends CI_Controller {
         $modifications = [];
         $branchChar = ModificationHelperTypeEnum::startModification($sequenceType);
         for ($index = 0; $index < 3; ++$index) {
+            var_dump($branchChar);
             $modificationName = $this->input->post($branchChar . Front::MODIFICATION_NAME);
             if (isset($modificationName) && $modificationName != '') {
                 $modificationFormula = $this->input->post($branchChar . Front::MODIFICATION_FORMULA);
@@ -568,13 +612,14 @@ class Land extends CI_Controller {
                 $modificationTerminalN = $this->input->post($branchChar . Front::MODIFICATION_TERMINAL_N);
                 $modificationTerminalC = $this->input->post($branchChar . Front::MODIFICATION_TERMINAL_C);
                 $modification = new ModificationTO($modificationName, $modificationFormula, $modificationMass, $modificationTerminalN, $modificationTerminalC);
-                $modifications[$index] = $modification;
+                $modifications[$branchChar] = $modification;
             }
             $branchChar = ModificationHelperTypeEnum::changeBranchChar($branchChar, $sequenceType);
             if (ModificationHelperTypeEnum::isEnd($branchChar)) {
                 break;
             }
         }
+        var_dump($modifications);
 
         $sequenceTO = new SequenceTO($sequenceDatabase, $sequenceName, $sequenceSmiles, $sequenceFormula, $sequenceMass, $sequenceIdentifier, $sequence, $sequenceType);
         $sequenceTO->identifier = $sequenceIdentifier;
@@ -585,11 +630,11 @@ class Land extends CI_Controller {
             $sequenceDatabase->save($sequenceTO, $mapBlocks, $modifications);
         } catch (SequenceInDatabaseException $e) {
             $this->errors = "Sequence is already in database";
-            $this->renderBlocks($this->getLastBlocksData());
+            $this->renderBlocksError();
             return;
         } catch (Exception $e) {
             $this->errors = $e->getMessage();
-            $this->renderBlocks($this->getLastBlocksData());
+            $this->renderBlocksError();
             return;
         }
 
@@ -597,6 +642,12 @@ class Land extends CI_Controller {
         $this->load->view(Front::PAGES_CANVAS);
         $this->load->view(Front::PAGES_MAIN, $this->getLastData());
         $this->load->view(Front::TEMPLATES_FOOTER);
+    }
+
+    private function renderBlocksError() {
+        $data = $this->getLastBlocksData();
+        $data = $this->getModificationData($data);
+        $this->renderBlocks($data);
     }
 
 }

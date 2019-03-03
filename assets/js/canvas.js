@@ -105,6 +105,25 @@ function resize() {
     drawSmile();
 }
 
+function sequenceTypeNumber($sequenceType) {
+    switch ($sequenceType) {
+        case "linear":
+            return 0;
+        case "cyclic":
+            return 1;
+        case "branched":
+            return 2;
+        case "branch-cyclic":
+            return 3;
+        case "linear-polyketide":
+            return 4;
+        case "cyclic-polyketide":
+            return 5;
+        case "other":
+            return 6;
+    }
+}
+
 function disintegrate() {
     let smilesAndSequence = smilesDrawer.buildBlockSmiles();
     let data = {
@@ -112,7 +131,7 @@ function disintegrate() {
         blocks: 'Blocks',
         first: true,
         sequence: smilesAndSequence[1],
-        sequenceType: smilesAndSequence[2]
+        sequenceType: sequenceTypeNumber(smilesAndSequence[2])
     };
     redirectWithData(FORM_MAIN, data);
 }
@@ -445,7 +464,6 @@ function drawLarge(canvasId) {
 }
 
 function save() {
-    // TODO if sequence element is null return error
     let sequence = document.getElementById("txt-sequence").value;
     let data = {sequence: sequence, save: 'Save'};
     data.sequenceType = document.getElementById("sel-sequence-type").value;
@@ -466,6 +484,37 @@ function save() {
     data.bTerminalN = document.getElementById("chk-b-nterminal").checked;
     data.bTerminalC = document.getElementById("chk-b-cterminal").checked;
     redirectWithData(FORM_MAIN, data);
+}
+
+function editorBlock(identifier) {
+    console.log(identifier);
+    let data = {editor: 'Edit'};
+    data.database = document.getElementById("sel-canvas-database").value;
+    data.search = document.getElementById("sel-canvas-search").value;
+    data.name = document.getElementById("txt-canvas-name").value;
+    data.smile = document.getElementById("txt-canvas-smile").value;
+    data.formula = document.getElementById("txt-canvas-fle").value;
+    data.mass = document.getElementById("txt-canvas-mass").value;
+    data.deflection = document.getElementById("txt-canvas-mass-deflection").value;
+    data.identifier = document.getElementById("txt-canvas-identifier").value;
+    data.sequence = document.getElementById("txt-sequence").value;
+    data.sequenceType = document.getElementById("sel-sequence-type").value;
+    data.nModification = document.getElementById("txt-n-modification").value;
+    data.nFormula = document.getElementById("txt-n-formula").value;
+    data.nMass = document.getElementById("txt-n-mass").value;
+    data.nTerminalN = document.getElementById("chk-n-nterminal").checked;
+    data.nTerminalC = document.getElementById("chk-n-cterminal").checked;
+    data.cModification = document.getElementById("txt-c-modification").value;
+    data.cFormula = document.getElementById("txt-c-formula").value;
+    data.cMass = document.getElementById("txt-c-mass").value;
+    data.cTerminalN = document.getElementById("chk-c-nterminal").checked;
+    data.cTerminalC = document.getElementById("chk-c-cterminal").checked;
+    data.bModification = document.getElementById("txt-b-modification").value;
+    data.bFormula = document.getElementById("txt-b-formula").value;
+    data.bMass = document.getElementById("txt-b-mass").value;
+    data.bTerminalN = document.getElementById("chk-b-nterminal").checked;
+    data.bTerminalC = document.getElementById("chk-b-cterminal").checked;
+    redirectWithData("form-block-edit" + identifier, data);
 }
 
 

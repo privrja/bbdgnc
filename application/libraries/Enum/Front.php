@@ -37,6 +37,21 @@ abstract class Front {
     const MODIFICATION_MASS = "Mass";
     const MODIFICATION_TERMINAL_N = "TerminalN";
     const MODIFICATION_TERMINAL_C = "TerminalC";
+    const N_MODIFICATION_NAME = "nModification";
+    const N_MODIFICATION_FORMULA = "nFormula";
+    const N_MODIFICATION_MASS = "nMass";
+    const N_MODIFICATION_TERMINAL_N = "nTerminalN";
+    const N_MODIFICATION_TERMINAL_C = "nTerminalC";
+    const C_MODIFICATION_NAME = "cModification";
+    const C_MODIFICATION_FORMULA = "cFormula";
+    const C_MODIFICATION_MASS = "cMass";
+    const C_MODIFICATION_TERMINAL_N = "cTerminalN";
+    const C_MODIFICATION_TERMINAL_C = "cTerminalC";
+    const B_MODIFICATION_NAME = "bModification";
+    const B_MODIFICATION_FORMULA = "bFormula";
+    const B_MODIFICATION_MASS = "bMass";
+    const B_MODIFICATION_TERMINAL_N = "bTerminalN";
+    const B_MODIFICATION_TERMINAL_C = "bTerminalC";
 
     const PAGES_MAIN = "pages/main";
     const PAGES_CANVAS = "pages/canvas";
@@ -72,5 +87,9 @@ abstract class Front {
         } else {
             return "";
         }
+    }
+
+    public static function checked($checked) {
+        return $checked === "true" ? "checked" : "";
     }
 }

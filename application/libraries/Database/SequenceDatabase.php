@@ -117,7 +117,7 @@ class SequenceDatabase {
         }
     }
 
-    private function setupModifications(int $key, $id) {
+    private function setupModifications(string $key, $id) {
         switch ($key) {
             case ModificationTypeEnum::N_MODIFICATION:
                 $this->sequenceTO->nModification = $id;
