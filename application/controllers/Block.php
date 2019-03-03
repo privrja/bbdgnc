@@ -43,40 +43,7 @@ class Block extends CI_Controller {
             $this->renderNew($data);
             return;
         }
-        $formula = $this->input->post(Front::BLOCK_FORMULA);
-        $mass = $this->input->post(Front::BLOCK_MASS);
-
-        $blockTO = new BlockTO(0, $this->input->post(Front::BLOCK_NAME),
-            $this->input->post(Front::BLOCK_ACRONYM),
-            $smiles, ComputeEnum::NO);
-
-        if ($smiles === "") {
-            $blockTO->formula = $formula;
-            if ($mass === "") {
-                $blockTO->computeMass();
-            } else {
-                $blockTO->mass = $mass;
-            }
-        } else {
-            if ($formula === "") {
-                $blockTO->computeFormula();
-                if ($mass === "") {
-                    $blockTO->computeMass();
-                } else {
-                    $blockTO->mass = $mass;
-                }
-            } else {
-                $blockTO->formula = $formula;
-                if ($mass === "") {
-                    $blockTO->computeMass();
-                } else {
-                    $blockTO->mass = $mass;
-                }
-            }
-            $blockTO->computeUniqueSmiles();
-        }
-        $blockTO->database = $this->input->post(Front::BLOCK_IDENTIFIER);
-        $blockTO->identifier = $this->input->post(Front::BLOCK_REFERENCE_SERVER);
+        $blockTO = $this->setupNewBlock($smiles);
         try {
             $this->block_model->insert($blockTO);
         } catch (UniqueConstraintException $exception) {
@@ -116,16 +83,7 @@ class Block extends CI_Controller {
             $this->renderEditForm($data);
             return;
         }
-        $blockTO = new BlockTO(0,
-            $this->input->post(Front::BLOCK_NAME),
-            $this->input->post(Front::BLOCK_ACRONYM),
-            $this->input->post(Front::BLOCK_SMILES),
-            ComputeEnum::UNIQUE_SMILES);
-        $blockTO->formula = $this->input->post(Front::BLOCK_FORMULA);
-        $blockTO->mass = $this->input->post(Front::BLOCK_MASS);
-        $blockTO->database = $this->input->post(Front::BLOCK_REFERENCE_SERVER);
-        $blockTO->identifier = $this->input->post(Front::BLOCK_IDENTIFIER);
-
+        $blockTO = $this->setupBlock();
         try {
             $this->block_model->update($id, $blockTO);
         } catch (Exception $exception) {
@@ -141,6 +99,56 @@ class Block extends CI_Controller {
         $this->load->view(Front::TEMPLATES_HEADER);
         $this->load->view('blocks/edit', $data);
         $this->load->view(Front::TEMPLATES_FOOTER);
+    }
+
+    private function setupBlock() {
+        $blockTO = new BlockTO(0,
+            $this->input->post(Front::BLOCK_NAME),
+            $this->input->post(Front::BLOCK_ACRONYM),
+            $this->input->post(Front::BLOCK_SMILES),
+            ComputeEnum::UNIQUE_SMILES);
+        $blockTO->formula = $this->input->post(Front::BLOCK_FORMULA);
+        $blockTO->mass = $this->input->post(Front::BLOCK_MASS);
+        $blockTO->database = $this->input->post(Front::BLOCK_REFERENCE_SERVER);
+        $blockTO->identifier = $this->input->post(Front::BLOCK_IDENTIFIER);
+        return $blockTO;
+    }
+
+    private function setupNewBlock($smiles) {
+        $formula = $this->input->post(Front::BLOCK_FORMULA);
+        $mass = $this->input->post(Front::BLOCK_MASS);
+        $blockTO = new BlockTO(0, $this->input->post(Front::BLOCK_NAME),
+            $this->input->post(Front::BLOCK_ACRONYM),
+            $smiles, ComputeEnum::NO);
+
+        if ($smiles === "") {
+            $blockTO->formula = $formula;
+            if ($mass === "") {
+                $blockTO->computeMass();
+            } else {
+                $blockTO->mass = $mass;
+            }
+        } else {
+            if ($formula === "") {
+                $blockTO->computeFormula();
+                if ($mass === "") {
+                    $blockTO->computeMass();
+                } else {
+                    $blockTO->mass = $mass;
+                }
+            } else {
+                $blockTO->formula = $formula;
+                if ($mass === "") {
+                    $blockTO->computeMass();
+                } else {
+                    $blockTO->mass = $mass;
+                }
+            }
+            $blockTO->computeUniqueSmiles();
+        }
+        $blockTO->database = $this->input->post(Front::BLOCK_IDENTIFIER);
+        $blockTO->identifier = $this->input->post(Front::BLOCK_REFERENCE_SERVER);
+        return $blockTO;
     }
 
 }
