@@ -29,32 +29,39 @@ use Bbdgnc\Finder\Enum\ServerEnum;
             </div>
             <div class="tbody">
                 <?php foreach ($blocks as $block): ?>
-                    <?= form_open('land/block', array('class' => 'tr')); ?>
-                    <div class="td">
-                        <?= $block['name']; ?>
+                    <div class='tr'>
+                        <div class="td">
+                            <?= $block['name']; ?>
+                        </div>
+                        <div class="td">
+                            <a href="<?= site_url("block/" . $block['id']) ?>">
+                                <?= $block['acronym']; ?>
+                            </a>
+                        </div>
+                        <div class="td">
+                            <?= $block['residue'] ?>
+                        </div>
+                        <div class="td">
+                        </div>
+                        <div class="td">
+                            <?= $block['mass'] ?>
+                        </div>
+                        <div class="td">
+                            <?= $block['smiles'] ?>
+                        </div>
+                        <div class="td">
+                            <?php if ($block['database'] !== null && !empty($block['identifier'])): ?>
+                                <a target="_blank"
+                                   href=<?= ServerEnum::getLink($block['database'], $block['identifier']) ?>>
+                                    <?= ServerEnum::$allValues[$block['database']]; ?></a>
+                            <?php endif; ?>
+                        </div>
+                        <div class="td">
+                            <a href="<?= site_url("block/edit") ?>">
+                                Edit
+                            </a>
+                        </div>
                     </div>
-                    <div class="td">
-                        <?= $block['acronym']; ?>
-                    </div>
-                    <div class="td">
-                        <?= $block['residue'] ?>
-                    </div>
-                    <div class="td">
-                    </div>
-                    <div class="td">
-                        <?= $block['mass'] ?>
-                    </div>
-                    <div class="td">
-                        <?= $block['smiles'] ?>
-                    </div>
-                    <div class="td">
-                        <?php if ($block['database'] !== null && !empty($block['identifier'])): ?>
-                            <a target="_blank"
-                               href=<?= ServerEnum::getLink($block['database'], $block['identifier']) ?>>
-                                <?= ServerEnum::$allValues[$block['database']]; ?></a>
-                        <?php endif; ?>
-                    </div>
-                    <?= form_close(); ?>
                 <?php endforeach; ?>
             </div>
         </div>

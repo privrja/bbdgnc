@@ -7,6 +7,8 @@ use Bbdgnc\Finder\Enum\ServerEnum;
 
 class SequenceTO implements IEntity {
 
+    public $databaseId;
+
     public $database = ServerEnum::PUBCHEM;
 
     public $name = "";
