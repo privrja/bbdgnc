@@ -31,8 +31,6 @@ class Land extends CI_Controller {
     /** @var int expire time of cookie 1 hour */
     const COOKIE_EXPIRE_HOUR = 360000;
 
-    const ERRORS = "errors";
-
     const COOKIE_BLOCKS = "cookie_blocks";
 
     private $errors = "";
@@ -60,7 +58,7 @@ class Land extends CI_Controller {
             Front::CANVAS_INPUT_NAME => "", Front::CANVAS_INPUT_SMILE => "",
             Front::CANVAS_INPUT_FORMULA => "", Front::CANVAS_INPUT_MASS => "",
             Front::CANVAS_INPUT_DEFLECTION => "", Front::CANVAS_INPUT_IDENTIFIER => "",
-            self::ERRORS => ""
+            Front::ERRORS => ""
         );
     }
 

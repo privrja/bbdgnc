@@ -6,6 +6,8 @@ use Bbdgnc\Enum\Front;
 
 class Block extends CI_Controller {
 
+    private $errors = "";
+
     /**
      * Block constructor.
      */
@@ -13,6 +15,7 @@ class Block extends CI_Controller {
         parent::__construct();
         $this->load->model(ModelEnum::BLOCK_MODEL);
         $this->load->helper([HelperEnum::HELPER_URL, HelperEnum::HELPER_FORM]);
+        $this->load->library('form_validation');
     }
 
     public function index() {
@@ -23,9 +26,22 @@ class Block extends CI_Controller {
     }
 
     public function new() {
+        $data = [];
+        $this->form_validation->set_rules(Front::BLOCK_NAME, 'Name', Front::REQUIRED);
+        $this->form_validation->set_rules(Front::BLOCK_ACRONYM, 'Acronym', Front::REQUIRED);
+        $this->form_validation->set_rules(Front::BLOCK_FORMULA, 'Formula', Front::REQUIRED);
+        if ($this->form_validation->run() === false) {
+            $data[Front::ERRORS] = $this->errors;
+        }
+
         $this->load->view(Front::TEMPLATES_HEADER);
-        $this->load->view('blocks/new');
+        $this->load->view('blocks/new', $data);
         $this->load->view(Front::TEMPLATES_FOOTER);
+    }
+
+    public function add() {
+
+
     }
 
     public function detail($id = 1) {
