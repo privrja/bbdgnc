@@ -62,7 +62,7 @@ class BlockTO implements IEntity {
         }
     }
 
-    private function computeAll() {
+    public function computeAll() {
         $graph = new Graph($this->smiles);
         $this->uniqueSmiles = $graph->getUniqueSmiles();
         $this->formula = $graph->getFormula(LossesEnum::H2O);
@@ -70,13 +70,21 @@ class BlockTO implements IEntity {
         $this->mass = FormulaHelper::computeMass($this->formula);
     }
 
-    private function computeUniqueSmiles() {
+    public function computeUniqueSmiles() {
         $graph = new Graph($this->smiles);
         $this->uniqueSmiles = $graph->getUniqueSmiles();
     }
 
-    private function computeFormulaAndMass() {
+    public function computeFormulaAndMass() {
+        $this->computeFormula();
+        $this->computeMass();
+    }
+
+    public function computeFormula() {
         $this->formula = FormulaHelper::formulaFromSmiles($this->smiles, LossesEnum::H2O);
+    }
+
+    public function computeMass() {
         try {
             $this->mass = FormulaHelper::computeMass($this->formula);
         } catch (IllegalArgumentException $exception) {

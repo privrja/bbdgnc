@@ -2,7 +2,9 @@
 
 use Bbdgnc\Base\HelperEnum;
 use Bbdgnc\Base\ModelEnum;
+use Bbdgnc\Enum\ComputeEnum;
 use Bbdgnc\Enum\Front;
+use Bbdgnc\TransportObjects\BlockTO;
 
 class Block extends CI_Controller {
 
@@ -29,19 +31,63 @@ class Block extends CI_Controller {
         $data = [];
         $this->form_validation->set_rules(Front::BLOCK_NAME, 'Name', Front::REQUIRED);
         $this->form_validation->set_rules(Front::BLOCK_ACRONYM, 'Acronym', Front::REQUIRED);
-        $this->form_validation->set_rules(Front::BLOCK_FORMULA, 'Formula', Front::REQUIRED);
+        $smiles = $this->input->post(Front::BLOCK_SMILES);
+        if (!isset($smiles) || $smiles === "") {
+            $this->form_validation->set_rules(Front::BLOCK_FORMULA, 'Formula', Front::REQUIRED);
+        }
         if ($this->form_validation->run() === false) {
             $data[Front::ERRORS] = $this->errors;
+            $this->renderNew($data);
+            return;
+        }
+        $formula = $this->input->post(Front::BLOCK_FORMULA);
+        $smiles = $this->input->post(Front::BLOCK_SMILES);
+        $mass = $this->input->post(Front::BLOCK_MASS);
+
+        $blockTO = new BlockTO(0, $this->input->post(Front::BLOCK_NAME),
+            $this->input->post(Front::BLOCK_ACRONYM),
+            $smiles, ComputeEnum::NO);
+
+        if ($smiles === "") {
+            $blockTO->formula = $formula;
+            if ($mass === "") {
+                $blockTO->computeMass();
+            } else {
+                $blockTO->mass = $mass;
+            }
+        } else {
+            if ($formula === "") {
+                $blockTO->computeFormula();
+                if ($mass === "") {
+                    $blockTO->computeMass();
+                } else {
+                    $blockTO->mass = $mass;
+                }
+            } else {
+                $blockTO->formula = $formula;
+                if ($mass === "") {
+                    $blockTO->computeMass();
+                } else {
+                    $blockTO->mass = $mass;
+                }
+            }
+            $blockTO->computeUniqueSmiles();
         }
 
+        try {
+            $this->block_model->insert($blockTO);
+        } catch (Exception $exception) {
+            $data[Front::ERRORS] = $exception->getMessage();
+            $this->renderNew($data);
+            return;
+        }
+        $this->renderNew($data);
+    }
+
+    public function renderNew($data) {
         $this->load->view(Front::TEMPLATES_HEADER);
         $this->load->view('blocks/new', $data);
         $this->load->view(Front::TEMPLATES_FOOTER);
-    }
-
-    public function add() {
-
-
     }
 
     public function detail($id = 1) {
@@ -50,7 +96,5 @@ class Block extends CI_Controller {
         $this->load->view('blocks/detail', $data);
         $this->load->view(Front::TEMPLATES_FOOTER);
     }
-
-
 
 }
