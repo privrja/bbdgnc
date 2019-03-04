@@ -3,6 +3,7 @@
 namespace Bbdgnc\TransportObjects;
 
 use Bbdgnc\Base\FormulaHelper;
+use Bbdgnc\Base\Logger;
 use Bbdgnc\Enum\ComputeEnum;
 use Bbdgnc\Enum\LoggerEnum;
 use Bbdgnc\Exception\IllegalArgumentException;
@@ -88,7 +89,7 @@ class BlockTO implements IEntity {
         try {
             $this->mass = FormulaHelper::computeMass($this->formula);
         } catch (IllegalArgumentException $exception) {
-            log_message(LoggerEnum::ERROR, $exception->getMessage());
+            Logger::log(LoggerEnum::ERROR, $exception->getMessage() . " " . $exception->getTraceAsString());
         }
     }
 
