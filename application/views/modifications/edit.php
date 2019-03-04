@@ -8,7 +8,7 @@ use Bbdgnc\Enum\Front;
     <?= form_open('modification/edit/' . $modification['id'], array('id' => 'form-modification-edit')); ?>
 
     <div id="div-editor">
-        <h2>Edit New Modification</h2>
+        <h2>Edit Modification</h2>
         <div id="div-editor-form">
             <label for="txt-modification">Name</label>
             <input type="text" id="txt-modification" name="<?= Front::MODIFICATION_NAME ?>"

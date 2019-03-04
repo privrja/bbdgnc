@@ -42,7 +42,7 @@ class SequenceTO implements IEntity {
      * @param string $sequence
      * @param int $sequenceType
      */
-    public function __construct(int $database, string $name, string $smiles, string $formula, string $mass, string $identifier, string $sequence, int $sequenceType) {
+    public function __construct($database, string $name, $smiles, string $formula, $mass, $identifier, string $sequence, int $sequenceType) {
         if ($database !== null && $identifier !== "" && $identifier !== null) {
             $this->database = $database;
             $this->identifier = $identifier;
