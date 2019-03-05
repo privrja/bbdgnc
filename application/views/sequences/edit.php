@@ -65,8 +65,8 @@ use Bbdgnc\Finder\Enum\ServerEnum;
                    value="<?= set_value(Front::SEQUENCE, $sequence['sequence']) ?>"/>
 
             <label for="txt-block-smiles">SMILES</label>
-            <input type="text" id="txt-block-smiles" name="<?= Front::BLOCK_SMILES ?>"
-                   value="<?= set_value(Front::BLOCK_SMILES, $sequence['smiles']) ?>"/>
+            <input type="text" id="txt-block-smiles" name="<?= Front::CANVAS_INPUT_SMILE ?>"
+                   value="<?= set_value(Front::CANVAS_INPUT_SMILE, $sequence['smiles']) ?>"/>
 
             <label for="sel-block-reference-database">Reference Database</label>
             <?= form_dropdown(Front::CANVAS_INPUT_DATABASE, ServerEnum::$allValues, set_value(Front::CANVAS_INPUT_DATABASE, $sequence['database']),
