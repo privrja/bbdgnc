@@ -33,6 +33,30 @@ class Sequence extends CI_Controller {
         $this->load->view(Front::TEMPLATES_FOOTER);
     }
 
+    public function new() {
+        $data = [];
+        $this->form_validation->set_rules(Front::SEQUENCE_TYPE, 'Type', Front::REQUIRED);
+        $this->form_validation->set_rules(Front::CANVAS_INPUT_NAME, 'Name', Front::REQUIRED);
+        $this->form_validation->set_rules(Front::CANVAS_INPUT_FORMULA, 'Formula', Front::REQUIRED);
+        $this->form_validation->set_rules(Front::SEQUENCE, 'Sequence', Front::REQUIRED);
+        if ($this->form_validation->run() === false) {
+            $data[Front::ERRORS] = $this->errors;
+            $this->renderNew($data);
+            return;
+        }
+        $sequenceTO = $this->createSequence();
+        try {
+            $this->sequence_model->insert($sequenceTO);
+        } catch (Exception $exception) {
+            $data[Front::ERRORS] = $exception->getMessage();
+            Logger::log(LoggerEnum::ERROR, $exception->getTraceAsString());
+            $this->renderEdit($data);
+            return;
+        }
+
+        $this->renderNew($data);
+    }
+
     public function edit($id = 1) {
         $data['sequence'] = $this->sequence_model->findById($id);
 
@@ -45,19 +69,7 @@ class Sequence extends CI_Controller {
             $this->renderEdit($data);
             return;
         }
-
-        var_dump($this->input->post(Front::CANVAS_INPUT_SMILE));
-        $sequenceTO = new SequenceTO(
-            $this->input->post(Front::CANVAS_INPUT_DATABASE),
-            $this->input->post(Front::CANVAS_INPUT_NAME),
-            $this->input->post(Front::CANVAS_INPUT_SMILE),
-            $this->input->post(Front::CANVAS_INPUT_FORMULA),
-            $this->input->post(Front::CANVAS_INPUT_MASS),
-            $this->input->post(Front::CANVAS_INPUT_IDENTIFIER),
-            $this->input->post(Front::SEQUENCE),
-            $this->input->post(Front::SEQUENCE_TYPE)
-        );
-
+        $sequenceTO = $this->createSequence();
         try {
             $this->sequence_model->update($id, $sequenceTO);
         } catch (Exception $exception) {
@@ -69,9 +81,28 @@ class Sequence extends CI_Controller {
         $this->renderEdit($data);
     }
 
+    private function createSequence() {
+        return new SequenceTO(
+            $this->input->post(Front::CANVAS_INPUT_DATABASE),
+            $this->input->post(Front::CANVAS_INPUT_NAME),
+            $this->input->post(Front::CANVAS_INPUT_SMILE),
+            $this->input->post(Front::CANVAS_INPUT_FORMULA),
+            $this->input->post(Front::CANVAS_INPUT_MASS),
+            $this->input->post(Front::CANVAS_INPUT_IDENTIFIER),
+            $this->input->post(Front::SEQUENCE),
+            $this->input->post(Front::SEQUENCE_TYPE)
+        );
+    }
+
     private function renderEdit($data) {
         $this->load->view(Front::TEMPLATES_HEADER);
         $this->load->view('sequences/edit', $data);
+        $this->load->view(Front::TEMPLATES_FOOTER);
+    }
+
+    private function renderNew($data) {
+        $this->load->view(Front::TEMPLATES_HEADER);
+        $this->load->view('sequences/new', $data);
         $this->load->view(Front::TEMPLATES_FOOTER);
     }
 
