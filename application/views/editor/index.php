@@ -8,6 +8,8 @@ use Bbdgnc\Finder\Enum\ServerEnum;
 <script src="<?= AssetHelper::jsJsme() ?>"></script>
 <script>
 
+    document.addEventListener('input', readSmiles);
+
     /**
      * This function will be called after the JavaScriptApplet code has been loaded.
      */
@@ -16,12 +18,19 @@ use Bbdgnc\Finder\Enum\ServerEnum;
         jsmeApplet.readGenericMolecularInput('<?= $block->smiles ?>');
     }
 
+    function readSmiles() {
+        jsmeApplet.readGenericMolecularInput(document.getElementById('txt-block-smiles').value);
+    }
+
     /**
      * This function is called after Acept button is clicked
      * Get SMILES from editor and submit form
      */
     function getSmiles() {
         let smile = jsmeApplet.nonisomericSmiles();
+        if (smile) {
+            document.getElementById('txt-block-smiles').value = smile;
+        }
         let blockId = '<?= $block->id ?>';
         let lastAcronym = '<?= $block->acronym ?>';
         let acronym = document.getElementById('txt-block-acronym').value;
@@ -36,7 +45,7 @@ use Bbdgnc\Finder\Enum\ServerEnum;
             databaseId = null;
         }
         document.getElementById('hdn-sequence').value = sequence;
-        redirectWithData({blockIdentifier: blockId, blockDatabaseId: databaseId, blockSmile: smile, blocks: 'Blocks'});
+        redirectWithData({blockIdentifier: blockId, blockDatabaseId: databaseId, blocks: 'Blocks'});
     }
 
     function sequenceReplace(id, acronym, sequence) {
@@ -85,6 +94,10 @@ use Bbdgnc\Finder\Enum\ServerEnum;
 
         <label for="txt-block-mass">Monoisotopic Residue Mass</label>
         <input type="text" id="txt-block-mass" name="<?= Front::BLOCK_MASS ?>" value="<?= $block->mass ?>"/>
+
+        <label for="txt-block-smiles">SMILES</label>
+        <input type="text" id="txt-block-smiles" name="<?= Front::BLOCK_SMILES ?>"
+               value="<?= $block->smiles ?>"/>
 
         <label for="txt-block-losses">Neutral Losses</label>
         <input type="text" id="txt-block-losses" name="<?= Front::BLOCK_NEUTRAL_LOSSES ?>"

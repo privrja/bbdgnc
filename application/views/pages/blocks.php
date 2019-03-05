@@ -143,7 +143,7 @@ use Bbdgnc\Finder\Enum\ServerEnum;
                        value="<?= $block->smiles ?>"/>
 
                 <div class="td">
-                    <input type="submit" title="SMILES Editor" onclick="editorBlock('<?= $block->id ?>')"/>
+                    <input type="submit" title="SMILES Editor" value="Edit" onclick="editorBlock('<?= $block->id ?>')"/>
                 </div>
 
                 <input type="hidden" name="<?= Front::BLOCK_IDENTIFIER ?>" value="<?= $block->id ?>"/>
