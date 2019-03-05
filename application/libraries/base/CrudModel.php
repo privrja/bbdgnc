@@ -5,7 +5,6 @@ namespace Bbdgnc\Base;
 use Bbdgnc\Exception\UniqueConstraintException;
 use Bbdgnc\TransportObjects\IEntity;
 use CI_Model;
-use mysql_xdevapi\Exception;
 
 abstract class CrudModel extends CI_Model {
 

@@ -83,7 +83,18 @@ class Land extends CI_Controller {
         return $data;
     }
 
+
+    private function modifications() {
+        $modificationsAll = $this->modification_model->findAll();
+        $modifications = ['None'];
+        foreach ($modificationsAll as $modification) {
+            $modifications[$modification['id']] = $modification['name'];
+        }
+        return $modifications;
+    }
+
     private function getModificationData($data) {
+        $data['modifications'] = $this->modifications();
         $data[Front::N_MODIFICATION_NAME] = $this->input->post(Front::N_MODIFICATION_NAME);
         $data[Front::N_MODIFICATION_FORMULA] = $this->input->post(Front::N_MODIFICATION_FORMULA);
         $data[Front::N_MODIFICATION_MASS] = $this->input->post(Front::N_MODIFICATION_MASS);
@@ -171,6 +182,7 @@ class Land extends CI_Controller {
         $cookieVal = get_cookie(self::COOKIE_BLOCKS . self::ZERO);
         $data[Front::SEQUENCE] = $this->input->post(Front::SEQUENCE);
         $data[Front::SEQUENCE_TYPE] = $this->input->post(Front::SEQUENCE_TYPE);
+        $data['modifications'] = $this->modifications();
         if (!isset($first) && $cookieVal !== null) {
             $data[Front::BLOCK_COUNT] = $this->input->post(Front::BLOCK_COUNT);
             $blocks = $this->loadCookies($data[Front::BLOCK_COUNT]);
@@ -602,14 +614,21 @@ class Land extends CI_Controller {
         $modifications = [];
         $branchChar = ModificationHelperTypeEnum::startModification($sequenceType);
         for ($index = 0; $index < 3; ++$index) {
-            $modificationName = $this->input->post($branchChar . Front::MODIFICATION_NAME);
-            if (isset($modificationName) && $modificationName != '') {
-                $modificationFormula = $this->input->post($branchChar . Front::MODIFICATION_FORMULA);
-                $modificationMass = $this->input->post($branchChar . Front::MODIFICATION_MASS);
-                $modificationTerminalN = $this->input->post($branchChar . Front::MODIFICATION_TERMINAL_N);
-                $modificationTerminalC = $this->input->post($branchChar . Front::MODIFICATION_TERMINAL_C);
-                $modification = new ModificationTO($modificationName, $modificationFormula, $modificationMass, $modificationTerminalN, $modificationTerminalC);
+            $modificationNameSel = $this->input->post($branchChar . Front::MODIFICATION_SELECT);
+            if ($modificationNameSel != 0) {
+                $modification = new ModificationTO('', '', '', '', '');
+                $modification->databaseId = $modificationNameSel;
                 $modifications[$branchChar] = $modification;
+            } else {
+                $modificationName = $this->input->post($branchChar . Front::MODIFICATION_NAME);
+                if (isset($modificationName) && $modificationName != '') {
+                    $modificationFormula = $this->input->post($branchChar . Front::MODIFICATION_FORMULA);
+                    $modificationMass = $this->input->post($branchChar . Front::MODIFICATION_MASS);
+                    $modificationTerminalN = Front::toBoolean($this->input->post($branchChar . Front::MODIFICATION_TERMINAL_N));
+                    $modificationTerminalC = Front::toBoolean($this->input->post($branchChar . Front::MODIFICATION_TERMINAL_C));
+                    $modification = new ModificationTO($modificationName, $modificationFormula, $modificationMass, $modificationTerminalN, $modificationTerminalC);
+                    $modifications[$branchChar] = $modification;
+                }
             }
             $branchChar = ModificationHelperTypeEnum::changeBranchChar($branchChar, $sequenceType);
             if (ModificationHelperTypeEnum::isEnd($branchChar)) {

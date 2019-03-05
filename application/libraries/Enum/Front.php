@@ -32,21 +32,25 @@ abstract class Front {
     const BLOCK_DATABASE_ID = "blockDatabaseId";
     const SEQUENCE_TYPE = "sequenceType";
     const SEQUENCE = "sequence";
+    const MODIFICATION_SELECT = "Select";
     const MODIFICATION_NAME = "Modification";
     const MODIFICATION_FORMULA = "Formula";
     const MODIFICATION_MASS = "Mass";
     const MODIFICATION_TERMINAL_N = "TerminalN";
     const MODIFICATION_TERMINAL_C = "TerminalC";
+    const N_MODIFICATION_SELECT = "nSelect";
     const N_MODIFICATION_NAME = "nModification";
     const N_MODIFICATION_FORMULA = "nFormula";
     const N_MODIFICATION_MASS = "nMass";
     const N_MODIFICATION_TERMINAL_N = "nTerminalN";
     const N_MODIFICATION_TERMINAL_C = "nTerminalC";
+    const C_MODIFICATION_SELECT = "cSelect";
     const C_MODIFICATION_NAME = "cModification";
     const C_MODIFICATION_FORMULA = "cFormula";
     const C_MODIFICATION_MASS = "cMass";
     const C_MODIFICATION_TERMINAL_N = "cTerminalN";
     const C_MODIFICATION_TERMINAL_C = "cTerminalC";
+    const B_MODIFICATION_SELECT = "bSelect";
     const B_MODIFICATION_NAME = "bModification";
     const B_MODIFICATION_FORMULA = "bFormula";
     const B_MODIFICATION_MASS = "bMass";
@@ -91,6 +95,10 @@ abstract class Front {
     }
 
     public static function checked($checked) {
-        return $checked === "true" || $checked === "on" ? "checked" : "";
+        return ($checked === "true" || $checked === "on") ? "checked" : "";
+    }
+
+    public static function toBoolean($checked) {
+        return $checked == "false" ? false : true;
     }
 }

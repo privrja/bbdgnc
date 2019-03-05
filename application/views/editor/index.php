@@ -31,6 +31,7 @@ use Bbdgnc\Finder\Enum\ServerEnum;
         if (smile) {
             document.getElementById('txt-block-smiles').value = smile;
         }
+        console.log(smile);
         let blockId = '<?= $block->id ?>';
         let lastAcronym = '<?= $block->acronym ?>';
         let acronym = document.getElementById('txt-block-acronym').value;
@@ -96,7 +97,7 @@ use Bbdgnc\Finder\Enum\ServerEnum;
         <input type="text" id="txt-block-mass" name="<?= Front::BLOCK_MASS ?>" value="<?= $block->mass ?>"/>
 
         <label for="txt-block-smiles">SMILES</label>
-        <input type="text" id="txt-block-smiles" name="<?= Front::BLOCK_SMILES ?>"
+        <input type="text" id="txt-block-smiles" name="<?= Front::BLOCK_SMILE ?>"
                value="<?= $block->smiles ?>"/>
 
         <label for="txt-block-losses">Neutral Losses</label>

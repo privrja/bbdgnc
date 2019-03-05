@@ -6,16 +6,19 @@ const CANVAS_SMALL_ID = "canvas-small-";
 const CANVAS_LARGE_ID = "canvas-large";
 const FORM_MAIN = "form-main";
 const SEQUENCE_TYPE = "sel-sequence-type";
+const SEL_N_MODIFICATION = "sel-n-modification";
 const TXT_N_MODIFICATION = "txt-n-modification";
 const TXT_N_FORMULA = "txt-n-formula";
 const TXT_N_MASS = "txt-n-mass";
 const CHK_N_NTERMINAL = "chk-n-nterminal";
 const CHK_N_CTERMINAL = "chk-n-cterminal";
+const SEL_C_MODIFICATION = "sel-c-modification";
 const TXT_C_MODIFICATION = "txt-c-modification";
 const TXT_C_FORMULA = "txt-c-formula";
 const TXT_C_MASS = "txt-c-mass";
 const CHK_C_NTERMINAL = "chk-c-nterminal";
 const CHK_C_CTERMINAL = "chk-c-cterminal";
+const SEL_B_MODIFICATION = "sel-b-modification";
 const TXT_BRANCH_MODIFICATION = "txt-b-modification";
 const TXT_BRANCH_FORMULA = "txt-b-formula";
 const TXT_BRANCH_MASS = "txt-b-mass";
@@ -74,6 +77,19 @@ document.addEventListener('DOMContentLoaded', function () {
     if (document.getElementById(SEQUENCE_TYPE)) {
         window.addEventListener('load', sequenceTypeChanged);
     }
+
+    if (document.getElementById(SEL_N_MODIFICATION)) {
+        document.getElementById(SEL_N_MODIFICATION).addEventListener('change', modificationSelect);
+    }
+
+    if (document.getElementById(SEL_C_MODIFICATION)) {
+        document.getElementById(SEL_C_MODIFICATION).addEventListener('change', modificationSelect);
+    }
+
+    if (document.getElementById(SEL_B_MODIFICATION)) {
+        document.getElementById(SEL_B_MODIFICATION).addEventListener('change', modificationSelect);
+    }
+
 });
 
 /**
@@ -463,21 +479,25 @@ function drawLarge(canvasId) {
     });
 }
 
+
 function save() {
     let sequence = document.getElementById("txt-sequence").value;
     let data = {sequence: sequence, save: 'Save'};
     data.sequenceType = document.getElementById("sel-sequence-type").value;
     data.blockCount = document.getElementsByClassName("block-count")[0].value;
+    data.nSelect = document.getElementById("sel-n-modification").value;
     data.nModification = document.getElementById("txt-n-modification").value;
     data.nFormula = document.getElementById("txt-n-formula").value;
     data.nMass = document.getElementById("txt-n-mass").value;
     data.nTerminalN = document.getElementById("chk-n-nterminal").checked;
     data.nTerminalC = document.getElementById("chk-n-cterminal").checked;
+    data.cSelect = document.getElementById("sel-c-modification").value;
     data.cModification = document.getElementById("txt-c-modification").value;
     data.cFormula = document.getElementById("txt-c-formula").value;
     data.cMass = document.getElementById("txt-c-mass").value;
     data.cTerminalN = document.getElementById("chk-c-nterminal").checked;
     data.cTerminalC = document.getElementById("chk-c-cterminal").checked;
+    data.bSelect = document.getElementById("sel-b-modification").value;
     data.bModification = document.getElementById("txt-b-modification").value;
     data.bFormula = document.getElementById("txt-b-formula").value;
     data.bMass = document.getElementById("txt-b-mass").value;
@@ -499,22 +519,47 @@ function editorBlock(identifier) {
     data.identifier = document.getElementById("txt-canvas-identifier").value;
     data.sequence = document.getElementById("txt-sequence").value;
     data.sequenceType = document.getElementById("sel-sequence-type").value;
+    data.nSelect = document.getElementById("sel-n-modification").value;
     data.nModification = document.getElementById("txt-n-modification").value;
     data.nFormula = document.getElementById("txt-n-formula").value;
     data.nMass = document.getElementById("txt-n-mass").value;
     data.nTerminalN = document.getElementById("chk-n-nterminal").checked;
     data.nTerminalC = document.getElementById("chk-n-cterminal").checked;
+    data.cSelect = document.getElementById("sel-c-modification").value;
     data.cModification = document.getElementById("txt-c-modification").value;
     data.cFormula = document.getElementById("txt-c-formula").value;
     data.cMass = document.getElementById("txt-c-mass").value;
     data.cTerminalN = document.getElementById("chk-c-nterminal").checked;
     data.cTerminalC = document.getElementById("chk-c-cterminal").checked;
+    data.bSelect = document.getElementById("sel-b-modification").value;
     data.bModification = document.getElementById("txt-b-modification").value;
     data.bFormula = document.getElementById("txt-b-formula").value;
     data.bMass = document.getElementById("txt-b-mass").value;
     data.bTerminalN = document.getElementById("chk-b-nterminal").checked;
     data.bTerminalC = document.getElementById("chk-b-cterminal").checked;
     redirectWithData("form-block-edit" + identifier, data);
+}
+
+function modificationSelect(event) {
+    if (event.target.value !== '0') {
+        displayModification(event.target.id, 'none');
+    } else {
+        displayModification(event.target.id, 'block');
+    }
+}
+
+function displayModification(id, display) {
+    switch (id) {
+        case SEL_N_MODIFICATION:
+            document.getElementById('div-n-modification').style.display = display;
+            break;
+        case SEL_C_MODIFICATION:
+            document.getElementById('div-c-modification').style.display = display;
+            break;
+        case SEL_B_MODIFICATION:
+            document.getElementById('div-b-modification').style.display = display;
+            break;
+    }
 }
 
 

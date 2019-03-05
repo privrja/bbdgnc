@@ -25,57 +25,78 @@ use Bbdgnc\Finder\Enum\ServerEnum;
         <div class="div-modification">
             <h4>N-terminal Modification</h4>
 
-            <label for="txt-n-modification">Name</label>
-            <input type="text" id="txt-n-modification" name="nModification" value="<?= $nModification ?>"/>
+            <label for="sel-n-modification">Select Modification</label>
+            <?= form_dropdown(Front::N_MODIFICATION_SELECT, $modifications, '0',
+                'id="sel-n-modification" class="select" title="Modification"'); ?>
 
-            <label for="txt-n-formula">Formula</label>
-            <input type="text" id="txt-n-formula" name="nFormula" value="<?= $nFormula ?>"/>
+            <div id="div-n-modification">
+                <label for="txt-n-modification">Name</label>
+                <input type="text" id="txt-n-modification" name="nModification" value="<?= $nModification ?>"/>
 
-            <label for="txt-n-mass">Monoisotopic Mass</label>
-            <input type="text" id="txt-n-mass" name="nMass" value="<?= $nMass ?>"/>
+                <label for="txt-n-formula">Formula</label>
+                <input type="text" id="txt-n-formula" name="nFormula" value="<?= $nFormula ?>"/>
 
-            <label for="chk-n-nterminal" class="chk">N-terminal</label>
-            <input type="checkbox" id="chk-n-nterminal" name="nnTerminal" <?= Front::checked($nTerminalN) ?> />
+                <label for="txt-n-mass">Monoisotopic Mass</label>
+                <input type="text" id="txt-n-mass" name="nMass" value="<?= $nMass ?>"/>
 
-            <label for="chk-n-cterminal" class="chk">C-terminal</label>
-            <input type="checkbox" id="chk-n-cterminal" name="ncTerminal" <?= Front::checked($nTerminalC) ?> />
+                <label for="chk-n-nterminal" class="chk">N-terminal</label>
+                <input type="checkbox" id="chk-n-nterminal" name="nnTerminal" <?= Front::checked($nTerminalN) ?> />
+
+                <label for="chk-n-cterminal" class="chk">C-terminal</label>
+                <input type="checkbox" id="chk-n-cterminal" name="ncTerminal" <?= Front::checked($nTerminalC) ?> />
+            </div>
         </div>
 
         <div class="div-modification">
             <h4>C-terminal Modification</h4>
 
-            <label for="txt-c-modification">Name</label>
-            <input type="text" id="txt-c-modification" name="cModification" value="<?= $cModification ?>"/>
+            <label for="sel-c-modification">Select Modification</label>
+            <?= form_dropdown(Front::C_MODIFICATION_SELECT, $modifications, '0',
+                'id="sel-c-modification" class="select" title="Modification"'); ?>
 
-            <label for="txt-c-formula">Formula</label>
-            <input type="text" id="txt-c-formula" name="cFormula" value="<?= $cFormula ?>"/>
+            <div id="div-c-modification">
+                <label for="txt-c-modification">Name</label>
+                <input type="text" id="txt-c-modification" name="cModification" value="<?= $cModification ?>"/>
 
-            <label for="txt-c-mass">Monoisotopic Mass</label>
-            <input type="text" id="txt-c-mass" name="cMass" value="<?= $cMass ?>"/>
+                <label for="txt-c-formula">Formula</label>
+                <input type="text" id="txt-c-formula" name="cFormula" value="<?= $cFormula ?>"/>
 
-            <label for="chk-c-nterminal" class="chk">N-terminal</label>
-            <input type="checkbox" id="chk-c-nterminal" name="cnTerminal" <?= Front::checked($cTerminalN) ?>/>
+                <label for="txt-c-mass">Monoisotopic Mass</label>
+                <input type="text" id="txt-c-mass" name="cMass" value="<?= $cMass ?>"/>
 
-            <label for="chk-c-cterminal" class="chk">C-terminal</label>
-            <input type="checkbox" id="chk-c-cterminal" name="ccTerminal" <?= Front::checked($cTerminalC) ?> />
+                <label for="chk-c-nterminal" class="chk">N-terminal</label>
+                <input type="checkbox" id="chk-c-nterminal" name="cnTerminal" <?= Front::checked($cTerminalN) ?>/>
+
+                <label for="chk-c-cterminal" class="chk">C-terminal</label>
+                <input type="checkbox" id="chk-c-cterminal" name="ccTerminal" <?= Front::checked($cTerminalC) ?> />
+            </div>
         </div>
 
         <div class="div-modification">
             <h4>Branch Modification</h4>
-            <label for="txt-b-modification">Name</label>
-            <input type="text" id="txt-b-modification" name="bModification" value="<?= $bModification ?>" disabled/>
 
-            <label for="txt-b-formula">Formula</label>
-            <input type="text" id="txt-b-formula" name="bFormula" value="<?= $bModification ?>" disabled/>
+            <label for="sel-b-modification">Select Modification</label>
+            <?= form_dropdown(Front::B_MODIFICATION_SELECT, $modifications, '0',
+                'id="sel-b-modification" class="select" title="Modification"'); ?>
 
-            <label for="txt-b-mass">Monoisotopic Mass</label>
-            <input type="text" id="txt-b-mass" name="bMass" value="<?= $bModification ?>" disabled/>
+            <div id="div-b-modification">
+                <label for="txt-b-modification">Name</label>
+                <input type="text" id="txt-b-modification" name="bModification" value="<?= $bModification ?>" disabled/>
 
-            <label for="chk-b-nterminal" class="chk">N-terminal</label>
-            <input type="checkbox" id="chk-b-nterminal" name="bnTerminal" <?= Front::checked($bTerminalN) ?> disabled/>
+                <label for="txt-b-formula">Formula</label>
+                <input type="text" id="txt-b-formula" name="bFormula" value="<?= $bModification ?>" disabled/>
 
-            <label for="chk-b-cterminal" class="chk">C-terminal</label>
-            <input type="checkbox" id="chk-b-cterminal" name="bcTerminal" <?= Front::checked($bTerminalC) ?> disabled/>
+                <label for="txt-b-mass">Monoisotopic Mass</label>
+                <input type="text" id="txt-b-mass" name="bMass" value="<?= $bModification ?>" disabled/>
+
+                <label for="chk-b-nterminal" class="chk">N-terminal</label>
+                <input type="checkbox" id="chk-b-nterminal" name="bnTerminal" <?= Front::checked($bTerminalN) ?>
+                       disabled/>
+
+                <label for="chk-b-cterminal" class="chk">C-terminal</label>
+                <input type="checkbox" id="chk-b-cterminal" name="bcTerminal" <?= Front::checked($bTerminalC) ?>
+                       disabled/>
+            </div>
         </div>
     </div>
 
