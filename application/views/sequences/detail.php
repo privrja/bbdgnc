@@ -24,6 +24,10 @@ use Bbdgnc\Finder\Enum\ServerEnum;
             <?php endif; ?>
         </div>
 
+
+        <div>
+            <a href="<?= site_url("modification/add/" . $sequence['id']) ?>">Add Modification</a>
+        </div>
         <?php if (isset($nModification)): ?>
             <article>
                 <h2>N - Modification</h2>
