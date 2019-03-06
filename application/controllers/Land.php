@@ -209,6 +209,8 @@ class Land extends CI_Controller {
                     $blockTO->databaseId = $arResult['id'];
                     $blockTO->formula = $arResult['residue'];
                     $blockTO->mass = $arResult['mass'];
+                    $blockTO->database = $arResult['database'];
+                    $blockTO->identifier = $arResult['identifier'];
                     $data[Front::SEQUENCE] = SequenceHelper::replaceSequence($data[Front::SEQUENCE], $blockTO->id, $blockTO->acronym);
                 } else {
                     $pubchemFinder = new PubChemFinder();

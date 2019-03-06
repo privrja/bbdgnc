@@ -12,11 +12,16 @@ class Sequence extends CI_Controller {
 
     private $errors = "";
 
+    private $sequenceDatabase;
+
     public function __construct() {
         parent::__construct();
         $this->load->model(ModelEnum::SEQUENCE_MODEL);
+        $this->load->model(ModelEnum::MODIFICATION_MODEL);
+        $this->load->model(ModelEnum::BLOCK_MODEL);
         $this->load->helper([HelperEnum::HELPER_URL, HelperEnum::HELPER_FORM]);
         $this->load->library(LibraryEnum::FORM_VALIDATION);
+        $this->sequenceDatabase = new SequenceDatabase($this);
     }
 
     public function index() {
@@ -27,7 +32,7 @@ class Sequence extends CI_Controller {
     }
 
     public function detail($id = 1) {
-        $data['sequence'] = $this->sequence_model->findById($id);
+        $data = $this->sequenceDatabase->findSequenceDetail($id);
         $this->load->view(Front::TEMPLATES_HEADER);
         $this->load->view('sequences/detail', $data);
         $this->load->view(Front::TEMPLATES_FOOTER);

@@ -9,6 +9,7 @@ use CI_Model;
 abstract class CrudModel extends CI_Model {
 
     const ID = 'id';
+    const DOT = '.';
 
     public function __construct() {
         $this->load->database();

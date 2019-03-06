@@ -36,4 +36,14 @@ class Block_model extends CrudModel {
     protected function getTableName(): string {
         return self::TABLE_NAME;
     }
+
+    public function findBlocksBySequenceId($id) {
+        $this->db
+            ->from($this->getTableName())
+            ->join('b2s', 'b2s.block_id = block.id')
+            ->where('b2s.sequence_id', $id);
+        $query = $this->db->get();
+        return $query->result_array();
+    }
+
 }

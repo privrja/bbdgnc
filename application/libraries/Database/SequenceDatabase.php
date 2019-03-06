@@ -137,4 +137,24 @@ class SequenceDatabase {
         }
     }
 
+    public function findSequenceDetail($id) {
+        $sequence = $this->controller->sequence_model->findById($id);
+        $detail = [];
+        $detail['sequence'] = $sequence;
+        if (isset($sequence['n_modification_id'])) {
+            $detail['nModification'] = $this->controller->modification_model->findById($sequence['n_modification_id']);
+        }
+
+        if (isset($sequence['c_modification_id'])) {
+            $detail['cModification'] = $this->controller->modification_model->findById($sequence['c_modification_id']);
+        }
+
+        if (isset($sequence['b_modification_id'])) {
+            $detail['bModification'] = $this->controller->modification_model->findById($sequence['b_modification_id']);
+        }
+
+        $detail['blocks'] = $this->controller->block_model->findBlocksBySequenceId($sequence['id']);
+        return $detail;
+    }
+
 }
