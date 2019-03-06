@@ -271,6 +271,7 @@ function enableModificationBranch() {
 }
 
 function enableOrDisableModificationN(disable) {
+    disableOrEnableElement(SEL_N_MODIFICATION, disable);
     disableOrEnableElement(TXT_N_MODIFICATION, disable);
     disableOrEnableElement(TXT_N_FORMULA, disable);
     disableOrEnableElement(TXT_N_MASS, disable);
@@ -279,6 +280,7 @@ function enableOrDisableModificationN(disable) {
 }
 
 function enableOrDisableModificationC(disable) {
+    disableOrEnableElement(SEL_C_MODIFICATION, disable);
     disableOrEnableElement(TXT_C_MODIFICATION, disable);
     disableOrEnableElement(TXT_C_FORMULA, disable);
     disableOrEnableElement(TXT_C_MASS, disable);
@@ -287,6 +289,7 @@ function enableOrDisableModificationC(disable) {
 }
 
 function enableOrDisableModificationBranch(disable) {
+    disableOrEnableElement(SEL_B_MODIFICATION, disable);
     disableOrEnableElement(TXT_BRANCH_MODIFICATION, disable);
     disableOrEnableElement(TXT_BRANCH_FORMULA, disable);
     disableOrEnableElement(TXT_BRANCH_MASS, disable);
