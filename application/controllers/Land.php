@@ -556,7 +556,7 @@ class Land extends CI_Controller {
     private function validateSequenceString() {
         $sequence = $this->input->post(Front::SEQUENCE);
         if (preg_match('/\[\\d+\]/', $sequence)) {
-            $this->errors = "Sequence problem";
+            $this->errors = "Sequence problem, some block haven't acronym";
             throw new IllegalArgumentException();
         }
     }
@@ -586,7 +586,6 @@ class Land extends CI_Controller {
             $this->validateSequence();
             $this->validateBlocks();
         } catch (IllegalArgumentException $exception) {
-            $this->errors = "Sequence is already in database";
             $this->renderBlocksError();
             return;
         }
@@ -603,6 +602,11 @@ class Land extends CI_Controller {
         $blocks = $this->loadCookies($lengthBlocks);
         $mapBlocks = new BlockSplObjectStorage();
         for ($index = 0; $index < $lengthBlocks; ++$index) {
+            if ($blocks[$index]->name === "") {
+                $this->errors = "On block with acronym " . $blocks[$index]->acronym . " isn't set up name";
+                $this->renderBlocksError();
+                return;
+            }
             $blockTO = new BlockTO($blocks[$index]->id, $blocks[$index]->name, $blocks[$index]->acronym, $blocks[$index]->smiles, ComputeEnum::UNIQUE_SMILES);
             $blockTO->databaseId = $blocks[$index]->databaseId;
             $blockTO->formula = $blocks[$index]->formula;
