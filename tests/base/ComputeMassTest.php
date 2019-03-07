@@ -24,6 +24,11 @@ final class ComputeMassTest extends TestCase {
         $this->assertEquals(201.1364934814, $result);
     }
 
+    public function testComputeMassWithRightData5() {
+        $result = FormulaHelper::computeMass('HNO-1');
+        $this->assertEquals(-0.9840155848, $result);
+    }
+
     public function testComputeMassWithNull() {
         $this->expectException(IllegalArgumentException::class);
         FormulaHelper::computeMass(null);
