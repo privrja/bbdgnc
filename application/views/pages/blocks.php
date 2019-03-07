@@ -84,10 +84,10 @@ use Bbdgnc\Finder\Enum\ServerEnum;
                 <input type="text" id="txt-b-modification" name="bModification" value="<?= $bModification ?>" disabled/>
 
                 <label for="txt-b-formula">Formula</label>
-                <input type="text" id="txt-b-formula" name="bFormula" value="<?= $bModification ?>" disabled/>
+                <input type="text" id="txt-b-formula" name="bFormula" value="<?= $bFormula ?>" disabled/>
 
                 <label for="txt-b-mass">Monoisotopic Mass</label>
-                <input type="text" id="txt-b-mass" name="bMass" value="<?= $bModification ?>" disabled/>
+                <input type="text" id="txt-b-mass" name="bMass" value="<?= $bMass ?>" disabled/>
 
                 <label for="chk-b-nterminal" class="chk">N-terminal</label>
                 <input type="checkbox" id="chk-b-nterminal" name="bnTerminal" <?= Front::checked($bTerminalN) ?>

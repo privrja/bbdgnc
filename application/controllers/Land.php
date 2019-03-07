@@ -1,6 +1,7 @@
 <?php
 
 use Bbdgnc\Base\BlockSplObjectStorage;
+use Bbdgnc\Base\FormulaHelper;
 use Bbdgnc\Base\HelperEnum;
 use Bbdgnc\Base\LibraryEnum;
 use Bbdgnc\Base\ModelEnum;
@@ -9,7 +10,6 @@ use Bbdgnc\Enum\ComputeEnum;
 use Bbdgnc\Enum\Front;
 use Bbdgnc\Enum\LoggerEnum;
 use Bbdgnc\Enum\ModificationHelperTypeEnum;
-use Bbdgnc\Enum\SequenceTypeEnum;
 use Bbdgnc\Exception\IllegalArgumentException;
 use Bbdgnc\Exception\SequenceInDatabaseException;
 use Bbdgnc\Finder\Enum\FindByEnum;
@@ -577,7 +577,7 @@ class Land extends CI_Controller {
             $data[Front::BLOCKS] = $blocks;
         }
         $data[Front::SEQUENCE] = $this->input->post(Front::SEQUENCE);
-        $data[Front::SEQUENCE_TYPE] = SequenceTypeEnum::$values[$this->input->post(Front::SEQUENCE_TYPE)];
+        $data[Front::SEQUENCE_TYPE] = $this->input->post(Front::SEQUENCE_TYPE);
         return $data;
     }
 
@@ -629,7 +629,15 @@ class Land extends CI_Controller {
                 $modificationName = $this->input->post($branchChar . Front::MODIFICATION_NAME);
                 if (isset($modificationName) && $modificationName != '') {
                     $modificationFormula = $this->input->post($branchChar . Front::MODIFICATION_FORMULA);
+                    if (!isset($modificationFormula) || $modificationFormula === "") {
+                        $this->errors = "Formula for modification " . strtoupper($branchChar) . " is not defined";
+                        $this->renderBlocksError();
+                        return;
+                    }
                     $modificationMass = $this->input->post($branchChar . Front::MODIFICATION_MASS);
+                    if (!isset($modificationMass) || $modificationMass === "") {
+                        $modificationMass = FormulaHelper::computeMass($modificationFormula);
+                    }
                     $modificationTerminalN = Front::toBoolean($this->input->post($branchChar . Front::MODIFICATION_TERMINAL_N));
                     $modificationTerminalC = Front::toBoolean($this->input->post($branchChar . Front::MODIFICATION_TERMINAL_C));
                     $modification = new ModificationTO($modificationName, $modificationFormula, $modificationMass, $modificationTerminalN, $modificationTerminalC);
