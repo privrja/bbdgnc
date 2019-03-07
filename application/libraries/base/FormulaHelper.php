@@ -7,7 +7,7 @@ use Bbdgnc\Exception\IllegalArgumentException;
 use Bbdgnc\Smiles\Enum\LossesEnum;
 use Bbdgnc\Smiles\Graph;
 use Bbdgnc\Smiles\Parser\AtomParser;
-use Bbdgnc\Smiles\Parser\NatParser;
+use Bbdgnc\Smiles\Parser\IntParser;
 
 class FormulaHelper {
 
@@ -25,12 +25,14 @@ class FormulaHelper {
             $atomParser = new AtomParser();
             $result = $atomParser->parse($strFormula);
             if (!$result->isAccepted()) {
+                var_dump($strFormula);
+                var_dump($result);
                 throw new IllegalArgumentException();
             }
             $strFormula = $result->getRemainder();
             $strName = $result->getResult();
             $strCount = 1;
-            $numberParser = new NatParser();
+            $numberParser = new IntParser();
             $numberResult = $numberParser->parse($strFormula);
             if ($numberResult->isAccepted()) {
                 $strCount = $numberResult->getResult();
