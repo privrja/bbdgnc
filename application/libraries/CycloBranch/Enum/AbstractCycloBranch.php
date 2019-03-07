@@ -27,7 +27,7 @@ abstract class AbstractCycloBranch implements ICycloBranch, IParser {
         }
         while (($line = fgets($handle)) !== false) {
             $arBlocks = $this->parse($line);
-            $this->save($arBlocks);
+            $this->save($arBlocks->getResult());
         }
         fclose($handle);
         unlink($filePath);
@@ -40,7 +40,7 @@ abstract class AbstractCycloBranch implements ICycloBranch, IParser {
 
     public abstract function export();
 
-    private function save($arBlocks) {
+    private function save(array $arBlocks) {
         $this->controller->block_model->startTransaction();
         $this->controller->block_model->insertMore($arBlocks);
         $this->controller->block_model->endTransaction();

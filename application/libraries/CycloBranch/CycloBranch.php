@@ -2,6 +2,8 @@
 
 namespace Bbdgnc\CycloBranch;
 
+use CI_Controller;
+
 class CycloBranch {
 
     private $controller;

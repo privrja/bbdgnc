@@ -34,7 +34,7 @@ class Import extends CI_Controller {
         } else {
             $uploadData = $this->upload->data();
             $type = $this->input->post('importType');
-            $this->import($uploadData['full_path'], $type);
+            $this->imp($uploadData['full_path'], $type);
             $data = ['upload_data' => $uploadData];
             $this->load->view('templates/header');
             $this->load->view('import/upload', $data);
@@ -42,7 +42,8 @@ class Import extends CI_Controller {
         }
     }
 
-    private function import(string $filePath, int $type) {
+    // TODO wrong route
+    private function imp(string $filePath, int $type) {
         $cycloBranch = new CycloBranch($type, $this);
         $cycloBranch->import($filePath);
     }

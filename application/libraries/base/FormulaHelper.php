@@ -25,8 +25,6 @@ class FormulaHelper {
             $atomParser = new AtomParser();
             $result = $atomParser->parse($strFormula);
             if (!$result->isAccepted()) {
-                var_dump($strFormula);
-                var_dump($result);
                 throw new IllegalArgumentException();
             }
             $strFormula = $result->getRemainder();
