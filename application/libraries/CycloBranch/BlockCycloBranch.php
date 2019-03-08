@@ -18,6 +18,7 @@ use Bbdgnc\Smiles\Parser\Accept;
 use Bbdgnc\Smiles\Parser\ReferenceParser;
 use Bbdgnc\Smiles\Parser\Reject;
 use Bbdgnc\TransportObjects\BlockTO;
+use SebastianBergmann\CodeCoverage\Report\PHP;
 
 class BlockCycloBranch extends AbstractCycloBranch {
 
@@ -114,16 +115,14 @@ class BlockCycloBranch extends AbstractCycloBranch {
         $arResult = $blockDatabase->findMergeBlocks($start);
         while (!empty($arResult)) {
             foreach ($arResult as $formula) {
-                foreach ($formula as $block) {
-                $strData =
-                    $block['name'] . "\t" .
-                    $block['acronym'] . "\t" .
-                    $block['residue'] . "\t" .
-                    $block['mass'] . "\t" .
-                    ReferenceHelper::reference($block['database'], $block['identifier'], $block['smiles']) .
-                    PHP_EOL;
+                $strData = "";
+                $blockCount = sizeof($formula);
+                $strData = $this->setNames($strData, $formula, $blockCount);
+                $strData = $this->setAcronyms($strData, $formula, $blockCount);
+                $strData .= $formula[0]['residue'] . "\t";
+                $strData .= $formula[0]['mass'] . "\t";
+                $strData = $this->setReferences($strData, $formula, $blockCount);
                 file_put_contents(self::FILE_NAME, $strData, FILE_APPEND);
-                }
             }
             $start += CommonConstants::PAGING;
             $arResult = $blockDatabase->findMergeBlocks($start);
@@ -140,6 +139,34 @@ class BlockCycloBranch extends AbstractCycloBranch {
 
     protected function getFileName() {
         return self::FILE_NAME;
+    }
+
+    private function setNames($strData, $formula, $blockCount) {
+        return $this->setData($strData, $formula, $blockCount, 'name');
+    }
+
+    private function setAcronyms(string $strData, $formula, int $blockCount) {
+        return $this->setData($strData, $formula, $blockCount, 'acronym');
+    }
+
+    private function setData(string $strData, $formula, int $blockCount, string $type) {
+        $index = 0;
+        $strData .= $formula[$index][$type];
+        for ($index = 1; $index < $blockCount; ++$index) {
+            $strData .= '/' . $formula[$index][$type];
+        }
+        $strData .= "\t";
+        return $strData;
+    }
+
+    private function setReferences(string $strData, $formula, int $blockCount) {
+        $index = 0;
+        $strData .= ReferenceHelper::reference($formula[$index]['database'], $formula[$index]['identifier'], $formula[$index]['smiles']);
+        for ($index = 1; $index < $blockCount; ++$index) {
+            $strData .= '/' . ReferenceHelper::reference($formula[$index]['database'], $formula[$index]['identifier'], $formula[$index]['smiles']);
+        }
+        $strData .= PHP_EOL;
+        return $strData;
     }
 
 }
