@@ -52,4 +52,6 @@ abstract class AbstractCycloBranch implements ICycloBranch, IParser {
         $this->controller->block_model->endTransaction();
     }
 
+    protected abstract function getFileName();
+
 }

@@ -4,6 +4,7 @@ namespace Bbdgnc\CycloBranch;
 
 use Bbdgnc\Base\FormulaHelper;
 use Bbdgnc\Base\Logger;
+use Bbdgnc\Base\ReferenceHelper;
 use Bbdgnc\Enum\ComputeEnum;
 use Bbdgnc\Enum\Front;
 use Bbdgnc\Enum\LoggerEnum;
@@ -24,6 +25,8 @@ class BlockCycloBranch extends AbstractCycloBranch {
     const MASS = 3;
     const REFERENCE = 4;
     const LENGTH = 5;
+
+    const FILE_NAME = 'blocks.txt';
 
     public function parse($line) {
         $arItems = preg_split('/\t/', $line);
@@ -104,7 +107,18 @@ class BlockCycloBranch extends AbstractCycloBranch {
     }
 
     public function export() {
-        // TODO: Implement export() method.
+        $arResult = $this->controller->block_model->findAll();
+        foreach ($arResult as $block) {
+            $strData =
+                $block['name'] . "\t" .
+                $block['acronym'] . "\t" .
+                $block['residue'] . "\t" .
+                $block['mass'] . "\t" .
+                ReferenceHelper::reference($block['database'], $block['reference'], $block['smiles']);
+            file_put_contents(self::FILE_NAME, $strData, FILE_APPEND);
+        }
+
+
     }
 
     /**
@@ -115,4 +129,7 @@ class BlockCycloBranch extends AbstractCycloBranch {
         return new Reject('Not match blocks in right format');
     }
 
+    protected function getFileName() {
+        return self::FILE_NAME;
+    }
 }

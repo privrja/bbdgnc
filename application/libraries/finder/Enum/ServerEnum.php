@@ -48,6 +48,8 @@ abstract class ServerEnum {
                 return "http://www.chemspider.com/Chemical-Structure." . $strIdentifier . ".html";
             case self::CHEBI:
                 return "https://www.ebi.ac.uk/chebi/searchId.do?chebiId=" . $strIdentifier;
+            case self::PDB:
+                return "http://www.rcsb.org/ligand/" . $strIdentifier;
         }
     }
 }

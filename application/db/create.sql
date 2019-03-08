@@ -2,10 +2,11 @@ BEGIN TRANSACTION;
 
 CREATE TABLE block (
     id                  INTEGER         PRIMARY KEY,
-    name                TEXT            NOT NULL,
-    acronym             TEXT            NOT NULL      CHECK(length(acronym) > 0),
-    residue             TEXT            NOT NULL,
+    name                TEXT            NOT NULL        CHECK(length(name) > 0),
+    acronym             TEXT            NOT NULL        CHECK(length(acronym) > 0),
+    residue             TEXT            NOT NULL        CHECK(length(residue) > 0),
     mass                REAL,
+    losses              TEXT,
     smiles              TEXT,
     usmiles             TEXT,
     database            INTEGER,
@@ -14,11 +15,11 @@ CREATE TABLE block (
 
 CREATE TABLE sequence (
     id                  INTEGER   PRIMARY KEY,
-    type                TEXT      NOT NULL    DEFAULT 'other',
-    name                TEXT      NOT NULL,
-    formula             TEXT      NOT NULL,
+    type                TEXT      NOT NULL      DEFAULT 'other',
+    name                TEXT      NOT NULL      CHECK(length(name) > 0),
+    formula             TEXT      NOT NULL      CHECK(length(formula) > 0),
     mass                REAL,
-    sequence            TEXT      NOT NULL,
+    sequence            TEXT      NOT NULL      CHECK(length(sequence) > 0),
     smiles              TEXT,
     database            INTEGER,
     identifier          TEXT,
@@ -32,11 +33,11 @@ CREATE TABLE sequence (
 
 CREATE TABLE modification (
     id                  INTEGER      PRIMARY KEY,
-    name                TEXT         NOT NULL,
-    formula             TEXT         NOT NULL,
+    name                TEXT         NOT NULL       CHECK(length(name) > 0),
+    formula             TEXT         NOT NULL       CHECK(length(formula) > 0),
     mass                REAL,
-    nterminal           INTEGER      NOT NULL    DEFAULT 0,
-    cterminal           INTEGER      NOT NULL    DEFAULT 0
+    nterminal           INTEGER      NOT NULL       DEFAULT 0,
+    cterminal           INTEGER      NOT NULL       DEFAULT 0
 );
 
 -- CREATE TABLE losses (

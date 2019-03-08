@@ -1,6 +1,7 @@
 <?php
 
 use Bbdgnc\Base\BlockSplObjectStorage;
+use Bbdgnc\Base\CommonConstants;
 use Bbdgnc\Base\FormulaHelper;
 use Bbdgnc\Base\HelperEnum;
 use Bbdgnc\Base\LibraryEnum;
@@ -35,12 +36,6 @@ class Land extends CI_Controller {
     const COOKIE_BLOCKS = "cookie_blocks";
 
     private $errors = "";
-
-    /**
-     * Get Default data for view
-     * @return array
-     */
-    const ZERO = "0";
 
     /**
      * Land constructor.
@@ -179,7 +174,7 @@ class Land extends CI_Controller {
     public function blocks() {
         $first = $this->input->post('first');
         $data = $this->getLastData();
-        $cookieVal = get_cookie(self::COOKIE_BLOCKS . self::ZERO);
+        $cookieVal = get_cookie(self::COOKIE_BLOCKS . CommonConstants::ZERO);
         $data[Front::SEQUENCE] = $this->input->post(Front::SEQUENCE);
         $data[Front::SEQUENCE_TYPE] = $this->input->post(Front::SEQUENCE_TYPE);
         $data['modifications'] = $this->modifications();
@@ -562,7 +557,7 @@ class Land extends CI_Controller {
     }
 
     private function validateBlocks() {
-        $cookieVal = get_cookie(self::COOKIE_BLOCKS . self::ZERO);
+        $cookieVal = get_cookie(self::COOKIE_BLOCKS . CommonConstants::ZERO);
         if ($cookieVal === null) {
             $this->errors = "Blocks data problem";
             throw new IllegalArgumentException();
@@ -571,7 +566,7 @@ class Land extends CI_Controller {
 
     private function getLastBlocksData() {
         $data[Front::BLOCK_COUNT] = $this->input->post(Front::BLOCK_COUNT);
-        $cookieVal = get_cookie(self::COOKIE_BLOCKS . self::ZERO);
+        $cookieVal = get_cookie(self::COOKIE_BLOCKS . CommonConstants::ZERO);
         if ($cookieVal !== null) {
             $blocks = $this->loadCookies($data[Front::BLOCK_COUNT]);
             $data[Front::BLOCKS] = $blocks;
