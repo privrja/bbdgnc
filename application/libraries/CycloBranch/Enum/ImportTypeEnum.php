@@ -1,5 +1,6 @@
 <?php
 
+namespace Bbdgnc\CycloBranch\Enum;
 
 class ImportTypeEnum {
 

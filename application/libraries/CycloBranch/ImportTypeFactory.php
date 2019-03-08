@@ -2,6 +2,9 @@
 
 namespace Bbdgnc\CycloBranch;
 
+use Bbdgnc\CycloBranch\Enum\ImportTypeEnum;
+use CI_Controller;
+
 class ImportTypeFactory {
 
     /**

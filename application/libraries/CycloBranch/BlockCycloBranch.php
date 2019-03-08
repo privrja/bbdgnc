@@ -57,15 +57,19 @@ class BlockCycloBranch extends AbstractCycloBranch {
             }
         }
 
+        var_dump("HERE");
         for ($index = 0; $index < $length; ++$index) {
             $arTmp = explode('in', $arReference[$index]);
             if (sizeof($arTmp) === 2) {
                 $strReference = $arTmp[1];
+                // TODO pokud prvni znak je " " odstranit
             } else {
                 $strReference = $arTmp[0];
             }
             $referenceParser = new ReferenceParser();
             $referenceResult = $referenceParser->parse($strReference);
+            var_dump($referenceResult);
+            var_dump($strReference);
             if ($referenceResult->isAccepted()) {
                 $arDatabaseReference[] = $referenceResult->getResult();
                 if ($arSmiles[$index] === "") {
