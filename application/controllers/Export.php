@@ -3,9 +3,11 @@
 use Bbdgnc\Base\HelperEnum;
 use Bbdgnc\Base\ModelEnum;
 use Bbdgnc\CycloBranch\BlockCycloBranch;
+use Bbdgnc\CycloBranch\ModificationCycloBranch;
+use Bbdgnc\CycloBranch\SequenceCycloBranch;
+use Bbdgnc\Enum\Front;
 
 class Export extends CI_Controller {
-
 
     public function __construct() {
         parent::__construct();
@@ -16,9 +18,23 @@ class Export extends CI_Controller {
     }
 
     public function index() {
+        $this->load->view(Front::TEMPLATES_HEADER);
+        $this->load->view('export/index');
+        $this->load->view(Front::TEMPLATES_FOOTER);
+    }
+
+    public function block() {
         $blockExport = new BlockCycloBranch($this);
         $blockExport->export();
     }
 
+    public function modification() {
+        $blockExport = new ModificationCycloBranch($this);
+        $blockExport->export();
+    }
 
+    public function sequence() {
+        $blockExport = new SequenceCycloBranch($this);
+        $blockExport->export();
+    }
 }

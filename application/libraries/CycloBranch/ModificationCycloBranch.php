@@ -8,8 +8,19 @@ class ModificationCycloBranch extends AbstractCycloBranch {
         // TODO: Implement parseLine() method.
     }
 
-    public function export() {
-        // TODO: Implement export() method.
+    public function parse($strText) {
+        // TODO: Implement parse() method.
     }
 
+    public static function reject() {
+        // TODO: Implement reject() method.
+    }
+
+    public function download() {
+        // TODO: Implement download() method.
+    }
+
+    protected function getFileName() {
+        // TODO: Implement getFileName() method.
+    }
 }
