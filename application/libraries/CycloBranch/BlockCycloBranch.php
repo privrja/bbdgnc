@@ -118,7 +118,6 @@ class BlockCycloBranch extends AbstractCycloBranch {
             file_put_contents(self::FILE_NAME, $strData, FILE_APPEND);
         }
 
-
     }
 
     /**

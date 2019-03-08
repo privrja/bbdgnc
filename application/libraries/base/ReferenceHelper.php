@@ -21,7 +21,7 @@ class ReferenceHelper {
             case ServerEnum::PDB:
                 return ServerEnum::$allValues[ServerEnum::PDB] . self::COLON . $reference;
             case ServerEnum::NORINE:
-                return ServerEnum::$allValues[ServerEnum::NORINE] . self::COLON . $reference;
+                return $reference;
             default:
                 return self::defaultValue($smiles);
         }
