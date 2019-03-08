@@ -2,6 +2,8 @@
 
 namespace Bbdgnc\CycloBranch;
 
+use Bbdgnc\Base\Logger;
+use Bbdgnc\Enum\LoggerEnum;
 use Bbdgnc\Smiles\Parser\IParser;
 use CI_Controller;
 
@@ -26,8 +28,12 @@ abstract class AbstractCycloBranch implements ICycloBranch, IParser {
             return;
         }
         while (($line = fgets($handle)) !== false) {
-            $arBlocks = $this->parse($line);
-            $this->save($arBlocks->getResult());
+            $arBlocksResult = $this->parse($line);
+            if ($arBlocksResult->isAccepted()) {
+                $this->save($arBlocksResult->getResult());
+            } else {
+                Logger::log(LoggerEnum::WARNING, "Line not parsed correctly" . PHP_EOL . $line . $arBlocksResult->getErrorMessage());
+            }
         }
         fclose($handle);
         unlink($filePath);

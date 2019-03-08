@@ -37,10 +37,14 @@
         </ul>
         <ul class="main-menu-right">
             <li class="main-menu">
-                <i class="fa fa-upload"></i> Import
+                <a href="<?= site_url("import") ?>" class="a-menu">
+                    <i class="fa fa-upload"></i> Import
+                </a>
             </li>
             <li class="main-menu">
-                <i class="fa fa-download"></i> Export
+                <a href="<?= site_url("export") ?>" class="a-menu">
+                    <i class="fa fa-download"></i> Export
+                </a>
             </li>
             <!--            <li class="main-menu">-->
             <!--                <a href="-->

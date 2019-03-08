@@ -78,6 +78,19 @@ final class BlockCycloBranchTest extends TestCase {
         $this->assertEquals([$blockTO->asEntity()], $result->getResult());
     }
 
+    public function testWithRightData5() {
+        $parser = new BlockCycloBranch(null);
+        $result = $parser->parse("Chloro-Isoleucine\tCl-Ile\tC6H10ClNO\t147.0450919483\tC(C(O)=O)(N)C(C(C)Cl)C in CSID: 10269389");
+        $blockTO = new BlockTO(0, "Chloro-Isoleucine", "Cl-Ile", "C(C(O)=O)(N)C(C(C)Cl)C", ComputeEnum::NO);
+        $blockTO->mass = 147.0450919483;
+        $blockTO->formula = "C6H10ClNO";
+        // TODO unique smiles
+        $blockTO->uniqueSmiles = "C(C(O)=O)(N)C(C(C)Cl)C";
+        $blockTO->database = ServerEnum::CHEMSPIDER;
+        $blockTO->identifier = 10269389;
+        $this->assertEquals([$blockTO->asEntity()], $result->getResult());
+    }
+
     public function testWithWrongData() {
         $parser = new BlockCycloBranch(null);
         $result = $parser->parse("Phenylalanine Phe C9H9NO 147.0684140000 CSID: 969");

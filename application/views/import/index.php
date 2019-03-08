@@ -1,5 +1,7 @@
 <?php
 
+use Bbdgnc\CycloBranch\Enum\ImportTypeEnum;
+
 ?>
 
 <div id="div-full">
