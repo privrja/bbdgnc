@@ -6,6 +6,6 @@ class CommonConstants {
 
     const ZERO = "0";
     const SPACE = " ";
-    const PAGING = 30;
+    const PAGING = 50;
 
 }

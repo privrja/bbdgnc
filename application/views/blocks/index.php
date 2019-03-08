@@ -65,5 +65,6 @@ use Bbdgnc\Finder\Enum\ServerEnum;
                 <?php endforeach; ?>
             </div>
         </div>
+        <p><?= $links; ?></p>
     </article>
 </div>

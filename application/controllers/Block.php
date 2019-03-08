@@ -27,8 +27,16 @@ class Block extends CI_Controller {
         $this->load->library(LibraryEnum::PAGINATION);
     }
 
-    public function index() {
-        $data['blocks'] = $this->block_model->findAll();
+    public function index($start = 0) {
+        $config = [];
+        $config["base_url"] = base_url() . "index.php/block";
+        $config["total_rows"] = $this->block_model->findAllPagingCount();
+        $config["per_page"] = CommonConstants::PAGING;
+
+        $this->pagination->initialize($config);
+        $data['blocks'] = $this->block_model->findAllPaging($start);
+        $data["links"] = $this->pagination->create_links();
+
         $this->load->view(Front::TEMPLATES_HEADER);
         $this->load->view('blocks/index', $data);
         $this->load->view(Front::TEMPLATES_FOOTER);
@@ -156,7 +164,7 @@ class Block extends CI_Controller {
     }
 
     public function merge($page = 0) {
-        $config = array();
+        $config = [];
         $config["base_url"] = base_url() . "index.php/block/merge";
         $config["total_rows"] = $this->block_model->findGroupByFormulaCount();
         $config["per_page"] = CommonConstants::PAGING;
