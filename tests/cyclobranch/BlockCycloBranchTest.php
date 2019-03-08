@@ -11,13 +11,13 @@ use PHPUnit\Framework\TestCase;
 
 final class BlockCycloBranchTest extends TestCase {
 
-    protected function setUp() {
-        Logger::setPrefix('../.');
-    }
-
-    protected function tearDown() {
-        Logger::clearPrefix();
-    }
+//    protected function setUp() {
+//        Logger::setPrefix('../.');
+//    }
+//
+//    protected function tearDown() {
+//        Logger::clearPrefix();
+//    }
 
     public function testWithNull() {
         $parser = new BlockCycloBranch(null);
