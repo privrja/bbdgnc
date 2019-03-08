@@ -37,4 +37,5 @@ class Export extends CI_Controller {
         $blockExport = new SequenceCycloBranch($this);
         $blockExport->export();
     }
+
 }

@@ -30,6 +30,19 @@ abstract class CrudModel extends CI_Model {
         return $query->result_array();
     }
 
+    public function findAllPagingCount() {
+        $this->db->from($this->getTableName());
+        $query = $this->db->get();
+        return $query->num_rows();
+    }
+
+    public function findAllPaging($start) {
+        $this->db->from($this->getTableName());
+        $this->db->limit(CommonConstants::PAGING, $start);
+        $query = $this->db->get();
+        return $query->result_array();
+    }
+
     public function findById($id) {
         $query = $this->db->get_where($this->getTableName(), array(self::ID => $id));
         return $query->row_array();

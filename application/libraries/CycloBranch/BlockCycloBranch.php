@@ -18,7 +18,6 @@ use Bbdgnc\Smiles\Parser\Accept;
 use Bbdgnc\Smiles\Parser\ReferenceParser;
 use Bbdgnc\Smiles\Parser\Reject;
 use Bbdgnc\TransportObjects\BlockTO;
-use SebastianBergmann\CodeCoverage\Report\PHP;
 
 class BlockCycloBranch extends AbstractCycloBranch {
 

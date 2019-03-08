@@ -4,9 +4,7 @@ namespace Bbdgnc\CycloBranch;
 
 class ModificationCycloBranch extends AbstractCycloBranch {
 
-    protected function parseLine(string $line) {
-        // TODO: Implement parseLine() method.
-    }
+    const FILE_NAME = './uploads/modifications.txt';
 
     public function parse($strText) {
         // TODO: Implement parse() method.
@@ -21,6 +19,6 @@ class ModificationCycloBranch extends AbstractCycloBranch {
     }
 
     protected function getFileName() {
-        // TODO: Implement getFileName() method.
+        return self::FILE_NAME;
     }
 }
