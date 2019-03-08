@@ -143,8 +143,6 @@ final class BlockCycloBranchTest extends TestCase {
         $this->assertEquals([$blockTO->asEntity()], $result->getResult());
     }
 
-
-
     public function testWithWrongData() {
         $parser = new BlockCycloBranch(null);
         $result = $parser->parse("Phenylalanine Phe C9H9NO 147.0684140000 CSID: 969");
