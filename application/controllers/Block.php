@@ -1,9 +1,11 @@
 <?php
 
+use Bbdgnc\Base\CommonConstants;
 use Bbdgnc\Base\HelperEnum;
 use Bbdgnc\Base\LibraryEnum;
 use Bbdgnc\Base\Logger;
 use Bbdgnc\Base\ModelEnum;
+use Bbdgnc\Database\BlockDatabase;
 use Bbdgnc\Enum\ComputeEnum;
 use Bbdgnc\Enum\Front;
 use Bbdgnc\Enum\LoggerEnum;
@@ -22,6 +24,7 @@ class Block extends CI_Controller {
         $this->load->model(ModelEnum::BLOCK_MODEL);
         $this->load->helper([HelperEnum::HELPER_URL, HelperEnum::HELPER_FORM]);
         $this->load->library(LibraryEnum::FORM_VALIDATION);
+        $this->load->library(LibraryEnum::PAGINATION);
     }
 
     public function index() {
@@ -150,6 +153,22 @@ class Block extends CI_Controller {
         $blockTO->database = $this->input->post(Front::BLOCK_IDENTIFIER);
         $blockTO->identifier = $this->input->post(Front::BLOCK_REFERENCE_SERVER);
         return $blockTO;
+    }
+
+    public function merge($page = 0) {
+        $config = array();
+        $config["base_url"] = base_url() . "index.php/block/merge";
+        $config["total_rows"] = $this->block_model->findGroupByFormulaCount();
+        $config["per_page"] = CommonConstants::PAGING;
+        $config["uri_segment"] = 3;
+
+        $this->pagination->initialize($config);
+
+        $blockDatabase = new BlockDatabase($this);
+        $data["results"] = $blockDatabase->findMergeBlocks($page);
+        $data["links"] = $this->pagination->create_links();
+
+        $this->load->view("blocks/merge", $data);
     }
 
 }

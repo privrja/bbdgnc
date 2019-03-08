@@ -33,6 +33,13 @@ abstract class ServerEnum {
         'PDB: ' => self::PDB,
     ];
 
+    public static $cycloBranchValues = [
+        self::PUBCHEM => 'CID: ',
+        self::CHEMSPIDER => 'CSID: ',
+        self::PDB => 'PDB: ',
+        self::CHEBI => 'ChEBI: ',
+    ];
+
     /**
      * Create link to web page to the molecule
      * @param int $intServerEnum enum code for server

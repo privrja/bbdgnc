@@ -12,4 +12,6 @@ class HelperEnum {
 
     const HELPER_SESSION = "session";
 
+    const HELPER_DOWNLOAD = 'download';
+
 }

@@ -6,20 +6,19 @@ use Bbdgnc\Finder\Enum\ServerEnum;
 
 class ReferenceHelper {
 
-    const COLON = ": ";
     const SMILES = "SMILES: ";
 
-    public static function reference(int $database, $reference, $smiles) {
+    public static function reference($database, $reference, $smiles) {
         if ($reference == 0) {
             self::defaultValue($smiles);
         }
         switch ($database) {
             case ServerEnum::PUBCHEM:
-                return ServerEnum::$allValues[ServerEnum::CHEMSPIDER] . self::COLON . $reference;
+                return ServerEnum::$cycloBranchValues[ServerEnum::CHEMSPIDER] . $reference;
             case ServerEnum::CHEMSPIDER:
-                return ServerEnum::$allValues[ServerEnum::PUBCHEM] . self::COLON . $reference;
+                return ServerEnum::$cycloBranchValues[ServerEnum::PUBCHEM] . $reference;
             case ServerEnum::PDB:
-                return ServerEnum::$allValues[ServerEnum::PDB] . self::COLON . $reference;
+                return ServerEnum::$cycloBranchValues[ServerEnum::PDB] . $reference;
             case ServerEnum::NORINE:
                 return $reference;
             default:

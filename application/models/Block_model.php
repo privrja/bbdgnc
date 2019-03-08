@@ -1,5 +1,6 @@
 <?php
 
+use Bbdgnc\Base\CommonConstants;
 use Bbdgnc\Base\CrudModel;
 use Bbdgnc\TransportObjects\BlockTO;
 
@@ -43,6 +44,35 @@ class Block_model extends CrudModel {
             ->join('b2s', 'b2s.block_id = block.id')
             ->where('b2s.sequence_id', $id);
         $query = $this->db->get();
+        return $query->result_array();
+    }
+
+    public function findAllMergeByFormula() {
+        $this->db->from($this->getTableName());
+        $this->db->order_by('formula', 'asc');
+        $query = $this->db->get();
+        return $query->result_array();
+    }
+
+    public function findGroupByFormulaCount() {
+        $this->db->select('formula');
+        $this->db->from($this->getTableName());
+        $this->db->group_by('residue');
+        $query = $this->db->get();
+        return $query->num_rows();
+    }
+
+    public function findGroupByFormula(int $start) {
+        $this->db->select('residue');
+        $this->db->from($this->getTableName());
+        $this->db->group_by('residue');
+        $this->db->limit(CommonConstants::PAGING, $start);
+        $query = $this->db->get();
+        return $query->result_array();
+    }
+
+    public function findByFormula(string $formula) {
+        $query = $this->db->get_where($this->getTableName(), ['residue' => $formula]);
         return $query->result_array();
     }
 

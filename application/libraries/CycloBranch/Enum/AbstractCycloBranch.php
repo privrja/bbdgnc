@@ -21,7 +21,7 @@ abstract class AbstractCycloBranch implements ICycloBranch, IParser {
         $this->controller = $controller;
     }
 
-    public function import(string $filePath) {
+    public final function import(string $filePath) {
         ini_set('max_execution_time', 120);
         $handle = fopen($filePath, 'r');
         if (!$handle) {
@@ -44,7 +44,15 @@ abstract class AbstractCycloBranch implements ICycloBranch, IParser {
 
     public abstract static function reject();
 
-    public abstract function export();
+    public abstract function download();
+
+    public final function export() {
+        if (file_exists($this->getFileName())) {
+            unlink($this->getFileName());
+        }
+        $this->download();
+        force_download($this->getFileName(), null);
+    }
 
     private function save(array $arBlocks) {
         $this->controller->block_model->startTransaction();

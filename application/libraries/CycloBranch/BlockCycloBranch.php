@@ -2,9 +2,11 @@
 
 namespace Bbdgnc\CycloBranch;
 
+use Bbdgnc\Base\CommonConstants;
 use Bbdgnc\Base\FormulaHelper;
 use Bbdgnc\Base\Logger;
 use Bbdgnc\Base\ReferenceHelper;
+use Bbdgnc\Database\BlockDatabase;
 use Bbdgnc\Enum\ComputeEnum;
 use Bbdgnc\Enum\Front;
 use Bbdgnc\Enum\LoggerEnum;
@@ -26,7 +28,7 @@ class BlockCycloBranch extends AbstractCycloBranch {
     const REFERENCE = 4;
     const LENGTH = 5;
 
-    const FILE_NAME = 'blocks.txt';
+    const FILE_NAME = './uploads/blocks.txt';
 
     public function parse($line) {
         $arItems = preg_split('/\t/', $line);
@@ -106,18 +108,26 @@ class BlockCycloBranch extends AbstractCycloBranch {
         return new Accept($arBlocks, '');
     }
 
-    public function export() {
-        $arResult = $this->controller->block_model->findAll();
-        foreach ($arResult as $block) {
-            $strData =
-                $block['name'] . "\t" .
-                $block['acronym'] . "\t" .
-                $block['residue'] . "\t" .
-                $block['mass'] . "\t" .
-                ReferenceHelper::reference($block['database'], $block['reference'], $block['smiles']);
-            file_put_contents(self::FILE_NAME, $strData, FILE_APPEND);
+    public function download() {
+        $blockDatabase = new BlockDatabase($this->controller);
+        $start = 0;
+        $arResult = $blockDatabase->findMergeBlocks($start);
+        while (!empty($arResult)) {
+            foreach ($arResult as $formula) {
+                foreach ($formula as $block) {
+                $strData =
+                    $block['name'] . "\t" .
+                    $block['acronym'] . "\t" .
+                    $block['residue'] . "\t" .
+                    $block['mass'] . "\t" .
+                    ReferenceHelper::reference($block['database'], $block['identifier'], $block['smiles']) .
+                    PHP_EOL;
+                file_put_contents(self::FILE_NAME, $strData, FILE_APPEND);
+                }
+            }
+            $start += CommonConstants::PAGING;
+            $arResult = $blockDatabase->findMergeBlocks($start);
         }
-
     }
 
     /**
@@ -131,4 +141,5 @@ class BlockCycloBranch extends AbstractCycloBranch {
     protected function getFileName() {
         return self::FILE_NAME;
     }
+
 }

@@ -1,5 +1,7 @@
 <?php
 
+namespace Bbdgnc\Database;
+
 use Bbdgnc\Base\Logger;
 use Bbdgnc\Enum\LoggerEnum;
 use Bbdgnc\Enum\ModificationTypeEnum;
@@ -12,10 +14,9 @@ use Bbdgnc\TransportObjects\BlockTO;
 use Bbdgnc\TransportObjects\BlockToSequenceTO;
 use Bbdgnc\TransportObjects\ModificationTO;
 use Bbdgnc\TransportObjects\SequenceTO;
+use SplObjectStorage;
 
-class SequenceDatabase {
-
-    private $controller;
+class SequenceDatabase extends AbstractDatabase {
 
     /** @var SequenceTO $sequenceTO */
     private $sequenceTO;
@@ -32,18 +33,10 @@ class SequenceDatabase {
     private $sequenceId;
 
     /**
-     * SequenceDatabase constructor.
-     * @param Land $controller
-     */
-    public function __construct($controller) {
-        $this->controller = $controller;
-    }
-
-    /**
      * @param SequenceTO $sequenceTO
      * @param SplObjectStorage $blocks
      * @param array $modifications
-     * @throws Exception
+     * @throws DatabaseException
      */
     public function save(SequenceTO $sequenceTO, SplObjectStorage $blocks, array $modifications = []) {
         try {
@@ -62,7 +55,7 @@ class SequenceDatabase {
             Logger::log(LoggerEnum::ERROR, "Database exception: " . $e->getMessage() . " Trace: " . $e->getTraceAsString());
             $this->controller->block_model->endTransaction();
             throw $e;
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             Logger::log(LoggerEnum::ERROR, $e->getMessage() . " Trace: " . $e->getTraceAsString());
             $this->controller->block_model->endTransaction();
         }

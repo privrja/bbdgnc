@@ -7,6 +7,7 @@ use Bbdgnc\Base\HelperEnum;
 use Bbdgnc\Base\LibraryEnum;
 use Bbdgnc\Base\ModelEnum;
 use Bbdgnc\Base\SequenceHelper;
+use Bbdgnc\Database\SequenceDatabase;
 use Bbdgnc\Enum\ComputeEnum;
 use Bbdgnc\Enum\Front;
 use Bbdgnc\Enum\LoggerEnum;
