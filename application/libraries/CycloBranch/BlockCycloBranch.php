@@ -74,6 +74,7 @@ class BlockCycloBranch extends AbstractCycloBranch {
                         $findResult = null;
                         $outArResult = [];
                         try {
+                            var_dump($referenceResult->getResult());
                             $findResult = $finder->findByIdentifier($referenceResult->getResult()->identifier, $outArResult);
                         } catch (BadTransferException $e) {
                             Logger::log(LoggerEnum::WARNING, "Block not found");

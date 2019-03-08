@@ -2,6 +2,7 @@
 
 namespace Bbdgnc\Test\CycloBranch\Parser;
 
+use Bbdgnc\Base\Logger;
 use Bbdgnc\CycloBranch\BlockCycloBranch;
 use Bbdgnc\Enum\ComputeEnum;
 use Bbdgnc\Finder\Enum\ServerEnum;
@@ -9,6 +10,14 @@ use Bbdgnc\TransportObjects\BlockTO;
 use PHPUnit\Framework\TestCase;
 
 final class BlockCycloBranchTest extends TestCase {
+
+//    protected function setUp() {
+//        Logger::setPrefix('../.');
+//    }
+//
+//    protected function tearDown() {
+//        Logger::clearPrefix();
+//    }
 
     public function testWithNull() {
         $parser = new BlockCycloBranch(null);
