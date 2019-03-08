@@ -14,13 +14,4 @@ class Sequence_model extends CrudModel {
         return self::TABLE_NAME;
     }
 
-//    public function findSequenceByIdWithBlocks($id) {
-//        $query = $this->db
-//            ->from($this->getTableName())
-//            ->join('b2s', 'b2s.sequence_id = ' . $this->getTableName() . self::DOT . self::ID)
-//            ->where($this->getTableName() . self::DOT . self::ID, [self::ID => $id]);
-//
-//        return $query->result_array();
-//    }
-
 }
