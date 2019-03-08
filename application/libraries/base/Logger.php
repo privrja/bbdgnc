@@ -25,7 +25,6 @@ class Logger {
         $caller = array_shift($bt);
         $str = LoggerEnum::$values[$lvl] . ' - ' . date('Y-m-d h:i:s', time())
             . " --> " . $msg . " in " . $caller['file'] . " on line: " . $caller['line'] . "\n";
-        var_dump(getcwd());
         file_put_contents(self::$prefix . self::FILE . date("Y-m-d", time()) . ".php", $str, FILE_APPEND);
     }
 

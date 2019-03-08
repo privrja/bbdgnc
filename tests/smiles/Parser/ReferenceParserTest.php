@@ -60,6 +60,24 @@ final class ReferenceParserTest extends TestCase {
         $this->assertEquals(new Accept($reference, ''), $parser->parse('CSID: 454123'));
     }
 
+    public function testWithRightData6() {
+        $parser = new ReferenceParser();
+        $reference = new ReferenceTO();
+        $reference->database = ServerEnum::PDB;
+        $reference->identifier = 4564;
+        $this->assertEquals(new Accept($reference, ''), $parser->parse('PDB: 4564'));
+    }
+
+    public function testWithRightData7() {
+        $parser = new ReferenceParser();
+        $parser = new ReferenceParser();
+        $reference = new ReferenceTO();
+        $reference->database = ServerEnum::PDB;
+        $reference->identifier = 4564;
+        $this->assertEquals(new Accept($reference, '8'), $parser->parse('PDB: 45648'));
+    }
+
+
     public function testWithWrongData() {
         $parser = new ReferenceParser();
         $this->assertEquals(ReferenceParser::reject(), $parser->parse('PDB MYR'));
@@ -87,7 +105,7 @@ final class ReferenceParserTest extends TestCase {
 
     public function testWithWrongData6() {
         $parser = new ReferenceParser();
-        $this->assertEquals(ReferenceParser::reject(), $parser->parse('PDB: 4564'));
+        $this->assertEquals(ReferenceParser::reject(), $parser->parse('PDB: 34,'));
     }
 
     public function testWithWrongData7() {

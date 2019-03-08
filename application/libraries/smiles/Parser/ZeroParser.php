@@ -11,7 +11,7 @@ class ZeroParser implements IParser {
      * @return Accept|Reject
      */
     public function parse($strText) {
-        return UseRegexParser::parseTextWithRegexType($strText, '/0/', $this);
+        return UseRegexParser::parseTextWithRegexType($strText, '/^0/', $this);
     }
 
     /**

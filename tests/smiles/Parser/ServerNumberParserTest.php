@@ -44,9 +44,14 @@ final class ServerNumberParserTest extends TestCase {
         $this->assertEquals(new Accept($reference, ''), $parser->parse('CSID: 1'));
     }
 
+    public function testWithRightData4() {
+        $parser = new ServerNumReferenceParser();
+        $this->assertEquals(new Accept(new ReferenceTO(), ''), $parser->parse('CSID: 0'));
+    }
+
     public function testWithWrongData() {
         $parser = new ServerNumReferenceParser();
-        $this->assertEquals(ServerNumReferenceParser::reject(), $parser->parse('CSID: 0'));
+        $this->assertEquals(ServerNumReferenceParser::reject(), $parser->parse('CSID: -1'));
     }
 
     public function testWithWrongData2() {

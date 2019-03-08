@@ -39,4 +39,9 @@ class ZeroParserTest extends TestCase {
         $this->assertEquals(ZeroParser::reject(), $parser->parse('a'));
     }
 
+    public function testWithWrongData4() {
+        $parser = new ZeroParser();
+        $this->assertEquals(ZeroParser::reject(), $parser->parse('NOR00864'));
+    }
+
 }
