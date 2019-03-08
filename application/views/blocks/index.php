@@ -13,6 +13,10 @@ use Bbdgnc\Finder\Enum\ServerEnum;
         <a href="<?= site_url("block/new") ?>">
             Add New Block
         </a>
+        <br/>
+        <a href="<?= site_url("block/merge") ?>">
+            Merge by Formula
+        </a>
 
         <div class="table t">
             <div class="thead t">

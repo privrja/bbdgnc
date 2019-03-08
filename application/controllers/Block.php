@@ -176,7 +176,9 @@ class Block extends CI_Controller {
         $data["results"] = $blockDatabase->findMergeBlocks($page);
         $data[PagingEnum::LINKS] = $this->pagination->create_links();
 
+        $this->load->view(Front::TEMPLATES_HEADER);
         $this->load->view("blocks/merge", $data);
+        $this->load->view(Front::TEMPLATES_FOOTER);
     }
 
 }
