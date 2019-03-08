@@ -5,6 +5,7 @@ use Bbdgnc\Base\HelperEnum;
 use Bbdgnc\Base\LibraryEnum;
 use Bbdgnc\Base\Logger;
 use Bbdgnc\Base\ModelEnum;
+use Bbdgnc\Base\PagingEnum;
 use Bbdgnc\Database\BlockDatabase;
 use Bbdgnc\Enum\ComputeEnum;
 use Bbdgnc\Enum\Front;
@@ -29,13 +30,13 @@ class Block extends CI_Controller {
 
     public function index($start = 0) {
         $config = [];
-        $config["base_url"] = base_url() . "index.php/block";
-        $config["total_rows"] = $this->block_model->findAllPagingCount();
-        $config["per_page"] = CommonConstants::PAGING;
+        $config[PagingEnum::BASE_URL] = base_url() . "index.php/block";
+        $config[PagingEnum::TOTAL_ROWS] = $this->block_model->findAllPagingCount();
+        $config[PagingEnum::PER_PAGE] = CommonConstants::PAGING;
 
         $this->pagination->initialize($config);
         $data['blocks'] = $this->block_model->findAllPaging($start);
-        $data["links"] = $this->pagination->create_links();
+        $data[PagingEnum::LINKS] = $this->pagination->create_links();
 
         $this->load->view(Front::TEMPLATES_HEADER);
         $this->load->view('blocks/index', $data);
@@ -165,16 +166,15 @@ class Block extends CI_Controller {
 
     public function merge($page = 0) {
         $config = [];
-        $config["base_url"] = base_url() . "index.php/block/merge";
-        $config["total_rows"] = $this->block_model->findGroupByFormulaCount();
-        $config["per_page"] = CommonConstants::PAGING;
-        $config["uri_segment"] = 3;
+        $config[PagingEnum::BASE_URL] = base_url() . "index.php/block/merge";
+        $config[PagingEnum::TOTAL_ROWS] = $this->block_model->findGroupByFormulaCount();
+        $config[PagingEnum::PER_PAGE] = CommonConstants::PAGING;
 
         $this->pagination->initialize($config);
 
         $blockDatabase = new BlockDatabase($this);
         $data["results"] = $blockDatabase->findMergeBlocks($page);
-        $data["links"] = $this->pagination->create_links();
+        $data[PagingEnum::LINKS] = $this->pagination->create_links();
 
         $this->load->view("blocks/merge", $data);
     }

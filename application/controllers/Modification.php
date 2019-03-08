@@ -1,9 +1,11 @@
 <?php
 
+use Bbdgnc\Base\CommonConstants;
 use Bbdgnc\Base\HelperEnum;
 use Bbdgnc\Base\LibraryEnum;
 use Bbdgnc\Base\Logger;
 use Bbdgnc\Base\ModelEnum;
+use Bbdgnc\Base\PagingEnum;
 use Bbdgnc\Enum\Front;
 use Bbdgnc\Enum\LoggerEnum;
 use Bbdgnc\TransportObjects\ModificationTO;
@@ -17,10 +19,19 @@ class Modification extends CI_Controller {
         $this->load->model(ModelEnum::MODIFICATION_MODEL);
         $this->load->helper([HelperEnum::HELPER_URL, HelperEnum::HELPER_FORM]);
         $this->load->library(LibraryEnum::FORM_VALIDATION);
+        $this->load->library(LibraryEnum::PAGINATION);
     }
 
-    public function index() {
-        $data['modifications'] = $this->modification_model->findAll();
+    public function index($start = 0) {
+        $config = [];
+        $config[PagingEnum::BASE_URL] = base_url() . "index.php/modification";
+        $config[PagingEnum::TOTAL_ROWS] = $this->modification_model->findAllPagingCount();
+        $config[PagingEnum::PER_PAGE] = CommonConstants::PAGING;
+
+        $this->pagination->initialize($config);
+        $data['modifications'] = $this->modification_model->findAllPaging($start);
+        $data[PagingEnum::LINKS] = $this->pagination->create_links();
+
         $this->load->view(Front::TEMPLATES_HEADER);
         $this->load->view('modifications/index', $data);
         $this->load->view(Front::TEMPLATES_FOOTER);
