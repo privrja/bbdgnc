@@ -62,9 +62,11 @@ class BlockCycloBranch extends AbstractCycloBranch {
             $arTmp = explode('in', $arReference[$index]);
             if (sizeof($arTmp) === 2) {
                 $strReference = $arTmp[1];
-                // TODO pokud prvni znak je " " odstranit
             } else {
                 $strReference = $arTmp[0];
+            }
+            if ($strReference[0] === " ") {
+                $strReference = substr($strReference, 1);
             }
             $referenceParser = new ReferenceParser();
             $referenceResult = $referenceParser->parse($strReference);
@@ -78,7 +80,6 @@ class BlockCycloBranch extends AbstractCycloBranch {
                         $findResult = null;
                         $outArResult = [];
                         try {
-                            var_dump($referenceResult->getResult());
                             $findResult = $finder->findByIdentifier($referenceResult->getResult()->identifier, $outArResult);
                         } catch (BadTransferException $e) {
                             Logger::log(LoggerEnum::WARNING, "Block not found");

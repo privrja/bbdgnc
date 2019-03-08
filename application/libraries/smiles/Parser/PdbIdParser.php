@@ -10,7 +10,10 @@ class PdbIdParser implements IParser {
      * @return Accept|Reject
      */
     public function parse($strText) {
-        if (preg_match('/^[A-Z]{3}/', $strText)) {
+        if (preg_match('/^[A-Z0-9]{4}/', $strText)) {
+            return new Accept(substr($strText, 0, 4), substr($strText, 4));
+        }
+        if (preg_match('/^[A-Z0-9]{3}/', $strText)) {
             return new Accept(substr($strText, 0, 3), substr($strText, 3));
         }
         return self::reject();

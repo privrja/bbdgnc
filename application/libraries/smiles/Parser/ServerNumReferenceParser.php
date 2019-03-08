@@ -3,6 +3,7 @@
 namespace Bbdgnc\Smiles\Parser;
 
 use Bbdgnc\TransportObjects\ReferenceTO;
+use phpDocumentor\Reflection\Types\Self_;
 
 class ServerNumReferenceParser implements IParser {
 
@@ -20,6 +21,14 @@ class ServerNumReferenceParser implements IParser {
         $numberParser = new NatParser();
         $numberResult = $numberParser->parse($serverResult->getRemainder());
         if (!$numberResult->isAccepted()) {
+            $zeroParser = new ZeroParser();
+            $zeroResult = $zeroParser->parse($serverResult->getRemainder());
+            if ($zeroResult->isAccepted()) {
+                $reference = new ReferenceTO();
+                $reference->database = null;
+                $reference->identifier = null;
+                return new Accept($reference, $zeroResult->getRemainder());
+            }
             return self::reject();
         }
         $reference = new ReferenceTO();

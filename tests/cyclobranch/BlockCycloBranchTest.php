@@ -11,13 +11,13 @@ use PHPUnit\Framework\TestCase;
 
 final class BlockCycloBranchTest extends TestCase {
 
-//    protected function setUp() {
-//        Logger::setPrefix('../.');
-//    }
-//
-//    protected function tearDown() {
-//        Logger::clearPrefix();
-//    }
+    protected function setUp() {
+        Logger::setPrefix('../.');
+    }
+
+    protected function tearDown() {
+        Logger::clearPrefix();
+    }
 
     public function testWithNull() {
         $parser = new BlockCycloBranch(null);
@@ -93,12 +93,57 @@ final class BlockCycloBranchTest extends TestCase {
         $blockTO = new BlockTO(0, "Chloro-Isoleucine", "Cl-Ile", "C(C(O)=O)(N)C(C(C)Cl)C", ComputeEnum::NO);
         $blockTO->mass = 147.0450919483;
         $blockTO->formula = "C6H10ClNO";
-        // TODO unique smiles
-        $blockTO->uniqueSmiles = "C(C(O)=O)(N)C(C(C)Cl)C";
+        $blockTO->uniqueSmiles = "CC(Cl)C(C)C(N)C(O)=O";
         $blockTO->database = ServerEnum::CHEMSPIDER;
         $blockTO->identifier = 10269389;
         $this->assertEquals([$blockTO->asEntity()], $result->getResult());
     }
+
+    public function testWithRightData6() {
+        $parser = new BlockCycloBranch(null);
+        $result = $parser->parse("DL-Glutamic acid/D-Glutamic Acid/beta-methyl-aspartic acid/D-beta-methyl-aspartic acid/beta-methoxy-aspartic acid/O-acetyl-Serine\tGlu/D-Glu/bMe-Asp/D-bMe-Asp/bOMe-Asp/Ac-Ser\tC5H7NO3\t129.0425930962\tCSID: 591/PDB: DGL/PDB: 2AS/PDB: ACB/CSID: 92764/CSID: 184");
+        $arExpected = [];
+        $length = 6;
+        $arExpected[] = new BlockTO(0, "DL-Glutamic acid", "Glu", "", ComputeEnum::NO);
+        $arExpected[] = new BlockTO(0, "D-Glutamic Acid", "D-Glu", "", ComputeEnum::NO);
+        $arExpected[] = new BlockTO(0, "beta-methyl-aspartic acid", "bMe-Asp", "", ComputeEnum::NO);
+        $arExpected[] = new BlockTO(0, "D-beta-methyl-aspartic acid", "D-bMe-Asp", "", ComputeEnum::NO);
+        $arExpected[] = new BlockTO(0, "beta-methoxy-aspartic acid", "bOMe-Asp", "", ComputeEnum::NO);
+        $arExpected[] = new BlockTO(0, "O-acetyl-Serine", "Ac-Ser", "", ComputeEnum::NO);
+        for ($index = 0; $index < $length; ++$index) {
+            $arExpected[$index]->mass = 129.0425930962;
+            $arExpected[$index]->formula = "C5H7NO3";
+        }
+        $arExpected[0]->database = ServerEnum::CHEMSPIDER;
+        $arExpected[0]->identifier = 591;
+        $arExpected[1]->database = ServerEnum::PDB;
+        $arExpected[1]->identifier = "DGL";
+        $arExpected[2]->database = ServerEnum::PDB;
+        $arExpected[2]->identifier = "2AS";
+        $arExpected[3]->database = ServerEnum::PDB;
+        $arExpected[3]->identifier = "ACB";
+        $arExpected[4]->database = ServerEnum::CHEMSPIDER;
+        $arExpected[4]->identifier = 92764;
+        $arExpected[5]->database = ServerEnum::CHEMSPIDER;
+        $arExpected[5]->identifier = 184;
+        for ($index = 0; $index < $length; ++$index) {
+            $arExpected[$index] = $arExpected[$index]->asEntity();
+        }
+        $this->assertEquals($arExpected, $result->getResult());
+    }
+
+    public function testWithRightData7() {
+        $parser = new BlockCycloBranch(null);
+        $result = $parser->parse("pyoverdin Pa A chromophore\tChrPaA\tC13H11N3O3\t257.0800412350\tC1=C(C(=CC2=C1N3C(C(=C2)N)=NC(CC3)C(O)=O)O)O in CSID: 0");
+        $blockTO = new BlockTO(0, "pyoverdin Pa A chromophore", "ChrPaA", "C1=C(C(=CC2=C1N3C(C(=C2)N)=NC(CC3)C(O)=O)O)O", ComputeEnum::NO);
+        $blockTO->mass = 257.0800412350;
+        $blockTO->formula = "C13H11N3O3";
+        $blockTO->uniqueSmiles = "NC1=CC2=C(C=C(O)C(=C2)O)N3CCC(N=C13)C(O)=O";
+        $blockTO->database = ServerEnum::PUBCHEM;
+        $this->assertEquals([$blockTO->asEntity()], $result->getResult());
+    }
+
+
 
     public function testWithWrongData() {
         $parser = new BlockCycloBranch(null);
