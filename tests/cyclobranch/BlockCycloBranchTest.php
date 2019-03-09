@@ -2,7 +2,6 @@
 
 namespace Bbdgnc\Test\CycloBranch\Parser;
 
-use Bbdgnc\Base\Logger;
 use Bbdgnc\CycloBranch\BlockCycloBranch;
 use Bbdgnc\Enum\ComputeEnum;
 use Bbdgnc\Finder\Enum\ServerEnum;

@@ -16,8 +16,9 @@ class SequenceCycloBranch extends AbstractCycloBranch {
 
     /**
      * SequenceCycloBranch constructor.
+     * @param CI_Controller $controller
      */
-    public function __construct(CI_Controller $controller) {
+    public function __construct($controller) {
         parent::__construct($controller);
         $this->database = new SequenceDatabase($controller);
     }

@@ -13,7 +13,7 @@ abstract class AbstractDatabase implements IDatabase {
      * AbstractDatabase constructor.
      * @param CI_Controller $controller
      */
-    public function __construct(CI_Controller $controller) {
+    public function __construct($controller) {
         $this->controller = $controller;
     }
 

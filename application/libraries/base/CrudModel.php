@@ -6,10 +6,9 @@ use Bbdgnc\Exception\UniqueConstraintException;
 use Bbdgnc\TransportObjects\IEntity;
 use CI_Model;
 
-abstract class CrudModel extends CI_Model {
+abstract class CrudModel extends CI_Model implements IDatabase {
 
     const ID = 'id';
-    const DOT = '.';
 
     public function __construct() {
         $this->load->database();
@@ -66,6 +65,7 @@ abstract class CrudModel extends CI_Model {
 
     /**
      * Insert blocks to database
+     * @param array $blocks
      */
     public function insertMore(array $blocks) {
         $this->db->insert_batch($this->getTableName(), $blocks);
