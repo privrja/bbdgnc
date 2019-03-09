@@ -2,9 +2,25 @@
 
 namespace Bbdgnc\CycloBranch;
 
+use Bbdgnc\Base\CommonConstants;
+use Bbdgnc\Database\ModificationDatabase;
+use CI_Controller;
+
 class ModificationCycloBranch extends AbstractCycloBranch {
 
     const FILE_NAME = './uploads/modifications.txt';
+
+    private $database;
+
+    /**
+     * ModificationCycloBranch constructor.
+     * @param CI_Controller $controller
+     */
+    public function __construct(CI_Controller $controller) {
+        parent::__construct($controller);
+        $this->database = new ModificationDatabase($controller);
+    }
+
 
     public function parse($strText) {
         // TODO: Implement parse() method.
@@ -15,7 +31,20 @@ class ModificationCycloBranch extends AbstractCycloBranch {
     }
 
     public function download() {
-        // TODO: Implement download() method.
+        $start = 0;
+        $arResult = $this->database->findAll($start);
+        while (!empty($arResult)) {
+            foreach ($arResult as $modification) {
+                $strData = $modification['name'] . "\t";
+                $strData .= $modification['formula'] . "\t";
+                $strData .= $modification['mass'] . "\t";
+                $strData .= $modification['nterminal'] . "\t";
+                $strData .= $modification['cterminal'];
+                file_put_contents(self::FILE_NAME, $strData, FILE_APPEND);
+            }
+            $start += CommonConstants::PAGING;
+            $arResult = $this->database->findAll($start);
+        }
     }
 
     protected function getFileName() {

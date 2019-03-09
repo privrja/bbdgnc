@@ -120,6 +120,7 @@ class BlockCycloBranch extends AbstractCycloBranch {
                 $strData = $this->setAcronyms($strData, $formula, $blockCount);
                 $strData .= $formula[0]['residue'] . "\t";
                 $strData .= $formula[0]['mass'] . "\t";
+                $strData .= $formula[0]['losses'] . "\t";
                 $strData = $this->setReferences($strData, $formula, $blockCount);
                 file_put_contents(self::FILE_NAME, $strData, FILE_APPEND);
             }
