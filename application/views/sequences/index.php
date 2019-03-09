@@ -48,13 +48,13 @@ use Bbdgnc\Finder\Enum\ServerEnum;
                             <?= $sequence['sequence'] ?>
                         </div>
                         <div class="td">
-                            <?= $sequence['n_modification_id'] ?>
+                            <?= $sequence['nname'] ?>
                         </div>
                         <div class="td">
-                            <?= $sequence['c_modification_id'] ?>
+                            <?= $sequence['cname'] ?>
                         </div>
                         <div class="td">
-                            <?= $sequence['b_modification_id'] ?>
+                            <?= $sequence['bname'] ?>
                         </div>
                         <div class="td">
                             <?php if ($sequence['database'] !== null && !empty($sequence['identifier'])): ?>

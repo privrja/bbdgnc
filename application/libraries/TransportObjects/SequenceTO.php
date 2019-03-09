@@ -57,6 +57,18 @@ class SequenceTO implements IEntity {
 
 
     public function asEntity() {
+        if ($this->nModification === "") {
+            $this->nModification = null;
+        }
+
+        if ($this->cModification === "") {
+            $this->cModification = null;
+        }
+
+        if ($this->bModification === "") {
+            $this->bModification = null;
+        }
+
         return [
             'type' => $this->sequenceType,
             'name' => $this->name,

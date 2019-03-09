@@ -39,7 +39,7 @@ class ModificationCycloBranch extends AbstractCycloBranch {
                 $strData .= $modification['formula'] . "\t";
                 $strData .= $modification['mass'] . "\t";
                 $strData .= $modification['nterminal'] . "\t";
-                $strData .= $modification['cterminal'];
+                $strData .= $modification['cterminal'] . PHP_EOL;
                 file_put_contents(self::FILE_NAME, $strData, FILE_APPEND);
             }
             $start += CommonConstants::PAGING;

@@ -31,11 +31,13 @@ class Sequence extends CI_Controller {
     public function index($start = 0) {
         $config = [];
         $config[PagingEnum::BASE_URL] = base_url() . "index.php/sequence";
-        $config[PagingEnum::TOTAL_ROWS] = $this->sequence_model->findAllPagingCount();
+        $config[PagingEnum::TOTAL_ROWS] = $this->sequenceDatabase->findSequenceWithModificationNamesPagingCount();
+//        $config[PagingEnum::TOTAL_ROWS] = $this->sequence_model->findAllPagingCount();
         $config[PagingEnum::PER_PAGE] = CommonConstants::PAGING;
 
         $this->pagination->initialize($config);
-        $data['sequences'] = $this->sequence_model->findAllPaging($start);
+//        $data['sequences'] = $this->sequence_model->findAllPaging($start);
+        $data['sequences'] = $this->sequenceDatabase->findSequenceWithModificationNamesPaging($start);
         $data[PagingEnum::LINKS] = $this->pagination->create_links();
 
         $this->load->view(Front::TEMPLATES_HEADER);

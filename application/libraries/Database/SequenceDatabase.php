@@ -150,4 +150,16 @@ class SequenceDatabase extends AbstractDatabase {
         return $detail;
     }
 
+    public function findAll($page) {
+        return $this->controller->sequence_model->findAllPaging($page);
+    }
+
+    public function findSequenceWithModificationNamesPaging($start) {
+        return $this->controller->sequence_model->findSequenceWithModificationNames($start);
+    }
+
+    public function findSequenceWithModificationNamesPagingCount() {
+        return $this->controller->sequence_model->findSequenceWithModificationNamesCount();
+    }
+
 }
