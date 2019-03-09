@@ -18,6 +18,7 @@ use Bbdgnc\Smiles\Parser\Accept;
 use Bbdgnc\Smiles\Parser\ReferenceParser;
 use Bbdgnc\Smiles\Parser\Reject;
 use Bbdgnc\TransportObjects\BlockTO;
+use CI_Controller;
 
 class BlockCycloBranch extends AbstractCycloBranch {
 
@@ -29,6 +30,18 @@ class BlockCycloBranch extends AbstractCycloBranch {
     const LENGTH = 5;
 
     const FILE_NAME = './uploads/blocks.txt';
+
+    protected $database;
+
+    /**
+     * BlockCycloBranch constructor.
+     * @param CI_Controller $controller
+     */
+    public function __construct(CI_Controller $controller) {
+        parent::__construct($controller);
+        $this->database = new BlockDatabase($controller);
+    }
+
 
     public function parse($line) {
         $arItems = preg_split('/\t/', $line);
@@ -109,9 +122,8 @@ class BlockCycloBranch extends AbstractCycloBranch {
     }
 
     public function download() {
-        $blockDatabase = new BlockDatabase($this->controller);
         $start = 0;
-        $arResult = $blockDatabase->findMergeBlocks($start);
+        $arResult = $this->database->findMergeBlocks($start);
         while (!empty($arResult)) {
             foreach ($arResult as $formula) {
                 $strData = "";
@@ -125,7 +137,7 @@ class BlockCycloBranch extends AbstractCycloBranch {
                 file_put_contents(self::FILE_NAME, $strData, FILE_APPEND);
             }
             $start += CommonConstants::PAGING;
-            $arResult = $blockDatabase->findMergeBlocks($start);
+            $arResult = $this->database->findMergeBlocks($start);
         }
     }
 

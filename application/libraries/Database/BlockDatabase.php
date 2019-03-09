@@ -13,4 +13,11 @@ class BlockDatabase extends AbstractDatabase {
         return $data;
     }
 
+    public function findAllPaging($start) {
+        return $this->controller->block_model->findAllPaging($start);
+    }
+
+    public function findAllPagingCount() {
+        return $this->controller->block_model->findAllPagingCount();
+    }
 }

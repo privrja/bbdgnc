@@ -32,7 +32,7 @@ class ModificationCycloBranch extends AbstractCycloBranch {
 
     public function download() {
         $start = 0;
-        $arResult = $this->database->findAll($start);
+        $arResult = $this->database->findAllPaging($start);
         while (!empty($arResult)) {
             foreach ($arResult as $modification) {
                 $strData = $modification['name'] . "\t";
@@ -43,7 +43,7 @@ class ModificationCycloBranch extends AbstractCycloBranch {
                 file_put_contents(self::FILE_NAME, $strData, FILE_APPEND);
             }
             $start += CommonConstants::PAGING;
-            $arResult = $this->database->findAll($start);
+            $arResult = $this->database->findAllPaging($start);
         }
     }
 

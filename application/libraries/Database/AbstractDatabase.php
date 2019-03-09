@@ -2,9 +2,10 @@
 
 namespace Bbdgnc\Database;
 
+use Bbdgnc\Base\IDatabase;
 use CI_Controller;
 
-abstract class AbstractDatabase {
+abstract class AbstractDatabase implements IDatabase {
 
     protected $controller;
 
@@ -15,6 +16,5 @@ abstract class AbstractDatabase {
     public function __construct(CI_Controller $controller) {
         $this->controller = $controller;
     }
-
 
 }
