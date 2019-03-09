@@ -6,7 +6,7 @@ use Bbdgnc\Exception\UniqueConstraintException;
 use Bbdgnc\TransportObjects\IEntity;
 use CI_Model;
 
-abstract class CrudModel extends CI_Model implements IDatabase {
+abstract class CrudModel extends CI_Model {
 
     const ID = 'id';
 

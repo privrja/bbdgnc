@@ -6,7 +6,7 @@
 <div id="div-full">
 
     <article>
-        <h2>Blocks</h2>
+        <h2>Modifications</h2>
         <a href="<?= site_url("modification/new") ?>">
             Add New Modification
         </a>

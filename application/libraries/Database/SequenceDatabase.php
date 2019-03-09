@@ -166,4 +166,16 @@ class SequenceDatabase extends AbstractDatabase {
     public function findAllPagingCount() {
         return $this->controller->sequence_model->findAllPaging();
     }
+
+    public function findById($id) {
+        return $this->controller->sequence_model->findById($id);
+    }
+
+    public function update($id, $to) {
+        $this->controller->sequence_model->update($id, $to);
+    }
+
+    public function insert($to) {
+        $this->controller->sequence_model->insert($to);
+    }
 }

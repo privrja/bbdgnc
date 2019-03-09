@@ -17,6 +17,8 @@ class Block extends CI_Controller {
 
     private $errors = "";
 
+    private $database;
+
     /**
      * Block constructor.
      */
@@ -26,16 +28,17 @@ class Block extends CI_Controller {
         $this->load->helper([HelperEnum::HELPER_URL, HelperEnum::HELPER_FORM]);
         $this->load->library(LibraryEnum::FORM_VALIDATION);
         $this->load->library(LibraryEnum::PAGINATION);
+        $this->database = new BlockDatabase($this);
     }
 
     public function index($start = 0) {
         $config = [];
         $config[PagingEnum::BASE_URL] = base_url() . "index.php/block";
-        $config[PagingEnum::TOTAL_ROWS] = $this->block_model->findAllPagingCount();
+        $config[PagingEnum::TOTAL_ROWS] = $this->database->findAllPagingCount();
         $config[PagingEnum::PER_PAGE] = CommonConstants::PAGING;
 
         $this->pagination->initialize($config);
-        $data['blocks'] = $this->block_model->findAllPaging($start);
+        $data['blocks'] = $this->database->findAllPaging($start);
         $data[PagingEnum::LINKS] = $this->pagination->create_links();
 
         $this->load->view(Front::TEMPLATES_HEADER);
@@ -58,7 +61,7 @@ class Block extends CI_Controller {
         }
         $blockTO = $this->setupNewBlock($smiles);
         try {
-            $this->block_model->insert($blockTO);
+            $this->database->insert($blockTO);
         } catch (UniqueConstraintException $exception) {
             $data[Front::ERRORS] = "Block with this acronym already in database";
             Logger::log(LoggerEnum::WARNING, $exception->getMessage());
@@ -80,14 +83,14 @@ class Block extends CI_Controller {
     }
 
     public function detail($id = 1) {
-        $data['block'] = $this->block_model->findById($id);
+        $data['block'] = $this->database->findById($id);
         $this->load->view(Front::TEMPLATES_HEADER);
         $this->load->view('blocks/detail', $data);
         $this->load->view(Front::TEMPLATES_FOOTER);
     }
 
     public function edit($id = 1) {
-        $data['block'] = $this->block_model->findById($id);
+        $data['block'] = $this->database->findById($id);
         $this->form_validation->set_rules(Front::BLOCK_NAME, 'Name', Front::REQUIRED);
         $this->form_validation->set_rules(Front::BLOCK_ACRONYM, 'Acronym', Front::REQUIRED);
         $this->form_validation->set_rules(Front::BLOCK_FORMULA, 'Formula', Front::REQUIRED);
@@ -98,7 +101,7 @@ class Block extends CI_Controller {
         }
         $blockTO = $this->setupBlock();
         try {
-            $this->block_model->update($id, $blockTO);
+            $this->database->update($id, $blockTO);
         } catch (Exception $exception) {
             $data[Front::ERRORS] = $exception->getMessage();
             Logger::log(LoggerEnum::ERROR, $exception->getTraceAsString());
@@ -169,13 +172,12 @@ class Block extends CI_Controller {
     public function merge($page = 0) {
         $config = [];
         $config[PagingEnum::BASE_URL] = base_url() . "index.php/block/merge";
-        $config[PagingEnum::TOTAL_ROWS] = $this->block_model->findGroupByFormulaCount();
+        $config[PagingEnum::TOTAL_ROWS] = $this->database->findGroupByFormulaCount();
         $config[PagingEnum::PER_PAGE] = CommonConstants::PAGING;
 
         $this->pagination->initialize($config);
 
-        $blockDatabase = new BlockDatabase($this);
-        $data["results"] = $blockDatabase->findMergeBlocks($page);
+        $data['results'] = $this->database->findMergeBlocks($page);
         $data[PagingEnum::LINKS] = $this->pagination->create_links();
 
         $this->load->view(Front::TEMPLATES_HEADER);

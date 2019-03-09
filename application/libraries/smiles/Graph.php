@@ -2,6 +2,8 @@
 
 namespace Bbdgnc\Smiles;
 
+use Bbdgnc\Base\Logger;
+use Bbdgnc\Enum\LoggerEnum;
 use Bbdgnc\Enum\PeriodicTableSingleton;
 use Bbdgnc\Exception\IllegalArgumentException;
 use Bbdgnc\Exception\IllegalStateException;
@@ -18,6 +20,8 @@ class Graph {
 
     /** @var string $uniqueSmiles */
     private $uniqueSmiles = "";
+
+    private $smiles = "";
 
     /** @var bool $isCyclic */
     private $isCyclic = false;
@@ -75,10 +79,12 @@ class Graph {
      * @param string $strText
      */
     private function buildGraph($strText): void {
+        $this->smiles = $strText;
         $strText = SmilesBuilder::removeUnnecessaryParentheses($strText);
         $smilesParser = new SmilesParser($this);
         $result = $smilesParser->parse($strText);
         if (!$result->isAccepted()) {
+            Logger::log(LoggerEnum::ERROR, $strText . 'Graph cannot be build');
             throw new IllegalArgumentException();
         }
     }
@@ -119,8 +125,13 @@ class Graph {
     }
 
     public function getUniqueSmiles(): string {
-        $this->cangen();
-        $this->genes();
+        try {
+            $this->cangen();
+            $this->genes();
+        } catch (\Error $e) {
+            Logger::log(LoggerEnum::ERROR, $this->smiles . PHP_EOL . $e->getMessage() . PHP_EOL . $e->getTraceAsString());
+            return $this->smiles;
+        }
         return $this->uniqueSmiles;
     }
 
@@ -567,6 +578,9 @@ class Graph {
                 $this->arNodes[$path[$index]]->getAtom()->asNonAromatic();
                 if ($index % 2 === 0) {
                     try {
+                        if (!isset($path[$index + 1])) {
+                            throw new IllegalArgumentException();
+                        }
                         $bond = $this->findBondTo($path[$index], $path[$index + 1]);
                         $bondBack = $this->findBondTo($path[$index + 1], $path[$index]);
                     } catch (NotFoundException $exception) {

@@ -15,7 +15,7 @@ class Sequence extends CI_Controller {
 
     private $errors = "";
 
-    private $sequenceDatabase;
+    private $database;
 
     public function __construct() {
         parent::__construct();
@@ -25,19 +25,17 @@ class Sequence extends CI_Controller {
         $this->load->helper([HelperEnum::HELPER_URL, HelperEnum::HELPER_FORM]);
         $this->load->library(LibraryEnum::FORM_VALIDATION);
         $this->load->library(LibraryEnum::PAGINATION);
-        $this->sequenceDatabase = new SequenceDatabase($this);
+        $this->database = new SequenceDatabase($this);
     }
 
     public function index($start = 0) {
         $config = [];
         $config[PagingEnum::BASE_URL] = base_url() . "index.php/sequence";
-        $config[PagingEnum::TOTAL_ROWS] = $this->sequenceDatabase->findSequenceWithModificationNamesPagingCount();
-//        $config[PagingEnum::TOTAL_ROWS] = $this->sequence_model->findAllPagingCount();
+        $config[PagingEnum::TOTAL_ROWS] = $this->database->findSequenceWithModificationNamesPagingCount();
         $config[PagingEnum::PER_PAGE] = CommonConstants::PAGING;
 
         $this->pagination->initialize($config);
-//        $data['sequences'] = $this->sequence_model->findAllPaging($start);
-        $data['sequences'] = $this->sequenceDatabase->findSequenceWithModificationNamesPaging($start);
+        $data['sequences'] = $this->database->findSequenceWithModificationNamesPaging($start);
         $data[PagingEnum::LINKS] = $this->pagination->create_links();
 
         $this->load->view(Front::TEMPLATES_HEADER);
@@ -46,7 +44,7 @@ class Sequence extends CI_Controller {
     }
 
     public function detail($id = 1) {
-        $data = $this->sequenceDatabase->findSequenceDetail($id);
+        $data = $this->database->findSequenceDetail($id);
         $this->load->view(Front::TEMPLATES_HEADER);
         $this->load->view('sequences/detail', $data);
         $this->load->view(Front::TEMPLATES_FOOTER);
@@ -65,7 +63,7 @@ class Sequence extends CI_Controller {
         }
         $sequenceTO = $this->createSequence();
         try {
-            $this->sequence_model->insert($sequenceTO);
+            $this->database->insert($sequenceTO);
         } catch (Exception $exception) {
             $data[Front::ERRORS] = $exception->getMessage();
             Logger::log(LoggerEnum::ERROR, $exception->getTraceAsString());
@@ -77,7 +75,7 @@ class Sequence extends CI_Controller {
     }
 
     public function edit($id = 1) {
-        $data['sequence'] = $this->sequence_model->findById($id);
+        $data['sequence'] = $this->database->findById($id);
 
         $this->form_validation->set_rules(Front::SEQUENCE_TYPE, 'Type', Front::REQUIRED);
         $this->form_validation->set_rules(Front::CANVAS_INPUT_NAME, 'Name', Front::REQUIRED);
@@ -90,7 +88,7 @@ class Sequence extends CI_Controller {
         }
         $sequenceTO = $this->createSequence();
         try {
-            $this->sequence_model->update($id, $sequenceTO);
+            $this->database->update($id, $sequenceTO);
         } catch (Exception $exception) {
             $data[Front::ERRORS] = $exception->getMessage();
             Logger::log(LoggerEnum::ERROR, $exception->getTraceAsString());
