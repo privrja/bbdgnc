@@ -21,7 +21,7 @@ class Graph {
     /** @var string $uniqueSmiles */
     private $uniqueSmiles = "";
 
-    private $smiles = "";
+    public $smiles = "";
 
     /** @var bool $isCyclic */
     private $isCyclic = false;

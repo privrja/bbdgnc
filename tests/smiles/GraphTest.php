@@ -22,6 +22,7 @@ final class GraphTest extends TestCase {
         for ($i = 0; $i < 3; $i++) {
             $expectedGraph->addNode(PeriodicTableSingleton::getInstance()->getAtoms()['C']);
         }
+        $expectedGraph->smiles = "CCC";
         $expectedGraph->addBond(0, new Bond(1, ''));
         $expectedGraph->addBond(1, new Bond(0, ''));
         $expectedGraph->addBond(1, new Bond(2, ''));
@@ -32,6 +33,7 @@ final class GraphTest extends TestCase {
     public function testGraph2() {
         $graph = new Graph('C=C');
         $expectedGraph = new Graph('');
+        $expectedGraph->smiles = "C=C";
         for ($i = 0; $i < 2; $i++) {
             $expectedGraph->addNode(PeriodicTableSingleton::getInstance()->getAtoms()['C']);
         }
@@ -43,6 +45,7 @@ final class GraphTest extends TestCase {
     public function testGraph3() {
         $graph = new Graph('C=C(C)C');
         $expectedGraph = new Graph('');
+        $expectedGraph->smiles = "C=C(C)C";
         for ($i = 0; $i < 4; $i++) {
             $expectedGraph->addNode(PeriodicTableSingleton::getInstance()->getAtoms()['C']);
         }
@@ -103,6 +106,7 @@ final class GraphTest extends TestCase {
     public function testGraph4() {
         $graph = new Graph('C=C(C)C(#O)C');
         $expectedGraph = new Graph('');
+        $expectedGraph->smiles = "C=C(C)C(#O)C";
         for ($i = 0; $i < 4; $i++) {
             $expectedGraph->addNode(PeriodicTableSingleton::getInstance()->getAtoms()['C']);
         }
@@ -124,6 +128,7 @@ final class GraphTest extends TestCase {
     public function testGraph5() {
         $graph = new Graph('CC(CC(=O)C(C(Br)CC)C)C');
         $expectedGraph = new Graph('');
+        $expectedGraph->smiles = "CC(CC(=O)C(C(Br)CC)C)C";
         for ($i = 0; $i < 4; $i++) {
             $expectedGraph->addNode(PeriodicTableSingleton::getInstance()->getAtoms()['C']);
         }
@@ -162,6 +167,7 @@ final class GraphTest extends TestCase {
     public function testGraph6() {
         $graph = new Graph('C1C(C)C1');
         $expectedGraph = new Graph('');
+        $expectedGraph->smiles = "C1C(C)C1";
         for ($i = 0; $i < 4; $i++) {
             $expectedGraph->addNode(PeriodicTableSingleton::getInstance()->getAtoms()['C']);
         }
@@ -179,6 +185,7 @@ final class GraphTest extends TestCase {
     public function testGraph7() {
         $graph = new Graph('C%18CC(=O)CC%18');
         $expectedGraph = new Graph('');
+        $expectedGraph->smiles = "C%18CC(=O)CC%18";
         for ($i = 0; $i < 3; $i++) {
             $expectedGraph->addNode(PeriodicTableSingleton::getInstance()->getAtoms()['C']);
         }
@@ -203,6 +210,7 @@ final class GraphTest extends TestCase {
     public function testGraph8() {
         $graph = new Graph('c1ccccc1');
         $expectedGraph = new Graph('');
+        $expectedGraph->smiles = "c1ccccc1";
         for ($i = 0; $i < 6; $i++) {
             $expectedGraph->addNode(PeriodicTableSingleton::getInstance()->getAtoms()['c']);
         }
@@ -224,6 +232,7 @@ final class GraphTest extends TestCase {
     public function testGraph9() {
         $graph = new Graph('CCC(C)C(NC(C)=O)C(=O)');
         $expectedGraph = new Graph('');
+        $expectedGraph->smiles = "CCC(C)C(NC(C)=O)C(=O)";
         for ($i = 0; $i < 5; $i++) {
             $expectedGraph->addNode(PeriodicTableSingleton::getInstance()->getAtoms()['C']);
         }
@@ -259,6 +268,7 @@ final class GraphTest extends TestCase {
     public function testGraph10() {
         $graph = new Graph('C1C(C)(C)C1');
         $expectedGraph = new Graph('');
+        $expectedGraph->smiles = "C1C(C)(C)C1";
         for ($i = 0; $i < 5; $i++) {
             $expectedGraph->addNode(PeriodicTableSingleton::getInstance()->getAtoms()['C']);
         }
@@ -278,6 +288,7 @@ final class GraphTest extends TestCase {
     public function testGraph11() {
         $graph = new Graph('C(C(CC)N)(=O)O');
         $expectedGraph = new Graph('');
+        $expectedGraph->smiles = "C(C(CC)N)(=O)O";
         for ($i = 0; $i < 4; $i++) {
             $expectedGraph->addNode(PeriodicTableSingleton::getInstance()->getAtoms()['C']);
         }
@@ -302,6 +313,7 @@ final class GraphTest extends TestCase {
     public function testGraph12() {
         $graph = new Graph('CC[NH4]C');
         $expectedGraph = new Graph('');
+        $expectedGraph->smiles = "CC[NH4]C";
         for ($i = 0; $i < 2; $i++) {
             $expectedGraph->addNode(PeriodicTableSingleton::getInstance()->getAtoms()['C']);
         }
@@ -321,6 +333,7 @@ final class GraphTest extends TestCase {
     public function testGraph13() {
         $graph = new Graph('CC#[NH4]C');
         $expectedGraph = new Graph('');
+        $expectedGraph->smiles = "CC#[NH4]C";
         for ($i = 0; $i < 2; $i++) {
             $expectedGraph->addNode(PeriodicTableSingleton::getInstance()->getAtoms()['C']);
         }
@@ -340,6 +353,7 @@ final class GraphTest extends TestCase {
     public function testGraph14() {
         $graph = new Graph('C1CCC[NH]1');
         $expectedGraph = new Graph('');
+        $expectedGraph->smiles = "C1CCC[NH]1";
         for ($i = 0; $i < 4; $i++) {
             $expectedGraph->addNode(PeriodicTableSingleton::getInstance()->getAtoms()['C']);
         }
@@ -362,6 +376,7 @@ final class GraphTest extends TestCase {
     public function testGraph15() {
         $graph = new Graph('C1CCC[N]1');
         $expectedGraph = new Graph('');
+        $expectedGraph->smiles = "C1CCC[N]1";
         for ($i = 0; $i < 4; $i++) {
             $expectedGraph->addNode(PeriodicTableSingleton::getInstance()->getAtoms()['C']);
         }
@@ -383,6 +398,7 @@ final class GraphTest extends TestCase {
     public function testGraph16() {
         $graph = new Graph('CCC[O+]');
         $expectedGraph = new Graph('');
+        $expectedGraph->smiles = "CCC[O+]";
         for ($i = 0; $i < 3; $i++) {
             $expectedGraph->addNode(PeriodicTableSingleton::getInstance()->getAtoms()['C']);
         }
@@ -403,6 +419,7 @@ final class GraphTest extends TestCase {
         $atom = PeriodicTableSingleton::getInstance()->getAtoms()['C']->asBracketElement();
         $atom->setHydrogens(4);
         $expectedGraph = new Graph('');
+        $expectedGraph->smiles = "[CH4]CC=[nH-3]";
         $expectedGraph->addNode($atom);
         for ($i = 0; $i < 2; $i++) {
             $expectedGraph->addNode(PeriodicTableSingleton::getInstance()->getAtoms()['C']);
@@ -478,6 +495,7 @@ final class GraphTest extends TestCase {
     public function testGraphRight18() {
         $graph = new Graph('OC(=O)C(Cc1ccccc1)N');
         $expectedGraph = new Graph('');
+        $expectedGraph->smiles = "OC(=O)C(Cc1ccccc1)N";
         $expectedGraph->addNode(PeriodicTableSingleton::getInstance()->getAtoms()['O']);
         $expectedGraph->addNode(PeriodicTableSingleton::getInstance()->getAtoms()['C']);
         $expectedGraph->addNode(PeriodicTableSingleton::getInstance()->getAtoms()['O']);
@@ -518,6 +536,7 @@ final class GraphTest extends TestCase {
     public function testGraphRight19() {
         $graph = new Graph('Cc1ccccc1');
         $expectedGraph = new Graph('');
+        $expectedGraph->smiles = "Cc1ccccc1";
         $expectedGraph->addNode(PeriodicTableSingleton::getInstance()->getAtoms()['C']);
         for ($i = 0; $i < 6; $i++) {
             $expectedGraph->addNode(PeriodicTableSingleton::getInstance()->getAtoms()['c']);

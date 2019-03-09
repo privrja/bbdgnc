@@ -14,6 +14,7 @@ final class InvariantsTest extends TestCase {
         $graph->computeInvariants();
         $graph->rankInvariants();
         $expectedGraph = new Graph('');
+        $expectedGraph->smiles = "C12C3C4C1C5C4C3C25";
         for ($i = 0; $i < 8; ++$i) {
             $expectedGraph->addNode(PeriodicTableSingleton::getInstance()->getAtoms()['C']);
         }
@@ -54,6 +55,7 @@ final class InvariantsTest extends TestCase {
         $graph->computeInvariants();
         $graph->rankInvariants();
         $expectedGraph = new Graph('');
+        $expectedGraph->smiles = "OCC(CC)CCC(CN)CN";
         $expectedGraph->addNode(PeriodicTableSingleton::getInstance()->getAtoms()['O']);
         for ($i = 0; $i < 8; ++$i) {
             $expectedGraph->addNode(PeriodicTableSingleton::getInstance()->getAtoms()['C']);
@@ -95,6 +97,7 @@ final class InvariantsTest extends TestCase {
         $graph = new Graph('C12C3C4C1C5C4C3C25');
         $graph->cangen();
         $expectedGraph = new Graph('');
+        $expectedGraph->smiles = "C12C3C4C1C5C4C3C25";
         for ($i = 0; $i < 8; ++$i) {
             $expectedGraph->addNode(PeriodicTableSingleton::getInstance()->getAtoms()['C']);
         }
@@ -146,6 +149,7 @@ final class InvariantsTest extends TestCase {
             }
         }
         $expectedGraph = new Graph('');
+        $expectedGraph->smiles = "OCC(CC)CCC(CN)CN";
         $expectedGraph->addNode(PeriodicTableSingleton::getInstance()->getAtoms()['O']);
         for ($i = 0; $i < 8; ++$i) {
             $expectedGraph->addNode(PeriodicTableSingleton::getInstance()->getAtoms()['C']);
@@ -192,6 +196,7 @@ final class InvariantsTest extends TestCase {
         $graph = new Graph('OCC(CC)CCC(CN)CN');
         $graph->cangen();
         $expectedGraph = new Graph('');
+        $expectedGraph->smiles = "OCC(CC)CCC(CN)CN";
         $expectedGraph->addNode(PeriodicTableSingleton::getInstance()->getAtoms()['O']);
         for ($i = 0; $i < 8; ++$i) {
             $expectedGraph->addNode(PeriodicTableSingleton::getInstance()->getAtoms()['C']);
@@ -240,6 +245,7 @@ final class InvariantsTest extends TestCase {
         $graph = new Graph('CC(=O)C');
         $graph->cangen();
         $expectedGraph = new Graph('');
+        $expectedGraph->smiles = "CC(=O)C";
         for ($i = 0; $i < 2; ++$i) {
             $expectedGraph->addNode(PeriodicTableSingleton::getInstance()->getAtoms()['C']);
         }
