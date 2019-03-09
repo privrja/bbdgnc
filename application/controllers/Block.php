@@ -122,6 +122,7 @@ class Block extends CI_Controller {
             ComputeEnum::UNIQUE_SMILES);
         $blockTO->formula = $this->input->post(Front::BLOCK_FORMULA);
         $blockTO->mass = $this->input->post(Front::BLOCK_MASS);
+        $blockTO->losses = $this->input->post(Front::BLOCK_NEUTRAL_LOSSES);
         $blockTO->database = $this->input->post(Front::BLOCK_REFERENCE_SERVER);
         $blockTO->identifier = $this->input->post(Front::BLOCK_IDENTIFIER);
         return $blockTO;
@@ -159,6 +160,7 @@ class Block extends CI_Controller {
             }
             $blockTO->computeUniqueSmiles();
         }
+        $blockTO->losses = $this->input->post(Front::BLOCK_NEUTRAL_LOSSES);
         $blockTO->database = $this->input->post(Front::BLOCK_IDENTIFIER);
         $blockTO->identifier = $this->input->post(Front::BLOCK_REFERENCE_SERVER);
         return $blockTO;

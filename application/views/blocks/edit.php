@@ -64,7 +64,7 @@ use Bbdgnc\Finder\Enum\ServerEnum;
 
             <label for="txt-block-losses">Neutral Losses</label>
             <input type="text" id="txt-block-losses" name="<?= Front::BLOCK_NEUTRAL_LOSSES ?>"
-                   value="<?= set_value(Front::BLOCK_NEUTRAL_LOSSES, "") ?>"/>
+                   value="<?= set_value(Front::BLOCK_NEUTRAL_LOSSES, $block['losses']) ?>"/>
 
             <label for="sel-block-reference-database">Reference Database</label>
             <?= form_dropdown(Front::BLOCK_REFERENCE_SERVER, ServerEnum::$allValues, set_value(Front::BLOCK_REFERENCE_SERVER, $block['database']),
@@ -74,7 +74,7 @@ use Bbdgnc\Finder\Enum\ServerEnum;
             <input type="text" id="txt-block-reference" name="<?= Front::BLOCK_IDENTIFIER ?>"
                    value="<?= set_value(Front::BLOCK_IDENTIFIER, $block['identifier']) ?>"/>
 
-            <button onclick="getSmiles()">Edit</button>
+            <button onclick="getSmiles()">Save</button>
 
             <?= validation_errors(); ?>
             <?php if (isset($errors)) echo $errors; ?>

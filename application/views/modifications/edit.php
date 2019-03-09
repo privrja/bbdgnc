@@ -31,7 +31,7 @@ use Bbdgnc\Enum\Front;
                    name="<?= Front::MODIFICATION_TERMINAL_C ?>" <?= Front::checked(set_value(Front::MODIFICATION_TERMINAL_C, $modification['cterminal'])) ?> />
         </div>
 
-        <button>Edit</button>
+        <button>Save</button>
 
         <?= validation_errors(); ?>
         <?php if (isset($errors)) echo $errors; ?>

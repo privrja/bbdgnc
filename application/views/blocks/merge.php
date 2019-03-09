@@ -48,6 +48,7 @@ use Bbdgnc\Finder\Enum\ServerEnum;
                                 </a>
                             </div>
                             <div class="td">
+                                <?= $block['losses'] ?>
                             </div>
                             <div class="td">
                                 <?= $block['mass'] ?>

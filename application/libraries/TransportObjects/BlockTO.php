@@ -99,6 +99,7 @@ class BlockTO implements IEntity {
             'acronym' => $this->acronym,
             'residue' => $this->formula,
             'mass' => $this->mass,
+            'losses' => $this->losses,
             'smiles' => $this->smiles,
             'usmiles' => $this->uniqueSmiles,
             'database' => $this->database,

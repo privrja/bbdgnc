@@ -16,7 +16,7 @@ use Bbdgnc\Finder\Enum\ServerEnum;
         <div>Name: <?= $block['name']; ?></div>
         <div>Acronym <?= $block['acronym']; ?></div>
         <div>Residue Formula: <?= $block['residue'] ?></div>
-        <div>Neutral loss:</div>
+        <div>Neutral loss: <?= $block['losses'] ?></div>
         <div>Residue Mass: <?= $block['mass'] ?></div>
         <div>SMILES: <?= $block['smiles'] ?></div>
         <div>Reference:
