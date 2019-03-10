@@ -4,14 +4,21 @@ namespace Bbdgnc\CycloBranch;
 
 use Bbdgnc\Base\CommonConstants;
 use Bbdgnc\Database\ModificationDatabase;
+use Bbdgnc\Smiles\Parser\Accept;
 use Bbdgnc\Smiles\Parser\Reject;
+use Bbdgnc\TransportObjects\ModificationTO;
 use CI_Controller;
 
 class ModificationCycloBranch extends AbstractCycloBranch {
 
     const FILE_NAME = './uploads/modifications.txt';
 
-    private $database;
+    const NAME = 0;
+    const FORMULA = 1;
+    const MASS = 2;
+    const N_TERMINAL = 3;
+    const C_TERMINAL = 4;
+    const LENGTH = 5;
 
     /**
      * ModificationCycloBranch constructor.
@@ -23,8 +30,14 @@ class ModificationCycloBranch extends AbstractCycloBranch {
     }
 
 
-    public function parse($strText) {
-        // TODO: Implement parse() method.
+    public function parse($line) {
+        $arItems = $this->validateLine($line);
+        if ($arItems === false) {
+            return self::reject();
+        }
+
+        $modification = new ModificationTO($arItems[self::NAME], $arItems[self::FORMULA], $arItems[self::MASS], $arItems[self::C_TERMINAL], $arItems[self::N_TERMINAL]);
+        return new Accept([$modification->asEntity()], '');
     }
 
     public static function reject() {
@@ -51,4 +64,9 @@ class ModificationCycloBranch extends AbstractCycloBranch {
     protected function getFileName() {
         return self::FILE_NAME;
     }
+
+    protected function getLineLength() {
+        return self::LENGTH;
+    }
+
 }

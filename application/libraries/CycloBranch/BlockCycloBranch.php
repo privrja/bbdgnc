@@ -31,8 +31,6 @@ class BlockCycloBranch extends AbstractCycloBranch {
 
     const FILE_NAME = './uploads/blocks.txt';
 
-    protected $database;
-
     /**
      * BlockCycloBranch constructor.
      * @param CI_Controller $controller
@@ -44,15 +42,9 @@ class BlockCycloBranch extends AbstractCycloBranch {
 
 
     public function parse($line) {
-        $arItems = preg_split('/\t/', $line);
-        if (empty($arItems) || sizeof($arItems) !== self::LENGTH) {
+        $arItems = $this->validateLine($line);
+        if ($arItems === false) {
             return self::reject();
-        }
-
-        for ($index = 0; $index < self::LENGTH; ++$index) {
-            if ($arItems[$index] === "") {
-                return self::reject();
-            }
         }
 
         $arNames = explode('/', $arItems[self::NAME]);
@@ -179,6 +171,10 @@ class BlockCycloBranch extends AbstractCycloBranch {
         }
         $strData .= PHP_EOL;
         return $strData;
+    }
+
+    protected function getLineLength() {
+        return self::LENGTH;
     }
 
 }

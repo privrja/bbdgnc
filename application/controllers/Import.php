@@ -14,6 +14,8 @@ class Import extends CI_Controller {
         parent::__construct();
         $this->load->helper(HelperEnum::HELPER_FORM, HelperEnum::HELPER_URL);
         $this->load->model(ModelEnum::BLOCK_MODEL);
+        $this->load->model(ModelEnum::SEQUENCE_MODEL);
+        $this->load->model(ModelEnum::MODIFICATION_MODEL);
     }
 
     public function index() {

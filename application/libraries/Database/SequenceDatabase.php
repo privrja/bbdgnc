@@ -178,4 +178,25 @@ class SequenceDatabase extends AbstractDatabase {
     public function insert($to) {
         $this->controller->sequence_model->insert($to);
     }
+
+    public function insertMore(array $tos) {
+        $this->controller->sequence_model->insertMore($tos);
+    }
+
+    public function startTransaction() {
+        $this->controller->sequence_model->startTransaction();
+    }
+
+    public function endTransaction() {
+        $this->controller->sequence_model->endTransaction();
+    }
+
+    public function commit() {
+        $this->controller->sequence_model->commit();
+    }
+
+    public function rollback() {
+        $this->controller->sequence_model->rollback();
+    }
+
 }

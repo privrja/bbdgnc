@@ -4,8 +4,6 @@ namespace Bbdgnc\TransportObjects;
 
 class ModificationTO implements IEntity {
 
-    public $databaseId;
-
     public $name;
 
     public $formula;

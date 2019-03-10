@@ -3,6 +3,7 @@
 namespace Bbdgnc\CycloBranch;
 
 use Bbdgnc\Base\Logger;
+use Bbdgnc\Database\AbstractDatabase;
 use Bbdgnc\Enum\LoggerEnum;
 use Bbdgnc\Smiles\Parser\IParser;
 use CI_Controller;
@@ -12,6 +13,9 @@ abstract class AbstractCycloBranch implements ICycloBranch, IParser {
      * @var CI_Controller
      */
     protected $controller;
+
+    /** @var AbstractDatabase $database */
+    protected $database;
 
     /**
      * AbstractCycloBranch constructor.
@@ -54,12 +58,27 @@ abstract class AbstractCycloBranch implements ICycloBranch, IParser {
         force_download($this->getFileName(), null);
     }
 
-    private function save(array $arBlocks) {
-        $this->controller->block_model->startTransaction();
-        $this->controller->block_model->insertMore($arBlocks);
-        $this->controller->block_model->endTransaction();
+    private function save(array $arTos) {
+        $this->database->startTransaction();
+        $this->database->insertMore($arTos);
+        $this->database->endTransaction();
     }
 
     protected abstract function getFileName();
 
+    protected abstract function getLineLength();
+
+    protected function validateLine($line) {
+        $arItems = preg_split('/\t/', $line);
+        if (empty($arItems) || sizeof($arItems) !== $this->getLineLength()) {
+            return false;
+        }
+
+        for ($index = 0; $index < $this->getLineLength(); ++$index) {
+            if ($arItems[$index] === "") {
+                return false;
+            }
+        }
+        return $arItems;
+    }
 }

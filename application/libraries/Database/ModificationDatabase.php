@@ -27,4 +27,25 @@ class ModificationDatabase extends AbstractDatabase {
     public function insert($to) {
         $this->controller->modification_model->insert($to);
     }
+
+    public function insertMore(array $tos) {
+        $this->controller->modification_model->insertMore($tos);
+    }
+
+    public function startTransaction() {
+        $this->controller->modification_model->startTransaction();
+    }
+
+    public function endTransaction() {
+        $this->controller->modification_model->endTransaction();
+    }
+
+    public function commit() {
+        $this->controller->modification_model->commit();
+    }
+
+    public function rollback() {
+        $this->controller->modification_model->rollback();
+    }
+
 }

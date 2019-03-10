@@ -41,9 +41,29 @@ class BlockDatabase extends AbstractDatabase {
         $this->controller->block_model->insert($blockTO);
     }
 
+    public function insertMore(array $tos) {
+        $this->controller->block_model->insertMore($tos);
+    }
+
     public function findBlockByUniqueSmiles($smiles) {
         $graph = new Graph($smiles);
         return $this->controller->block_model->getBlockByUniqueSmiles($graph->getUniqueSmiles());
+    }
+
+    public function startTransaction() {
+        $this->controller->block_model->startTransaction();
+    }
+
+    public function endTransaction() {
+        $this->controller->block_model->endTransaction();
+    }
+
+    public function commit() {
+        $this->controller->block_model->commit();
+    }
+
+    public function rollback() {
+        $this->controller->block_model->rollback();
     }
 
 }
