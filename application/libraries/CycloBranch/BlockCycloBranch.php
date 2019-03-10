@@ -57,30 +57,18 @@ class BlockCycloBranch extends AbstractCycloBranch {
         if (sizeof($arAcronyms) !== $length || sizeof($arReference) !== $length) {
             return self::reject();
         }
-        for ($index = 0; $index < $length; ++$index) {
-            $arTmp = explode('in', $arReference[$index]);
-            if (empty($arTmp) || $arTmp[0] === $arReference[$index]) {
-                $arSmiles[] = '';
-            } else {
-                $smiles = substr($arTmp[0], 0, -1);
-                $arSmiles[] = FormulaHelper::genericSmiles($smiles);
-            }
-        }
 
         for ($index = 0; $index < $length; ++$index) {
-            $arTmp = explode('in', $arReference[$index]);
-            if (sizeof($arTmp) === 2) {
-                $strReference = $arTmp[1];
-            } else {
-                $strReference = $arTmp[0];
-            }
-            if ($strReference[0] === " ") {
-                $strReference = substr($strReference, 1);
-            }
             $referenceParser = new ReferenceParser();
-            $referenceResult = $referenceParser->parse($strReference);
+            $referenceResult = $referenceParser->parse($arReference[$index]);
             if ($referenceResult->isAccepted()) {
-                $arDatabaseReference[] = $referenceResult->getResult();
+                if ($referenceResult->getResult()->database === "SMILES") {
+                    $arSmiles[$index] = $referenceResult->getResult()->identifier;
+                    $arDatabaseReference[] = $referenceResult->getResult();
+                } else {
+                    $arSmiles[$index] = "";
+                    $arDatabaseReference[] = $referenceResult->getResult();
+                }
                 if ($arSmiles[$index] === "") {
                     if ($referenceResult->getResult()->database === ServerEnum::PUBCHEM || $referenceResult->getResult()->database === ServerEnum::CHEBI) {
                         $finder = FinderFactory::getFinder($referenceResult->getResult()->database);
@@ -103,12 +91,15 @@ class BlockCycloBranch extends AbstractCycloBranch {
 
         $arBlocks = [];
         for ($index = 0; $index < $length; ++$index) {
+            Logger::log(LoggerEnum::DEBUG, (string) $arSmiles[$index]);
             $blockTO = new BlockTO(0, $arNames[$index], $arAcronyms[$index], $arSmiles[$index], ComputeEnum::UNIQUE_SMILES);
             $blockTO->formula = $arItems[self::FORMULA];
             $blockTO->mass = (float)$arItems[self::MASS];
             $blockTO->losses = $arItems[self::LOSSES];
-            $blockTO->database = $arDatabaseReference[$index]->database;
-            $blockTO->identifier = $arDatabaseReference[$index]->identifier;
+            if ($arDatabaseReference[$index]->database !== "SMILES") {
+                $blockTO->database = $arDatabaseReference[$index]->database;
+                $blockTO->identifier = $arDatabaseReference[$index]->identifier;
+            }
             $arBlocks[] = $blockTO->asEntity();
         }
         return new Accept($arBlocks, '');

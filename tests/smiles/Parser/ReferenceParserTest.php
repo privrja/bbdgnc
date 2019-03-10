@@ -25,7 +25,7 @@ final class ReferenceParserTest extends TestCase {
         $reference = new ReferenceTO();
         $reference->database = ServerEnum::NORINE;
         $reference->identifier = 'NOR00863';
-        $this->assertEquals(new Accept($reference, ''), $parser->parse(': NOR00863'));
+        $this->assertEquals(new Accept($reference, ''), $parser->parse('NOR00863'));
     }
 
     public function testWithRightData2() {
@@ -33,7 +33,7 @@ final class ReferenceParserTest extends TestCase {
         $reference = new ReferenceTO();
         $reference->database = ServerEnum::NORINE;
         $reference->identifier = 'NOR00001';
-        $this->assertEquals(new Accept($reference, ' 5'), $parser->parse(': NOR00001 5'));
+        $this->assertEquals(new Accept($reference, ' 5'), $parser->parse('NOR00001 5'));
     }
 
     public function testWithRightData3() {
@@ -70,13 +70,19 @@ final class ReferenceParserTest extends TestCase {
 
     public function testWithRightData7() {
         $parser = new ReferenceParser();
-        $parser = new ReferenceParser();
         $reference = new ReferenceTO();
         $reference->database = ServerEnum::PDB;
         $reference->identifier = 4564;
         $this->assertEquals(new Accept($reference, '8'), $parser->parse('PDB: 45648'));
     }
 
+    public function testWithRightData8() {
+        $parser = new ReferenceParser();
+        $reference = new ReferenceTO();
+        $reference->database = "SMILES";
+        $reference->identifier = "CCC";
+        $this->assertEquals(new Accept($reference, ''), $parser->parse('SMILES: CCC'));
+    }
 
     public function testWithWrongData() {
         $parser = new ReferenceParser();
@@ -85,7 +91,7 @@ final class ReferenceParserTest extends TestCase {
 
     public function testWithWrongData2() {
         $parser = new ReferenceParser();
-        $this->assertEquals(ReferenceParser::reject(), $parser->parse('NOR00123'));
+        $this->assertEquals(ReferenceParser::reject(), $parser->parse(': NOR00123'));
     }
 
     public function testWithWrongData3() {

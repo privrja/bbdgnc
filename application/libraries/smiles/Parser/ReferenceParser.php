@@ -15,11 +15,19 @@ class ReferenceParser implements IParser {
         if ($serverNumReferenceResult->isAccepted()) {
             return $serverNumReferenceResult;
         }
+
         $pdbReferenceParser = new PdbReferenceParser();
         $pdbReferenceResult = $pdbReferenceParser->parse($strText);
         if ($pdbReferenceResult->isAccepted()) {
             return $pdbReferenceResult;
         }
+
+        $smilesReferenceParser = new SmilesReferenceParser();
+        $smilesResult = $smilesReferenceParser->parse($strText);
+        if ($smilesResult->isAccepted()) {
+            return $smilesResult;
+        }
+
         $norineReferenceParser = new NorineReferenceParser();
         $norineReferenceResult = $norineReferenceParser->parse($strText);
         if ($norineReferenceResult->isAccepted()) {

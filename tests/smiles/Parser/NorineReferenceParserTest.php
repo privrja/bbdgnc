@@ -25,7 +25,7 @@ final class NorineReferenceParserTest extends TestCase {
         $reference = new ReferenceTO();
         $reference->database = ServerEnum::NORINE;
         $reference->identifier = 'NOR00863';
-        $this->assertEquals(new Accept($reference, ''), $parser->parse(': NOR00863'));
+        $this->assertEquals(new Accept($reference, ''), $parser->parse('NOR00863'));
     }
 
     public function testWithRightData2() {
@@ -33,7 +33,7 @@ final class NorineReferenceParserTest extends TestCase {
         $reference = new ReferenceTO();
         $reference->database = ServerEnum::NORINE;
         $reference->identifier = 'NOR00001';
-        $this->assertEquals(new Accept($reference, ' 5'), $parser->parse(': NOR00001 5'));
+        $this->assertEquals(new Accept($reference, ' 5'), $parser->parse('NOR00001 5'));
     }
 
     public function testWithWrongData() {
@@ -43,7 +43,7 @@ final class NorineReferenceParserTest extends TestCase {
 
     public function testWithWrongData2() {
         $parser = new NorineReferenceParser();
-        $this->assertEquals(NorineReferenceParser::reject(), $parser->parse('NOR00123'));
+        $this->assertEquals(NorineReferenceParser::reject(), $parser->parse('N OR00123'));
     }
 
     public function testWithWrongData3() {
@@ -54,6 +54,11 @@ final class NorineReferenceParserTest extends TestCase {
     public function testWithWrongData4() {
         $parser = new NorineReferenceParser();
         $this->assertEquals(NorineReferenceParser::reject(), $parser->parse(':NOR88888'));
+    }
+
+    public function testWithWrongData5() {
+        $parser = new NorineReferenceParser();
+        $this->assertEquals(NorineReferenceParser::reject(), $parser->parse(': NOR88888'));
     }
 
 }
