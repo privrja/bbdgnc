@@ -26,8 +26,9 @@ class BlockCycloBranch extends AbstractCycloBranch {
     const ACRONYM = 1;
     const FORMULA = 2;
     const MASS = 3;
-    const REFERENCE = 4;
-    const LENGTH = 5;
+    const LOSSES = 4;
+    const REFERENCE = 5;
+    const LENGTH = 6;
 
     const FILE_NAME = './uploads/blocks.txt';
 
@@ -42,7 +43,7 @@ class BlockCycloBranch extends AbstractCycloBranch {
 
 
     public function parse($line) {
-        $arItems = $this->validateLine($line);
+        $arItems = $this->validateLine($line, false);
         if ($arItems === false) {
             return self::reject();
         }
@@ -52,6 +53,8 @@ class BlockCycloBranch extends AbstractCycloBranch {
         $arSmiles = [];
         $arAcronyms = explode('/', $arItems[self::ACRONYM]);
         // TODO v nove verzi CycloBranch přibude položka Neutral Losess a bude před references
+
+
         $arReference = explode('/', $arItems[self::REFERENCE]);
         $arDatabaseReference = [];
         if (sizeof($arAcronyms) !== $length || sizeof($arReference) !== $length) {
@@ -106,6 +109,7 @@ class BlockCycloBranch extends AbstractCycloBranch {
             $blockTO = new BlockTO(0, $arNames[$index], $arAcronyms[$index], $arSmiles[$index], ComputeEnum::UNIQUE_SMILES);
             $blockTO->formula = $arItems[self::FORMULA];
             $blockTO->mass = (float)$arItems[self::MASS];
+            $blockTO->losses = $arItems[self::LOSSES];
             $blockTO->database = $arDatabaseReference[$index]->database;
             $blockTO->identifier = $arDatabaseReference[$index]->identifier;
             $arBlocks[] = $blockTO->asEntity();

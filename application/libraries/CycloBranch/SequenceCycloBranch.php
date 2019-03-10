@@ -7,13 +7,23 @@ use Bbdgnc\Base\ReferenceHelper;
 use Bbdgnc\Database\SequenceDatabase;
 use Bbdgnc\Enum\SequenceTypeEnum;
 use Bbdgnc\Smiles\Parser\Reject;
+use Bbdgnc\TransportObjects\SequenceTO;
 use CI_Controller;
 
 class SequenceCycloBranch extends AbstractCycloBranch {
 
     const FILE_NAME = './uploads/sequences.txt';
 
-    private $database;
+    const TYPE = 0;
+    const NAME = 1;
+    const FORMULA = 2;
+    const MASS = 3;
+    const SEQUENCE = 4;
+    const N_TERMINAL_MODIFICATION = 5;
+    const C_TERMINAL_MODIFICATION = 6;
+    const B_TERMINAL_MODIFICATION = 7;
+    const REFERENCE = 7;
+    const LENGTH = 8;
 
     /**
      * SequenceCycloBranch constructor.
@@ -25,8 +35,28 @@ class SequenceCycloBranch extends AbstractCycloBranch {
     }
 
 
-    public function parse($strText) {
-        // TODO: Implement parse() method.
+    public function parse($line) {
+        $arResult = $this->validateLine($line);
+        if ($arResult === false) {
+            self::reject();
+        }
+
+        $type = $this->validateType($arResult[self::TYPE]);
+
+
+        $sequenceTO = new SequenceTO();
+
+
+
+
+    }
+
+    private function validateType($type) {
+        try {
+            return SequenceTypeEnum::$backValues[$type];
+        } catch (\Exception $e) {
+            return false;
+        }
     }
 
     public static function reject() {
@@ -57,6 +87,10 @@ class SequenceCycloBranch extends AbstractCycloBranch {
 
     protected function getFileName() {
         return self::FILE_NAME;
+    }
+
+    protected function getLineLength() {
+        return self::LENGTH;
     }
 
 }

@@ -68,15 +68,17 @@ abstract class AbstractCycloBranch implements ICycloBranch, IParser {
 
     protected abstract function getLineLength();
 
-    protected function validateLine($line) {
+    protected function validateLine($line, $allSet = true) {
         $arItems = preg_split('/\t/', $line);
         if (empty($arItems) || sizeof($arItems) !== $this->getLineLength()) {
             return false;
         }
 
-        for ($index = 0; $index < $this->getLineLength(); ++$index) {
-            if ($arItems[$index] === "") {
-                return false;
+        if ($allSet) {
+            for ($index = 0; $index < $this->getLineLength(); ++$index) {
+                if ($arItems[$index] === "") {
+                    return false;
+                }
             }
         }
         return $arItems;
