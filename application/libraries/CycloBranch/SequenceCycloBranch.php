@@ -129,7 +129,6 @@ class SequenceCycloBranch extends AbstractCycloBranch {
         }
         $blockIds = $arTos['blockIds'];
         foreach ($blockIds as $blockId) {
-            var_dump($blockId . "-" . $sequenceId);
             $blockToSequence = new BlockToSequenceTO($blockId, $sequenceId);
             try {
             $this->controller->blockToSequence_model->insert($blockToSequence);
