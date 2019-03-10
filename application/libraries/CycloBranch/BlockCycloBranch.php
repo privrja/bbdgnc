@@ -52,9 +52,6 @@ class BlockCycloBranch extends AbstractCycloBranch {
         $length = sizeof($arNames);
         $arSmiles = [];
         $arAcronyms = explode('/', $arItems[self::ACRONYM]);
-        // TODO v nove verzi CycloBranch přibude položka Neutral Losess a bude před references
-
-
         $arReference = explode('/', $arItems[self::REFERENCE]);
         $arDatabaseReference = [];
         if (sizeof($arAcronyms) !== $length || sizeof($arReference) !== $length) {
