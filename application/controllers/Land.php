@@ -7,6 +7,8 @@ use Bbdgnc\Base\HelperEnum;
 use Bbdgnc\Base\LibraryEnum;
 use Bbdgnc\Base\ModelEnum;
 use Bbdgnc\Base\SequenceHelper;
+use Bbdgnc\Database\BlockDatabase;
+use Bbdgnc\Database\ModificationDatabase;
 use Bbdgnc\Database\SequenceDatabase;
 use Bbdgnc\Enum\ComputeEnum;
 use Bbdgnc\Enum\Front;
@@ -38,6 +40,8 @@ class Land extends CI_Controller {
 
     private $errors = "";
 
+    private $blockDatabase;
+
     /**
      * Land constructor.
      */
@@ -49,6 +53,7 @@ class Land extends CI_Controller {
         $this->load->model(ModelEnum::MODIFICATION_MODEL);
         $this->load->model(ModelEnum::BLOCK_TO_SEQUENCE_MODEL);
         $this->load->library(LibraryEnum::FORM_VALIDATION);
+        $this->blockDatabase = new BlockDatabase($this);
     }
 
     private function getData() {
@@ -81,7 +86,8 @@ class Land extends CI_Controller {
 
 
     private function modifications() {
-        $modificationsAll = $this->modification_model->findAll();
+        $modificationDatabase = new ModificationDatabase($this);
+        $modificationsAll = $modificationDatabase->findAll();
         $modifications = ['None'];
         foreach ($modificationsAll as $modification) {
             $modifications[$modification['id']] = $modification['name'];
@@ -198,8 +204,10 @@ class Land extends CI_Controller {
             $inputSmiles = $this->input->post(Front::BLOCK_SMILES);
             $smiles = explode(",", $inputSmiles);
             foreach ($smiles as $smile) {
-                $graph = new Graph($smile);
-                $arResult = $this->block_model->getBlockByUniqueSmiles($graph->getUniqueSmiles());
+//                $graph = new Graph($smile);
+//                $arResult = $this->block_model->getBlockByUniqueSmiles($graph->getUniqueSmiles());
+                $arResult = $this->blockDatabase->findBlockByUniqueSmiles($smile);
+
                 if (!empty($arResult)) {
                     $blockTO = new BlockTO($intCounter, $arResult['name'], $arResult['acronym'], $arResult['smiles'], ComputeEnum::NO);
                     $blockTO->databaseId = $arResult['id'];

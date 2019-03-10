@@ -2,6 +2,8 @@
 
 namespace Bbdgnc\Database;
 
+use Bbdgnc\Smiles\Graph;
+
 class BlockDatabase extends AbstractDatabase {
 
     public function findMergeBlocks($page) {
@@ -37,5 +39,10 @@ class BlockDatabase extends AbstractDatabase {
         $this->controller->block_model->insert($blockTO);
     }
 
+
+    public function findBlockByUniqueSmiles($smiles) {
+        $graph = new Graph($smiles);
+        return $this->controller->block_model->getBlockByUniqueSmiles($graph->getUniqueSmiles());
+    }
 
 }

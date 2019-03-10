@@ -12,6 +12,10 @@ class ModificationDatabase extends AbstractDatabase {
         return $this->controller->modification_model->findAllPagingCount();
     }
 
+    public function findAll() {
+        return $this->controller->modification_model->findAll();
+    }
+
     public function findById($id) {
         return $this->controller->modification_model->findById($id);
     }
