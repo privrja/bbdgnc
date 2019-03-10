@@ -48,7 +48,7 @@ class Block extends CI_Controller {
 
     public function new() {
         $data = [];
-        $this->form_validation->set_rules(Front::BLOCK_NAME, 'Name', Front::REQUIRED);
+        $this->form_validation->set_rules(Front::BLOCK_NAME ,'Name', Front::REQUIRED);
         $this->form_validation->set_rules(Front::BLOCK_ACRONYM, 'Acronym', Front::REQUIRED);
         $smiles = $this->input->post(Front::BLOCK_SMILES);
         if (!isset($smiles) || $smiles === "") {

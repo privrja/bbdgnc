@@ -30,7 +30,6 @@ class Modification extends CI_Controller {
         $config = [];
         $config[PagingEnum::BASE_URL] = base_url() . "index.php/modification";
         $config[PagingEnum::TOTAL_ROWS] = $this->database->findAllPagingCount();
-//        $config[PagingEnum::TOTAL_ROWS] = $this->modification_model->findAllPagingCount();
         $config[PagingEnum::PER_PAGE] = CommonConstants::PAGING;
 
         $this->pagination->initialize($config);
@@ -44,7 +43,6 @@ class Modification extends CI_Controller {
 
     public function detail($id = 1) {
         $data['modification'] = $this->database->findById($id);
-//        $data['modification'] = $this->modification_model->findById($id);
         $this->load->view(Front::TEMPLATES_HEADER);
         $this->load->view('modifications/detail', $data);
         $this->load->view(Front::TEMPLATES_FOOTER);
@@ -72,7 +70,6 @@ class Modification extends CI_Controller {
 
         try {
             $this->database->insert($modificationTO);
-//            $this->modification_model->insert($modificationTO);
         } catch (Exception $exception) {
             $data[Front::ERRORS] = $exception->getMessage();
             Logger::log(LoggerEnum::ERROR, $exception->getTraceAsString());

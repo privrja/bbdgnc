@@ -7,9 +7,7 @@
 
     <article>
         <h2>Modifications</h2>
-        <a href="<?= site_url("modification/new") ?>">
-            Add New Modification
-        </a>
+        <a href="<?= site_url("modification/new") ?>">Add New Modification</a>
         <div class="table t">
             <div class="thead t">
                 <div class="tr t">
