@@ -2,6 +2,7 @@
 
 namespace Bbdgnc\Base;
 
+use Bbdgnc\Enum\LoggerEnum;
 use Bbdgnc\Exception\UniqueConstraintException;
 use Bbdgnc\TransportObjects\IEntity;
 use CI_Model;

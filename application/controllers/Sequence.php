@@ -75,7 +75,8 @@ class Sequence extends CI_Controller {
     }
 
     public function edit($id = 1) {
-        $data['sequence'] = $this->database->findById($id);
+        $sequenceTO = $this->database->findById($id);
+        $data['sequence'] = $sequenceTO;
 
         $this->form_validation->set_rules(Front::SEQUENCE_TYPE, 'Type', Front::REQUIRED);
         $this->form_validation->set_rules(Front::CANVAS_INPUT_NAME, 'Name', Front::REQUIRED);
@@ -86,7 +87,7 @@ class Sequence extends CI_Controller {
             $this->renderEdit($data);
             return;
         }
-        $sequenceTO = $this->createSequence();
+        $sequenceTO = $this->updateSequence($sequenceTO);
         try {
             $this->database->update($id, $sequenceTO);
         } catch (Exception $exception) {
@@ -96,6 +97,18 @@ class Sequence extends CI_Controller {
             return;
         }
         $this->renderEdit($data);
+    }
+
+    private function updateSequence(SequenceTO $sequenceTO) {
+        $sequenceTO->name = $this->input->post(Front::CANVAS_INPUT_NAME);
+        $sequenceTO->database = $this->input->post(Front::CANVAS_INPUT_DATABASE);
+        $sequenceTO->smiles = $this->input->post(Front::CANVAS_INPUT_SMILE);
+        $sequenceTO->formula = $this->input->post(Front::CANVAS_INPUT_FORMULA);
+        $sequenceTO->mass = $this->input->post(Front::CANVAS_INPUT_MASS);
+        $sequenceTO->identifier = $this->input->post(Front::CANVAS_INPUT_IDENTIFIER);
+        $sequenceTO->sequence = $this->input->post(Front::SEQUENCE);
+        $sequenceTO->sequenceType = $this->input->post(Front::SEQUENCE_TYPE);
+        return $sequenceTO;
     }
 
     private function createSequence() {

@@ -129,7 +129,7 @@ class Graph {
             $this->cangen();
             $this->genes();
         } catch (\Error $e) {
-            Logger::log(LoggerEnum::ERROR, $this->smiles . PHP_EOL . $e->getMessage() . PHP_EOL . $e->getTraceAsString());
+            Logger::log(LoggerEnum::ERROR, $this->smiles . PHP_EOL . PHP_EOL . $e->getTraceAsString());
             return $this->smiles;
         }
         return $this->uniqueSmiles;

@@ -5,6 +5,7 @@ use Bbdgnc\Base\CommonConstants;
 use Bbdgnc\Base\FormulaHelper;
 use Bbdgnc\Base\HelperEnum;
 use Bbdgnc\Base\LibraryEnum;
+use Bbdgnc\Base\Logger;
 use Bbdgnc\Base\ModelEnum;
 use Bbdgnc\Base\SequenceHelper;
 use Bbdgnc\Database\BlockDatabase;
@@ -204,8 +205,6 @@ class Land extends CI_Controller {
             $inputSmiles = $this->input->post(Front::BLOCK_SMILES);
             $smiles = explode(",", $inputSmiles);
             foreach ($smiles as $smile) {
-//                $graph = new Graph($smile);
-//                $arResult = $this->block_model->getBlockByUniqueSmiles($graph->getUniqueSmiles());
                 $arResult = $this->blockDatabase->findBlockByUniqueSmiles($smile);
 
                 if (!empty($arResult)) {

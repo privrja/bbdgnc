@@ -2,6 +2,8 @@
 
 namespace Bbdgnc\Database;
 
+use Bbdgnc\Base\Logger;
+use Bbdgnc\Enum\LoggerEnum;
 use Bbdgnc\Smiles\Graph;
 
 class BlockDatabase extends AbstractDatabase {
@@ -38,7 +40,6 @@ class BlockDatabase extends AbstractDatabase {
     public function insert($blockTO) {
         $this->controller->block_model->insert($blockTO);
     }
-
 
     public function findBlockByUniqueSmiles($smiles) {
         $graph = new Graph($smiles);
