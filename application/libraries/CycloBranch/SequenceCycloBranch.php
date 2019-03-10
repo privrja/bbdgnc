@@ -6,6 +6,7 @@ use Bbdgnc\Base\CommonConstants;
 use Bbdgnc\Base\ReferenceHelper;
 use Bbdgnc\Database\SequenceDatabase;
 use Bbdgnc\Enum\SequenceTypeEnum;
+use Bbdgnc\Smiles\Parser\Reject;
 use CI_Controller;
 
 class SequenceCycloBranch extends AbstractCycloBranch {
@@ -29,7 +30,7 @@ class SequenceCycloBranch extends AbstractCycloBranch {
     }
 
     public static function reject() {
-        // TODO: Implement reject() method.
+        return new Reject('Not match sequence in right format');
     }
 
     public function download() {

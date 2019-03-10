@@ -4,6 +4,7 @@ namespace Bbdgnc\CycloBranch;
 
 use Bbdgnc\Base\CommonConstants;
 use Bbdgnc\Database\ModificationDatabase;
+use Bbdgnc\Smiles\Parser\Reject;
 use CI_Controller;
 
 class ModificationCycloBranch extends AbstractCycloBranch {
@@ -27,7 +28,7 @@ class ModificationCycloBranch extends AbstractCycloBranch {
     }
 
     public static function reject() {
-        // TODO: Implement reject() method.
+        return new Reject('Not match modification in right format');
     }
 
     public function download() {
