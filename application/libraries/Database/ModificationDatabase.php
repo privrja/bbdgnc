@@ -20,12 +20,16 @@ class ModificationDatabase extends AbstractDatabase {
         return $this->controller->modification_model->findById($id);
     }
 
+    public function findByName($name) {
+        return $this->controller->modification_model->findByName($name);
+    }
+
     public function update($id, $to) {
         $this->controller->modification_model->update($id, $to);
     }
 
     public function insert($to) {
-        $this->controller->modification_model->insert($to);
+        return $this->controller->modification_model->insert($to);
     }
 
     public function insertMore(array $tos) {

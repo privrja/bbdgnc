@@ -33,12 +33,16 @@ class BlockDatabase extends AbstractDatabase {
         return $this->controller->block_model->findById($id);
     }
 
+    public function findByAcronym($acronym) {
+        return $this->controller->block_model->findByAcronym($acronym);
+    }
+
     public function update($id, $to) {
         $this->controller->block_model->update($id, $to);
     }
 
     public function insert($blockTO) {
-        $this->controller->block_model->insert($blockTO);
+        return $this->controller->block_model->insert($blockTO);
     }
 
     public function insertMore(array $tos) {

@@ -176,7 +176,7 @@ class SequenceDatabase extends AbstractDatabase {
     }
 
     public function insert($to) {
-        $this->controller->sequence_model->insert($to);
+        return $this->controller->sequence_model->insert($to);
     }
 
     public function insertMore(array $tos) {

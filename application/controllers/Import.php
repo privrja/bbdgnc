@@ -16,6 +16,7 @@ class Import extends CI_Controller {
         $this->load->model(ModelEnum::BLOCK_MODEL);
         $this->load->model(ModelEnum::SEQUENCE_MODEL);
         $this->load->model(ModelEnum::MODIFICATION_MODEL);
+        $this->load->model(ModelEnum::BLOCK_TO_SEQUENCE_MODEL);
     }
 
     public function index() {

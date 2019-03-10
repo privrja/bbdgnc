@@ -14,4 +14,9 @@ class Modification_model extends CrudModel {
         return self::TABLE_NAME;
     }
 
+    public function findByName($name) {
+        $query = $this->db->get_where($this->getTableName(), array('name' => $name));
+        return $query->row_array();
+    }
+
 }

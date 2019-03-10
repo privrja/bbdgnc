@@ -58,7 +58,7 @@ abstract class AbstractCycloBranch implements ICycloBranch, IParser {
         force_download($this->getFileName(), null);
     }
 
-    private function save(array $arTos) {
+    protected function save(array $arTos) {
         $this->database->startTransaction();
         $this->database->insertMore($arTos);
         $this->database->endTransaction();

@@ -2,7 +2,13 @@
 
 namespace Bbdgnc\Base;
 
+use Bbdgnc\Exception\IllegalArgumentException;
+
 class SequenceHelper {
+
+    const WRONG_SEQUENCE = 'Wrong sequence ';
+    const LEFT_BRACKET = "[";
+    const RIGHT_BRACKET = "]";
 
     /**
      * @param string $sequence
@@ -19,7 +25,7 @@ class SequenceHelper {
 
     private static function replace(string $sequence, string $lastAcronym, string $acronym) {
         $length = strlen($lastAcronym);
-        $index = strpos($sequence, "[" . $lastAcronym . "]");
+        $index = strpos($sequence, self::LEFT_BRACKET . $lastAcronym . self::RIGHT_BRACKET);
         if ($index === false) {
             return $sequence;
         }
@@ -27,6 +33,43 @@ class SequenceHelper {
         $left = substr($sequence, 0, $index);
         $right = substr($sequence, $index + $length);
         return $left . $acronym . $right;
+    }
+
+    /**
+     * Get block names from sequence entry
+     * @param $strSequence
+     * @return array
+     */
+    public static function getBlockAcronyms(string $strSequence) {
+        $sequence = str_split($strSequence);
+        $boolMeasure = false;
+        $blocks = [];
+        $block = '';
+        while($sequence != []) {
+            $character = array_shift($sequence);
+            switch ($character) {
+                case self::LEFT_BRACKET:
+                    if ($boolMeasure) {
+                        throw new IllegalArgumentException(self::WRONG_SEQUENCE . $strSequence);
+                    }
+                    $boolMeasure = true;
+                    $block = '';
+                    break;
+                case self::RIGHT_BRACKET:
+                    if (!$boolMeasure) {
+                        throw new IllegalArgumentException(self::WRONG_SEQUENCE . $strSequence);
+                    }
+                    $boolMeasure = false;
+                    $blocks[] = $block;
+                    break;
+                default:
+                    if ($boolMeasure) {
+                        $block .= $character;
+                    }
+                    break;
+            }
+        }
+        return $blocks;
     }
 
 }

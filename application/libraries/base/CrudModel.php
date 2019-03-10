@@ -66,10 +66,12 @@ abstract class CrudModel extends CI_Model {
 
     /**
      * Insert blocks to database
-     * @param array $blocks
+     * @param array $arTos
+     * @return
      */
-    public function insertMore(array $blocks) {
-        $this->db->insert_batch($this->getTableName(), $blocks);
+    public function insertMore(array $arTos) {
+        $this->db->insert_batch($this->getTableName(), $arTos);
+        return $this->db->insert_id();
     }
 
     public function update($id, IEntity $entity) {

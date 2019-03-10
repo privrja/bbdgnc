@@ -22,12 +22,17 @@ class Block_model extends CrudModel {
         return $result[0];
     }
 
+    public function findByAcronym($acronym) {
+        $query = $this->db->get_where($this->getTableName(), array('acronym' => $acronym));
+        return $query->row_array();
+    }
+
     /**
      * Insert blocks to database
-     * @param BlockTO[] $blocks array with blocks
+     * @param BlockTO[] $arTos array with blocks
      */
-    public function insertMore(array $blocks) {
-        $this->db->insert_batch(self::TABLE_NAME, $blocks);
+    public function insertMore(array $arTos) {
+        $this->db->insert_batch(self::TABLE_NAME, $arTos);
     }
 
     /**
