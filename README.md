@@ -62,7 +62,7 @@ If there is a problem with the certificates try to add this line.
  
 and comment following line
 
-    openssl.cafile=
+    #openssl.cafile=
 
 ## Database
 
