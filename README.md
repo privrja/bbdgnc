@@ -56,6 +56,13 @@ In php.ini only need to uncomment one line:
 
     extension=php_soap.dll
     
+If there is a problem with the certificates try to add this line.
+
+    curl.cainfo="C:\xampp\php\ext\cacert.pem"
+ 
+and comment following line
+
+    openssl.cafile=
 
 ## Database
 
