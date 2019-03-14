@@ -58,4 +58,5 @@ class BracketAtomParser implements IParser {
     public static function reject() {
         return new Reject('Not match atom in []');
     }
+
 }

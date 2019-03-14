@@ -15,7 +15,7 @@ class PdbParser implements IParser {
         $parser = new StringParser();
         $result = $parser->parseTextWithTemplate($strText, 'PDB: ');
         if ($result->isAccepted()) {
-            return new Accept(ServerEnum::$backValues[$result->getResult()], $result->getRemainder());
+            return new Accept(ServerEnum::PDB, $result->getRemainder());
         }
         return self::reject();
     }
@@ -27,4 +27,5 @@ class PdbParser implements IParser {
     public static function reject() {
         return new Reject("Not match PDB: ");
     }
+
 }

@@ -32,4 +32,5 @@ class BondParser implements IParser {
     public static function reject() {
         return new Reject('Not match bond, end of string or null given');
     }
+
 }

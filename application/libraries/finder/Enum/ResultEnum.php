@@ -17,4 +17,5 @@ abstract class ResultEnum {
 
     /** @var int found more than 1 result */
     const REPLY_OK_MORE = 2;
+
 }

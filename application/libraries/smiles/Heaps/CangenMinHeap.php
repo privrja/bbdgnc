@@ -22,4 +22,5 @@ class CangenMinHeap extends \SplMinHeap {
         }
         return 0;
     }
+
 }

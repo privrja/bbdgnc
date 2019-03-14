@@ -54,5 +54,4 @@ class CangenStructure {
         $this->productPrime = $productPrime;
     }
 
-
 }

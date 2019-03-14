@@ -16,4 +16,5 @@ class ImportTypeEnum {
         self::BLOCK => 'Block',
         self::MODIFICATION => 'Modification'
     ];
+
 }

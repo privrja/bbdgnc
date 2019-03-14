@@ -27,4 +27,5 @@ class NorineIdParser implements IParser {
     public static function reject() {
         return new Reject('Not match Norine identifier NORddddd');
     }
+
 }

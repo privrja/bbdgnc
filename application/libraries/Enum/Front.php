@@ -101,4 +101,5 @@ abstract class Front {
     public static function toBoolean($checked) {
         return $checked != "false";
     }
+
 }

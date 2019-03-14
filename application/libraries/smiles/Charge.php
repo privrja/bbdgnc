@@ -59,5 +59,4 @@ class Charge {
         return $this->sign . $this->chargeSize;
     }
 
-
 }

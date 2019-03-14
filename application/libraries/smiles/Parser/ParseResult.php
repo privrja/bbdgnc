@@ -28,5 +28,4 @@ abstract class ParseResult {
      */
     public abstract function getRemainder();
 
-
 }

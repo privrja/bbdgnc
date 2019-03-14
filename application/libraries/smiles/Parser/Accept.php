@@ -43,4 +43,5 @@ class Accept extends ParseResult {
     public function getRemainder() {
         return $this->remainder;
     }
+
 }

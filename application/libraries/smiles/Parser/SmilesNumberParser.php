@@ -30,4 +30,5 @@ class SmilesNumberParser implements IParser {
     public static function reject() {
         return new Reject('Not match SMILES number, format: %[1-9][0-9]*% + [0-9]');
     }
+
 }

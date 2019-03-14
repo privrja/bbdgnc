@@ -25,8 +25,4 @@ class CycloBranch {
         $cycloBranch->import($filePath);
     }
 
-    public function export() {
-
-    }
-
 }

@@ -26,4 +26,5 @@ class PdbIdParser implements IParser {
     public static function reject() {
         return new Reject("Not match PDB idetifier XXX");
     }
+
 }

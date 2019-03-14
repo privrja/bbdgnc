@@ -59,4 +59,5 @@ abstract class ServerEnum {
                 return "http://www.rcsb.org/ligand/" . $strIdentifier;
         }
     }
+
 }

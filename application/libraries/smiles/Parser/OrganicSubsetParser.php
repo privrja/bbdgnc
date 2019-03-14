@@ -31,4 +31,5 @@ class OrganicSubsetParser implements IParser {
     public static function reject() {
         return new Reject('Not match Organic Subset');
     }
+
 }

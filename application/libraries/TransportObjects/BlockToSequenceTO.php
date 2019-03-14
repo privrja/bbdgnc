@@ -18,7 +18,6 @@ class BlockToSequenceTO implements IEntity {
         $this->sequenceId = $sequenceId;
     }
 
-
     /**
      * Map entity to array for store to database
      * @return array
@@ -29,4 +28,5 @@ class BlockToSequenceTO implements IEntity {
             "sequence_id" => $this->sequenceId
         ];
     }
+
 }

@@ -24,4 +24,5 @@ class RegexParser {
     public static function reject() {
         return new Reject('Not match regex');
     }
+
 }

@@ -9,4 +9,5 @@ interface IEntity {
      * @return array
      */
     function asEntity();
+
 }

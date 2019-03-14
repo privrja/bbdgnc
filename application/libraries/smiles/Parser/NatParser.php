@@ -42,4 +42,5 @@ class NatParser implements IParser {
     public static function reject() {
         return new Reject('Not match positive number');
     }
+
 }

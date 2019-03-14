@@ -83,4 +83,5 @@ abstract class AbstractCycloBranch implements ICycloBranch, IParser {
         }
         return $arItems;
     }
+
 }

@@ -375,4 +375,5 @@ class SmilesParser implements IParser {
     private function accept() {
         return new Accept('', $this->strSmiles);
     }
+
 }
