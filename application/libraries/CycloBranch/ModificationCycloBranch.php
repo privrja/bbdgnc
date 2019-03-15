@@ -39,9 +39,6 @@ class ModificationCycloBranch extends AbstractCycloBranch {
             return self::reject();
         }
 
-        Logger::log(LoggerEnum::DEBUG, $line);
-        Logger::log(LoggerEnum::DEBUG, $arItems[self::C_TERMINAL]);
-        Logger::log(LoggerEnum::DEBUG, $arItems[self::N_TERMINAL]);
         $booleanParser = new BooleanParser();
         $booleanNTerminalResult = $booleanParser->parse($arItems[self::N_TERMINAL]);
         $booleanCTerminalResult = $booleanParser->parse($arItems[self::C_TERMINAL]);
@@ -50,7 +47,6 @@ class ModificationCycloBranch extends AbstractCycloBranch {
         }
 
         $modification = new ModificationTO($arItems[self::NAME], $arItems[self::FORMULA], $arItems[self::MASS], $booleanCTerminalResult->getResult(), $booleanNTerminalResult->getResult());
-        var_dump($modification->asEntity());
         return new Accept([$modification->asEntity()], '');
     }
 
