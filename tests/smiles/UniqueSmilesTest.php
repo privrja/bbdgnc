@@ -269,13 +269,13 @@ final class UniqueSmilesTest extends TestCase {
     public function testCyclicAromatic() {
         $graph = new Graph('Cc1c[nH]cn1');
         $smiles = $graph->getUniqueSmiles();
-        $this->assertEquals('CC1=C[NH]C=N1', $smiles);
+        $this->assertEquals('CC1=CNC=N1', $smiles);
     }
 
     public function testCyclicAromatic2() {
         $graph = new Graph('NC(C(O)=O)Cc1nc[nH]c1');
         $smiles = $graph->getUniqueSmiles();
-        $this->assertEquals('NC(CC1=C[NH]C=N1)C(O)=O', $smiles);
+        $this->assertEquals('NC(CC1=CNC=N1)C(O)=O', $smiles);
     }
 
 }

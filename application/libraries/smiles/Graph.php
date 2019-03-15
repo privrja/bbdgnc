@@ -565,7 +565,7 @@ class Graph {
      */
     private function printBondAndAtom(string $bond, Node $node) {
         $this->uniqueSmiles .= $bond;
-        $this->uniqueSmiles .= $node->getAtom()->elementSmiles();
+        $this->uniqueSmiles .= $node->elementSmiles();
     }
 
     /**

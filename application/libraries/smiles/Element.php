@@ -38,7 +38,7 @@ class Element {
         $this->charge = new Charge();
     }
 
-    public function elementSmiles() {
+    public function elementSmiles($actualBindings) {
         return $this->name;
     }
 

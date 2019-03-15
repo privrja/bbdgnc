@@ -2,10 +2,15 @@
 
 namespace Bbdgnc\Smiles;
 
+use Bbdgnc\Enum\PeriodicTableSingleton;
+use Bbdgnc\Smiles\Parser\OrganicSubsetParser;
+
 class BracketElement extends Element {
 
     /** @var int $hydrogens */
     private $hydrogens;
+
+    private $isOrganicSubset = false;
 
     /**
      * BracketElement constructor.
@@ -23,6 +28,15 @@ class BracketElement extends Element {
         assert($hydrogens >= 0);
         $this->charge = $charge;
         $this->hydrogens = $hydrogens;
+        $this->setupIsOrganicSubset($name);
+    }
+
+    private function setupIsOrganicSubset($name) {
+        $organicSubsetParser = new OrganicSubsetParser();
+        $organicSubsetResult = $organicSubsetParser->parse($name);
+        if ($organicSubsetResult->isAccepted()) {
+            $this->isOrganicSubset = true;
+        }
     }
 
     /**
@@ -43,7 +57,11 @@ class BracketElement extends Element {
         return $this->getHydrogens();
     }
 
-    public function elementSmiles() {
+    public function elementSmiles($actualBindings) {
+        if ($this->charge->isZero() && $this->hydrogens + $actualBindings === PeriodicTableSingleton::getInstance()->getAtoms()[strtolower($this->name)]->getBindings() + 1 && $this->isOrganicSubset) {
+            return parent::elementSmiles($actualBindings);
+        }
+
         $smiles =  '[' . $this->name;
         if ($this->hydrogens > 0) {
             $smiles .= 'H';

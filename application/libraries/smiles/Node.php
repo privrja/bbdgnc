@@ -86,10 +86,9 @@ class Node {
         return $this->atom;
     }
 
-    public function setAtom(Element $element): void {
-
+    public function elementSmiles() {
+        return $this->atom->elementSmiles($this->actualBindings());
     }
-
     /**
      * @return mixed
      */
