@@ -297,6 +297,7 @@ class Land extends CI_Controller {
             $this->save();
         } else if (isset($btnLoad)) {
             /* Load from database */
+            $this->uniqueSmiles();
         } else if (isset($btnBlocks)) {
             /* Building Blocks */
             $this->blocks();
@@ -680,6 +681,16 @@ class Land extends CI_Controller {
         $data = $this->getLastBlocksData();
         $data = $this->getModificationData($data);
         $this->renderBlocks($data);
+    }
+
+    private function uniqueSmiles() {
+        $graph = new Graph($this->input->post(Front::CANVAS_INPUT_SMILE));
+        $this->load->view(Front::TEMPLATES_HEADER);
+        $this->load->view(Front::PAGES_CANVAS);
+        $data = $this->getLastData();
+        $data[Front::CANVAS_INPUT_SMILE] = $graph->getUniqueSmiles();
+        $this->load->view(Front::PAGES_MAIN, $data);
+        $this->load->view(Front::TEMPLATES_FOOTER);
     }
 
 }

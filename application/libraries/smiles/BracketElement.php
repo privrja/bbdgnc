@@ -19,7 +19,7 @@ class BracketElement extends Element {
      * @param int $hydrogens
      */
     public function __construct(string $name, int $protons, int $bindings, float $mass, bool $isAromatic, Charge $charge, int $hydrogens) {
-        parent::__construct($name, $protons, $bindings, $mass);
+        parent::__construct($name, $protons, $bindings, $mass, $isAromatic);
         assert($hydrogens >= 0);
         $this->charge = $charge;
         $this->hydrogens = $hydrogens;
@@ -46,7 +46,10 @@ class BracketElement extends Element {
     public function elementSmiles() {
         $smiles =  '[' . $this->name;
         if ($this->hydrogens > 0) {
-            $smiles .= 'H' . $this->hydrogens;
+            $smiles .= 'H';
+            if ($this->hydrogens > 1) {
+                $smiles .= $this->hydrogens;
+            }
         }
         if (!$this->charge->isZero()) {
             $smiles .= $this->charge->getCharge();

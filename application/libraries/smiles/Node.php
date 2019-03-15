@@ -86,6 +86,10 @@ class Node {
         return $this->atom;
     }
 
+    public function setAtom(Element $element): void {
+
+    }
+
     /**
      * @return mixed
      */

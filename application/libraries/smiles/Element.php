@@ -87,7 +87,8 @@ class Element {
     /**
      * @return bool
      */
-    public function isAromatic(): bool {
+    public
+    function isAromatic(): bool {
         return $this->isAromatic;
     }
 

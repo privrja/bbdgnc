@@ -129,7 +129,7 @@ class Graph {
             $this->cangen();
             $this->genes();
         } catch (\Error $e) {
-            Logger::log(LoggerEnum::ERROR, $this->smiles . PHP_EOL . PHP_EOL . $e->getTraceAsString());
+            Logger::log(LoggerEnum::ERROR, $this->smiles . PHP_EOL . $e->getMessage() . PHP_EOL . $e->getTraceAsString());
             return $this->smiles;
         }
         return $this->uniqueSmiles;
@@ -331,6 +331,7 @@ class Graph {
             foreach ($node->getBonds() as $bond) {
                 $str .= $bond->getBondTypeString() . $bond->getNodeNumber() . ' ';
             }
+            $str .= " is aromatic: " . $node->getAtom()->isAromatic();
             $str .= PHP_EOL;
             $intIndex++;
         }
@@ -576,18 +577,50 @@ class Graph {
             $pathLength = sizeof($path);
             for ($index = 0; $index < $pathLength; ++$index) {
                 $this->arNodes[$path[$index]]->getAtom()->asNonAromatic();
-                if ($index % 2 === 0) {
-                    try {
-                        if (!isset($path[$index + 1])) {
-                            throw new IllegalArgumentException();
+                if ($pathLength === 5) {
+                    if ($index === 3) {
+                        try {
+                            $bond = $this->findBondTo($path[$index], $path[$index + 1]);
+                            $bondBack = $this->findBondTo($path[$index + 1], $path[$index]);
+                        } catch (NotFoundException $e) {
+                            throw new IllegalStateException();
                         }
-                        $bond = $this->findBondTo($path[$index], $path[$index + 1]);
-                        $bondBack = $this->findBondTo($path[$index + 1], $path[$index]);
-                    } catch (NotFoundException $exception) {
-                        throw new IllegalStateException();
+                        $bond->setBondType(BondTypeEnum::DOUBLE);
+                        $bondBack->setBondType(BondTypeEnum::DOUBLE);
+                    } else if ($index % 2 === 0 && $index !== 2) {
+                        try {
+                            if (isset($path[$index + 1])) {
+                                $bond = $this->findBondTo($path[$index], $path[$index + 1]);
+                                $bondBack = $this->findBondTo($path[$index + 1], $path[$index]);
+                            } else {
+                                $strArray = implode(" ", $path);
+                                Logger::log(LoggerEnum::WARNING, "index $index + 1 out of range in path array $strArray");
+                            }
+                        } catch (NotFoundException $exception) {
+                            throw new IllegalStateException();
+                        }
+                        $bond->setBondType(BondTypeEnum::DOUBLE);
+                        $bondBack->setBondType(BondTypeEnum::DOUBLE);
+                    } else if ($index === 2) {
+                       $atom = $this->arNodes[$path[$index]]->getAtom()->asBracketElement();
+                       $atom->setHydrogens(1);
                     }
-                    $bond->setBondType(BondTypeEnum::DOUBLE);
-                    $bondBack->setBondType(BondTypeEnum::DOUBLE);
+                } else {
+                    if ($index % 2 === 0) {
+                        try {
+                            if (isset($path[$index + 1])) {
+                                $bond = $this->findBondTo($path[$index], $path[$index + 1]);
+                                $bondBack = $this->findBondTo($path[$index + 1], $path[$index]);
+                            } else {
+                                $strArray = implode(" ", $path);
+                                Logger::log(LoggerEnum::WARNING, "index $index + 1 out of range in path array $strArray");
+                            }
+                        } catch (NotFoundException $exception) {
+                            throw new IllegalStateException();
+                        }
+                        $bond->setBondType(BondTypeEnum::DOUBLE);
+                        $bondBack->setBondType(BondTypeEnum::DOUBLE);
+                    }
                 }
             }
         }

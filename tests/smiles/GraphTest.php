@@ -559,4 +559,34 @@ final class GraphTest extends TestCase {
         $this->assertEquals(true, $graph->isAromaticRing([1, 2, 3, 4, 5, 6]));
     }
 
+    public function testGraphRight20() {
+        $graph = new Graph('Cc1c[nH]cn1');
+        $expectedGraph = new Graph('');
+        $expectedGraph->smiles = "Cc1c[nH]cn1";
+        $expectedGraph->addNode(PeriodicTableSingleton::getInstance()->getAtoms()['C']);
+        for ($i = 0; $i < 2; $i++) {
+            $expectedGraph->addNode(PeriodicTableSingleton::getInstance()->getAtoms()['c']);
+        }
+        $atom = PeriodicTableSingleton::getInstance()->getAtoms()['n']->asBracketElement();
+        $atom->setHydrogens(1);
+        $expectedGraph->addNode($atom);
+        $expectedGraph->addNode(PeriodicTableSingleton::getInstance()->getAtoms()['c']);
+        $expectedGraph->addNode(PeriodicTableSingleton::getInstance()->getAtoms()['n']);
+
+        $expectedGraph->addBond(0, new Bond(1, ''));
+        $expectedGraph->addBond(1, new Bond(0, ''));
+        $expectedGraph->addBond(1, new Bond(2, ''));
+        $expectedGraph->addBond(1, new Bond(5, ''));
+        $expectedGraph->addBond(2, new Bond(1, ''));
+        $expectedGraph->addBond(2, new Bond(3, ''));
+        $expectedGraph->addBond(3, new Bond(2, ''));
+        $expectedGraph->addBond(3, new Bond(4, ''));
+        $expectedGraph->addBond(4, new Bond(3, ''));
+        $expectedGraph->addBond(4, new Bond(5, ''));
+        $expectedGraph->addBond(5, new Bond(4, ''));
+        $expectedGraph->addBond(5, new Bond(1, ''));
+        $this->assertEquals($expectedGraph, $graph);
+        $this->assertEquals(true, $graph->isAromaticRing([1, 2, 3, 4, 5]));
+    }
+
 }
