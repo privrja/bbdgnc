@@ -88,7 +88,6 @@ class Modification extends CI_Controller {
 
     public function edit($id = 1) {
         $data['modification'] = $this->database->findById($id);
-//        $data['modification'] = $this->modification_model->findById($id);
         $this->form_validation->set_rules(Front::MODIFICATION_NAME, 'Name', Front::REQUIRED);
         $this->form_validation->set_rules(Front::MODIFICATION_FORMULA, 'Formula', Front::REQUIRED);
         if ($this->form_validation->run() === false) {
@@ -109,13 +108,14 @@ class Modification extends CI_Controller {
 
         try {
             $this->database->update($id, $modificationTO);
-//            $this->modification_model->update($id, $modificationTO);
         } catch (Exception $exception) {
             $data[Front::ERRORS] = $exception->getMessage();
             Logger::log(LoggerEnum::ERROR, $exception->getTraceAsString());
             $this->renderEdit($data);
             return;
         }
+        $data['modification'] = $modificationTO->asEntity();
+        $data['modification']['id'] = $id;
         $this->renderEdit($data);
     }
 

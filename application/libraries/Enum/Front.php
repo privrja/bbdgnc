@@ -95,7 +95,7 @@ abstract class Front {
     }
 
     public static function checked($checked) {
-        return ($checked === "true" || $checked === "on") ? "checked" : "";
+        return ($checked === "true" || $checked === "on" || $checked == 1) ? "checked" : "";
     }
 
     public static function toBoolean($checked) {
