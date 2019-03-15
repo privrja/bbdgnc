@@ -5,85 +5,17 @@ use Bbdgnc\Finder\Enum\ServerEnum;
 
 ?>
 
-<script src="<?= AssetHelper::jsJsme() ?>"></script>
-<script>
-
-    document.addEventListener('input', readSmiles);
-
-    /**
-     * This function will be called after the JavaScriptApplet code has been loaded.
-     */
-    function jsmeOnLoad() {
-        jsmeApplet = new JSApplet.JSME("jsme_container", "500px", "500px");
-        jsmeApplet.readGenericMolecularInput('<?= $block->smiles ?>');
-    }
-
-    function readSmiles() {
-        jsmeApplet.readGenericMolecularInput(document.getElementById('txt-block-smiles').value);
-    }
-
-    /**
-     * This function is called after Acept button is clicked
-     * Get SMILES from editor and submit form
-     */
-    function getSmiles() {
-        let smile = jsmeApplet.nonisomericSmiles();
-        if (smile) {
-            document.getElementById('txt-block-smiles').value = smile;
-        }
-        console.log(smile);
-        let blockId = '<?= $block->id ?>';
-        let lastAcronym = '<?= $block->acronym ?>';
-        let acronym = document.getElementById('txt-block-acronym').value;
-        let sequence = document.getElementById('hdn-sequence').value;
-        if ("" === lastAcronym || !sequence.includes(`[${lastAcronym}]`)) {
-            sequence = sequenceReplace(blockId, acronym, sequence);
-        } else {
-            sequence = sequenceReplace(lastAcronym, acronym, sequence);
-        }
-        let databaseId = '<?= $block->databaseId ?>';
-        if (lastAcronym !== acronym) {
-            databaseId = null;
-        }
-        document.getElementById('hdn-sequence').value = sequence;
-        redirectWithData({blockIdentifier: blockId, blockDatabaseId: databaseId, blocks: 'Blocks'});
-    }
-
-    function sequenceReplace(id, acronym, sequence) {
-        let length = id.toString().length;
-        let index = sequence.indexOf(`[${id}]`);
-        if (index === -1) {
-            return sequence;
-        }
-        index++;
-        let left = sequence.substr(0, index);
-        let right = sequence.substr(index + length);
-        return left + acronym + right;
-    }
-
-    /**
-     * This function add data to form as hidden and submit form
-     * @param data
-     */
-    function redirectWithData(data) {
-        let form = document.getElementById('form-block');
-        for (let name in data) {
-            let input = document.createElement('input');
-            input.type = 'hidden';
-            input.name = name;
-            input.value = data[name];
-            form.appendChild(input);
-        }
-        form.submit();
-    }
-</script>
-
 <?= form_open('land/form', array('id' => 'form-block')); ?>
 
 <div id="div-editor">
     <h2>JSME editor</h2>
     <div class="div-editor-left" id="jsme_container"></div>
     <div id="div-editor-form">
+
+        <label for="sel-block">Select Modification</label>
+        <?= form_dropdown(Front::BLOCK_SELECT, $blocks, set_value(Front::BLOCK_DATABASE_ID, '0'),
+            'id="sel-block" class="select" title="Block"'); ?>
+
         <label for="txt-block-name">Name</label>
         <input type="text" id="txt-block-name" name="<?= Front::BLOCK_NAME ?>" value="<?= $block->name ?>"/>
 
@@ -144,3 +76,83 @@ use Bbdgnc\Finder\Enum\ServerEnum;
 <input type="hidden" name="<?= Front::B_MODIFICATION_TERMINAL_C ?>" value="<?= $bTerminalC ?>"/>
 
 </form>
+
+<script src="<?= AssetHelper::jsJsme() ?>"></script>
+<script>
+
+    document.addEventListener('input', readSmiles);
+    document.getElementById('sel-block').addEventListener('change', blockFromDatabase);
+
+    /**
+     * This function will be called after the JavaScriptApplet code has been loaded.
+     */
+    function jsmeOnLoad() {
+        jsmeApplet = new JSApplet.JSME("jsme_container", "500px", "500px");
+        jsmeApplet.readGenericMolecularInput('<?= $block->smiles ?>');
+    }
+
+    function readSmiles() {
+        jsmeApplet.readGenericMolecularInput(document.getElementById('txt-block-smiles').value);
+    }
+
+    function blockFromDatabase() {
+        let blocks = <?= json_encode($blocks); ?>;
+        let id = document.getElementById('sel-block').value;
+        document.getElementById('txt-block-acronym').value = blocks[id];
+    }
+
+    /**
+     * This function is called after Acept button is clicked
+     * Get SMILES from editor and submit form
+     */
+    function getSmiles() {
+        let smile = jsmeApplet.nonisomericSmiles();
+        if (smile) {
+            document.getElementById('txt-block-smiles').value = smile;
+        }
+        console.log(smile);
+        let blockId = '<?= $block->id ?>';
+        let lastAcronym = '<?= $block->acronym ?>';
+        let acronym = document.getElementById('txt-block-acronym').value;
+        let sequence = document.getElementById('hdn-sequence').value;
+        if ("" === lastAcronym || !sequence.includes(`[${lastAcronym}]`)) {
+            sequence = sequenceReplace(blockId, acronym, sequence);
+        } else {
+            sequence = sequenceReplace(lastAcronym, acronym, sequence);
+        }
+        let databaseId = '<?= $block->databaseId ?>';
+        if (lastAcronym !== acronym) {
+            databaseId = null;
+        }
+        document.getElementById('hdn-sequence').value = sequence;
+        redirectWithData({blockIdentifier: blockId, blockDatabaseId: databaseId, blocks: 'Blocks'});
+    }
+
+    function sequenceReplace(id, acronym, sequence) {
+        let length = id.toString().length;
+        let index = sequence.indexOf(`[${id}]`);
+        if (index === -1) {
+            return sequence;
+        }
+        index++;
+        let left = sequence.substr(0, index);
+        let right = sequence.substr(index + length);
+        return left + acronym + right;
+    }
+
+    /**
+     * This function add data to form as hidden and submit form
+     * @param data
+     */
+    function redirectWithData(data) {
+        let form = document.getElementById('form-block');
+        for (let name in data) {
+            let input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = name;
+            input.value = data[name];
+            form.appendChild(input);
+        }
+        form.submit();
+    }
+</script>

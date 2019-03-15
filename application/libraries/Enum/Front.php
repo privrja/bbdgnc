@@ -30,6 +30,7 @@ abstract class Front {
     const BLOCK_REFERENCE = "blockReference";
     const BLOCK_REFERENCE_SERVER = "blockReferenceServer";
     const BLOCK_DATABASE_ID = "blockDatabaseId";
+    const BLOCK_SELECT = "blockSelect";
     const SEQUENCE_TYPE = "sequenceType";
     const SEQUENCE = "sequence";
     const MODIFICATION_SELECT = "Select";

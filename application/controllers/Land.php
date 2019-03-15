@@ -85,7 +85,6 @@ class Land extends CI_Controller {
         return $data;
     }
 
-
     private function modifications() {
         $modificationDatabase = new ModificationDatabase($this);
         $modificationsAll = $modificationDatabase->findAll();
@@ -173,10 +172,27 @@ class Land extends CI_Controller {
         $data[Front::BLOCK_COUNT] = $blockCount;
         $data[Front::SEQUENCE] = $sequence;
         $data[Front::SEQUENCE_TYPE] = $sequenceType;
+        $data['blocks'] = $this->blockDatabase->findAllSelect();
         $data = $this->getModificationData($data);
         $this->load->view(Front::TEMPLATES_HEADER);
         $this->load->view('editor/index', $data);
         $this->load->view(Front::TEMPLATES_FOOTER);
+    }
+
+    private function toBlockTO(int $blockIdentifier, array $arBlock) {
+        $blockTO = new BlockTO(
+            $blockIdentifier,
+            $arBlock['name'],
+            $arBlock['acronym'],
+            $arBlock['smiles'],
+            ComputeEnum::NO
+        );
+        $blockTO->formula = $arBlock['residue'];
+        $blockTO->mass = $arBlock['mass'];
+        $blockTO->losses = $arBlock['losses'];
+        $blockTO->database = $arBlock['database'];
+        $blockTO->identifier = $arBlock['identifier'];
+        return $blockTO;
     }
 
     public function blocks() {
@@ -190,13 +206,20 @@ class Land extends CI_Controller {
             $data[Front::BLOCK_COUNT] = $this->input->post(Front::BLOCK_COUNT);
             $blocks = $this->loadCookies($data[Front::BLOCK_COUNT]);
             $blockIdentifier = $this->input->post(Front::BLOCK_IDENTIFIER);
-            $blockTO = new BlockTO($blockIdentifier, $this->input->post(Front::BLOCK_NAME), $this->input->post(Front::BLOCK_ACRONYM), $this->input->post(Front::BLOCK_SMILE), ComputeEnum::NO);
-            $blockTO->databaseId = $this->input->post(Front::BLOCK_DATABASE_ID);
-            $blockTO->formula = $this->input->post(Front::BLOCK_FORMULA);
-            $blockTO->mass = $this->input->post(Front::BLOCK_MASS);
-            $blockTO->losses = $this->input->post(Front::BLOCK_NEUTRAL_LOSSES);
-            $blockTO->identifier = $this->input->post(Front::BLOCK_REFERENCE);
-            $blockTO->database = $this->input->post(Front::BLOCK_REFERENCE_SERVER);
+            $databaseId = $this->input->post(Front::BLOCK_SELECT);
+            if (!empty($databaseId)) {
+                $arBlock = $this->blockDatabase->findById($databaseId);
+                $blockTO = $this->toBlockTO($blockIdentifier, $arBlock);
+            } else {
+                $blockTO = new BlockTO($blockIdentifier, $this->input->post(Front::BLOCK_NAME), $this->input->post(Front::BLOCK_ACRONYM), $this->input->post(Front::BLOCK_SMILE), ComputeEnum::NO);
+                $blockTO->databaseId = $this->input->post(Front::BLOCK_DATABASE_ID);
+                $blockTO->formula = $this->input->post(Front::BLOCK_FORMULA);
+                $blockTO->mass = $this->input->post(Front::BLOCK_MASS);
+                $blockTO->losses = $this->input->post(Front::BLOCK_NEUTRAL_LOSSES);
+                $blockTO->identifier = $this->input->post(Front::BLOCK_REFERENCE);
+                $blockTO->database = $this->input->post(Front::BLOCK_REFERENCE_SERVER);
+            }
+            $blockTO->databaseId = empty($databaseId) ? "" : $databaseId;
             $blocks[$blockIdentifier] = $blockTO;
             $data = $this->getModificationData($data);
         } else {

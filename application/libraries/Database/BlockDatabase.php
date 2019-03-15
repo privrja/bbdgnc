@@ -17,6 +17,10 @@ class BlockDatabase extends AbstractDatabase {
         return $data;
     }
 
+    public function findAll() {
+        return $this->controller->block_model->findAll();
+    }
+
     public function findAllPaging($start) {
         return $this->controller->block_model->findAllPaging($start);
     }
@@ -68,6 +72,15 @@ class BlockDatabase extends AbstractDatabase {
 
     public function rollback() {
         $this->controller->block_model->rollback();
+    }
+
+    public function findAllSelect() {
+        $blocksAll = $this->findAll();
+        $blocks = ['None'];
+        foreach ($blocksAll as $block) {
+            $blocks[$block['id']] = $block['acronym'];
+        }
+        return $blocks;
     }
 
 }
