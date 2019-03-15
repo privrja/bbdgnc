@@ -91,7 +91,6 @@ class BlockCycloBranch extends AbstractCycloBranch {
 
         $arBlocks = [];
         for ($index = 0; $index < $length; ++$index) {
-            Logger::log(LoggerEnum::DEBUG, (string) $arSmiles[$index]);
             $blockTO = new BlockTO(0, $arNames[$index], $arAcronyms[$index], $arSmiles[$index], ComputeEnum::UNIQUE_SMILES);
             $blockTO->formula = $arItems[self::FORMULA];
             $blockTO->mass = (float)$arItems[self::MASS];

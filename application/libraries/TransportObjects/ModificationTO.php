@@ -2,6 +2,9 @@
 
 namespace Bbdgnc\TransportObjects;
 
+use Bbdgnc\Base\Logger;
+use Bbdgnc\Enum\LoggerEnum;
+
 class ModificationTO implements IEntity {
 
     public $name;
@@ -10,9 +13,9 @@ class ModificationTO implements IEntity {
 
     public $mass;
 
-    public $cTerminal;
+    public $cTerminal = false;
 
-    public $nTerminal;
+    public $nTerminal = false;
 
     /**
      * ModificationTO constructor.

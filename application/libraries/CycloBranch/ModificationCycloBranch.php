@@ -3,8 +3,11 @@
 namespace Bbdgnc\CycloBranch;
 
 use Bbdgnc\Base\CommonConstants;
+use Bbdgnc\Base\Logger;
 use Bbdgnc\Database\ModificationDatabase;
+use Bbdgnc\Enum\LoggerEnum;
 use Bbdgnc\Smiles\Parser\Accept;
+use Bbdgnc\Smiles\Parser\BooleanParser;
 use Bbdgnc\Smiles\Parser\Reject;
 use Bbdgnc\TransportObjects\ModificationTO;
 use CI_Controller;
@@ -36,7 +39,18 @@ class ModificationCycloBranch extends AbstractCycloBranch {
             return self::reject();
         }
 
-        $modification = new ModificationTO($arItems[self::NAME], $arItems[self::FORMULA], $arItems[self::MASS], $arItems[self::C_TERMINAL], $arItems[self::N_TERMINAL]);
+        Logger::log(LoggerEnum::DEBUG, $line);
+        Logger::log(LoggerEnum::DEBUG, $arItems[self::C_TERMINAL]);
+        Logger::log(LoggerEnum::DEBUG, $arItems[self::N_TERMINAL]);
+        $booleanParser = new BooleanParser();
+        $booleanNTerminalResult = $booleanParser->parse($arItems[self::N_TERMINAL]);
+        $booleanCTerminalResult = $booleanParser->parse($arItems[self::C_TERMINAL]);
+        if (!$booleanCTerminalResult->isAccepted() || !$booleanNTerminalResult->isAccepted()) {
+            return self::reject();
+        }
+
+        $modification = new ModificationTO($arItems[self::NAME], $arItems[self::FORMULA], $arItems[self::MASS], $booleanCTerminalResult->getResult(), $booleanNTerminalResult->getResult());
+        var_dump($modification->asEntity());
         return new Accept([$modification->asEntity()], '');
     }
 
