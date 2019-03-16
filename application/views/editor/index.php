@@ -99,6 +99,7 @@ use Bbdgnc\Finder\Enum\ServerEnum;
         let blocks = <?= json_encode($blocks); ?>;
         let id = document.getElementById('sel-block').value;
         document.getElementById('txt-block-acronym').value = blocks[id];
+        getBlock();
     }
 
     /**
@@ -155,4 +156,12 @@ use Bbdgnc\Finder\Enum\ServerEnum;
         }
         form.submit();
     }
+
+    const getBlock = async () => {
+        const response = await fetch('https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/cid/962/property/IUPACName,MolecularFormula,MonoisotopicMass,CanonicalSmiles/json');
+        const myJson = await response.json(); //extract JSON from the http response
+        // do something with myJson
+        console.log(myJson);
+    }
+
 </script>
