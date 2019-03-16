@@ -12,7 +12,7 @@ use Bbdgnc\Finder\Enum\ServerEnum;
     <div class="div-editor-left" id="jsme_container"></div>
     <div id="div-editor-form">
 
-        <label for="sel-block">Select Modification</label>
+        <label for="sel-block">Select Block</label>
         <?= form_dropdown(Front::BLOCK_SELECT, $blocks, set_value(Front::BLOCK_DATABASE_ID, '0'),
             'id="sel-block" class="select" title="Block"'); ?>
 

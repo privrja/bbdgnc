@@ -76,7 +76,7 @@ use Bbdgnc\Finder\Enum\ServerEnum;
             <input type="text" id="txt-block-reference" name="<?= Front::CANVAS_INPUT_IDENTIFIER ?>"
                    value="<?= set_value(Front::CANVAS_INPUT_IDENTIFIER) ?>"/>
 
-            <button onclick="getSmiles()">Edit</button>
+            <button onclick="getSmiles()">Add</button>
 
             <?= validation_errors(); ?>
             <?php if (isset($errors)) echo $errors; ?>
