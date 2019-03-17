@@ -704,11 +704,16 @@ class Land extends CI_Controller {
     }
 
     private function uniqueSmiles() {
-        $graph = new Graph($this->input->post(Front::CANVAS_INPUT_SMILE));
+        $smiles = $this->input->post(Front::CANVAS_INPUT_SMILE);
         $this->load->view(Front::TEMPLATES_HEADER);
         $this->load->view(Front::PAGES_CANVAS);
         $data = $this->getLastData();
-        $data[Front::CANVAS_INPUT_SMILE] = $graph->getUniqueSmiles();
+        try {
+            $graph = new Graph($smiles);
+            $data[Front::CANVAS_INPUT_SMILE] = $graph->getUniqueSmiles();
+        } catch (IllegalArgumentException $e) {
+            $data[Front::CANVAS_INPUT_SMILE] = $smiles;
+        }
         $this->load->view(Front::PAGES_MAIN, $data);
         $this->load->view(Front::TEMPLATES_FOOTER);
     }
