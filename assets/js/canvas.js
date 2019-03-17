@@ -544,23 +544,31 @@ function editorBlock(identifier) {
 }
 
 function modificationSelect(event) {
-    if (event.target.value !== '0') {
-        displayModification(event.target.id, 'none');
-    } else {
-        displayModification(event.target.id, 'block');
-    }
+    displayModification(event.target.id, event.target.value != 0);
 }
 
 function displayModification(id, display) {
     switch (id) {
         case SEL_N_MODIFICATION:
-            document.getElementById('div-n-modification').style.display = display;
+            document.getElementById('txt-n-modification').disabled = display;
+            document.getElementById('txt-n-formula').disabled = display;
+            document.getElementById('txt-n-mass').disabled = display;
+            document.getElementById('chk-n-nterminal').disabled = display;
+            document.getElementById('chk-n-cterminal').disabled = display;
             break;
         case SEL_C_MODIFICATION:
-            document.getElementById('div-c-modification').style.display = display;
+            document.getElementById('txt-c-modification').disabled = display;
+            document.getElementById('txt-c-formula').disabled = display;
+            document.getElementById('txt-c-mass').disabled = display;
+            document.getElementById('chk-c-nterminal').disabled = display;
+            document.getElementById('chk-c-cterminal').disabled = display;
             break;
         case SEL_B_MODIFICATION:
-            document.getElementById('div-b-modification').style.display = display;
+            document.getElementById('txt-b-modification').disabled = display;
+            document.getElementById('txt-b-formula').disabled = display;
+            document.getElementById('txt-b-mass').disabled = display;
+            document.getElementById('chk-b-nterminal').disabled = display;
+            document.getElementById('chk-b-cterminal').disabled = display;
             break;
     }
 }
