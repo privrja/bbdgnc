@@ -98,7 +98,19 @@ use Bbdgnc\Finder\Enum\ServerEnum;
     function blockFromDatabase() {
         let blocks = <?= json_encode($blocks); ?>;
         let id = document.getElementById('sel-block').value;
-        document.getElementById('txt-block-acronym').value = blocks[id];
+        // document.getElementById('txt-block-acronym').value = blocks[id];
+        disable(id != 0);
+    }
+
+    function disable(disable = false) {
+        document.getElementById('txt-block-name').disabled = disable;
+        document.getElementById('txt-block-acronym').disabled = disable;
+        document.getElementById('txt-block-formula').disabled = disable;
+        document.getElementById('txt-block-mass').disabled = disable;
+        document.getElementById('txt-block-smiles').disabled = disable;
+        document.getElementById('txt-block-losses').disabled = disable;
+        document.getElementById('sel-block-reference-database').disabled = disable;
+        document.getElementById('txt-block-reference').disabled = disable;
     }
 
     /**
