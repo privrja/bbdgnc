@@ -4,6 +4,7 @@ namespace Bbdgnc\Database;
 
 use Bbdgnc\base\Query;
 use Bbdgnc\Base\Sortable;
+use Bbdgnc\Exception\IllegalArgumentException;
 use Bbdgnc\Smiles\Graph;
 
 class BlockDatabase extends AbstractDatabase {
@@ -54,8 +55,12 @@ class BlockDatabase extends AbstractDatabase {
     }
 
     public function findBlockByUniqueSmiles($smiles) {
-        $graph = new Graph($smiles);
-        return $this->controller->block_model->getBlockByUniqueSmiles($graph->getUniqueSmiles());
+        try {
+            $graph = new Graph($smiles);
+            return $this->controller->block_model->getBlockByUniqueSmiles($graph->getUniqueSmiles());
+        } catch (IllegalArgumentException $e) {
+            return $this->controller->block_model->getBlockByUniqueSmiles($smiles);
+        }
     }
 
     public function startTransaction() {
