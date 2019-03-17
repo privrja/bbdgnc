@@ -5,7 +5,6 @@ namespace Bbdgnc\Smiles;
 use Bbdgnc\Base\Logger;
 use Bbdgnc\Enum\LoggerEnum;
 use Bbdgnc\Enum\PeriodicTableSingleton;
-use Bbdgnc\Exception\IllegalArgumentException;
 use Bbdgnc\Exception\IllegalStateException;
 use Bbdgnc\Exception\NotFoundException;
 use Bbdgnc\Smiles\Enum\BondTypeEnum;
@@ -84,8 +83,7 @@ class Graph {
         $smilesParser = new SmilesParser($this);
         $result = $smilesParser->parse($strText);
         if (!$result->isAccepted()) {
-            Logger::log(LoggerEnum::ERROR, $strText . 'Graph cannot be build');
-            throw new IllegalArgumentException();
+            Logger::log(LoggerEnum::ERROR, $strText . ' Graph cannot be build');
         }
     }
 
