@@ -5,9 +5,10 @@ use Bbdgnc\Base\CommonConstants;
 use Bbdgnc\Base\FormulaHelper;
 use Bbdgnc\Base\HelperEnum;
 use Bbdgnc\Base\LibraryEnum;
-use Bbdgnc\Base\Logger;
 use Bbdgnc\Base\ModelEnum;
+use Bbdgnc\base\Query;
 use Bbdgnc\Base\SequenceHelper;
+use Bbdgnc\Base\Sortable;
 use Bbdgnc\Database\BlockDatabase;
 use Bbdgnc\Database\ModificationDatabase;
 use Bbdgnc\Database\SequenceDatabase;
@@ -87,7 +88,9 @@ class Land extends CI_Controller {
 
     private function modifications() {
         $modificationDatabase = new ModificationDatabase($this);
-        $modificationsAll = $modificationDatabase->findAll();
+        $query = new Query();
+        $query->addSortable(new Sortable('name'));
+        $modificationsAll = $modificationDatabase->findAll($query);
         $modifications = ['None'];
         foreach ($modificationsAll as $modification) {
             $modifications[$modification['id']] = $modification['name'];

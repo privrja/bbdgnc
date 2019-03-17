@@ -2,8 +2,8 @@
 
 namespace Bbdgnc\Database;
 
-use Bbdgnc\Base\Logger;
-use Bbdgnc\Enum\LoggerEnum;
+use Bbdgnc\base\Query;
+use Bbdgnc\Base\Sortable;
 use Bbdgnc\Smiles\Graph;
 
 class BlockDatabase extends AbstractDatabase {
@@ -17,8 +17,8 @@ class BlockDatabase extends AbstractDatabase {
         return $data;
     }
 
-    public function findAll() {
-        return $this->controller->block_model->findAll();
+    public function findAll(Query $query) {
+        return $this->controller->block_model->findAll($query);
     }
 
     public function findAllPaging($start) {
@@ -75,7 +75,9 @@ class BlockDatabase extends AbstractDatabase {
     }
 
     public function findAllSelect() {
-        $blocksAll = $this->findAll();
+        $query = new Query();
+        $query->addSortable(new Sortable('acronym'));
+        $blocksAll = $this->findAll($query);
         $blocks = ['None'];
         foreach ($blocksAll as $block) {
             $blocks[$block['id']] = $block['acronym'];

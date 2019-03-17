@@ -2,6 +2,8 @@
 
 namespace Bbdgnc\Database;
 
+use Bbdgnc\base\Query;
+
 class ModificationDatabase extends AbstractDatabase {
 
     public function findAllPaging($start) {
@@ -12,8 +14,8 @@ class ModificationDatabase extends AbstractDatabase {
         return $this->controller->modification_model->findAllPagingCount();
     }
 
-    public function findAll() {
-        return $this->controller->modification_model->findAll();
+    public function findAll(Query $query) {
+        return $this->controller->modification_model->findAll($query);
     }
 
     public function findById($id) {

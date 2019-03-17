@@ -2,7 +2,6 @@
 
 namespace Bbdgnc\Base;
 
-use Bbdgnc\Enum\LoggerEnum;
 use Bbdgnc\Exception\UniqueConstraintException;
 use Bbdgnc\TransportObjects\IEntity;
 use CI_Model;
@@ -23,9 +22,11 @@ abstract class CrudModel extends CI_Model {
 
     /**
      * Get all entities from database
+     * @param Query $query
      * @return array
      */
-    public function findAll() {
+    public function findAll(Query $query) {
+        $query->query($this);
         $query = $this->db->get($this->getTableName());
         return $query->result_array();
     }
