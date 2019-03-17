@@ -15,6 +15,7 @@ use Bbdgnc\Finder\Enum\ServerEnum;
         <div>Name: <?= $sequence['name']; ?></div>
         <div>Formula: <?= $sequence['formula'] ?></div>
         <div>Mass: <?= $sequence['mass'] ?></div>
+        <div>Sequence: <?= $sequence['sequence'] ?></div>
         <div>SMILES: <?= $sequence['smiles'] ?></div>
         <div>Reference:
             <?php if ($sequence['database'] !== null && !empty($sequence['identifier'])): ?>
