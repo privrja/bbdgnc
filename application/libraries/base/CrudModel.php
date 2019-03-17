@@ -80,7 +80,7 @@ abstract class CrudModel extends CI_Model {
         $this->db->update($this->getTableName(), $entity->asEntity());
     }
 
-    public function delete() {
+    public function delete($id) {
         // TODO
     }
 

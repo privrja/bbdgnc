@@ -3,6 +3,7 @@
 namespace Bbdgnc\Database;
 
 use Bbdgnc\base\Query;
+use Bbdgnc\Base\Sortable;
 
 class ModificationDatabase extends AbstractDatabase {
 
@@ -54,4 +55,14 @@ class ModificationDatabase extends AbstractDatabase {
         $this->controller->modification_model->rollback();
     }
 
+    public function findAllSelect() {
+        $query = new Query();
+        $query->addSortable(new Sortable('name'));
+        $modificationsAll = $this->findAll($query);
+        $modifications = ['None'];
+        foreach ($modificationsAll as $modification) {
+            $modifications[$modification['id']] = $modification['name'];
+        }
+        return $modifications;
+    }
 }

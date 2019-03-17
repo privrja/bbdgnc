@@ -6,9 +6,7 @@ use Bbdgnc\Base\FormulaHelper;
 use Bbdgnc\Base\HelperEnum;
 use Bbdgnc\Base\LibraryEnum;
 use Bbdgnc\Base\ModelEnum;
-use Bbdgnc\base\Query;
 use Bbdgnc\Base\SequenceHelper;
-use Bbdgnc\Base\Sortable;
 use Bbdgnc\Database\BlockDatabase;
 use Bbdgnc\Database\ModificationDatabase;
 use Bbdgnc\Database\SequenceDatabase;
@@ -88,14 +86,7 @@ class Land extends CI_Controller {
 
     private function modifications() {
         $modificationDatabase = new ModificationDatabase($this);
-        $query = new Query();
-        $query->addSortable(new Sortable('name'));
-        $modificationsAll = $modificationDatabase->findAll($query);
-        $modifications = ['None'];
-        foreach ($modificationsAll as $modification) {
-            $modifications[$modification['id']] = $modification['name'];
-        }
-        return $modifications;
+        return $modificationDatabase->findAllSelect();
     }
 
     private function getModificationData($data) {
@@ -117,7 +108,6 @@ class Land extends CI_Controller {
         $data[Front::B_MODIFICATION_TERMINAL_C] = $this->input->post(Front::B_MODIFICATION_TERMINAL_C);
         return $data;
     }
-
 
     /**
      * Index - default view
@@ -305,7 +295,6 @@ class Land extends CI_Controller {
      * Find in specific database by specific param or save data to database
      */
     public function form() {
-
         /* get important input data */
         $btnFind = $this->input->post("find");
         $btnSave = $this->input->post("save");
