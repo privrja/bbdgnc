@@ -103,4 +103,8 @@ abstract class Front {
         return $checked != "false";
     }
 
+    public static function removeWhiteSpace(string $str) {
+        return preg_replace('/\s+/', '', $str);
+    }
+
 }

@@ -499,7 +499,9 @@ class Land extends CI_Controller {
         if ($this->form_validation->run() === false) {
             return ResultEnum::REPLY_NONE;
         }
-        return $finder->findByIdentifier($this->input->post(Front::CANVAS_INPUT_IDENTIFIER), $outArResult);
+        $identifier = $this->input->post(Front::CANVAS_INPUT_IDENTIFIER);
+        $identifier = Front::removeWhiteSpace($identifier);
+        return $finder->findByIdentifier($identifier, $outArResult);
     }
 
     /**
@@ -533,7 +535,8 @@ class Land extends CI_Controller {
         if ($this->form_validation->run() === false) {
             return ResultEnum::REPLY_NONE;
         }
-        return $finder->findByFormula($this->input->post(Front::CANVAS_INPUT_FORMULA), $outArResult, $outArNextResult);
+        $formula = Front::removeWhiteSpace($this->input->post(Front::CANVAS_INPUT_FORMULA));
+        return $finder->findByFormula($formula, $outArResult, $outArNextResult);
     }
 
     /**
@@ -550,7 +553,8 @@ class Land extends CI_Controller {
         if ($this->form_validation->run() === false) {
             return ResultEnum::REPLY_NONE;
         }
-        return $finder->findBySmile($this->input->post(Front::CANVAS_INPUT_SMILE), $outArResult, $outArNextResult);
+        $smiles = Front::removeWhiteSpace($this->input->post(Front::CANVAS_INPUT_SMILE));
+        return $finder->findBySmile($smiles, $outArResult, $outArNextResult);
     }
 
     /**
@@ -567,7 +571,8 @@ class Land extends CI_Controller {
         if ($this->form_validation->run() === false) {
             return ResultEnum::REPLY_NONE;
         }
-        return $finder->findByMass($this->input->post(Front::CANVAS_INPUT_MASS), $this->input->post(Front::CANVAS_INPUT_DEFLECTION), $outArResult, $outArNextResult);
+        $mass = Front::removeWhiteSpace($this->input->post(Front::CANVAS_INPUT_MASS));
+        return $finder->findByMass($mass, $this->input->post(Front::CANVAS_INPUT_DEFLECTION), $outArResult, $outArNextResult);
     }
 
     private function validateSequence() {
