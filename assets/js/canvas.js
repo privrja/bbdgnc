@@ -277,6 +277,7 @@ function enableOrDisableModificationN(disable) {
     disableOrEnableElement(TXT_N_MASS, disable);
     disableOrEnableElement(CHK_N_NTERMINAL, disable);
     disableOrEnableElement(CHK_N_CTERMINAL, disable);
+    document.getElementById(SEL_N_MODIFICATION).value = '0';
 }
 
 function enableOrDisableModificationC(disable) {
@@ -286,6 +287,7 @@ function enableOrDisableModificationC(disable) {
     disableOrEnableElement(TXT_C_MASS, disable);
     disableOrEnableElement(CHK_C_NTERMINAL, disable);
     disableOrEnableElement(CHK_C_CTERMINAL, disable);
+    document.getElementById(SEL_C_MODIFICATION).value = '0';
 }
 
 function enableOrDisableModificationBranch(disable) {
@@ -295,6 +297,7 @@ function enableOrDisableModificationBranch(disable) {
     disableOrEnableElement(TXT_BRANCH_MASS, disable);
     disableOrEnableElement(CHK_BRANCH_NTERMINAL, disable);
     disableOrEnableElement(CHK_BRANCH_CTERMINAL, disable);
+    document.getElementById(SEL_B_MODIFICATION).value = '0';
 }
 
 function disableOrEnableElement(elementId, disable) {
