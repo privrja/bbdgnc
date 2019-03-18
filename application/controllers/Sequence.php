@@ -6,7 +6,7 @@ use Bbdgnc\Base\LibraryEnum;
 use Bbdgnc\Base\Logger;
 use Bbdgnc\Base\ModelEnum;
 use Bbdgnc\Base\PagingEnum;
-use Bbdgnc\base\Query;
+use Bbdgnc\Base\Query;
 use Bbdgnc\Database\SequenceDatabase;
 use Bbdgnc\Enum\Front;
 use Bbdgnc\Enum\LoggerEnum;
