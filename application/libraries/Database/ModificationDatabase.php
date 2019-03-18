@@ -7,12 +7,12 @@ use Bbdgnc\Base\Sortable;
 
 class ModificationDatabase extends AbstractDatabase {
 
-    public function findAllPaging($start) {
-        return $this->controller->modification_model->findAllPaging($start);
+    public function findAllPaging($start, Query $query) {
+        return $this->controller->modification_model->findAllPaging($start, $query);
     }
 
-    public function findAllPagingCount() {
-        return $this->controller->modification_model->findAllPagingCount();
+    public function findAllPagingCount(Query $query) {
+        return $this->controller->modification_model->findAllPagingCount($query);
     }
 
     public function findAll(Query $query) {

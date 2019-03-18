@@ -3,6 +3,7 @@
 namespace Bbdgnc\Database;
 
 use Bbdgnc\Base\Logger;
+use Bbdgnc\base\Query;
 use Bbdgnc\Enum\LoggerEnum;
 use Bbdgnc\Enum\ModificationTypeEnum;
 use Bbdgnc\Exception\BlockToSequenceInDatabaseException;
@@ -150,21 +151,21 @@ class SequenceDatabase extends AbstractDatabase {
         return $detail;
     }
 
-    public function findSequenceWithModificationNamesPaging($start) {
-        return $this->controller->sequence_model->findSequenceWithModificationNames($start);
+    public function findSequenceWithModificationNamesPaging($start, Query $query) {
+        return $this->controller->sequence_model->findSequenceWithModificationNames($start, $query);
     }
 
-    public function findSequenceWithModificationNamesPagingCount() {
-        return $this->controller->sequence_model->findSequenceWithModificationNamesCount();
+    public function findSequenceWithModificationNamesPagingCount(Query $query) {
+        return $this->controller->sequence_model->findSequenceWithModificationNamesCount($query);
     }
 
-    public function findAllPaging($start) {
-        return $this->controller->sequence_model->findAllPaging($start);
+    public function findAllPaging($start, Query $query) {
+        return $this->controller->sequence_model->findAllPaging($start, $query);
     }
 
 
-    public function findAllPagingCount() {
-        return $this->controller->sequence_model->findAllPaging();
+    public function findAllPagingCount(Query $query) {
+        return $this->controller->sequence_model->findAllPaging($query);
     }
 
     public function findById($id) {

@@ -22,12 +22,12 @@ class BlockDatabase extends AbstractDatabase {
         return $this->controller->block_model->findAll($query);
     }
 
-    public function findAllPaging($start) {
-        return $this->controller->block_model->findAllPaging($start);
+    public function findAllPaging($start, Query $query) {
+        return $this->controller->block_model->findAllPaging($start, $query);
     }
 
-    public function findAllPagingCount() {
-        return $this->controller->block_model->findAllPagingCount();
+    public function findAllPagingCount(Query $query) {
+        return $this->controller->block_model->findAllPagingCount($query);
     }
 
     public function findGroupByFormulaCount() {

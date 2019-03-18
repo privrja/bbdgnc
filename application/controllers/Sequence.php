@@ -6,6 +6,7 @@ use Bbdgnc\Base\LibraryEnum;
 use Bbdgnc\Base\Logger;
 use Bbdgnc\Base\ModelEnum;
 use Bbdgnc\Base\PagingEnum;
+use Bbdgnc\base\Query;
 use Bbdgnc\Database\SequenceDatabase;
 use Bbdgnc\Enum\Front;
 use Bbdgnc\Enum\LoggerEnum;
@@ -31,11 +32,11 @@ class Sequence extends CI_Controller {
     public function index($start = 0) {
         $config = [];
         $config[PagingEnum::BASE_URL] = base_url() . "index.php/sequence";
-        $config[PagingEnum::TOTAL_ROWS] = $this->database->findSequenceWithModificationNamesPagingCount();
+        $config[PagingEnum::TOTAL_ROWS] = $this->database->findSequenceWithModificationNamesPagingCount(new Query());
         $config[PagingEnum::PER_PAGE] = CommonConstants::PAGING;
 
         $this->pagination->initialize($config);
-        $data['sequences'] = $this->database->findSequenceWithModificationNamesPaging($start);
+        $data['sequences'] = $this->database->findSequenceWithModificationNamesPaging($start, new Query());
         $data[PagingEnum::LINKS] = $this->pagination->create_links();
 
         $this->load->view(Front::TEMPLATES_HEADER);

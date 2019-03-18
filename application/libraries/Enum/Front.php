@@ -2,6 +2,10 @@
 
 namespace Bbdgnc\Enum;
 
+use Bbdgnc\Base\BetweenFilter;
+use Bbdgnc\Base\LikeFilter;
+use Bbdgnc\Base\Query;
+
 abstract class Front {
 
     /** @var string name of inputs */
@@ -105,6 +109,25 @@ abstract class Front {
 
     public static function removeWhiteSpace(string $str) {
         return preg_replace('/\s+/', '', $str);
+    }
+
+    public static function isEmpty($value) {
+        return isset($value) && $value !== "";
+    }
+
+    public static function addLikeFilter(string $key, Query $query, $controller) {
+        $filter = $controller->input->get($key, true);
+        if (Front::isEmpty($filter)) {
+            $query->addFilterable(new LikeFilter($key, $filter));
+        }
+    }
+
+    public static function addBetweenFilter(string $key, Query $query, $controller) {
+        $filterFrom = $controller->input->get($key . 'From', true);
+        $filterTo = $controller->input->get($key . "To", true);
+        if (Front::isEmpty($filterFrom) && Front::isEmpty($filterTo) && $filterFrom >= $filterTo) {
+            $query->addFilterable(new BetweenFilter($key, $filterFrom, $filterTo));
+        }
     }
 
 }

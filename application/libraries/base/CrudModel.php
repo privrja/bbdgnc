@@ -31,13 +31,15 @@ abstract class CrudModel extends CI_Model {
         return $query->result_array();
     }
 
-    public function findAllPagingCount() {
+    public function findAllPagingCount(Query $query) {
+        $query->query($this);
         $this->db->from($this->getTableName());
         $query = $this->db->get();
         return $query->num_rows();
     }
 
-    public function findAllPaging($start) {
+    public function findAllPaging($start, Query $query) {
+        $query->query($this);
         $this->db->from($this->getTableName());
         $this->db->limit(CommonConstants::PAGING, $start);
         $query = $this->db->get();
