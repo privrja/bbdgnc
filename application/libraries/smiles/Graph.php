@@ -2,6 +2,7 @@
 
 namespace Bbdgnc\Smiles;
 
+use Bbdgnc\Base\FormulaHelper;
 use Bbdgnc\Base\Logger;
 use Bbdgnc\Enum\LoggerEnum;
 use Bbdgnc\Enum\PeriodicTableSingleton;
@@ -111,17 +112,7 @@ class Graph {
                 $arMapNodesAndCount[$node->getAtom()->getName()] = 1;
             }
         }
-        $arMapNodesAndCount = LossesEnum::subtractLosses($losses, $arMapNodesAndCount);
-        ksort($arMapNodesAndCount);
-        $strFormula = "";
-        foreach ($arMapNodesAndCount as $key => $value) {
-            if ($value === 1) {
-                $strFormula .= $key;
-            } else {
-                $strFormula .= $key . $value;
-            }
-        }
-        return $strFormula;
+        return FormulaHelper::formulaExtractLosses($arMapNodesAndCount, $losses);
     }
 
     public function getUniqueSmiles(): string {
