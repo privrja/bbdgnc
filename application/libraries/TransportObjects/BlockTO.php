@@ -67,7 +67,6 @@ class BlockTO implements IEntity {
         $graph = new Graph($this->smiles);
         $this->uniqueSmiles = $graph->getUniqueSmiles();
         $this->formula = $graph->getFormula(LossesEnum::H2O);
-        // TODO tohle by šlo asi přesunout do grafu, tam by to možná šlo spočítat bez formule, zalezi jestli by to bylo potřeba
         $this->mass = FormulaHelper::computeMass($this->formula);
     }
 

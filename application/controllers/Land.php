@@ -251,7 +251,6 @@ class Land extends CI_Controller {
                         $blockTO = new BlockTO($intCounter, "", "", $smile);
                     }
                 }
-                var_dump($blockTO);
                 $blocks[] = $blockTO;
                 $intCounter++;
             }
@@ -262,7 +261,6 @@ class Land extends CI_Controller {
         $this->saveCookies($blocks);
         $this->renderBlocks($data);
     }
-
 
     /**
      * @param BlockTO[] $blocks

@@ -78,6 +78,10 @@ class FormulaHelper {
             }
             $arMap[$strName] = $strCount;
         }
+        return self::formulaExtractLosses($arMap, $losses);
+    }
+
+    public static function formulaExtractLosses($arMap, $losses) {
         $arMap = LossesEnum::subtractLosses($losses, $arMap);
         ksort($arMap);
         $strFormulaResult = "";
