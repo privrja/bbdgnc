@@ -237,7 +237,7 @@ class Land extends CI_Controller {
                         $result = $pubchemFinder->findBySmile($smile, $outArResult, $outArExtResult);
                         switch ($result) {
                             case ResultEnum::REPLY_OK_ONE:
-                                $blockTO = new BlockTO($intCounter, $outArResult[Front::CANVAS_INPUT_NAME], "", $smile, ComputeEnum::FORMULA_MASS);
+                                $blockTO = new BlockTO($intCounter, $outArResult[Front::CANVAS_INPUT_NAME], "", $smile, ComputeEnum::FORMULA_MASS, $outArResult[Front::CANVAS_INPUT_FORMULA]);
                                 $blockTO->identifier = $outArResult[Front::CANVAS_INPUT_IDENTIFIER];
                                 $blockTO->database = ServerEnum::PUBCHEM;
                                 break;
@@ -251,6 +251,7 @@ class Land extends CI_Controller {
                         $blockTO = new BlockTO($intCounter, "", "", $smile);
                     }
                 }
+                var_dump($blockTO);
                 $blocks[] = $blockTO;
                 $intCounter++;
             }

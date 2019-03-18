@@ -56,6 +56,41 @@ class FormulaHelper {
         return $graph->getFormula($losses);
     }
 
+    public static function formulaWithLosses(string $strFormula, int $losses = LossesEnum::NONE) {
+        if (!isset($strFormula) || empty($strFormula)) {
+            throw new IllegalArgumentException();
+        }
+        $arMap = [];
+        while (!empty($strFormula)) {
+            $atomParser = new AtomParser();
+            $result = $atomParser->parse($strFormula);
+            if (!$result->isAccepted()) {
+                throw new IllegalArgumentException();
+            }
+            $strFormula = $result->getRemainder();
+            $strName = $result->getResult();
+            $strCount = 1;
+            $numberParser = new IntParser();
+            $numberResult = $numberParser->parse($strFormula);
+            if ($numberResult->isAccepted()) {
+                $strCount = $numberResult->getResult();
+                $strFormula = $numberResult->getRemainder();
+            }
+            $arMap[$strName] = $strCount;
+        }
+        $arMap = LossesEnum::subtractLosses($losses, $arMap);
+        ksort($arMap);
+        $strFormulaResult = "";
+        foreach ($arMap as $key => $value) {
+            if ($value === 1) {
+                $strFormulaResult .= $key;
+            } else {
+                $strFormulaResult .= $key . $value;
+            }
+        }
+        return $strFormulaResult;
+    }
+
     public static function genericSmiles(string $smiles) {
         $stack = [];
         $smilesNext = str_split($smiles);

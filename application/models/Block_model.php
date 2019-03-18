@@ -22,6 +22,12 @@ class Block_model extends CrudModel {
         return $result[0];
     }
 
+    public function findBlockBySmiles(string $smiles) {
+        $this->db->limit('1');
+        $query = $this->db->get_where(self::TABLE_NAME, array('smiles' => $smiles));
+        return $query->row_array();
+    }
+
     public function findByAcronym($acronym) {
         $query = $this->db->get_where($this->getTableName(), array('acronym' => $acronym));
         return $query->row_array();

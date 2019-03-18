@@ -59,8 +59,13 @@ class BlockDatabase extends AbstractDatabase {
             $graph = new Graph($smiles);
             return $this->controller->block_model->getBlockByUniqueSmiles($graph->getUniqueSmiles());
         } catch (IllegalArgumentException $e) {
-            return $this->controller->block_model->getBlockByUniqueSmiles($smiles);
+            var_dump($this->controller->block_model->findBlockBySmiles($smiles));
+            return $this->controller->block_model->findBlockBySmiles($smiles);
         }
+    }
+
+    private function findBlockBySmiles($smiles) {
+        return $this->controller->block_model->findBlockBySmiles($smiles);
     }
 
     public function startTransaction() {

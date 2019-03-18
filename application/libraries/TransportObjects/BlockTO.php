@@ -43,7 +43,7 @@ class BlockTO implements IEntity {
      * @param int $compute
      * @see ComputeEnum
      */
-    public function __construct(int $id, $name, $acronym, $smiles, int $compute = ComputeEnum::FORMULA_MASS) {
+    public function __construct(int $id, $name, $acronym, $smiles, int $compute = ComputeEnum::FORMULA_MASS, $strFormula = '') {
         $this->id = $id;
         $this->name = $name;
         $this->acronym = $acronym;
@@ -51,7 +51,7 @@ class BlockTO implements IEntity {
         if ($smiles !== "") {
             switch ($compute) {
                 case ComputeEnum::FORMULA_MASS:
-                    $this->computeFormulaAndMass();
+                    $this->computeFormulaAndMass($strFormula);
                     break;
                 case ComputeEnum::UNIQUE_SMILES:
                     $this->computeUniqueSmiles();
@@ -76,16 +76,16 @@ class BlockTO implements IEntity {
         $this->uniqueSmiles = $graph->getUniqueSmiles();
     }
 
-    public function computeFormulaAndMass() {
-        $this->computeFormula();
+    public function computeFormulaAndMass($strFormula = '') {
+        $this->computeFormula($strFormula);
         $this->computeMass();
     }
 
-    public function computeFormula() {
+    public function computeFormula($strFormula = '') {
         try {
             $this->formula = FormulaHelper::formulaFromSmiles($this->smiles, LossesEnum::H2O);
         } catch (IllegalArgumentException $e) {
-            $this->formula = '';
+            $this->formula = FormulaHelper::formulaWithLosses($strFormula, LossesEnum::H2O);
         }
     }
 
