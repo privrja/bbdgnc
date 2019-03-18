@@ -29,14 +29,24 @@ class Sequence extends CI_Controller {
         $this->database = new SequenceDatabase($this);
     }
 
+    private function setupQuery(Query $query) {
+        Front::addSameFilter('type', 'sequence', $query, $this);
+        Front::addLikeFilter('name', 'sequence', $query, $this);
+        Front::addLikeFilter('formula','sequence', $query, $this);
+        Front::addBetweenFilter('mass','sequence', $query, $this);
+        Front::addLikeFilter('sequence', 'sequence', $query, $this);
+    }
+
     public function index($start = 0) {
         $config = [];
+        $query = new Query();
+        $this->setupQuery($query);
         $config[PagingEnum::BASE_URL] = base_url() . "index.php/sequence";
-        $config[PagingEnum::TOTAL_ROWS] = $this->database->findSequenceWithModificationNamesPagingCount(new Query());
+        $config[PagingEnum::TOTAL_ROWS] = $this->database->findSequenceWithModificationNamesPagingCount($query);
         $config[PagingEnum::PER_PAGE] = CommonConstants::PAGING;
 
         $this->pagination->initialize($config);
-        $data['sequences'] = $this->database->findSequenceWithModificationNamesPaging($start, new Query());
+        $data['sequences'] = $this->database->findSequenceWithModificationNamesPaging($start, $query);
         $data[PagingEnum::LINKS] = $this->pagination->create_links();
 
         $this->load->view(Front::TEMPLATES_HEADER);

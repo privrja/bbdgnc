@@ -12,6 +12,14 @@ use Bbdgnc\Smiles\Graph;
 
 class BlockTO implements IEntity {
 
+    const TABLE_NAME = 'block';
+    const ACRONYM = 'acronym';
+    const NAME = 'name';
+    const RESIDUE = 'residue';
+    const LOSSES = 'losses';
+    const SMILES = 'smiles';
+    const MASS = 'mass';
+
     public $id = 0;
 
     public $databaseId;

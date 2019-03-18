@@ -16,6 +16,7 @@ use Bbdgnc\TransportObjects\BlockTO;
 
 class Block extends CI_Controller {
 
+    const TABLENAME = 'block';
     private $errors = "";
 
     private $database;
@@ -33,12 +34,12 @@ class Block extends CI_Controller {
     }
 
     private function setupQuery(Query $query) {
-        Front::addLikeFilter('acronym', $query, $this);
-        Front::addLikeFilter('name', $query, $this);
-        Front::addLikeFilter('residue', $query, $this);
-        Front::addLikeFilter('losses', $query, $this);
-        Front::addLikeFilter('smiles', $query, $this);
-        Front::addBetweenFilter('mass', $query, $this);
+        Front::addLikeFilter(BlockTO::ACRONYM, BlockTO::TABLE_NAME, $query, $this);
+        Front::addLikeFilter(BlockTO::NAME, BlockTO::TABLE_NAME, $query, $this);
+        Front::addLikeFilter(BlockTO::RESIDUE, BlockTO::TABLE_NAME, $query, $this);
+        Front::addLikeFilter(BlockTO::LOSSES, BlockTO::TABLE_NAME, $query, $this);
+        Front::addLikeFilter(BlockTO::SMILES, BlockTO::TABLE_NAME, $query, $this);
+        Front::addBetweenFilter(BlockTO::MASS,BlockTO::TABLE_NAME, $query, $this);
     }
 
     public function index($start = 0) {
@@ -95,14 +96,14 @@ class Block extends CI_Controller {
     }
 
     public function detail($id = 1) {
-        $data['block'] = $this->database->findById($id);
+        $data[self::TABLENAME] = $this->database->findById($id);
         $this->load->view(Front::TEMPLATES_HEADER);
         $this->load->view('blocks/detail', $data);
         $this->load->view(Front::TEMPLATES_FOOTER);
     }
 
     public function edit($id = 1) {
-        $data['block'] = $this->database->findById($id);
+        $data[self::TABLENAME] = $this->database->findById($id);
         $this->form_validation->set_rules(Front::BLOCK_NAME, 'Name', Front::REQUIRED);
         $this->form_validation->set_rules(Front::BLOCK_ACRONYM, 'Acronym', Front::REQUIRED);
         $this->form_validation->set_rules(Front::BLOCK_FORMULA, 'Formula', Front::REQUIRED);

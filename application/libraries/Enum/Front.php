@@ -3,6 +3,7 @@
 namespace Bbdgnc\Enum;
 
 use Bbdgnc\Base\BetweenFilter;
+use Bbdgnc\Base\CommonConstants;
 use Bbdgnc\Base\LikeFilter;
 use Bbdgnc\Base\Query;
 use Bbdgnc\Base\SameFilter;
@@ -116,25 +117,25 @@ abstract class Front {
         return isset($value) && $value !== "";
     }
 
-    public static function addLikeFilter(string $key, Query $query, $controller) {
+    public static function addLikeFilter(string $key, string $tableName, Query $query, $controller) {
         $filter = $controller->input->get($key, true);
         if (Front::isEmpty($filter)) {
-            $query->addFilterable(new LikeFilter($key, $filter));
+            $query->addFilterable(new LikeFilter($tableName . CommonConstants::DOT . $key, $filter));
         }
     }
 
-    public static function addBetweenFilter(string $key, Query $query, $controller) {
+    public static function addBetweenFilter(string $key, string $tableName, Query $query, $controller) {
         $filterFrom = $controller->input->get($key . 'From', true);
         $filterTo = $controller->input->get($key . "To", true);
         if (Front::isEmpty($filterFrom) && Front::isEmpty($filterTo) && $filterFrom <= $filterTo) {
-            $query->addFilterable(new BetweenFilter($key, $filterFrom, $filterTo));
+            $query->addFilterable(new BetweenFilter($tableName . CommonConstants::DOT . $key, $filterFrom, $filterTo));
         }
     }
 
-    public static function addSameFilter(string $key, Query $query, $controller) {
+    public static function addSameFilter(string $key, string $tableName, Query $query, $controller) {
         $filter = $controller->input->get($key, true);
         if (Front::isEmpty($filter)) {
-            $query->addFilterable(new SameFilter($key, $filter));
+            $query->addFilterable(new SameFilter($tableName . CommonConstants::DOT . $key, $filter));
         }
     }
 
