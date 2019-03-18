@@ -125,7 +125,7 @@ abstract class Front {
     public static function addBetweenFilter(string $key, Query $query, $controller) {
         $filterFrom = $controller->input->get($key . 'From', true);
         $filterTo = $controller->input->get($key . "To", true);
-        if (Front::isEmpty($filterFrom) && Front::isEmpty($filterTo) && $filterFrom >= $filterTo) {
+        if (Front::isEmpty($filterFrom) && Front::isEmpty($filterTo) && $filterFrom <= $filterTo) {
             $query->addFilterable(new BetweenFilter($key, $filterFrom, $filterTo));
         }
     }
