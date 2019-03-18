@@ -42,9 +42,9 @@ class Block extends CI_Controller {
     }
 
     public function index($start = 0) {
+        $config = [];
         $query = new Query();
         $this->setupQuery($query);
-        $config = [];
         $config[PagingEnum::BASE_URL] = base_url() . "index.php/block";
         $config[PagingEnum::TOTAL_ROWS] = $this->database->findAllPagingCount($query);
         $config[PagingEnum::PER_PAGE] = CommonConstants::PAGING;

@@ -5,6 +5,7 @@ namespace Bbdgnc\Enum;
 use Bbdgnc\Base\BetweenFilter;
 use Bbdgnc\Base\LikeFilter;
 use Bbdgnc\Base\Query;
+use Bbdgnc\Base\SameFilter;
 
 abstract class Front {
 
@@ -127,6 +128,13 @@ abstract class Front {
         $filterTo = $controller->input->get($key . "To", true);
         if (Front::isEmpty($filterFrom) && Front::isEmpty($filterTo) && $filterFrom <= $filterTo) {
             $query->addFilterable(new BetweenFilter($key, $filterFrom, $filterTo));
+        }
+    }
+
+    public static function addSameFilter(string $key, Query $query, $controller) {
+        $filter = $controller->input->get($key, true);
+        if (Front::isEmpty($filter)) {
+            $query->addFilterable(new SameFilter($key, $filter));
         }
     }
 

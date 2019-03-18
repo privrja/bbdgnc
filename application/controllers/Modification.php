@@ -27,14 +27,25 @@ class Modification extends CI_Controller {
         $this->database = new ModificationDatabase($this);
     }
 
+    private function setupQuery(Query $query) {
+        Front::addLikeFilter('name', $query, $this);
+        Front::addLikeFilter('formula', $query, $this);
+        Front::addLikeFilter('losses', $query, $this);
+        Front::addSameFilter('nterminal', $query, $this);
+        Front::addSameFilter('cterminal', $query, $this);
+        Front::addBetweenFilter('mass', $query, $this);
+    }
+
     public function index($start = 0) {
         $config = [];
+        $query = new Query();
+        $this->setupQuery($query);
         $config[PagingEnum::BASE_URL] = base_url() . "index.php/modification";
-        $config[PagingEnum::TOTAL_ROWS] = $this->database->findAllPagingCount(new Query());
+        $config[PagingEnum::TOTAL_ROWS] = $this->database->findAllPagingCount($query);
         $config[PagingEnum::PER_PAGE] = CommonConstants::PAGING;
 
         $this->pagination->initialize($config);
-        $data['modifications'] = $this->database->findAllPaging($start, new Query());
+        $data['modifications'] = $this->database->findAllPaging($start, $query);
         $data[PagingEnum::LINKS] = $this->pagination->create_links();
 
         $this->load->view(Front::TEMPLATES_HEADER);

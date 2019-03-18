@@ -1,6 +1,6 @@
 <?php
 
-namespace Bbdgnc\base;
+namespace Bbdgnc\Base;
 
 class SameFilter extends Filterable {
 
