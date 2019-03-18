@@ -28,12 +28,12 @@ class Modification extends CI_Controller {
     }
 
     private function setupQuery(Query $query) {
-        Front::addLikeFilter('name', 'modification', $query, $this);
-        Front::addLikeFilter('formula', 'modification', $query, $this);
-        Front::addLikeFilter('losses', 'modification', $query, $this);
-        Front::addSameFilter('nterminal','modification', $query, $this);
-        Front::addSameFilter('cterminal','modification', $query, $this);
-        Front::addBetweenFilter('mass',  'modification', $query, $this);
+        Front::addLikeFilter(ModificationTO::NAME, ModificationTO::TABLE_NAME, $query, $this);
+        Front::addLikeFilter(ModificationTO::FORMULA, ModificationTO::TABLE_NAME, $query, $this);
+        Front::addLikeFilter(ModificationTO::LOSSES, ModificationTO::TABLE_NAME, $query, $this);
+        Front::addSameFilter(ModificationTO::NTERMINAL,ModificationTO::TABLE_NAME, $query, $this);
+        Front::addSameFilter(ModificationTO::CTERMINAL,ModificationTO::TABLE_NAME, $query, $this);
+        Front::addBetweenFilter(ModificationTO::MASS, ModificationTO::TABLE_NAME, $query, $this);
     }
 
     public function index($start = 0) {

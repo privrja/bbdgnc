@@ -30,11 +30,11 @@ class Sequence extends CI_Controller {
     }
 
     private function setupQuery(Query $query) {
-        Front::addSameFilter('type', 'sequence', $query, $this);
-        Front::addLikeFilter('name', 'sequence', $query, $this);
-        Front::addLikeFilter('formula','sequence', $query, $this);
-        Front::addBetweenFilter('mass','sequence', $query, $this);
-        Front::addLikeFilter('sequence', 'sequence', $query, $this);
+        Front::addSameFilter(SequenceTO::TYPE, SequenceTO::TABLE_NAME, $query, $this);
+        Front::addLikeFilter(SequenceTO::NAME, SequenceTO::TABLE_NAME, $query, $this);
+        Front::addLikeFilter(SequenceTO::FORMULA, SequenceTO::TABLE_NAME, $query, $this);
+        Front::addBetweenFilter(SequenceTO::MASS, SequenceTO::TABLE_NAME, $query, $this);
+        Front::addLikeFilter(SequenceTO::SEQUENCE, SequenceTO::TABLE_NAME, $query, $this);
     }
 
     public function index($start = 0) {

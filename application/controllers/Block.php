@@ -16,7 +16,6 @@ use Bbdgnc\TransportObjects\BlockTO;
 
 class Block extends CI_Controller {
 
-    const TABLENAME = 'block';
     private $errors = "";
 
     private $database;
@@ -96,14 +95,14 @@ class Block extends CI_Controller {
     }
 
     public function detail($id = 1) {
-        $data[self::TABLENAME] = $this->database->findById($id);
+        $data[BlockTO::TABLE_NAME] = $this->database->findById($id);
         $this->load->view(Front::TEMPLATES_HEADER);
         $this->load->view('blocks/detail', $data);
         $this->load->view(Front::TEMPLATES_FOOTER);
     }
 
     public function edit($id = 1) {
-        $data[self::TABLENAME] = $this->database->findById($id);
+        $data[BlockTO::TABLE_NAME] = $this->database->findById($id);
         $this->form_validation->set_rules(Front::BLOCK_NAME, 'Name', Front::REQUIRED);
         $this->form_validation->set_rules(Front::BLOCK_ACRONYM, 'Acronym', Front::REQUIRED);
         $this->form_validation->set_rules(Front::BLOCK_FORMULA, 'Formula', Front::REQUIRED);

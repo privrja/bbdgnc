@@ -6,6 +6,12 @@ use Bbdgnc\Enum\SequenceTypeEnum;
 use Bbdgnc\Finder\Enum\ServerEnum;
 
 class SequenceTO implements IEntity {
+    const TABLE_NAME = self::SEQUENCE;
+    const TYPE = 'type';
+    const NAME = 'name';
+    const FORMULA = 'formula';
+    const MASS = 'mass';
+    const SEQUENCE = 'sequence';
 
     public $database = ServerEnum::PUBCHEM;
 
@@ -68,11 +74,11 @@ class SequenceTO implements IEntity {
         }
 
         return [
-            'type' => $this->sequenceType,
-            'name' => $this->name,
-            'formula' => $this->formula,
-            'mass' => $this->mass,
-            'sequence' => $this->sequence,
+            self::TYPE => $this->sequenceType,
+            self::NAME => $this->name,
+            self::FORMULA => $this->formula,
+            self::MASS => $this->mass,
+            self::SEQUENCE => $this->sequence,
             'smiles' => $this->smiles,
             'database' => $this->database,
             'identifier' => $this->identifier,

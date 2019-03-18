@@ -2,7 +2,7 @@
 
 namespace Bbdgnc\Database;
 
-use Bbdgnc\base\Query;
+use Bbdgnc\Base\Query;
 use Bbdgnc\Base\Sortable;
 
 class ModificationDatabase extends AbstractDatabase {

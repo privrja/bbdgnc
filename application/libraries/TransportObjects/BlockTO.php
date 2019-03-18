@@ -13,12 +13,15 @@ use Bbdgnc\Smiles\Graph;
 class BlockTO implements IEntity {
 
     const TABLE_NAME = 'block';
-    const ACRONYM = 'acronym';
     const NAME = 'name';
+    const ACRONYM = 'acronym';
     const RESIDUE = 'residue';
+    const MASS = 'mass';
     const LOSSES = 'losses';
     const SMILES = 'smiles';
-    const MASS = 'mass';
+    const USMILES = 'usmiles';
+    const DATABASE = 'database';
+    const IDENTIFIER = 'identifier';
 
     public $id = 0;
 
@@ -106,15 +109,15 @@ class BlockTO implements IEntity {
 
     public function asEntity() {
         return [
-            'name' => $this->name,
-            'acronym' => $this->acronym,
-            'residue' => $this->formula,
-            'mass' => $this->mass,
-            'losses' => $this->losses,
-            'smiles' => $this->smiles,
-            'usmiles' => $this->uniqueSmiles,
-            'database' => $this->database,
-            'identifier' => $this->identifier,
+            self::NAME => $this->name,
+            self::ACRONYM => $this->acronym,
+            self::RESIDUE => $this->formula,
+            self::MASS => $this->mass,
+            self::LOSSES => $this->losses,
+            self::SMILES => $this->smiles,
+            self::USMILES => $this->uniqueSmiles,
+            self::DATABASE => $this->database,
+            self::IDENTIFIER => $this->identifier,
         ];
     }
 
