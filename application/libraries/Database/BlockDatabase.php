@@ -2,7 +2,7 @@
 
 namespace Bbdgnc\Database;
 
-use Bbdgnc\base\Query;
+use Bbdgnc\Base\Query;
 use Bbdgnc\Base\Sortable;
 use Bbdgnc\Exception\IllegalArgumentException;
 use Bbdgnc\Smiles\Graph;

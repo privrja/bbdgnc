@@ -3,7 +3,7 @@
 namespace Bbdgnc\Database;
 
 use Bbdgnc\Base\Logger;
-use Bbdgnc\base\Query;
+use Bbdgnc\Base\Query;
 use Bbdgnc\Enum\LoggerEnum;
 use Bbdgnc\Enum\ModificationTypeEnum;
 use Bbdgnc\Exception\BlockToSequenceInDatabaseException;
