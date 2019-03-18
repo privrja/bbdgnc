@@ -14,12 +14,9 @@ class Block_model extends CrudModel {
      * @return array
      */
     public function getBlockByUniqueSmiles(string $usmiles) {
+        $this->db->limit('1');
         $query = $this->db->get_where(self::TABLE_NAME, array('usmiles' => $usmiles));
-        $result = $query->result_array();
-        if (empty($result)) {
-            return [];
-        }
-        return $result[0];
+        return $query->row_array();
     }
 
     public function findBlockBySmiles(string $smiles) {
