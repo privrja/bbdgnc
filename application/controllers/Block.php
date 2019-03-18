@@ -32,6 +32,8 @@ class Block extends CI_Controller {
     }
 
     public function index($start = 0) {
+        $filterAcronym = $this->input->get('acronym', true);
+
         $config = [];
         $config[PagingEnum::BASE_URL] = base_url() . "index.php/block";
         $config[PagingEnum::TOTAL_ROWS] = $this->database->findAllPagingCount();
