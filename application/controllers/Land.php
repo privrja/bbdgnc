@@ -690,9 +690,11 @@ class Land extends CI_Controller {
             return;
         }
 
+        $data = $this->getLastData();
+        $data[Front::ERRORS] = 'Sequence saved OK';
         $this->load->view(Front::TEMPLATES_HEADER);
         $this->load->view(Front::PAGES_CANVAS);
-        $this->load->view(Front::PAGES_MAIN, $this->getLastData());
+        $this->load->view(Front::PAGES_MAIN, $data);
         $this->load->view(Front::TEMPLATES_FOOTER);
     }
 
