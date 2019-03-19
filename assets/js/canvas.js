@@ -35,6 +35,11 @@ const CANVAS_SMALL_SQUARE = 300;
 const PIXEL_TWO = 2;
 const PROCENT_SIXTY = 0.6;
 
+const ASC = 'asc';
+const DESC = 'desc';
+
+let sortDirection = ASC;
+
 /** constants mode */
 const MODE_LIGHT = "light";
 const MODE_DARK = "dark";
@@ -590,19 +595,30 @@ function redirectWithData(formId, data) {
     form.submit();
 }
 
-function filter(param) {
-    let query = filterValue('?', 'filter-name', 'name') +
-        filterValue(AMPERSAND, 'filter-acronym', 'acronym') +
-        filterValue(AMPERSAND, 'filter-residue', 'residue') +
-        filterValue(AMPERSAND, 'filter-losses', 'losses') +
-        filterValue(AMPERSAND, 'filter-mass-from', 'massFrom') +
-        filterValue(AMPERSAND, 'filter-mass-to', 'massTo') +
-        filterValue(AMPERSAND, 'filter-smiles', 'smiles') +
-        filterValue(AMPERSAND, 'filter-type', 'type') +
-        filterValue(AMPERSAND, 'filter-formula', 'formula') +
-        filterValue(AMPERSAND, 'filter-sequence', 'sequence') +
-        filterValue(AMPERSAND, 'filter-nterminal', 'nterminal') +
-        filterValue(AMPERSAND, 'filter-cterminal', 'cterminal');
+function sort(param, sort) {
+    let sortQuery = AMPERSAND + sort + 'Sort=' + sortDirection;
+    if (sortDirection === ASC) {
+        sortDirection = DESC;
+    } else {
+        sortDirection = ASC;
+    }
+    filter(param, sortQuery);
+}
+
+function filter(param, sort = '') {
+    let query = '?' +  sort +
+        filterValue('filter-name', 'name') +
+        filterValue('filter-acronym', 'acronym') +
+        filterValue('filter-residue', 'residue') +
+        filterValue('filter-losses', 'losses') +
+        filterValue('filter-mass-from', 'massFrom') +
+        filterValue('filter-mass-to', 'massTo') +
+        filterValue('filter-smiles', 'smiles') +
+        filterValue('filter-type', 'type') +
+        filterValue('filter-formula', 'formula') +
+        filterValue('filter-sequence', 'sequence') +
+        filterValue('filter-nterminal', 'nterminal') +
+        filterValue('filter-cterminal', 'cterminal');
     window.location.href = param + query;
 }
 
@@ -610,10 +626,10 @@ function getInputData(id) {
     return document.getElementById(id).value;
 }
 
-function filterValue(separator = '', id, key) {
+function filterValue(id, key) {
     try {
         let name = getInputData(id);
-        return separator + key + '=' + name;
+        return AMPERSAND + key + '=' + name;
     } catch (e) {
         console.log(e);
         return '';

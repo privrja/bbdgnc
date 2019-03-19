@@ -148,4 +148,15 @@ abstract class Front {
         }
     }
 
+    public static function setValue($field, $default = '', $html_escape = true) {
+        $CI =& get_instance();
+
+        $value = (isset($CI->form_validation) && is_object($CI->form_validation) && $CI->form_validation->has_rule($field))
+            ? $CI->form_validation->set_value($field, $default)
+            : $CI->input->post($field, FALSE);
+
+        isset($value) OR $value = ($CI->input->get($field) === null ? $default : $CI->input->get($field));
+        return ($html_escape) ? html_escape($value) : $value;
+    }
+
 }

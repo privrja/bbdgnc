@@ -1,5 +1,6 @@
 <?php
 
+use Bbdgnc\Enum\Front;
 use Bbdgnc\Enum\SequenceTypeEnum;
 use Bbdgnc\Finder\Enum\ServerEnum;
 
@@ -13,11 +14,11 @@ use Bbdgnc\Finder\Enum\ServerEnum;
         <div class="table t">
             <div class="thead t">
                 <div class="tr t">
-                    <div class="td">Type</div>
-                    <div class="td">Name</div>
-                    <div class="td">Summary Formula</div>
-                    <div class="td">Monoisotopic Mass</div>
-                    <div class="td">Sequence</div>
+                    <div class="td" onclick="<?= "sort('" . site_url('sequence') . "', 'type')" ?>">Type</div>
+                    <div class="td" onclick="<?= "sort('" . site_url('sequence') . "', 'name')" ?>">Name</div>
+                    <div class="td" onclick="<?= "sort('" . site_url('sequence') . "', 'formula')" ?>">Summary Formula</div>
+                    <div class="td" onclick="<?= "sort('" . site_url('sequence') . "', 'mass')" ?>">Monoisotopic Mass</div>
+                    <div class="td" onclick="<?= "sort('" . site_url('sequence') . "', 'sequence')" ?>">Sequence</div>
                     <div class="td">N-terminal</div>
                     <div class="td">C-terminal</div>
                     <div class="td">Branch</div>
@@ -28,20 +29,20 @@ use Bbdgnc\Finder\Enum\ServerEnum;
             <div class="tbody">
                 <div class='tr'>
                     <div class="td">
-                        <input type="text" placeholder="Filter by Type" accesskey="t" id="filter-type" />
+                        <input type="text" placeholder="Filter by Type" accesskey="t" id="filter-type" value="<?= Front::setValue('type') ?>"/>
                     </div>
                     <div class="td">
-                        <input type="text" placeholder="Filter by Name" accesskey="n" id="filter-name"/>
+                        <input type="text" placeholder="Filter by Name" accesskey="n" id="filter-name" value="<?= Front::setValue('name') ?>"/>
                     </div>
                     <div class="td">
-                        <input type="text" placeholder="Filter by Summary Formula" accesskey="f" id="filter-formula"/>
+                        <input type="text" placeholder="Filter by Summary Formula" accesskey="f" id="filter-formula" value="<?= Front::setValue('formula') ?>"/>
                     </div>
                     <div class="td">
-                        <input type="text" placeholder="Filter by Mass From" accesskey="m" id="filter-mass-from"/>
-                        <input type="text" placeholder="Filter by Mass To" id="filter-mass-to"/>
+                        <input type="text" placeholder="Filter by Mass From" accesskey="m" id="filter-mass-from" value="<?= Front::setValue('massFrom') ?>"/>
+                        <input type="text" placeholder="Filter by Mass To" id="filter-mass-to" value="<?= Front::setValue('massTo') ?>"/>
                     </div>
                     <div class="td">
-                        <input type="text" placeholder="Filter by Sequence" accesskey="s" id="filter-sequence"/>
+                        <input type="text" placeholder="Filter by Sequence" accesskey="s" id="filter-sequence" value="<?= Front::setValue('sequence') ?>"/>
                     </div>
                     <div class="td">
                     </div>

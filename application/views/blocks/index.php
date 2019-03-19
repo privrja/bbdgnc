@@ -1,5 +1,6 @@
 <?php
 
+use Bbdgnc\Enum\Front;
 use Bbdgnc\Finder\Enum\ServerEnum;
 
 ?>
@@ -17,12 +18,12 @@ use Bbdgnc\Finder\Enum\ServerEnum;
         <div class="table t">
             <div class="thead t">
                 <div class="tr t">
-                    <div class="td">Name</div>
-                    <div class="td">Acronym</div>
-                    <div class="td">Residue Formula</div>
-                    <div class="td">Neutral loss</div>
-                    <div class="td">Residue Mass</div>
-                    <div class="td">SMILES</div>
+                    <div class="td" onclick="<?= "sort('" . site_url('block') . "', 'name')" ?>">Name</div>
+                    <div class="td" onclick="<?= "sort('" . site_url('block') . "', 'acronym')" ?>">Acronym</div>
+                    <div class="td" onclick="<?= "sort('" . site_url('block') . "', 'residue')" ?>">Residue Formula</div>
+                    <div class="td" onclick="<?= "sort('" . site_url('block') . "', 'losses')" ?>">Neutral loss</div>
+                    <div class="td" onclick="<?= "sort('" . site_url('block') . "', 'mass')" ?>">Residue Mass</div>
+                    <div class="td" onclick="<?= "sort('" . site_url('block') . "', 'smiles')" ?>">SMILES</div>
                     <div class="td">Reference</div>
                     <div class="td">Editor</div>
                 </div>
@@ -30,23 +31,23 @@ use Bbdgnc\Finder\Enum\ServerEnum;
             <div class="tbody">
                 <div class='tr'>
                     <div class="td">
-                        <input type="text" placeholder="Filter by Name" accesskey="n" id="filter-name"/>
+                        <input type="text" placeholder="Filter by Name" accesskey="n" id="filter-name" value="<?= Front::setValue('name') ?>"/>
                     </div>
                     <div class="td">
-                        <input type="text" placeholder="Filter by Acronym" accesskey="a" id="filter-acronym"/>
+                        <input type="text" placeholder="Filter by Acronym" accesskey="a" id="filter-acronym" value="<?= Front::setValue('acronym') ?>"/>
                     </div>
                     <div class="td">
-                        <input type="text" placeholder="Filter by Residue Formula" accesskey="f" id="filter-residue"/>
+                        <input type="text" placeholder="Filter by Residue Formula" accesskey="f" id="filter-residue" value="<?= Front::setValue('residue') ?>"/>
                     </div>
                     <div class="td">
-                        <input type="text" placeholder="Filter by Neutral Losses" accesskey="l" id="filter-losses"/>
+                        <input type="text" placeholder="Filter by Neutral Losses" accesskey="l" id="filter-losses" value="<?= Front::setValue('losses') ?>"/>
                     </div>
                     <div class="td">
-                        <input type="text" placeholder="Filter by Mass From" accesskey="m" id="filter-mass-from"/>
-                        <input type="text" placeholder="Filter by Mass To" id="filter-mass-to"/>
+                        <input type="text" placeholder="Filter by Mass From" accesskey="m" id="filter-mass-from" value="<?= Front::setValue('massFrom') ?>"/>
+                        <input type="text" placeholder="Filter by Mass To" id="filter-mass-to" value="<?= Front::setValue('massTo') ?>"/>
                     </div>
                     <div class="td">
-                        <input type="text" placeholder="Filter by SMILES" accesskey="s" id="filter-smiles"/>
+                        <input type="text" placeholder="Filter by SMILES" accesskey="s" id="filter-smiles" value="<?= Front::setValue('smiles') ?>"/>
                     </div>
                     <div class="td">
                         <button onclick="window.location.href = '<?= site_url('block') ?>'">Cancel</button>

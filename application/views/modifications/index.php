@@ -1,6 +1,6 @@
 <?php
 
-?>
+use Bbdgnc\Enum\Front; ?>
 
 
 <div id="div-full">
@@ -11,30 +11,38 @@
         <div class="table t">
             <div class="thead t">
                 <div class="tr t">
-                    <div class="td">Name</div>
-                    <div class="td">Summary Formula</div>
-                    <div class="td">Monoisotopic Mass</div>
-                    <div class="td">N-terminal</div>
-                    <div class="td">C-terminal</div>
+                    <div class="td" onclick="<?= "sort('" . site_url('modification') . "', 'name')" ?>">Name</div>
+                    <div class="td" onclick="<?= "sort('" . site_url('modification') . "', 'formula')" ?>">Summary
+                        Formula
+                    </div>
+                    <div class="td" onclick="<?= "sort('" . site_url('modification') . "', 'mass')" ?>">Monoisotopic
+                        Mass
+                    </div>
+                    <div class="td" onclick="<?= "sort('" . site_url('modification') . "', 'nterminal')" ?>">
+                        N-terminal
+                    </div>
+                    <div class="td" onclick="<?= "sort('" . site_url('modification') . "', 'cterminal')" ?>">
+                        C-terminal
+                    </div>
                     <div class="td">Editor</div>
                 </div>
             </div>
-            <diVdv class="tbody">
+            <div class="tbody">
                 <div class="td">
-                    <input type="text" placeholder="Filter by Name" accesskey="n" id="filter-name"/>
+                    <input type="text" placeholder="Filter by Name" accesskey="n" id="filter-name" value="<?= Front::setValue('name') ?>"/>
                 </div>
                 <div class="td">
-                    <input type="text" placeholder="Filter by Summary Formula" accesskey="f" id="filter-formula"/>
+                    <input type="text" placeholder="Filter by Summary Formula" accesskey="f" id="filter-formula" value="<?= Front::setValue('formula') ?>"/>
                 </div>
                 <div class="td">
-                    <input type="text" placeholder="Filter by Mass From" accesskey="m" id="filter-mass-from"/>
-                    <input type="text" placeholder="Filter by Mass To" id="filter-mass-to"/>
+                    <input type="text" placeholder="Filter by Mass From" accesskey="m" id="filter-mass-from" value="<?= Front::setValue('massFrom') ?>"/>
+                    <input type="text" placeholder="Filter by Mass To" id="filter-mass-to" value="<?= Front::setValue('massTo') ?>"/>
                 </div>
                 <div class="td">
-                    <input type="text" placeholder="Filter by N-terminal" accesskey="n" id="filter-nterminal"/>
+                    <input type="text" placeholder="Filter by N-terminal" accesskey="n" id="filter-nterminal" value="<?= Front::setValue('nterminal') ?>"/>
                 </div>
                 <div class="td">
-                    <input type="text" placeholder="Filter by C-terminal" accesskey="c" id="filter-cterminal"/>
+                    <input type="text" placeholder="Filter by C-terminal" accesskey="c" id="filter-cterminal" value="<?= Front::setValue('cterminal') ?>"/>
                 </div>
                 <div class="td">
                     <button onclick="window.location.href = '<?= site_url('modification') ?>'">Cancel</button>
@@ -68,8 +76,7 @@
                         </div>
                     </div>
                 <?php endforeach; ?>
+            </div>
         </div>
+    </article>
 </div>
-</article>
-</div>
-
