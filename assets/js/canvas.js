@@ -589,3 +589,10 @@ function redirectWithData(formId, data) {
     }
     form.submit();
 }
+
+function cancelFilterBlock() {
+}
+
+function filterBlock() {
+    
+}

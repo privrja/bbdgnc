@@ -26,6 +26,36 @@ use Bbdgnc\Finder\Enum\ServerEnum;
                 </div>
             </div>
             <div class="tbody">
+                <div class='tr'>
+                    <div class="td">
+                        <input type="text" placeholder="Filter by Type" accesskey="t"/>
+                    </div>
+                    <div class="td">
+                        <input type="text" placeholder="Filter by Name" accesskey="n"/>
+                    </div>
+                    <div class="td">
+                        <input type="text" placeholder="Filter by Summary Formula" accesskey="f"/>
+                    </div>
+                    <div class="td">
+                        <input type="text" placeholder="Filter by Mass From" accesskey="m"/>
+                        <input type="text" placeholder="Filter by Mass To"/>
+                    </div>
+                    <div class="td">
+                        <input type="text" placeholder="Filter by Sequence" accesskey="s"/>
+                    </div>
+                    <div class="td">
+                    </div>
+                    <div class="td">
+                    </div>
+                    <div class="td">
+                    </div>
+                    <div class="td">
+                        <button onclick="cancelFilterBlock()">Cancel</button>
+                    </div>
+                    <div class="td">
+                        <button onclick="filterBlock()">Filter</button>
+                    </div>
+                </div>
                 <?php foreach ($sequences as $sequence): ?>
                     <div class='tr'>
                         <div class="td">

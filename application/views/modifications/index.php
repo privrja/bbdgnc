@@ -19,7 +19,29 @@
                     <div class="td">Editor</div>
                 </div>
             </div>
-            <div class="tbody">
+            <diVdv class="tbody">
+                <div class="td">
+                    <input type="text" placeholder="Filter by Name" accesskey="n"/>
+                </div>
+                <div class="td">
+                    <input type="text" placeholder="Filter by Summary Formula" accesskey="f"/>
+                </div>
+                <div class="td">
+                    <input type="text" placeholder="Filter by Mass From" accesskey="m"/>
+                    <input type="text" placeholder="Filter by Mass To"/>
+                </div>
+                <div class="td">
+                    <input type="text" placeholder="Filter by N-terminal" accesskey="n"/>
+                </div>
+                <div class="td">
+                    <input type="text" placeholder="Filter by C-terminal" accesskey="c"/>
+                </div>
+                <div class="td">
+                    <button onclick="cancelFilterModification()">Cancel</button>
+                </div>
+                <div class="td">
+                    <button onclick="filterModification()">Filter</button>
+                </div>
                 <?php foreach ($modifications as $modification): ?>
                     <div class='tr'>
                         <div class="td">
@@ -46,8 +68,8 @@
                         </div>
                     </div>
                 <?php endforeach; ?>
-            </div>
         </div>
-    </article>
+</div>
+</article>
 </div>
 
