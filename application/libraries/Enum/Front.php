@@ -7,6 +7,8 @@ use Bbdgnc\Base\CommonConstants;
 use Bbdgnc\Base\LikeFilter;
 use Bbdgnc\Base\Query;
 use Bbdgnc\Base\SameFilter;
+use Bbdgnc\Base\Sortable;
+use Bbdgnc\Base\SortDirectionEnum;
 
 abstract class Front {
 
@@ -136,6 +138,13 @@ abstract class Front {
         $filter = $controller->input->get($key, true);
         if (Front::isEmpty($filter)) {
             $query->addFilterable(new SameFilter($tableName . CommonConstants::DOT . $key, $filter));
+        }
+    }
+
+    public static function addSortable(string $key, string $tableName, Query $query, $controller) {
+        $sort = $controller->input->get($key . 'Sort', true);
+        if (Front::isEmpty($sort) && $sort === SortDirectionEnum::DESC || $sort === SortDirectionEnum::ASC) {
+            $query->addSortable(new Sortable($tableName . CommonConstants::DOT . $key, $sort));
         }
     }
 

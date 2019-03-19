@@ -35,6 +35,11 @@ class Sequence extends CI_Controller {
         Front::addLikeFilter(SequenceTO::FORMULA, SequenceTO::TABLE_NAME, $query, $this);
         Front::addBetweenFilter(SequenceTO::MASS, SequenceTO::TABLE_NAME, $query, $this);
         Front::addLikeFilter(SequenceTO::SEQUENCE, SequenceTO::TABLE_NAME, $query, $this);
+        Front::addSortable(SequenceTO::TYPE, SequenceTO::TABLE_NAME, $query, $this);
+        Front::addSortable(SequenceTO::NAME, SequenceTO::TABLE_NAME, $query, $this);
+        Front::addSortable(SequenceTO::FORMULA,SequenceTO::TABLE_NAME, $query, $this);
+        Front::addSortable(SequenceTO::MASS, SequenceTO::TABLE_NAME, $query, $this);
+        Front::addSortable(SequenceTO::SEQUENCE, SequenceTO::TABLE_NAME, $query, $this);
     }
 
     public function index($start = 0) {

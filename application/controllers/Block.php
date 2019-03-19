@@ -39,6 +39,13 @@ class Block extends CI_Controller {
         Front::addLikeFilter(BlockTO::LOSSES, BlockTO::TABLE_NAME, $query, $this);
         Front::addLikeFilter(BlockTO::SMILES, BlockTO::TABLE_NAME, $query, $this);
         Front::addBetweenFilter(BlockTO::MASS,BlockTO::TABLE_NAME, $query, $this);
+        Front::addSortable(BlockTO::NAME, BlockTO::TABLE_NAME, $query, $this);
+        Front::addSortable(BlockTO::ACRONYM, BlockTO::TABLE_NAME, $query, $this);
+        Front::addSortable(BlockTO::RESIDUE, BlockTO::TABLE_NAME, $query, $this);
+        Front::addSortable(BlockTO::LOSSES, BlockTO::TABLE_NAME, $query, $this);
+        Front::addSortable(BlockTO::SMILES, BlockTO::TABLE_NAME, $query, $this);
+        Front::addSortable(BlockTO::MASS, BlockTO::TABLE_NAME, $query, $this);
+        Front::addSortable(BlockTO::ACRONYM, BlockTO::TABLE_NAME, $query, $this);
     }
 
     public function index($start = 0) {

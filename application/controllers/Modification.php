@@ -34,6 +34,12 @@ class Modification extends CI_Controller {
         Front::addSameFilter(ModificationTO::NTERMINAL,ModificationTO::TABLE_NAME, $query, $this);
         Front::addSameFilter(ModificationTO::CTERMINAL,ModificationTO::TABLE_NAME, $query, $this);
         Front::addBetweenFilter(ModificationTO::MASS, ModificationTO::TABLE_NAME, $query, $this);
+        Front::addSortable(ModificationTO::NAME, ModificationTO::TABLE_NAME, $query, $this);
+        Front::addSortable(ModificationTO::FORMULA,ModificationTO::TABLE_NAME, $query, $this);
+        Front::addSortable(ModificationTO::LOSSES, ModificationTO::TABLE_NAME, $query, $this);
+        Front::addSortable(ModificationTO::MASS,ModificationTO::TABLE_NAME, $query, $this);
+        Front::addSortable(ModificationTO::NTERMINAL, ModificationTO::TABLE_NAME, $query, $this);
+        Front::addSortable(ModificationTO::CTERMINAL, ModificationTO::TABLE_NAME, $query, $this);
     }
 
     public function index($start = 0) {
