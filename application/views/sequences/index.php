@@ -28,32 +28,32 @@ use Bbdgnc\Finder\Enum\ServerEnum;
             <div class="tbody">
                 <div class='tr'>
                     <div class="td">
-                        <input type="text" placeholder="Filter by Type" accesskey="t"/>
+                        <input type="text" placeholder="Filter by Type" accesskey="t" id="filter-type" />
                     </div>
                     <div class="td">
-                        <input type="text" placeholder="Filter by Name" accesskey="n"/>
+                        <input type="text" placeholder="Filter by Name" accesskey="n" id="filter-name"/>
                     </div>
                     <div class="td">
-                        <input type="text" placeholder="Filter by Summary Formula" accesskey="f"/>
+                        <input type="text" placeholder="Filter by Summary Formula" accesskey="f" id="filter-formula"/>
                     </div>
                     <div class="td">
-                        <input type="text" placeholder="Filter by Mass From" accesskey="m"/>
-                        <input type="text" placeholder="Filter by Mass To"/>
+                        <input type="text" placeholder="Filter by Mass From" accesskey="m" id="filter-mass-from"/>
+                        <input type="text" placeholder="Filter by Mass To" id="filter-mass-to"/>
                     </div>
                     <div class="td">
-                        <input type="text" placeholder="Filter by Sequence" accesskey="s"/>
-                    </div>
-                    <div class="td">
-                    </div>
-                    <div class="td">
+                        <input type="text" placeholder="Filter by Sequence" accesskey="s" id="filter-sequence"/>
                     </div>
                     <div class="td">
                     </div>
                     <div class="td">
-                        <button onclick="cancelFilterBlock()">Cancel</button>
                     </div>
                     <div class="td">
-                        <button onclick="filterBlock()">Filter</button>
+                    </div>
+                    <div class="td">
+                        <button onclick="window.location.href = '<?= site_url('sequence') ?>'">Cancel</button>
+                    </div>
+                    <div class="td">
+                        <button onclick="<?= "filter('" . site_url('sequence') . "')" ?>">Filter</button>
                     </div>
                 </div>
                 <?php foreach ($sequences as $sequence): ?>

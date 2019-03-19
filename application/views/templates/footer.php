@@ -29,5 +29,6 @@
         </ul>
     </nav>
 </footer>
+<script src="<?= AssetHelper::jsUrl() . "canvas.js" ?>"></script>
 </body>
 </html>

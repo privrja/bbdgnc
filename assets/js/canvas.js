@@ -24,6 +24,7 @@ const TXT_BRANCH_FORMULA = "txt-b-formula";
 const TXT_BRANCH_MASS = "txt-b-mass";
 const CHK_BRANCH_NTERMINAL = "chk-b-nterminal";
 const CHK_BRANCH_CTERMINAL = "chk-b-cterminal";
+const AMPERSAND = '&';
 
 const CAPTION_RESULTS = "#h-results";
 
@@ -576,7 +577,6 @@ function displayModification(id, display) {
     }
 }
 
-
 function redirectWithData(formId, data) {
     let form = document.getElementById(formId);
     form.method = 'post';
@@ -590,9 +590,32 @@ function redirectWithData(formId, data) {
     form.submit();
 }
 
-function cancelFilterBlock() {
+function filter(param) {
+    let query = filterValue('?', 'filter-name', 'name') +
+        filterValue(AMPERSAND, 'filter-acronym', 'acronym') +
+        filterValue(AMPERSAND, 'filter-residue', 'residue') +
+        filterValue(AMPERSAND, 'filter-losses', 'losses') +
+        filterValue(AMPERSAND, 'filter-mass-from', 'massFrom') +
+        filterValue(AMPERSAND, 'filter-mass-to', 'massTo') +
+        filterValue(AMPERSAND, 'filter-smiles', 'smiles') +
+        filterValue(AMPERSAND, 'filter-type', 'type') +
+        filterValue(AMPERSAND, 'filter-formula', 'formula') +
+        filterValue(AMPERSAND, 'filter-sequence', 'sequence') +
+        filterValue(AMPERSAND, 'filter-nterminal', 'nterminal') +
+        filterValue(AMPERSAND, 'filter-cterminal', 'cterminal');
+    window.location.href = param + query;
 }
 
-function filterBlock() {
-    
+function getInputData(id) {
+    return document.getElementById(id).value;
+}
+
+function filterValue(separator = '', id, key) {
+    try {
+        let name = getInputData(id);
+        return separator + key + '=' + name;
+    } catch (e) {
+        console.log(e);
+        return '';
+    }
 }

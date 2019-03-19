@@ -62,5 +62,3 @@ use Bbdgnc\Finder\Enum\ServerEnum;
 
 <!-- Smiles Drawer -->
 <script src="<?= AssetHelper::jsSmilesDrawer() ?>"></script>
-
-<script src="<?= AssetHelper::jsUrl() . "canvas.js" ?>"></script>

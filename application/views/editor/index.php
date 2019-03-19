@@ -137,7 +137,7 @@ use Bbdgnc\Finder\Enum\ServerEnum;
             databaseId = null;
         }
         document.getElementById('hdn-sequence').value = sequence;
-        redirectWithData({blockIdentifier: blockId, blockDatabaseId: databaseId, blocks: 'Blocks'});
+        redirectWithData('form-block', {blockIdentifier: blockId, blockDatabaseId: databaseId, blocks: 'Blocks'});
     }
 
     function sequenceReplace(id, acronym, sequence) {
@@ -152,19 +152,4 @@ use Bbdgnc\Finder\Enum\ServerEnum;
         return left + acronym + right;
     }
 
-    /**
-     * This function add data to form as hidden and submit form
-     * @param data
-     */
-    function redirectWithData(data) {
-        let form = document.getElementById('form-block');
-        for (let name in data) {
-            let input = document.createElement('input');
-            input.type = 'hidden';
-            input.name = name;
-            input.value = data[name];
-            form.appendChild(input);
-        }
-        form.submit();
-    }
 </script>

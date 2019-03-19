@@ -21,26 +21,26 @@
             </div>
             <diVdv class="tbody">
                 <div class="td">
-                    <input type="text" placeholder="Filter by Name" accesskey="n"/>
+                    <input type="text" placeholder="Filter by Name" accesskey="n" id="filter-name"/>
                 </div>
                 <div class="td">
-                    <input type="text" placeholder="Filter by Summary Formula" accesskey="f"/>
+                    <input type="text" placeholder="Filter by Summary Formula" accesskey="f" id="filter-formula"/>
                 </div>
                 <div class="td">
-                    <input type="text" placeholder="Filter by Mass From" accesskey="m"/>
-                    <input type="text" placeholder="Filter by Mass To"/>
+                    <input type="text" placeholder="Filter by Mass From" accesskey="m" id="filter-mass-from"/>
+                    <input type="text" placeholder="Filter by Mass To" id="filter-mass-to"/>
                 </div>
                 <div class="td">
-                    <input type="text" placeholder="Filter by N-terminal" accesskey="n"/>
+                    <input type="text" placeholder="Filter by N-terminal" accesskey="n" id="filter-nterminal"/>
                 </div>
                 <div class="td">
-                    <input type="text" placeholder="Filter by C-terminal" accesskey="c"/>
+                    <input type="text" placeholder="Filter by C-terminal" accesskey="c" id="filter-cterminal"/>
                 </div>
                 <div class="td">
-                    <button onclick="cancelFilterModification()">Cancel</button>
+                    <button onclick="window.location.href = '<?= site_url('modification') ?>'">Cancel</button>
                 </div>
                 <div class="td">
-                    <button onclick="filterModification()">Filter</button>
+                    <button onclick="<?= "filter('" . site_url('modification') . "')" ?>">Filter</button>
                 </div>
                 <?php foreach ($modifications as $modification): ?>
                     <div class='tr'>
