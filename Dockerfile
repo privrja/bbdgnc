@@ -48,7 +48,7 @@ RUN php -r "unlink('composer-setup.php');"
 
 COPY . /var/www/html
 
-RUN mv /var/www/html/deploy/database.php /var/www/html/application/config
+COPY deploy/database.php application/config
 
 # install php dependecies
 RUN /var/www/html/composer.phar install --no-dev
