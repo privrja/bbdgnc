@@ -6,7 +6,9 @@ WORKDIR /var/www/html
 RUN apt-get update
 
 RUN apt-get update && \
-    apt-get install -y libxml2-dev
+    apt-get install -y \
+        libxml2-dev \
+        git
 
 RUN docker-php-ext-install -j$(nproc) soap
 
