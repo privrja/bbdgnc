@@ -12,11 +12,10 @@ RUN apt-get update && \
         libxml2-dev \
         zlib1g-dev \
         git \
-        unzip \
-        curl
+        unzip
 
 RUN docker-php-ext-install -j$(nproc) zip
-RUN docker-php-ext-install -j$(nproc) curl
+#RUN docker-php-ext-install -j$(nproc) curl
 RUN docker-php-ext-install -j$(nproc) soap
 
 # nvm environment variables
