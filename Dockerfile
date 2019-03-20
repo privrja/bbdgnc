@@ -8,6 +8,7 @@ RUN apt-get update
 RUN apt-get update && \
     apt-get install -y \
         libxml2-dev \
+        zlib-dev \
         git
 
 RUN docker-php-ext-install -j$(nproc) zip
