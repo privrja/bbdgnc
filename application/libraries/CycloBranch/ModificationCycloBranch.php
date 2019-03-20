@@ -3,9 +3,8 @@
 namespace Bbdgnc\CycloBranch;
 
 use Bbdgnc\Base\CommonConstants;
-use Bbdgnc\Base\Logger;
+use Bbdgnc\Base\Query;
 use Bbdgnc\Database\ModificationDatabase;
-use Bbdgnc\Enum\LoggerEnum;
 use Bbdgnc\Smiles\Parser\Accept;
 use Bbdgnc\Smiles\Parser\BooleanParser;
 use Bbdgnc\Smiles\Parser\Reject;
@@ -56,18 +55,18 @@ class ModificationCycloBranch extends AbstractCycloBranch {
 
     public function download() {
         $start = 0;
-        $arResult = $this->database->findAllPaging($start);
+        $arResult = $this->database->findAllPaging($start, new Query());
         while (!empty($arResult)) {
             foreach ($arResult as $modification) {
-                $strData = $modification['name'] . "\t";
-                $strData .= $modification['formula'] . "\t";
-                $strData .= $modification['mass'] . "\t";
-                $strData .= $modification['nterminal'] . "\t";
-                $strData .= $modification['cterminal'] . PHP_EOL;
+                $strData = $modification[ModificationTO::NAME] . "\t";
+                $strData .= $modification[ModificationTO::FORMULA] . "\t";
+                $strData .= $modification[ModificationTO::MASS] . "\t";
+                $strData .= $modification[ModificationTO::NTERMINAL] . "\t";
+                $strData .= $modification[ModificationTO::CTERMINAL] . PHP_EOL;
                 file_put_contents(self::FILE_NAME, $strData, FILE_APPEND);
             }
             $start += CommonConstants::PAGING;
-            $arResult = $this->database->findAllPaging($start);
+            $arResult = $this->database->findAllPaging($start, new Query());
         }
     }
 

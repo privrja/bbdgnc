@@ -2,10 +2,15 @@
 
 namespace Bbdgnc\TransportObjects;
 
-use Bbdgnc\Base\Logger;
-use Bbdgnc\Enum\LoggerEnum;
-
 class ModificationTO implements IEntity {
+
+    const TABLE_NAME = 'modification';
+    const LOSSES = 'losses';
+    const NAME = 'name';
+    const FORMULA = 'formula';
+    const MASS = 'mass';
+    const NTERMINAL = 'nterminal';
+    const CTERMINAL = 'cterminal';
 
     public $name;
 
@@ -35,11 +40,11 @@ class ModificationTO implements IEntity {
 
     public function asEntity() {
         return [
-            'name' => $this->name,
-            'formula' => $this->formula,
-            'mass' => $this->mass,
-            'nterminal' => $this->nTerminal,
-            'cterminal' => $this->cTerminal,
+            self::NAME => $this->name,
+            self::FORMULA => $this->formula,
+            self::MASS => $this->mass,
+            self::NTERMINAL => $this->nTerminal,
+            self::CTERMINAL => $this->cTerminal,
         ];
     }
 

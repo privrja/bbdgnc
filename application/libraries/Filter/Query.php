@@ -1,6 +1,6 @@
 <?php
 
-namespace Bbdgnc\base;
+namespace Bbdgnc\Base;
 
 class Query {
 
@@ -19,7 +19,7 @@ class Query {
         array_push($this->filterables, $filterable);
     }
 
-    public function query($model) {
+    public function applyQuery($model) {
         foreach ($this->filterables as $filterable) {
             $filterable->query($model);
         }

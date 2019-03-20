@@ -6,6 +6,7 @@ use Bbdgnc\Base\LibraryEnum;
 use Bbdgnc\Base\Logger;
 use Bbdgnc\Base\ModelEnum;
 use Bbdgnc\Base\PagingEnum;
+use Bbdgnc\Base\Query;
 use Bbdgnc\Database\SequenceDatabase;
 use Bbdgnc\Enum\Front;
 use Bbdgnc\Enum\LoggerEnum;
@@ -28,14 +29,32 @@ class Sequence extends CI_Controller {
         $this->database = new SequenceDatabase($this);
     }
 
+    private function setupQuery(Query $query) {
+        Front::addSameFilter(SequenceTO::TYPE, SequenceTO::TABLE_NAME, $query, $this);
+        Front::addLikeFilter(SequenceTO::NAME, SequenceTO::TABLE_NAME, $query, $this);
+        Front::addLikeFilter(SequenceTO::FORMULA, SequenceTO::TABLE_NAME, $query, $this);
+        Front::addBetweenFilter(SequenceTO::MASS, SequenceTO::TABLE_NAME, $query, $this);
+        Front::addLikeFilter(SequenceTO::SEQUENCE, SequenceTO::TABLE_NAME, $query, $this);
+        $sort = [];
+        $sort[] = Front::addSortable(SequenceTO::TYPE, SequenceTO::TABLE_NAME, $query, $this);
+        $sort[] = Front::addSortable(SequenceTO::NAME, SequenceTO::TABLE_NAME, $query, $this);
+        $sort[] = Front::addSortable(SequenceTO::FORMULA,SequenceTO::TABLE_NAME, $query, $this);
+        $sort[] = Front::addSortable(SequenceTO::MASS, SequenceTO::TABLE_NAME, $query, $this);
+        $sort[] = Front::addSortable(SequenceTO::SEQUENCE, SequenceTO::TABLE_NAME, $query, $this);
+        return Front::getSortDirection($sort);
+    }
+
     public function index($start = 0) {
-        $config = [];
+        $config = $data = [];
+        $query = new Query();
+        $data['sort'] = $this->setupQuery($query);
+        $config[PagingEnum::REUSE_QUERY_STRING] = true;
         $config[PagingEnum::BASE_URL] = base_url() . "index.php/sequence";
-        $config[PagingEnum::TOTAL_ROWS] = $this->database->findSequenceWithModificationNamesPagingCount();
+        $config[PagingEnum::TOTAL_ROWS] = $this->database->findSequenceWithModificationNamesPagingCount($query);
         $config[PagingEnum::PER_PAGE] = CommonConstants::PAGING;
 
         $this->pagination->initialize($config);
-        $data['sequences'] = $this->database->findSequenceWithModificationNamesPaging($start);
+        $data['sequences'] = $this->database->findSequenceWithModificationNamesPaging($start, $query);
         $data[PagingEnum::LINKS] = $this->pagination->create_links();
 
         $this->load->view(Front::TEMPLATES_HEADER);

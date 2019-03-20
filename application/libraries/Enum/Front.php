@@ -2,6 +2,14 @@
 
 namespace Bbdgnc\Enum;
 
+use Bbdgnc\Base\BetweenFilter;
+use Bbdgnc\Base\CommonConstants;
+use Bbdgnc\Base\LikeFilter;
+use Bbdgnc\Base\Query;
+use Bbdgnc\Base\SameFilter;
+use Bbdgnc\Base\Sortable;
+use Bbdgnc\Base\SortDirectionEnum;
+
 abstract class Front {
 
     /** @var string name of inputs */
@@ -105,6 +113,63 @@ abstract class Front {
 
     public static function removeWhiteSpace(string $str) {
         return preg_replace('/\s+/', '', $str);
+    }
+
+    public static function isEmpty($value) {
+        return isset($value) && $value !== "";
+    }
+
+    public static function addLikeFilter(string $key, string $tableName, Query $query, $controller) {
+        $filter = $controller->input->get($key, true);
+        if (Front::isEmpty($filter)) {
+            $query->addFilterable(new LikeFilter($tableName . CommonConstants::DOT . $key, $filter));
+        }
+    }
+
+    public static function addBetweenFilter(string $key, string $tableName, Query $query, $controller) {
+        $filterFrom = $controller->input->get($key . 'From', true);
+        $filterTo = $controller->input->get($key . "To", true);
+        if (Front::isEmpty($filterFrom) && Front::isEmpty($filterTo) && $filterFrom <= $filterTo) {
+            $query->addFilterable(new BetweenFilter($tableName . CommonConstants::DOT . $key, $filterFrom, $filterTo));
+        }
+    }
+
+    public static function addSameFilter(string $key, string $tableName, Query $query, $controller) {
+        $filter = $controller->input->get($key, true);
+        if (Front::isEmpty($filter)) {
+            $query->addFilterable(new SameFilter($tableName . CommonConstants::DOT . $key, $filter));
+        }
+    }
+
+    public static function addSortable(string $key, string $tableName, Query $query, $controller) {
+        $sort = $controller->input->get($key . 'Sort', true);
+        if (Front::isEmpty($sort) && $sort === SortDirectionEnum::DESC || $sort === SortDirectionEnum::ASC) {
+            $query->addSortable(new Sortable($tableName . CommonConstants::DOT . $key, $sort));
+            return $sort;
+        }
+        return '';
+    }
+
+    public static function setValue($field, $default = '', $html_escape = true) {
+        $CI =& get_instance();
+
+        $value = (isset($CI->form_validation) && is_object($CI->form_validation) && $CI->form_validation->has_rule($field))
+            ? $CI->form_validation->set_value($field, $default)
+            : $CI->input->post($field, FALSE);
+
+        isset($value) || $value = ($CI->input->get($field) === null ? $default : $CI->input->get($field));
+        return ($html_escape) ? html_escape($value) : $value;
+    }
+
+    public static function getSortDirection(array $sort) {
+        foreach ($sort as $direction) {
+            if ($direction === SortDirectionEnum::ASC) {
+                return SortDirectionEnum::DESC;
+            } else if ($direction === SortDirectionEnum::DESC) {
+                return SortDirectionEnum::ASC;
+            }
+        }
+        return SortDirectionEnum::ASC;
     }
 
 }

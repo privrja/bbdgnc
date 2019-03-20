@@ -6,6 +6,7 @@ use Bbdgnc\Base\LibraryEnum;
 use Bbdgnc\Base\Logger;
 use Bbdgnc\Base\ModelEnum;
 use Bbdgnc\Base\PagingEnum;
+use Bbdgnc\Base\Query;
 use Bbdgnc\Database\ModificationDatabase;
 use Bbdgnc\Enum\Front;
 use Bbdgnc\Enum\LoggerEnum;
@@ -26,14 +27,34 @@ class Modification extends CI_Controller {
         $this->database = new ModificationDatabase($this);
     }
 
+    private function setupQuery(Query $query) {
+        Front::addLikeFilter(ModificationTO::NAME, ModificationTO::TABLE_NAME, $query, $this);
+        Front::addLikeFilter(ModificationTO::FORMULA, ModificationTO::TABLE_NAME, $query, $this);
+        Front::addLikeFilter(ModificationTO::LOSSES, ModificationTO::TABLE_NAME, $query, $this);
+        Front::addSameFilter(ModificationTO::NTERMINAL,ModificationTO::TABLE_NAME, $query, $this);
+        Front::addSameFilter(ModificationTO::CTERMINAL,ModificationTO::TABLE_NAME, $query, $this);
+        Front::addBetweenFilter(ModificationTO::MASS, ModificationTO::TABLE_NAME, $query, $this);
+        $sort = [];
+        $sort[] = Front::addSortable(ModificationTO::NAME, ModificationTO::TABLE_NAME, $query, $this);
+        $sort[] = Front::addSortable(ModificationTO::FORMULA,ModificationTO::TABLE_NAME, $query, $this);
+        $sort[] = Front::addSortable(ModificationTO::LOSSES, ModificationTO::TABLE_NAME, $query, $this);
+        $sort[] = Front::addSortable(ModificationTO::MASS,ModificationTO::TABLE_NAME, $query, $this);
+        $sort[] = Front::addSortable(ModificationTO::NTERMINAL, ModificationTO::TABLE_NAME, $query, $this);
+        $sort[] = Front::addSortable(ModificationTO::CTERMINAL, ModificationTO::TABLE_NAME, $query, $this);
+        return Front::getSortDirection($sort);
+    }
+
     public function index($start = 0) {
-        $config = [];
+        $config = $data = [];
+        $query = new Query();
+        $data['sort'] = $this->setupQuery($query);
+        $config[PagingEnum::REUSE_QUERY_STRING] = true;
         $config[PagingEnum::BASE_URL] = base_url() . "index.php/modification";
-        $config[PagingEnum::TOTAL_ROWS] = $this->database->findAllPagingCount();
+        $config[PagingEnum::TOTAL_ROWS] = $this->database->findAllPagingCount($query);
         $config[PagingEnum::PER_PAGE] = CommonConstants::PAGING;
 
         $this->pagination->initialize($config);
-        $data['modifications'] = $this->database->findAllPaging($start);
+        $data['modifications'] = $this->database->findAllPaging($start, $query);
         $data[PagingEnum::LINKS] = $this->pagination->create_links();
 
         $this->load->view(Front::TEMPLATES_HEADER);
@@ -42,7 +63,7 @@ class Modification extends CI_Controller {
     }
 
     public function detail($id = 1) {
-        $data['modification'] = $this->database->findById($id);
+        $data[ModificationTO::TABLE_NAME] = $this->database->findById($id);
         $this->load->view(Front::TEMPLATES_HEADER);
         $this->load->view('modifications/detail', $data);
         $this->load->view(Front::TEMPLATES_FOOTER);
@@ -87,7 +108,7 @@ class Modification extends CI_Controller {
     }
 
     public function edit($id = 1) {
-        $data['modification'] = $this->database->findById($id);
+        $data[ModificationTO::TABLE_NAME] = $this->database->findById($id);
         $this->form_validation->set_rules(Front::MODIFICATION_NAME, 'Name', Front::REQUIRED);
         $this->form_validation->set_rules(Front::MODIFICATION_FORMULA, 'Formula', Front::REQUIRED);
         if ($this->form_validation->run() === false) {
@@ -114,8 +135,8 @@ class Modification extends CI_Controller {
             $this->renderEdit($data);
             return;
         }
-        $data['modification'] = $modificationTO->asEntity();
-        $data['modification']['id'] = $id;
+        $data[ModificationTO::TABLE_NAME] = $modificationTO->asEntity();
+        $data[ModificationTO::TABLE_NAME]['id'] = $id;
         $this->renderEdit($data);
     }
 

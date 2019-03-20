@@ -6,6 +6,7 @@ use Bbdgnc\Base\LibraryEnum;
 use Bbdgnc\Base\Logger;
 use Bbdgnc\Base\ModelEnum;
 use Bbdgnc\Base\PagingEnum;
+use Bbdgnc\Base\Query;
 use Bbdgnc\Database\BlockDatabase;
 use Bbdgnc\Enum\ComputeEnum;
 use Bbdgnc\Enum\Front;
@@ -31,15 +32,37 @@ class Block extends CI_Controller {
         $this->database = new BlockDatabase($this);
     }
 
+    private function setupQuery(Query $query) {
+        Front::addLikeFilter(BlockTO::ACRONYM, BlockTO::TABLE_NAME, $query, $this);
+        Front::addLikeFilter(BlockTO::NAME, BlockTO::TABLE_NAME, $query, $this);
+        Front::addLikeFilter(BlockTO::RESIDUE, BlockTO::TABLE_NAME, $query, $this);
+        Front::addLikeFilter(BlockTO::LOSSES, BlockTO::TABLE_NAME, $query, $this);
+        Front::addLikeFilter(BlockTO::SMILES, BlockTO::TABLE_NAME, $query, $this);
+        Front::addBetweenFilter(BlockTO::MASS,BlockTO::TABLE_NAME, $query, $this);
+        $sort = [];
+        $sort[] = Front::addSortable(BlockTO::NAME, BlockTO::TABLE_NAME, $query, $this);
+        $sort[] = Front::addSortable(BlockTO::ACRONYM, BlockTO::TABLE_NAME, $query, $this);
+        $sort[] = Front::addSortable(BlockTO::RESIDUE, BlockTO::TABLE_NAME, $query, $this);
+        $sort[] = Front::addSortable(BlockTO::LOSSES, BlockTO::TABLE_NAME, $query, $this);
+        $sort[] = Front::addSortable(BlockTO::SMILES, BlockTO::TABLE_NAME, $query, $this);
+        $sort[] = Front::addSortable(BlockTO::MASS, BlockTO::TABLE_NAME, $query, $this);
+        $sort[] = Front::addSortable(BlockTO::ACRONYM, BlockTO::TABLE_NAME, $query, $this);
+        return Front::getSortDirection($sort);
+    }
+
     public function index($start = 0) {
-        $config = [];
+        $config = $data = [];
+        $query = new Query();
+        $data['sort'] = $this->setupQuery($query);
+        $config[PagingEnum::REUSE_QUERY_STRING] = true;
         $config[PagingEnum::BASE_URL] = base_url() . "index.php/block";
-        $config[PagingEnum::TOTAL_ROWS] = $this->database->findAllPagingCount();
+        $config[PagingEnum::TOTAL_ROWS] = $this->database->findAllPagingCount($query);
         $config[PagingEnum::PER_PAGE] = CommonConstants::PAGING;
 
         $this->pagination->initialize($config);
-        $data['blocks'] = $this->database->findAllPaging($start);
+        $data['blocks'] = $this->database->findAllPaging($start, $query);
         $data[PagingEnum::LINKS] = $this->pagination->create_links();
+
 
         $this->load->view(Front::TEMPLATES_HEADER);
         $this->load->view('blocks/index', $data);
@@ -83,14 +106,14 @@ class Block extends CI_Controller {
     }
 
     public function detail($id = 1) {
-        $data['block'] = $this->database->findById($id);
+        $data[BlockTO::TABLE_NAME] = $this->database->findById($id);
         $this->load->view(Front::TEMPLATES_HEADER);
         $this->load->view('blocks/detail', $data);
         $this->load->view(Front::TEMPLATES_FOOTER);
     }
 
     public function edit($id = 1) {
-        $data['block'] = $this->database->findById($id);
+        $data[BlockTO::TABLE_NAME] = $this->database->findById($id);
         $this->form_validation->set_rules(Front::BLOCK_NAME, 'Name', Front::REQUIRED);
         $this->form_validation->set_rules(Front::BLOCK_ACRONYM, 'Acronym', Front::REQUIRED);
         $this->form_validation->set_rules(Front::BLOCK_FORMULA, 'Formula', Front::REQUIRED);

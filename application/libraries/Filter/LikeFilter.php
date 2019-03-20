@@ -1,8 +1,8 @@
 <?php
 
-namespace Bbdgnc\base;
+namespace Bbdgnc\Base;
 
-class SameFilter extends Filterable {
+class LikeFilter extends Filterable {
 
     private $value;
 
@@ -16,7 +16,7 @@ class SameFilter extends Filterable {
     }
 
     public function query($model) {
-        $model->db->where($this->item, $this->value);
+        $model->db->like($this->item, $this->value);
     }
 
 }

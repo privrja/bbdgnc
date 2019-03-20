@@ -4,9 +4,9 @@ namespace Bbdgnc\Base;
 
 interface IDatabase {
 
-    public function findAllPaging($start);
+    public function findAllPaging($start, Query $query);
 
-    public function findAllPagingCount();
+    public function findAllPagingCount(Query $query);
 
     public function findById($id);
 
