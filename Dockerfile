@@ -1,6 +1,12 @@
 FROM php:7.1-apache
 
-WORKDIR /
+WORKDIR /var/www/html
+
+#install additional libraries
+RUN apt-get update
+RUN apt-get install -y \
+        git \
+        libxml2
 
 RUN docker-php-ext-install -j$(nproc) soap
 
@@ -10,4 +16,14 @@ RUN php -r "if (hash_file('sha384', 'composer-setup.php') === '48e3236262b34d309
 RUN php composer-setup.php
 RUN php -r "unlink('composer-setup.php');"
 
-RUN composer.phar install
+COPY composer.phar /var/www/html
+
+RUN /var/www/html/composer.phar install
+
+#configure Apache
+ENV PORT 80
+ENV APACHE_DOCUMENT_ROOT /var/www/html/public
+RUN cp vhost.conf /etc/apache2/sites-available/bbdgnc.conf
+RUN a2ensite bbdgnc.conf
+RUN a2dissite 000-default.conf
+RUN a2enmod rewrite
