@@ -11,17 +11,24 @@ use Bbdgnc\Enum\Front; ?>
         <div class="table t">
             <div class="thead t">
                 <div class="tr t">
-                    <div class="td" onclick="<?= "sort('" . site_url('modification') . "', 'name')" ?>">Name</div>
-                    <div class="td" onclick="<?= "sort('" . site_url('modification') . "', 'formula')" ?>">Summary
-                        Formula
+                    <div class="td"
+                         onclick="<?= "sort('" . site_url('modification') . "', 'name', '" . $sort . "')" ?>">
+                        Name
                     </div>
-                    <div class="td" onclick="<?= "sort('" . site_url('modification') . "', 'mass')" ?>">Monoisotopic
-                        Mass
+                    <div class="td"
+                         onclick="<?= "sort('" . site_url('modification') . "', 'formula', '" . $sort . "')" ?>">
+                        Summary Formula
                     </div>
-                    <div class="td" onclick="<?= "sort('" . site_url('modification') . "', 'nterminal')" ?>">
+                    <div class="td"
+                         onclick="<?= "sort('" . site_url('modification') . "', 'mass', '" . $sort . "')" ?>">
+                        Monoisotopic Mass
+                    </div>
+                    <div class="td"
+                         onclick="<?= "sort('" . site_url('modification') . "', 'nterminal', '" . $sort . "')" ?>">
                         N-terminal
                     </div>
-                    <div class="td" onclick="<?= "sort('" . site_url('modification') . "', 'cterminal')" ?>">
+                    <div class="td"
+                         onclick="<?= "sort('" . site_url('modification') . "', 'cterminal', '" . $sort . "')" ?>">
                         C-terminal
                     </div>
                     <div class="td">Editor</div>
@@ -29,20 +36,26 @@ use Bbdgnc\Enum\Front; ?>
             </div>
             <div class="tbody">
                 <div class="td">
-                    <input type="text" placeholder="Filter by Name" accesskey="n" id="filter-name" value="<?= Front::setValue('name') ?>"/>
+                    <input type="text" placeholder="Filter by Name" accesskey="n" id="filter-name"
+                           value="<?= Front::setValue('name') ?>"/>
                 </div>
                 <div class="td">
-                    <input type="text" placeholder="Filter by Summary Formula" accesskey="f" id="filter-formula" value="<?= Front::setValue('formula') ?>"/>
+                    <input type="text" placeholder="Filter by Summary Formula" accesskey="f" id="filter-formula"
+                           value="<?= Front::setValue('formula') ?>"/>
                 </div>
                 <div class="td">
-                    <input type="text" placeholder="Filter by Mass From" accesskey="m" id="filter-mass-from" value="<?= Front::setValue('massFrom') ?>"/>
-                    <input type="text" placeholder="Filter by Mass To" id="filter-mass-to" value="<?= Front::setValue('massTo') ?>"/>
+                    <input type="text" placeholder="Filter by Mass From" accesskey="m" id="filter-mass-from"
+                           value="<?= Front::setValue('massFrom') ?>"/>
+                    <input type="text" placeholder="Filter by Mass To" id="filter-mass-to"
+                           value="<?= Front::setValue('massTo') ?>"/>
                 </div>
                 <div class="td">
-                    <input type="text" placeholder="Filter by N-terminal" accesskey="n" id="filter-nterminal" value="<?= Front::setValue('nterminal') ?>"/>
+                    <input type="text" placeholder="Filter by N-terminal" accesskey="n" id="filter-nterminal"
+                           value="<?= Front::setValue('nterminal') ?>"/>
                 </div>
                 <div class="td">
-                    <input type="text" placeholder="Filter by C-terminal" accesskey="c" id="filter-cterminal" value="<?= Front::setValue('cterminal') ?>"/>
+                    <input type="text" placeholder="Filter by C-terminal" accesskey="c" id="filter-cterminal"
+                           value="<?= Front::setValue('cterminal') ?>"/>
                 </div>
                 <div class="td">
                     <button onclick="window.location.href = '<?= site_url('modification') ?>'">Cancel</button>

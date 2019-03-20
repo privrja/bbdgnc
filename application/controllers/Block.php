@@ -39,19 +39,22 @@ class Block extends CI_Controller {
         Front::addLikeFilter(BlockTO::LOSSES, BlockTO::TABLE_NAME, $query, $this);
         Front::addLikeFilter(BlockTO::SMILES, BlockTO::TABLE_NAME, $query, $this);
         Front::addBetweenFilter(BlockTO::MASS,BlockTO::TABLE_NAME, $query, $this);
-        Front::addSortable(BlockTO::NAME, BlockTO::TABLE_NAME, $query, $this);
-        Front::addSortable(BlockTO::ACRONYM, BlockTO::TABLE_NAME, $query, $this);
-        Front::addSortable(BlockTO::RESIDUE, BlockTO::TABLE_NAME, $query, $this);
-        Front::addSortable(BlockTO::LOSSES, BlockTO::TABLE_NAME, $query, $this);
-        Front::addSortable(BlockTO::SMILES, BlockTO::TABLE_NAME, $query, $this);
-        Front::addSortable(BlockTO::MASS, BlockTO::TABLE_NAME, $query, $this);
-        Front::addSortable(BlockTO::ACRONYM, BlockTO::TABLE_NAME, $query, $this);
+        $sort = [];
+        $sort[] = Front::addSortable(BlockTO::NAME, BlockTO::TABLE_NAME, $query, $this);
+        $sort[] = Front::addSortable(BlockTO::ACRONYM, BlockTO::TABLE_NAME, $query, $this);
+        $sort[] = Front::addSortable(BlockTO::RESIDUE, BlockTO::TABLE_NAME, $query, $this);
+        $sort[] = Front::addSortable(BlockTO::LOSSES, BlockTO::TABLE_NAME, $query, $this);
+        $sort[] = Front::addSortable(BlockTO::SMILES, BlockTO::TABLE_NAME, $query, $this);
+        $sort[] = Front::addSortable(BlockTO::MASS, BlockTO::TABLE_NAME, $query, $this);
+        $sort[] = Front::addSortable(BlockTO::ACRONYM, BlockTO::TABLE_NAME, $query, $this);
+        return Front::getSortDirection($sort);
     }
 
     public function index($start = 0) {
-        $config = [];
+        $config = $data = [];
         $query = new Query();
-        $this->setupQuery($query);
+        $data['sort'] = $this->setupQuery($query);
+        $config[PagingEnum::REUSE_QUERY_STRING] = true;
         $config[PagingEnum::BASE_URL] = base_url() . "index.php/block";
         $config[PagingEnum::TOTAL_ROWS] = $this->database->findAllPagingCount($query);
         $config[PagingEnum::PER_PAGE] = CommonConstants::PAGING;
@@ -59,6 +62,7 @@ class Block extends CI_Controller {
         $this->pagination->initialize($config);
         $data['blocks'] = $this->database->findAllPaging($start, $query);
         $data[PagingEnum::LINKS] = $this->pagination->create_links();
+
 
         $this->load->view(Front::TEMPLATES_HEADER);
         $this->load->view('blocks/index', $data);

@@ -595,13 +595,8 @@ function redirectWithData(formId, data) {
     form.submit();
 }
 
-function sort(param, sort) {
-    let sortQuery = AMPERSAND + sort + 'Sort=' + sortDirection;
-    if (sortDirection === ASC) {
-        sortDirection = DESC;
-    } else {
-        sortDirection = ASC;
-    }
+function sort(param, sort, direction = 'asc') {
+    let sortQuery = AMPERSAND + sort + 'Sort=' + direction;
     filter(param, sortQuery);
 }
 

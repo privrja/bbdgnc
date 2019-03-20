@@ -18,12 +18,12 @@ use Bbdgnc\Finder\Enum\ServerEnum;
         <div class="table t">
             <div class="thead t">
                 <div class="tr t">
-                    <div class="td" onclick="<?= "sort('" . site_url('block') . "', 'name')" ?>">Name</div>
-                    <div class="td" onclick="<?= "sort('" . site_url('block') . "', 'acronym')" ?>">Acronym</div>
-                    <div class="td" onclick="<?= "sort('" . site_url('block') . "', 'residue')" ?>">Residue Formula</div>
-                    <div class="td" onclick="<?= "sort('" . site_url('block') . "', 'losses')" ?>">Neutral loss</div>
-                    <div class="td" onclick="<?= "sort('" . site_url('block') . "', 'mass')" ?>">Residue Mass</div>
-                    <div class="td" onclick="<?= "sort('" . site_url('block') . "', 'smiles')" ?>">SMILES</div>
+                    <div class="td" onclick="<?= "sort('" . site_url('block') . "', 'name', '" . $sort . "')" ?>">Name</div>
+                    <div class="td" onclick="<?= "sort('" . site_url('block') . "', 'acronym', '". $sort . "')" ?>">Acronym</div>
+                    <div class="td" onclick="<?= "sort('" . site_url('block') . "', 'residue', '" . $sort . "')" ?>">Residue Formula</div>
+                    <div class="td" onclick="<?= "sort('" . site_url('block') . "', 'losses', '" . $sort . "')" ?>">Neutral loss</div>
+                    <div class="td" onclick="<?= "sort('" . site_url('block') . "', 'mass', '" . $sort . "')" ?>">Residue Mass</div>
+                    <div class="td" onclick="<?= "sort('" . site_url('block') . "', 'smiles', '" . $sort . "')" ?>">SMILES</div>
                     <div class="td">Reference</div>
                     <div class="td">Editor</div>
                 </div>

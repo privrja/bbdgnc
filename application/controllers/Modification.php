@@ -34,18 +34,21 @@ class Modification extends CI_Controller {
         Front::addSameFilter(ModificationTO::NTERMINAL,ModificationTO::TABLE_NAME, $query, $this);
         Front::addSameFilter(ModificationTO::CTERMINAL,ModificationTO::TABLE_NAME, $query, $this);
         Front::addBetweenFilter(ModificationTO::MASS, ModificationTO::TABLE_NAME, $query, $this);
-        Front::addSortable(ModificationTO::NAME, ModificationTO::TABLE_NAME, $query, $this);
-        Front::addSortable(ModificationTO::FORMULA,ModificationTO::TABLE_NAME, $query, $this);
-        Front::addSortable(ModificationTO::LOSSES, ModificationTO::TABLE_NAME, $query, $this);
-        Front::addSortable(ModificationTO::MASS,ModificationTO::TABLE_NAME, $query, $this);
-        Front::addSortable(ModificationTO::NTERMINAL, ModificationTO::TABLE_NAME, $query, $this);
-        Front::addSortable(ModificationTO::CTERMINAL, ModificationTO::TABLE_NAME, $query, $this);
+        $sort = [];
+        $sort[] = Front::addSortable(ModificationTO::NAME, ModificationTO::TABLE_NAME, $query, $this);
+        $sort[] = Front::addSortable(ModificationTO::FORMULA,ModificationTO::TABLE_NAME, $query, $this);
+        $sort[] = Front::addSortable(ModificationTO::LOSSES, ModificationTO::TABLE_NAME, $query, $this);
+        $sort[] = Front::addSortable(ModificationTO::MASS,ModificationTO::TABLE_NAME, $query, $this);
+        $sort[] = Front::addSortable(ModificationTO::NTERMINAL, ModificationTO::TABLE_NAME, $query, $this);
+        $sort[] = Front::addSortable(ModificationTO::CTERMINAL, ModificationTO::TABLE_NAME, $query, $this);
+        return Front::getSortDirection($sort);
     }
 
     public function index($start = 0) {
-        $config = [];
+        $config = $data = [];
         $query = new Query();
-        $this->setupQuery($query);
+        $data['sort'] = $this->setupQuery($query);
+        $config[PagingEnum::REUSE_QUERY_STRING] = true;
         $config[PagingEnum::BASE_URL] = base_url() . "index.php/modification";
         $config[PagingEnum::TOTAL_ROWS] = $this->database->findAllPagingCount($query);
         $config[PagingEnum::PER_PAGE] = CommonConstants::PAGING;

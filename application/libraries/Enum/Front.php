@@ -145,7 +145,9 @@ abstract class Front {
         $sort = $controller->input->get($key . 'Sort', true);
         if (Front::isEmpty($sort) && $sort === SortDirectionEnum::DESC || $sort === SortDirectionEnum::ASC) {
             $query->addSortable(new Sortable($tableName . CommonConstants::DOT . $key, $sort));
+            return $sort;
         }
+        return '';
     }
 
     public static function setValue($field, $default = '', $html_escape = true) {
@@ -157,6 +159,17 @@ abstract class Front {
 
         isset($value) OR $value = ($CI->input->get($field) === null ? $default : $CI->input->get($field));
         return ($html_escape) ? html_escape($value) : $value;
+    }
+
+    public static function getSortDirection(array $sort) {
+        foreach ($sort as $direction) {
+            if ($direction === SortDirectionEnum::ASC) {
+                return SortDirectionEnum::DESC;
+            } else if ($direction === SortDirectionEnum::DESC) {
+                return SortDirectionEnum::ASC;
+            }
+        }
+        return SortDirectionEnum::ASC;
     }
 
 }
