@@ -19,7 +19,7 @@ RUN docker-php-ext-install -j$(nproc) zip
 RUN docker-php-ext-install -j$(nproc) soap
 
 # nvm environment variables
-ENV NVM_DIR /usr/local/nvm
+ENV NVM_DIR /
 ENV NODE_VERSION 11.7.0
 
 # install nvm
