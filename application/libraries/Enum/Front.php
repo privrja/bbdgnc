@@ -157,7 +157,7 @@ abstract class Front {
             ? $CI->form_validation->set_value($field, $default)
             : $CI->input->post($field, FALSE);
 
-        isset($value) OR $value = ($CI->input->get($field) === null ? $default : $CI->input->get($field));
+        isset($value) || $value = ($CI->input->get($field) === null ? $default : $CI->input->get($field));
         return ($html_escape) ? html_escape($value) : $value;
     }
 

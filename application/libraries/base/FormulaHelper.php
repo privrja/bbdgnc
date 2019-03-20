@@ -8,6 +8,7 @@ use Bbdgnc\Smiles\Enum\LossesEnum;
 use Bbdgnc\Smiles\Graph;
 use Bbdgnc\Smiles\Parser\AtomParser;
 use Bbdgnc\Smiles\Parser\IntParser;
+use Bbdgnc\TransportObjects\AtomCount;
 
 class FormulaHelper {
 
@@ -22,22 +23,9 @@ class FormulaHelper {
         }
         $mass = 0;
         while (!empty($strFormula)) {
-            $atomParser = new AtomParser();
-            $result = $atomParser->parse($strFormula);
-            if (!$result->isAccepted()) {
-                throw new IllegalArgumentException();
-            }
-            $strFormula = $result->getRemainder();
-            $strName = $result->getResult();
-            $strCount = 1;
-            $numberParser = new IntParser();
-            $numberResult = $numberParser->parse($strFormula);
-            if ($numberResult->isAccepted()) {
-                $strCount = $numberResult->getResult();
-                $strFormula = $numberResult->getRemainder();
-            }
+            $atomCount = self::getAtomCount($strFormula);
             try {
-                $mass += (PeriodicTableSingleton::getInstance()->getAtoms())[$strName]->getMass() * $strCount;
+                $mass += (PeriodicTableSingleton::getInstance()->getAtoms())[$atomCount->getAtom()]->getMass() * $atomCount->getCount();
             } catch (\Exception $exception) {
                 throw new IllegalArgumentException();
             }
@@ -62,23 +50,28 @@ class FormulaHelper {
         }
         $arMap = [];
         while (!empty($strFormula)) {
-            $atomParser = new AtomParser();
-            $result = $atomParser->parse($strFormula);
-            if (!$result->isAccepted()) {
-                throw new IllegalArgumentException();
-            }
-            $strFormula = $result->getRemainder();
-            $strName = $result->getResult();
-            $strCount = 1;
-            $numberParser = new IntParser();
-            $numberResult = $numberParser->parse($strFormula);
-            if ($numberResult->isAccepted()) {
-                $strCount = $numberResult->getResult();
-                $strFormula = $numberResult->getRemainder();
-            }
-            $arMap[$strName] = $strCount;
+            $atomCount = self::getAtomCount($strFormula);
+            $arMap[$atomCount->getAtom()] = $atomCount->getCount();
         }
         return self::formulaExtractLosses($arMap, $losses);
+    }
+
+    private static function getAtomCount(string &$strFormula) {
+        $atomParser = new AtomParser();
+        $result = $atomParser->parse($strFormula);
+        if (!$result->isAccepted()) {
+            throw new IllegalArgumentException();
+        }
+        $strFormula = $result->getRemainder();
+        $strName = $result->getResult();
+        $strCount = 1;
+        $numberParser = new IntParser();
+        $numberResult = $numberParser->parse($strFormula);
+        if ($numberResult->isAccepted()) {
+            $strCount = $numberResult->getResult();
+            $strFormula = $numberResult->getRemainder();
+        }
+        return new AtomCount($strName, $strCount);
     }
 
     public static function formulaExtractLosses($arMap, $losses) {

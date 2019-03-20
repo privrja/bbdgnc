@@ -35,7 +35,7 @@ class Sequence_model extends CrudModel {
         $this->db->join('modification nmod', 'nmod.id = sequence.n_modification_id', 'left');
         $this->db->join('modification cmod', 'cmod.id = sequence.c_modification_id', 'left');
         $this->db->join('modification bmod', 'bmod.id = sequence.b_modification_id', 'left');
-        $query->query($this);
+        $query->applyQuery($this);
     }
 
 }
