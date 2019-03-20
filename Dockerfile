@@ -16,7 +16,6 @@ RUN apt-get update && \
         sqlite3
 
 RUN docker-php-ext-install -j$(nproc) zip
-#RUN docker-php-ext-install -j$(nproc) curl
 RUN docker-php-ext-install -j$(nproc) soap
 
 # nvm environment variables
@@ -37,10 +36,6 @@ RUN source $NVM_DIR/nvm.sh \
 ENV NODE_PATH $NVM_DIR/v$NODE_VERSION/lib/node_modules
 ENV PATH $NVM_DIR/versions/node/v$NODE_VERSION/bin:$PATH
 
-# confirm installation
-#RUN node -v
-#RUN npm -v
-
 # install composer
 RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
 RUN php -r "if (hash_file('sha384', 'composer-setup.php') === '48e3236262b34d30969dca3c37281b3b4bbe3221bda826ac6a9a62d6444cdb0dcd0615698a5cbe587c3f0fe57a54d8f5') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;"
@@ -50,15 +45,21 @@ RUN php -r "unlink('composer-setup.php');"
 COPY . /var/www/html
 
 COPY /deploy/config.php /var/www/html/application/config
+
 RUN chmod 777 /var/www/html/application/logs
 RUN rm /var/www/html/application/logs/log*.php
+RUN chmod 777 /var/www/html/uploads
+
+RUN chown -R www-data:www-data /var/www/html/application/db
+RUN chmod -R u+w /var/www/html/application/db
 
 # install php dependecies
 RUN /var/www/html/composer.phar install --no-dev
 RUN npm install
 
 # database setup
-RUN sqlite3 application/db/data.sqlite < /deploy/database.sh
+RUN sqlite3 /var/www/html/application/db/data.sqlite < /var/www/html/deploy/database.sh
+RUN chmod 777 /var/www/html/application/db/data.sqlite
 
 # configure Apache
 ENV PORT 80
