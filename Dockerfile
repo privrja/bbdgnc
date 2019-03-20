@@ -12,7 +12,8 @@ RUN apt-get update && \
         libxml2-dev \
         zlib1g-dev \
         git \
-        unzip
+        unzip \
+        sqlite3
 
 RUN docker-php-ext-install -j$(nproc) zip
 #RUN docker-php-ext-install -j$(nproc) curl
@@ -48,11 +49,16 @@ RUN php -r "unlink('composer-setup.php');"
 
 COPY . /var/www/html
 
-COPY deploy/database.php application/config
+COPY /deploy/config.php /var/www/html/application/config
+RUN chmod 777 /var/www/html/application/logs
+RUN rm /var/www/html/application/logs/log*.php
 
 # install php dependecies
 RUN /var/www/html/composer.phar install --no-dev
 RUN npm install
+
+# database setup
+RUN sqlite3 application/db/data.sqlite < /deploy/database.sh
 
 # configure Apache
 ENV PORT 80
