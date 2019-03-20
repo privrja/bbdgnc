@@ -3,7 +3,6 @@
 namespace Bbdgnc\CycloBranch;
 
 use Bbdgnc\Base\CommonConstants;
-use Bbdgnc\Base\FormulaHelper;
 use Bbdgnc\Base\Logger;
 use Bbdgnc\Base\ReferenceHelper;
 use Bbdgnc\Database\BlockDatabase;
@@ -113,9 +112,9 @@ class BlockCycloBranch extends AbstractCycloBranch {
                 $blockCount = sizeof($formula);
                 $strData = $this->setNames($strData, $formula, $blockCount);
                 $strData = $this->setAcronyms($strData, $formula, $blockCount);
-                $strData .= $formula[0]['residue'] . "\t";
-                $strData .= $formula[0]['mass'] . "\t";
-                $strData .= $formula[0]['losses'] . "\t";
+                $strData .= $formula[0][BlockTO::RESIDUE] . "\t";
+                $strData .= $formula[0][BlockTO::MASS] . "\t";
+                $strData .= $formula[0][BlockTO::LOSSES] . "\t";
                 $strData = $this->setReferences($strData, $formula, $blockCount);
                 file_put_contents(self::FILE_NAME, $strData, FILE_APPEND);
             }
@@ -137,11 +136,11 @@ class BlockCycloBranch extends AbstractCycloBranch {
     }
 
     private function setNames($strData, $formula, $blockCount) {
-        return $this->setData($strData, $formula, $blockCount, 'name');
+        return $this->setData($strData, $formula, $blockCount, BlockTO::NAME);
     }
 
     private function setAcronyms(string $strData, $formula, int $blockCount) {
-        return $this->setData($strData, $formula, $blockCount, 'acronym');
+        return $this->setData($strData, $formula, $blockCount, BlockTO::ACRONYM);
     }
 
     private function setData(string $strData, $formula, int $blockCount, string $type) {

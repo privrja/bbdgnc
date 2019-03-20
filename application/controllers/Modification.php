@@ -63,7 +63,7 @@ class Modification extends CI_Controller {
     }
 
     public function detail($id = 1) {
-        $data['modification'] = $this->database->findById($id);
+        $data[ModificationTO::TABLE_NAME] = $this->database->findById($id);
         $this->load->view(Front::TEMPLATES_HEADER);
         $this->load->view('modifications/detail', $data);
         $this->load->view(Front::TEMPLATES_FOOTER);
@@ -108,7 +108,7 @@ class Modification extends CI_Controller {
     }
 
     public function edit($id = 1) {
-        $data['modification'] = $this->database->findById($id);
+        $data[ModificationTO::TABLE_NAME] = $this->database->findById($id);
         $this->form_validation->set_rules(Front::MODIFICATION_NAME, 'Name', Front::REQUIRED);
         $this->form_validation->set_rules(Front::MODIFICATION_FORMULA, 'Formula', Front::REQUIRED);
         if ($this->form_validation->run() === false) {
@@ -135,8 +135,8 @@ class Modification extends CI_Controller {
             $this->renderEdit($data);
             return;
         }
-        $data['modification'] = $modificationTO->asEntity();
-        $data['modification']['id'] = $id;
+        $data[ModificationTO::TABLE_NAME] = $modificationTO->asEntity();
+        $data[ModificationTO::TABLE_NAME]['id'] = $id;
         $this->renderEdit($data);
     }
 

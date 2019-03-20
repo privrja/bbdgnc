@@ -4,6 +4,7 @@ namespace Bbdgnc\CycloBranch;
 
 use Bbdgnc\Base\CommonConstants;
 use Bbdgnc\Base\Logger;
+use Bbdgnc\Base\Query;
 use Bbdgnc\Base\ReferenceHelper;
 use Bbdgnc\Base\SequenceHelper;
 use Bbdgnc\Database\BlockDatabase;
@@ -12,7 +13,6 @@ use Bbdgnc\Database\SequenceDatabase;
 use Bbdgnc\Enum\LoggerEnum;
 use Bbdgnc\Enum\SequenceTypeEnum;
 use Bbdgnc\Exception\UniqueConstraintException;
-use Bbdgnc\Finder\Enum\ServerEnum;
 use Bbdgnc\Smiles\Parser\Accept;
 use Bbdgnc\Smiles\Parser\ReferenceParser;
 use Bbdgnc\Smiles\Parser\Reject;
@@ -112,7 +112,7 @@ class SequenceCycloBranch extends AbstractCycloBranch {
         $sequenceTO->bModification = $bModificationId;
 
         return new Accept([
-            'sequence' => $sequenceTO,
+            SequenceTO::TABLE_NAME => $sequenceTO,
             'blockIds' => $blockIds,
         ], '');
     }
@@ -122,7 +122,7 @@ class SequenceCycloBranch extends AbstractCycloBranch {
         $this->database->startTransaction();
         $sequenceId = null;
         try {
-            $sequenceId = $this->database->insert($arTos['sequence']);
+            $sequenceId = $this->database->insert($arTos[SequenceTO::TABLE_NAME]);
         } catch (UniqueConstraintException $e) {
             Logger::log(LoggerEnum::WARNING, "Sequence already in database");
             $exThrownSequence = true;
@@ -160,14 +160,14 @@ class SequenceCycloBranch extends AbstractCycloBranch {
 
     public function download() {
         $start = 0;
-        $arResult = $this->database->findSequenceWithModificationNamesPaging($start);
+        $arResult = $this->database->findSequenceWithModificationNamesPaging($start, new Query());
         while (!empty($arResult)) {
             foreach ($arResult as $sequence) {
-                $strData = SequenceTypeEnum::$values[$sequence['type']] . "\t";
-                $strData .= $sequence['name'] . "\t";
-                $strData .= $sequence['formula'] . "\t";
-                $strData .= $sequence['mass'] . "\t";
-                $strData .= $sequence['sequence'] . "\t";
+                $strData = SequenceTypeEnum::$values[$sequence[SequenceTO::TYPE]] . "\t";
+                $strData .= $sequence[SequenceTO::NAME] . "\t";
+                $strData .= $sequence[SequenceTO::FORMULA] . "\t";
+                $strData .= $sequence[SequenceTO::MASS] . "\t";
+                $strData .= $sequence[SequenceTO::SEQUENCE] . "\t";
                 $strData .= $sequence['nname'] . "\t";
                 $strData .= $sequence['cname'] . "\t";
                 $strData .= $sequence['bname'] . "\t";
@@ -176,7 +176,7 @@ class SequenceCycloBranch extends AbstractCycloBranch {
                 file_put_contents(self::FILE_NAME, $strData, FILE_APPEND);
             }
             $start += CommonConstants::PAGING;
-            $arResult = $this->database->findSequenceWithModificationNamesPaging($start);
+            $arResult = $this->database->findSequenceWithModificationNamesPaging($start, new Query());
         }
     }
 
