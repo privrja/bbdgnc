@@ -47,7 +47,7 @@ COPY . /var/www/html
 COPY /deploy/config.php /var/www/html/application/config
 
 RUN chmod 777 /var/www/html/application/logs
-RUN rm /var/www/html/application/logs/*.php
+RUN rm -f /var/www/html/application/logs/log*.php
 RUN chmod 777 /var/www/html/uploads
 
 RUN chown -R www-data:www-data /var/www/html/application/db
