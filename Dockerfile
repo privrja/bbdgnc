@@ -25,7 +25,7 @@ ENV NODE_VERSION 11.7.0
 
 # install nvm
 # https://github.com/creationix/nvm#install-script
-RUN curl --silent -o- https://raw.githubusercontent.com/creationix/nvm/v0.31.2/install.sh | bash
+RUN curl --silent -o- https://raw.githubusercontent.com/creationix/nvm/v0.34.0/install.sh | bash
 
 # install node and npm
 RUN source $NVM_DIR/nvm.sh \
