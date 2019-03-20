@@ -68,3 +68,7 @@ RUN cp vhost.conf /etc/apache2/sites-available/bbdgnc.conf
 RUN a2ensite bbdgnc.conf
 RUN a2dissite 000-default.conf
 RUN a2enmod rewrite
+
+# update apache port at runtime for Heroku
+#ENTRYPOINT []
+#CMD sed -i "s/80/$PORT/g" /etc/apache2/sites-available/bbdgnc.conf /etc/apache2/ports.conf && docker-php-entrypoint apache2-foreground
