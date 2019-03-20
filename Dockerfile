@@ -1,12 +1,11 @@
-FROM php:7.1-apache
+FROM php:7.2-apache
 
 WORKDIR /var/www/html
 
 #install additional libraries
 RUN apt-get update
-RUN apt-get install -y \
-        git \
-        libxml2
+
+RUN apt-get -qq update && apt-get -qq install libxml++2.6-dev > /dev/null
 
 RUN docker-php-ext-install -j$(nproc) soap
 
