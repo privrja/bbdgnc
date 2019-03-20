@@ -10,6 +10,7 @@ RUN apt-get update && \
         libxml2-dev \
         git
 
+RUN docker-php-ext-install -j$(nproc) zip
 RUN docker-php-ext-install -j$(nproc) soap
 
 # install composer
