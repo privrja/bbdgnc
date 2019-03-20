@@ -52,6 +52,7 @@ RUN mv /var/www/html/deploy/database.php /var/www/html/application/config
 
 # install php dependecies
 RUN /var/www/html/composer.phar install --no-dev
+RUN npm install
 
 # configure Apache
 ENV PORT 80
