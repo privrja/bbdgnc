@@ -62,13 +62,11 @@ RUN sqlite3 /var/www/html/application/db/data.sqlite < /var/www/html/deploy/data
 RUN chmod 777 /var/www/html/application/db/data.sqlite
 
 # configure Apache
-ENV PORT 80
 ENV APACHE_DOCUMENT_ROOT /var/www/html
 RUN cp vhost.conf /etc/apache2/sites-available/bbdgnc.conf
 RUN a2ensite bbdgnc.conf
 RUN a2dissite 000-default.conf
 RUN a2enmod rewrite
+EXPOSE 80
 
-# update apache port at runtime for Heroku
-#ENTRYPOINT []
-#CMD sed -i "s/80/$PORT/g" /etc/apache2/sites-available/bbdgnc.conf /etc/apache2/ports.conf && docker-php-entrypoint apache2-foreground
+CMD ["apachectl", "-D",  "FOREGROUND"]
