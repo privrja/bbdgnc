@@ -13,6 +13,7 @@ RUN apt-get update && \
         unzip
 
 RUN docker-php-ext-install -j$(nproc) zip
+RUN docker-php-ext-install -j$(nproc) curl
 RUN docker-php-ext-install -j$(nproc) soap
 
 # install composer
@@ -24,7 +25,7 @@ RUN php -r "unlink('composer-setup.php');"
 COPY . /var/www/html
 
 # install php dependecies
-RUN /var/www/html/composer.phar install
+RUN /var/www/html/composer.phar install --no-dev
 
 # configure Apache
 ENV PORT 80
