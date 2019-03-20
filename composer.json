@@ -1,6 +1,6 @@
 {
 	"description": "Bbdgnc using CodeIgniter framework",
-	"name": "bbdgnc",
+	"name": "privrja/bbdgnc",
 	"type": "project",
 	"license": "MIT",
 	"require": {
