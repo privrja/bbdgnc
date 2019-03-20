@@ -53,7 +53,7 @@ RUN /var/www/html/composer.phar install --no-dev
 
 # configure Apache
 ENV PORT 80
-ENV APACHE_DOCUMENT_ROOT /var/www/html/public
+ENV APACHE_DOCUMENT_ROOT /var/www/html
 RUN cp vhost.conf /etc/apache2/sites-available/bbdgnc.conf
 RUN a2ensite bbdgnc.conf
 RUN a2dissite 000-default.conf
