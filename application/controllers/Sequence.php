@@ -74,7 +74,6 @@ class Sequence extends CI_Controller {
         $this->form_validation->set_rules(Front::SEQUENCE_TYPE, 'Type', Front::REQUIRED);
         $this->form_validation->set_rules(Front::CANVAS_INPUT_NAME, 'Name', Front::REQUIRED);
         $this->form_validation->set_rules(Front::CANVAS_INPUT_FORMULA, 'Formula', Front::REQUIRED);
-        $this->form_validation->set_rules(Front::SEQUENCE, 'Sequence', Front::REQUIRED);
         if ($this->form_validation->run() === false) {
             $data[Front::ERRORS] = $this->errors;
             $this->renderNew($data);
@@ -100,7 +99,6 @@ class Sequence extends CI_Controller {
         $this->form_validation->set_rules(Front::SEQUENCE_TYPE, 'Type', Front::REQUIRED);
         $this->form_validation->set_rules(Front::CANVAS_INPUT_NAME, 'Name', Front::REQUIRED);
         $this->form_validation->set_rules(Front::CANVAS_INPUT_FORMULA, 'Formula', Front::REQUIRED);
-        $this->form_validation->set_rules(Front::SEQUENCE, 'Sequence', Front::REQUIRED);
         if ($this->form_validation->run() === false) {
             $data[Front::ERRORS] = $this->errors;
             $this->renderEdit($data);

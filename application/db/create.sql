@@ -19,7 +19,7 @@ CREATE TABLE sequence (
     name                TEXT      NOT NULL      CHECK(length(name) > 0),
     formula             TEXT      NOT NULL      CHECK(length(formula) > 0),
     mass                REAL,
-    sequence            TEXT      NOT NULL      CHECK(length(sequence) > 0),
+    sequence            TEXT,
     smiles              TEXT,
     database            INTEGER,
     identifier          TEXT,

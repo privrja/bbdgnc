@@ -2,11 +2,10 @@ FROM php:7.2-apache
 
 WORKDIR /var/www/html
 
+# replace bourne shell to bash
 RUN rm /bin/sh && ln -s /bin/bash /bin/sh
 
 # install libraries
-RUN apt-get update
-
 RUN apt-get update && \
     apt-get install -y \
         libxml2-dev \
@@ -15,6 +14,7 @@ RUN apt-get update && \
         unzip \
         sqlite3
 
+# install php needed extensions
 RUN docker-php-ext-install -j$(nproc) zip
 RUN docker-php-ext-install -j$(nproc) soap
 
@@ -22,7 +22,7 @@ RUN docker-php-ext-install -j$(nproc) soap
 ENV NVM_DIR /
 ENV NODE_VERSION 11.7.0
 
-# install nvm
+# install nvm for installing node.js
 # https://github.com/creationix/nvm#install-script
 RUN curl --silent -o- https://raw.githubusercontent.com/creationix/nvm/v0.34.0/install.sh | bash
 
@@ -42,10 +42,13 @@ RUN php -r "if (hash_file('sha384', 'composer-setup.php') === '48e3236262b34d309
 RUN php composer-setup.php
 RUN php -r "unlink('composer-setup.php');"
 
+# copy code to right dir
 COPY . /var/www/html
 
+# replace configuration files
 COPY /deploy/config.php /var/www/html/application/config
 
+# setup permissions
 RUN chmod 777 /var/www/html/application/logs
 RUN rm -f /var/www/html/application/logs/log*.php
 RUN chmod 777 /var/www/html/uploads
@@ -69,4 +72,5 @@ RUN a2dissite 000-default.conf
 RUN a2enmod rewrite
 EXPOSE 80
 
+# run apache
 CMD ["apachectl", "-D",  "FOREGROUND"]
