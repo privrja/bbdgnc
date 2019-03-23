@@ -7,6 +7,7 @@ use Bbdgnc\Base\Logger;
 use Bbdgnc\Base\ModelEnum;
 use Bbdgnc\Base\PagingEnum;
 use Bbdgnc\Base\Query;
+use Bbdgnc\Database\ModificationDatabase;
 use Bbdgnc\Database\SequenceDatabase;
 use Bbdgnc\Enum\Front;
 use Bbdgnc\Enum\LoggerEnum;
@@ -66,6 +67,17 @@ class Sequence extends CI_Controller {
         $data = $this->database->findSequenceDetail($id);
         $this->load->view(Front::TEMPLATES_HEADER);
         $this->load->view('sequences/detail', $data);
+        $this->load->view(Front::TEMPLATES_FOOTER);
+    }
+
+    public function blocks($id = 1) {
+        $modificationDatabase = new ModificationDatabase($this);
+        $data = $this->database->findSequenceDetail($id);
+        $data['modifications'] = $modificationDatabase->findAllSelect();
+        $this->load->view(Front::TEMPLATES_HEADER);
+        $this->load->view(Front::PAGES_CANVAS);
+        $this->load->view('sequences/sequence', $data);
+        $this->load->view('sequences/blocks', $data);
         $this->load->view(Front::TEMPLATES_FOOTER);
     }
 
