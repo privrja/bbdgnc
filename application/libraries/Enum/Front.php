@@ -172,4 +172,7 @@ abstract class Front {
         return SortDirectionEnum::ASC;
     }
 
+    public static function setupTerminal($terminal) {
+        return isset($terminal);
+    }
 }

@@ -2,6 +2,8 @@
 
 namespace Bbdgnc\TransportObjects;
 
+use Bbdgnc\Base\FormulaHelper;
+
 class ModificationTO implements IEntity {
 
     const TABLE_NAME = 'modification';
@@ -30,10 +32,18 @@ class ModificationTO implements IEntity {
      * @param $cTerminal
      * @param $nTerminal
      */
-    public function __construct(string $name, string $formula, $mass, bool $cTerminal, bool $nTerminal) {
+    public function __construct(string $name, string $formula = '', $mass = 0, bool $cTerminal = false, bool $nTerminal = false) {
         $this->name = $name;
         $this->formula = $formula;
-        $this->mass = $mass;
+        if ($mass == 0) {
+            if ($formula !== '') {
+                $this->mass = FormulaHelper::computeMass($formula);
+            } else {
+                $this->mass = $mass;
+            }
+        } else {
+            $this->mass = $mass;
+        }
         $this->cTerminal = $cTerminal;
         $this->nTerminal = $nTerminal;
     }

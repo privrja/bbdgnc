@@ -68,18 +68,25 @@ let smilesDrawer = getSmilesDrawer();
 let smallSmilesDrawer = getSmallSmilesDrawer();
 let largeSmilesDrawer = getLargeSmilesDrawer();
 let canvasRef = document.getElementById(CANVAS_ID);
-let offsetX = canvasRef.offsetLeft;
-let offsetY = canvasRef.offsetTop;
+if (canvasRef) {
+    var offsetX = canvasRef.offsetLeft;
+    var offsetY = canvasRef.offsetTop;
+}
 
 /** events */
 document.addEventListener('DOMContentLoaded', function () {
     window.addEventListener('resize', resize);
     window.addEventListener('load', finder);
-    document.getElementById(TXT_SMILE_ID).addEventListener('input', drawSmile);
-    canvasRef.addEventListener('click', function (e) {
-        smilesDrawer.handleMouseClick(e, offsetX, offsetY);
-    });
+    if (document.getElementById(TXT_SMILE_ID)) {
+        document.getElementById(TXT_SMILE_ID).addEventListener('input', drawSmile);
+    }
+    if (canvasRef) {
+        canvasRef.addEventListener('click', function (e) {
+            smilesDrawer.handleMouseClick(e, offsetX, offsetY);
+        });
+    }
 
+    console.log(document.getElementById(SEQUENCE_TYPE));
     if (document.getElementById(SEQUENCE_TYPE)) {
         window.addEventListener('load', sequenceTypeChanged);
     }
@@ -119,12 +126,14 @@ function finder() {
  */
 function resize() {
     let canvas = document.getElementById(CANVAS_ID);
-    canvas.style.width = "100%";
-    canvas.style.height = "100%";
-    let context = canvas.getContext("2d");
-    context.clearRect(0, 0, canvas.width, canvas.height);
-    smilesDrawer = getSmilesDrawer();
-    drawSmile();
+    if (canvas) {
+        canvas.style.width = "100%";
+        canvas.style.height = "100%";
+        let context = canvas.getContext("2d");
+        context.clearRect(0, 0, canvas.width, canvas.height);
+        smilesDrawer = getSmilesDrawer();
+        drawSmile();
+    }
 }
 
 function sequenceTypeNumber($sequenceType) {
@@ -165,21 +174,34 @@ let DEFAULT_SCREEN_MODE = MODE_LIGHT;
  * Get SMILES Drawer instance with dimension of canvas
  */
 function getSmilesDrawer() {
-    return new SmilesDrawer.Drawer(options);
+    try {
+        return new SmilesDrawer.Drawer(options);
+    } catch (e) {
+    }
 }
 
 /** Get SMILES Drawer instance for small preview */
 function getSmallSmilesDrawer() {
-    return new SmilesDrawer.Drawer({width: CANVAS_SMALL_SQUARE, height: CANVAS_SMALL_SQUARE, compactDrawing: false});
+    try {
+        return new SmilesDrawer.Drawer({
+            width: CANVAS_SMALL_SQUARE,
+            height: CANVAS_SMALL_SQUARE,
+            compactDrawing: false
+        });
+    } catch (e) {
+    }
 }
 
 /** Get SMILES Drawer instance for large preview */
 function getLargeSmilesDrawer() {
-    return new SmilesDrawer.Drawer({
-        width: getWindowWidth() * PROCENT_SIXTY,
-        height: getWindowHeight() + PIXEL_TWO,
-        compactDrawing: false
-    });
+    try {
+        return new SmilesDrawer.Drawer({
+            width: getWindowWidth() * PROCENT_SIXTY,
+            height: getWindowHeight() + PIXEL_TWO,
+            compactDrawing: false
+        });
+    } catch (e) {
+    }
 }
 
 /**
@@ -210,14 +232,22 @@ function getWindowHeight() {
  * Get current width of canvas
  */
 function getCanvasWidth() {
-    return document.getElementById(CANVAS_ID).offsetWidth;
+    if (document.getElementById(CANVAS_ID)) {
+        return document.getElementById(CANVAS_ID).offsetWidth;
+    } else {
+        return 0;
+    }
 }
 
 /**
  * Get current height of canvas
  */
 function getCanvasHeight() {
-    return document.getElementById(CANVAS_ID).offsetHeight;
+    if (document.getElementById(CANVAS_ID)) {
+        return document.getElementById(CANVAS_ID).offsetHeight;
+    } else {
+        return 0;
+    }
 }
 
 /**
@@ -601,7 +631,7 @@ function sort(param, sort, direction = 'asc') {
 }
 
 function filter(param, sort = '') {
-    let query = '?' +  sort +
+    let query = '?' + sort +
         filterValue('filter-name', 'name') +
         filterValue('filter-acronym', 'acronym') +
         filterValue('filter-residue', 'residue') +

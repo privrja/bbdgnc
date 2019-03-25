@@ -11,12 +11,14 @@ use Bbdgnc\Database\ModificationDatabase;
 use Bbdgnc\Database\SequenceDatabase;
 use Bbdgnc\Enum\Front;
 use Bbdgnc\Enum\LoggerEnum;
+use Bbdgnc\Enum\ModificationHelperTypeEnum;
 use Bbdgnc\TransportObjects\ModificationTO;
 use Bbdgnc\TransportObjects\SequenceTO;
 
 class Sequence extends CI_Controller {
 
     const SEQUENCE_ID = 'sequenceId';
+    const MODIFICATION_ID = '_modification_id';
     private $errors = "";
 
     private $database;
@@ -135,28 +137,39 @@ class Sequence extends CI_Controller {
 
     public function modifications() {
         $modificationDatabase = new ModificationDatabase($this);
-        $nTerminal = $this->input->post(Front::N_MODIFICATION_SELECT);
+        // TODO validate sequenceId and modification id
+        $id = $this->input->post(self::SEQUENCE_ID);
+        $data[SequenceTO::TABLE_NAME] = $this->database->findById($id);
 
-        if ($nTerminal === 0) {
-            $name = $this->input->post(Front::N_MODIFICATION_NAME);
-            $formula = $this->input->post(Front::N_MODIFICATION_FORMULA);
-            if (!Front::isEmpty($name) && !Front::isEmpty($formula)) {
-                // TODO save new
-                // TODO update id
-                // TODO mass and terminals
-                $modification = new ModificationTO($name, $formula, 0, false, false);
-                $this->database->insertNewModification($this->input->post(self::SEQUENCE_ID), $modification, 'n');
+        $branchChar = ModificationHelperTypeEnum::startModification($data[SequenceTO::TABLE_NAME][SequenceTO::TYPE]);
+        for ($index = 0; $index < 3; ++$index) {
+            $modificationNameSel = $this->input->post($branchChar . Front::MODIFICATION_SELECT);
+            $this->saveModification($modificationNameSel, $branchChar);
+            $branchChar = ModificationHelperTypeEnum::changeBranchChar($branchChar, $data[SequenceTO::TABLE_NAME][SequenceTO::TYPE]);
+            if (ModificationHelperTypeEnum::isEnd($branchChar)) {
+                break;
             }
-        } else {
-            // TODO change update id
-            $this->database->updateModification($this->input->post(self::SEQUENCE_ID), $this->input->post(Front::N_MODIFICATION_SELECT), 'n');
         }
-
-
+        $data = $this->database->findSequenceDetail($id);
+        $data['modifications'] = $modificationDatabase->findAllSelect();
+        $this->renderEdit($data);
     }
 
-    private function validateModification(string $name, string $formula) {
-        if (Front::isEmpty($this->input->post($name) || Front::isEmpty($this->input->post($formula)))) {
+    private function saveModification($terminal, string $terminalValue) {
+        if ($terminal == 0) {
+            $name = $this->input->post($terminalValue . Front::MODIFICATION_NAME);
+            $formula = $this->input->post($terminalValue . Front::MODIFICATION_FORMULA);
+            $mass = $this->input->post($terminalValue . Front::MODIFICATION_MASS);
+            $terminalN = Front::setupTerminal($this->input->post($terminalValue . Front::MODIFICATION_TERMINAL_N));
+            $terminalC = Front::setupTerminal($this->input->post($terminalValue . Front::MODIFICATION_TERMINAL_C));
+            if (Front::isEmpty($name) && Front::isEmpty($formula)) {
+                $modification = new ModificationTO($name, $formula, $mass, $terminalC, $terminalN);
+                $this->database->insertNewModification($this->input->post(self::SEQUENCE_ID), $modification, $terminalValue . self::MODIFICATION_ID);
+            } else {
+                $this->database->updateModification($this->input->post(self::SEQUENCE_ID), $this->input->post($terminalValue . Front::MODIFICATION_SELECT), $terminalValue . self::MODIFICATION_ID);
+            }
+        } else {
+            $this->database->updateModification($this->input->post(self::SEQUENCE_ID), $this->input->post($terminalValue . Front::MODIFICATION_SELECT), $terminalValue . self::MODIFICATION_ID);
         }
     }
 

@@ -645,7 +645,7 @@ class Land extends CI_Controller {
         for ($index = 0; $index < 3; ++$index) {
             $modificationNameSel = $this->input->post($branchChar . Front::MODIFICATION_SELECT);
             if ($modificationNameSel != 0) {
-                $modification = new ModificationTO('', '', '', '', '');
+                $modification = new ModificationTO('');
                 $modification->databaseId = $modificationNameSel;
                 $modifications[$branchChar] = $modification;
             } else {

@@ -29,6 +29,13 @@ class Sequence_model extends CrudModel {
         return $query->result_array();
     }
 
+    public function updateModification($sequenceId, $value, $terminal) {
+        $this->db->set($terminal, $value);
+        $this->db->where(self::ID, $sequenceId);
+        $this->db->update(self::TABLE_NAME);
+    }
+
+
     private function sequenceWithNameModificationNames(Query $query) {
         $this->db->select("sequence.id, sequence.n_modification_id, sequence.c_modification_id, sequence.b_modification_id, sequence.type, sequence.name, sequence.formula, sequence.mass, sequence.sequence, sequence.database, sequence.identifier, nmod.name nname, cmod.name cname, bmod.name bname");
         $this->db->from($this->getTableName());
