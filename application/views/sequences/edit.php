@@ -91,7 +91,7 @@ use Bbdgnc\TransportObjects\ModificationTO;
                 <h4>N-terminal Modification</h4>
 
                 <label for="sel-n-modification">Select Modification</label>
-                <?= form_dropdown(Front::N_MODIFICATION_SELECT, $modifications, $nModification['id'],
+                <?= form_dropdown(Front::N_MODIFICATION_SELECT, $modifications, set_value(Front::N_MODIFICATION_SELECT, $nModification['id']),
                     'id="sel-n-modification" class="select" title="Modification"'); ?>
 
                 <div id="div-n-modification">
@@ -121,7 +121,7 @@ use Bbdgnc\TransportObjects\ModificationTO;
                 <h4>C-terminal Modification</h4>
 
                 <label for="sel-c-modification">Select Modification</label>
-                <?= form_dropdown(Front::C_MODIFICATION_SELECT, $modifications, $cModification['id'],
+                <?= form_dropdown(Front::C_MODIFICATION_SELECT, $modifications, set_value(Front::C_MODIFICATION_SELECT, $cModification['id']),
                     'id="sel-c-modification" class="select" title="Modification"'); ?>
 
                 <div id="div-c-modification">
@@ -152,7 +152,7 @@ use Bbdgnc\TransportObjects\ModificationTO;
 
                 <div id="div-b-modification">
                     <label for="sel-b-modification">Select Modification</label>
-                    <?= form_dropdown(Front::B_MODIFICATION_SELECT, $modifications, $bModification['id'],
+                    <?= form_dropdown(Front::B_MODIFICATION_SELECT, $modifications, set_value(Front::B_MODIFICATION_SELECT, $bModification['id']),
                         'id="sel-b-modification" class="select" title="Modification"'); ?>
 
                     <label for="txt-b-modification">Name</label>

@@ -80,15 +80,17 @@ document.addEventListener('DOMContentLoaded', function () {
     if (document.getElementById(TXT_SMILE_ID)) {
         document.getElementById(TXT_SMILE_ID).addEventListener('input', drawSmile);
     }
+
     if (canvasRef) {
         canvasRef.addEventListener('click', function (e) {
             smilesDrawer.handleMouseClick(e, offsetX, offsetY);
         });
     }
 
-    console.log(document.getElementById(SEQUENCE_TYPE));
     if (document.getElementById(SEQUENCE_TYPE)) {
-        window.addEventListener('load', sequenceTypeChanged);
+        if (!document.getElementById('form-sequence-edit')) {
+            window.addEventListener('load', sequenceTypeChanged);
+        }
     }
 
     if (document.getElementById(SEL_N_MODIFICATION)) {
@@ -549,7 +551,6 @@ function save() {
 }
 
 function editorBlock(identifier) {
-    console.log(identifier);
     let data = {editor: 'Edit'};
     data.database = document.getElementById("sel-canvas-database").value;
     data.search = document.getElementById("sel-canvas-search").value;

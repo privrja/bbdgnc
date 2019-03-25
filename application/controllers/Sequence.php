@@ -12,6 +12,7 @@ use Bbdgnc\Database\SequenceDatabase;
 use Bbdgnc\Enum\Front;
 use Bbdgnc\Enum\LoggerEnum;
 use Bbdgnc\Enum\ModificationHelperTypeEnum;
+use Bbdgnc\Exception\UniqueConstraintException;
 use Bbdgnc\TransportObjects\ModificationTO;
 use Bbdgnc\TransportObjects\SequenceTO;
 
@@ -141,21 +142,24 @@ class Sequence extends CI_Controller {
         $id = $this->input->post(self::SEQUENCE_ID);
         $data[SequenceTO::TABLE_NAME] = $this->database->findById($id);
 
+        $modificationDatabase->startTransaction();
         $branchChar = ModificationHelperTypeEnum::startModification($data[SequenceTO::TABLE_NAME][SequenceTO::TYPE]);
         for ($index = 0; $index < 3; ++$index) {
             $modificationNameSel = $this->input->post($branchChar . Front::MODIFICATION_SELECT);
-            $this->saveModification($modificationNameSel, $branchChar);
+            $this->saveModification($modificationNameSel, $branchChar, $id, $modificationDatabase);
             $branchChar = ModificationHelperTypeEnum::changeBranchChar($branchChar, $data[SequenceTO::TABLE_NAME][SequenceTO::TYPE]);
             if (ModificationHelperTypeEnum::isEnd($branchChar)) {
                 break;
             }
         }
+        $modificationDatabase->endTransaction();
         $data = $this->database->findSequenceDetail($id);
+        $data[Front::ERRORS] = $this->errors;
         $data['modifications'] = $modificationDatabase->findAllSelect();
         $this->renderEdit($data);
     }
 
-    private function saveModification($terminal, string $terminalValue) {
+    private function saveModification($terminal, string $terminalValue, $sequenceId, ModificationDatabase $modificationDatabase) {
         if ($terminal == 0) {
             $name = $this->input->post($terminalValue . Front::MODIFICATION_NAME);
             $formula = $this->input->post($terminalValue . Front::MODIFICATION_FORMULA);
@@ -164,7 +168,11 @@ class Sequence extends CI_Controller {
             $terminalC = Front::setupTerminal($this->input->post($terminalValue . Front::MODIFICATION_TERMINAL_C));
             if (Front::isEmpty($name) && Front::isEmpty($formula)) {
                 $modification = new ModificationTO($name, $formula, $mass, $terminalC, $terminalN);
-                $this->database->insertNewModification($this->input->post(self::SEQUENCE_ID), $modification, $terminalValue . self::MODIFICATION_ID);
+                try {
+                    $this->database->insertNewModification($this->input->post(self::SEQUENCE_ID), $modification, $terminalValue . self::MODIFICATION_ID);
+                } catch (UniqueConstraintException $e) {
+                    $this->errors = "Modification " . $name  . " already in database";
+                }
             } else {
                 $this->database->updateModification($this->input->post(self::SEQUENCE_ID), $this->input->post($terminalValue . Front::MODIFICATION_SELECT), $terminalValue . self::MODIFICATION_ID);
             }
