@@ -28,76 +28,91 @@ use Bbdgnc\TransportObjects\SequenceTO;
         <div class="div-modification">
             <h4>N-terminal Modification</h4>
 
-            <label for="sel-n-modification">Select Modification</label>
-            <?= form_dropdown(Front::N_MODIFICATION_SELECT, $modifications, '0',
-                'id="sel-n-modification" class="select" title="Modification"'); ?>
+            <?php if(isset($nModification['id'])): ?>
+            <button onclick="window.location.href = '<?= site_url('modification/edit/' . $nModification['id']) ?>'">Edit</button>
+            <?php endif; ?>
 
             <div id="div-n-modification">
                 <label for="txt-n-modification">Name</label>
-                <input type="text" id="txt-n-modification" name="nModification" value="<?= set_value('nModification', $nModification['name']) ?>"/>
+                <input type="text" id="txt-n-modification" name="nModification"
+                       value="<?= set_value('nModification', $nModification['name']) ?>"/>
 
                 <label for="txt-n-formula">Formula</label>
-                <input type="text" id="txt-n-formula" name="nFormula" value="<?= set_value('nFormula', $nModification[ModificationTO::FORMULA]) ?>"/>
+                <input type="text" id="txt-n-formula" name="nFormula"
+                       value="<?= set_value('nFormula', $nModification[ModificationTO::FORMULA]) ?>"/>
 
                 <label for="txt-n-mass">Monoisotopic Mass</label>
-                <input type="text" id="txt-n-mass" name="nMass" value="<?= set_value('nMass', $nModification[ModificationTO::MASS]) ?>"/>
+                <input type="text" id="txt-n-mass" name="nMass"
+                       value="<?= set_value('nMass', $nModification[ModificationTO::MASS]) ?>"/>
 
                 <label for="chk-n-nterminal" class="chk">N-terminal</label>
-                <input type="checkbox" id="chk-n-nterminal" name="nnTerminal" <?= Front::checked(set_value('nnTerminal', $nModification[ModificationTO::NTERMINAL])) ?> />
+                <input type="checkbox" id="chk-n-nterminal"
+                       name="nnTerminal" <?= Front::checked(set_value('nnTerminal', $nModification[ModificationTO::NTERMINAL])) ?> />
 
                 <label for="chk-n-cterminal" class="chk">C-terminal</label>
-                <input type="checkbox" id="chk-n-cterminal" name="ncTerminal" <?= Front::checked(set_value('ncTerminal', $nModification[ModificationTO::CTERMINAL])) ?> />
+                <input type="checkbox" id="chk-n-cterminal"
+                       name="ncTerminal" <?= Front::checked(set_value('ncTerminal', $nModification[ModificationTO::CTERMINAL])) ?> />
             </div>
         </div>
 
         <div class="div-modification">
             <h4>C-terminal Modification</h4>
 
-            <label for="sel-c-modification">Select Modification</label>
-            <?= form_dropdown(Front::C_MODIFICATION_SELECT, $modifications, '0',
-                'id="sel-c-modification" class="select" title="Modification"'); ?>
+            <?php if(isset($cModification['id'])): ?>
+            <button onclick="window.location.href = '<?= site_url('modification/edit/' . $cModification['id']) ?>'">Edit</button>
+            <?php endif; ?>
 
             <div id="div-c-modification">
                 <label for="txt-c-modification">Name</label>
-                <input type="text" id="txt-c-modification" name="cModification" value="<?= set_value('cModification', $cModification[ModificationTO::NAME]) ?>"/>
+                <input type="text" id="txt-c-modification" name="cModification"
+                       value="<?= set_value('cModification', $cModification[ModificationTO::NAME]) ?>"/>
 
                 <label for="txt-c-formula">Formula</label>
-                <input type="text" id="txt-c-formula" name="cFormula" value="<?= set_value('cFormula', $cModification[ModificationTO::FORMULA]) ?>"/>
+                <input type="text" id="txt-c-formula" name="cFormula"
+                       value="<?= set_value('cFormula', $cModification[ModificationTO::FORMULA]) ?>"/>
 
                 <label for="txt-c-mass">Monoisotopic Mass</label>
-                <input type="text" id="txt-c-mass" name="cMass" value="<?= set_value('cMass', $cModification[ModificationTO::MASS]) ?>"/>
+                <input type="text" id="txt-c-mass" name="cMass"
+                       value="<?= set_value('cMass', $cModification[ModificationTO::MASS]) ?>"/>
 
                 <label for="chk-c-nterminal" class="chk">N-terminal</label>
-                <input type="checkbox" id="chk-c-nterminal" name="cnTerminal" <?= Front::checked(set_value('cnTerminal', $cModification[ModificationTO::NTERMINAL])) ?>/>
+                <input type="checkbox" id="chk-c-nterminal"
+                       name="cnTerminal" <?= Front::checked(set_value('cnTerminal', $cModification[ModificationTO::NTERMINAL])) ?>/>
 
                 <label for="chk-c-cterminal" class="chk">C-terminal</label>
-                <input type="checkbox" id="chk-c-cterminal" name="ccTerminal" <?= Front::checked(set_value('ccTerminal', $cModification[ModificationTO::CTERMINAL])) ?> />
+                <input type="checkbox" id="chk-c-cterminal"
+                       name="ccTerminal" <?= Front::checked(set_value('ccTerminal', $cModification[ModificationTO::CTERMINAL])) ?> />
             </div>
         </div>
 
         <div class="div-modification">
             <h4>Branch Modification</h4>
 
-            <label for="sel-b-modification">Select Modification</label>
-            <?= form_dropdown(Front::B_MODIFICATION_SELECT, $modifications, '0',
-                'id="sel-b-modification" class="select" title="Modification"'); ?>
+            <?php if(isset($bModification['id'])): ?>
+            <button onclick="window.location.href = '<?= site_url('modification/edit/' . $bModification['id']) ?>'">Edit</button>
+            <?php endif; ?>
 
             <div id="div-b-modification">
                 <label for="txt-b-modification">Name</label>
-                <input type="text" id="txt-b-modification" name="bModification" value="<?= set_value('bModification', $bModification[ModificationTO::NAME]) ?>" disabled/>
+                <input type="text" id="txt-b-modification" name="bModification"
+                       value="<?= set_value('bModification', $bModification[ModificationTO::NAME]) ?>" disabled/>
 
                 <label for="txt-b-formula">Formula</label>
-                <input type="text" id="txt-b-formula" name="bFormula" value="<?= set_value('bFormula', $bModification[ModificationTO::FORMULA]) ?>" disabled/>
+                <input type="text" id="txt-b-formula" name="bFormula"
+                       value="<?= set_value('bFormula', $bModification[ModificationTO::FORMULA]) ?>" disabled/>
 
                 <label for="txt-b-mass">Monoisotopic Mass</label>
-                <input type="text" id="txt-b-mass" name="bMass" value="<?= set_value('bMass', $bModification[ModificationTO::MASS]) ?>" disabled/>
+                <input type="text" id="txt-b-mass" name="bMass"
+                       value="<?= set_value('bMass', $bModification[ModificationTO::MASS]) ?>" disabled/>
 
                 <label for="chk-b-nterminal" class="chk">N-terminal</label>
-                <input type="checkbox" id="chk-b-nterminal" name="bnTerminal" <?= Front::checked(set_value('bnTerminal', $bModification[ModificationTO::NTERMINAL])) ?>
+                <input type="checkbox" id="chk-b-nterminal"
+                       name="bnTerminal" <?= Front::checked(set_value('bnTerminal', $bModification[ModificationTO::NTERMINAL])) ?>
                        disabled/>
 
                 <label for="chk-b-cterminal" class="chk">C-terminal</label>
-                <input type="checkbox" id="chk-b-cterminal" name="bcTerminal" <?= Front::checked(set_value('bcTerminal', $bModification[ModificationTO::CTERMINAL])) ?>
+                <input type="checkbox" id="chk-b-cterminal"
+                       name="bcTerminal" <?= Front::checked(set_value('bcTerminal', $bModification[ModificationTO::CTERMINAL])) ?>
                        disabled/>
             </div>
         </div>
@@ -120,57 +135,57 @@ use Bbdgnc\TransportObjects\SequenceTO;
         <div class="tbody">
             <?php foreach ($blocks as $block): ?>
 
-                <?= form_open('land/block', array('class' => 'tr', 'id' => 'form-block-edit' . $block['id'])); ?>
-                <div class="td">
-                    <canvas id="canvas-small-<?= $block['id']; ?>"
-                            data-canvas-small-id="<?= $block['id'] ?>"
-                            class="canvas-small"
-                            onclick="drawOrClearLargeSmile(<?= $block['id'] ?>)"
-                            title="<?= $block[BlockTO::SMILES] ?>">
-                    </canvas>
+                <div class="tr" id="<?= 'form-block-edit' . $block['id'] ?>">
+                    <div class="td">
+                        <canvas id="canvas-small-<?= $block['id']; ?>"
+                                data-canvas-small-id="<?= $block['id'] ?>"
+                                class="canvas-small"
+                                onclick="drawOrClearLargeSmile(<?= $block['id'] ?>)"
+                                title="<?= $block[BlockTO::SMILES] ?>">
+                        </canvas>
+                    </div>
+
+                    <div class="td">
+                        <p><?= $block[BlockTO::NAME] ?></p>
+                    </div>
+
+                    <div class="td">
+                        <p><?= $block[BlockTO::ACRONYM] ?></p>
+                    </div>
+
+                    <div class="td">
+                        <p><?= $block[BlockTO::RESIDUE] ?></p>
+                    </div>
+
+                    <div class="td">
+                        <p><?= $block[BlockTO::LOSSES] ?></p>
+                    </div>
+
+                    <div class="td">
+                        <p><?= $block[BlockTO::MASS] ?></p>
+                    </div>
+
+                    <div class="td">
+                        <p><?= $block[BlockTO::SMILES] ?></p>
+                    </div>
+
+                    <div class="td">
+                        <?php if ($block['database'] !== null && !empty($block['identifier'])): ?>
+                            <a target="_blank"
+                               href=<?= ServerEnum::getLink($block[BlockTO::DATABASE], $block[BlockTO::IDENTIFIER]) ?>>
+                                <?= ServerEnum::$allValues[$block[BlockTO::DATABASE]]; ?></a>
+                        <?php endif; ?>
+                    </div>
+
+                    <input type="hidden" name="<?= Front::BLOCK_SMILE ?>"
+                           id="hidden-canvas-small-<?= $block['id'] ?>"
+                           value="<?= $block[BlockTO::SMILES] ?>"/>
+
+                    <div class="td">
+                        <button onclick="window.location.href = '<?= site_url('block/edit/' . $block['id']) ?>'">Edit
+                        </button>
+                    </div>
                 </div>
-
-                <div class="td">
-                    <p><?= $block[BlockTO::NAME] ?></p>
-                </div>
-
-                <div class="td">
-                    <p><?= $block[BlockTO::ACRONYM] ?></p>
-                </div>
-
-                <div class="td">
-                    <p><?= $block[BlockTO::RESIDUE] ?></p>
-                </div>
-
-                <div class="td">
-                    <p><?= $block[BlockTO::LOSSES] ?></p>
-                </div>
-
-                <div class="td">
-                    <p><?= $block[BlockTO::MASS] ?></p>
-                </div>
-
-                <div class="td">
-                    <p><?= $block[BlockTO::SMILES] ?></p>
-                </div>
-
-                <div class="td">
-                    <?php if ($block['database'] !== null && !empty($block['identifier'])): ?>
-                        <a target="_blank"
-                           href=<?= ServerEnum::getLink($block[BlockTO::DATABASE], $block[BlockTO::IDENTIFIER]) ?>>
-                            <?= ServerEnum::$allValues[$block[BlockTO::DATABASE]]; ?></a>
-                    <?php endif; ?>
-                </div>
-
-                <input type="hidden" name="<?= Front::BLOCK_SMILE ?>"
-                       id="hidden-canvas-small-<?= $block['id'] ?>"
-                       value="<?= $block[BlockTO::SMILES] ?>"/>
-
-                <div class="td">
-                    <input type="submit" title="SMILES Editor" value="Edit" onclick=""/>
-                </div>
-
-                <?= form_close(); ?>
             <?php endforeach; ?>
         </div>
     </div>
