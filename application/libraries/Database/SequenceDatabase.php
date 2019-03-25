@@ -182,6 +182,23 @@ class SequenceDatabase extends AbstractDatabase {
         $this->controller->sequence_model->update($id, $to);
     }
 
+    /**
+     * @param $sequenceId
+     * @param $modificationId
+     * @param $modification
+     * @param $terminal
+     */
+    public function insertNewModification($sequenceId, $modification, $terminal) {
+        $modificationDatabase = new ModificationDatabase($this->controller);
+        $modificationId = $modificationDatabase->insert($modification);
+        $this->updateModification($sequenceId, $modificationId, $terminal);
+    }
+
+    public function updateModification($sequenceId, $modificationId, $terminal) {
+        // TODO better only with replaced values?
+
+    }
+
     public function insert($to) {
         return $this->controller->sequence_model->insert($to);
     }

@@ -11,10 +11,12 @@ use Bbdgnc\Database\ModificationDatabase;
 use Bbdgnc\Database\SequenceDatabase;
 use Bbdgnc\Enum\Front;
 use Bbdgnc\Enum\LoggerEnum;
+use Bbdgnc\TransportObjects\ModificationTO;
 use Bbdgnc\TransportObjects\SequenceTO;
 
 class Sequence extends CI_Controller {
 
+    const SEQUENCE_ID = 'sequenceId';
     private $errors = "";
 
     private $database;
@@ -39,7 +41,7 @@ class Sequence extends CI_Controller {
         $sort = [];
         $sort[] = Front::addSortable(SequenceTO::TYPE, SequenceTO::TABLE_NAME, $query, $this);
         $sort[] = Front::addSortable(SequenceTO::NAME, SequenceTO::TABLE_NAME, $query, $this);
-        $sort[] = Front::addSortable(SequenceTO::FORMULA,SequenceTO::TABLE_NAME, $query, $this);
+        $sort[] = Front::addSortable(SequenceTO::FORMULA, SequenceTO::TABLE_NAME, $query, $this);
         $sort[] = Front::addSortable(SequenceTO::MASS, SequenceTO::TABLE_NAME, $query, $this);
         $sort[] = Front::addSortable(SequenceTO::SEQUENCE, SequenceTO::TABLE_NAME, $query, $this);
         return Front::getSortDirection($sort);
@@ -107,6 +109,9 @@ class Sequence extends CI_Controller {
     public function edit($id = 1) {
         $arSequence = $this->database->findById($id);
         $data['sequence'] = $arSequence;
+        $modificationDatabase = new ModificationDatabase($this);
+        $data = $this->database->findSequenceDetail($id);
+        $data['modifications'] = $modificationDatabase->findAllSelect();
 
         $this->form_validation->set_rules(Front::SEQUENCE_TYPE, 'Type', Front::REQUIRED);
         $this->form_validation->set_rules(Front::CANVAS_INPUT_NAME, 'Name', Front::REQUIRED);
@@ -126,6 +131,33 @@ class Sequence extends CI_Controller {
             return;
         }
         $this->renderEdit($data);
+    }
+
+    public function modifications() {
+        $modificationDatabase = new ModificationDatabase($this);
+        $nTerminal = $this->input->post(Front::N_MODIFICATION_SELECT);
+
+        if ($nTerminal === 0) {
+            $name = $this->input->post(Front::N_MODIFICATION_NAME);
+            $formula = $this->input->post(Front::N_MODIFICATION_FORMULA);
+            if (!Front::isEmpty($name) && !Front::isEmpty($formula)) {
+                // TODO save new
+                // TODO update id
+                // TODO mass and terminals
+                $modification = new ModificationTO($name, $formula, 0, false, false);
+                $this->database->insertNewModification($this->input->post(self::SEQUENCE_ID), $modification, 'n');
+            }
+        } else {
+            // TODO change update id
+            $this->database->updateModification($this->input->post(self::SEQUENCE_ID), $this->input->post(Front::N_MODIFICATION_SELECT), 'n');
+        }
+
+
+    }
+
+    private function validateModification(string $name, string $formula) {
+        if (Front::isEmpty($this->input->post($name) || Front::isEmpty($this->input->post($formula)))) {
+        }
     }
 
     private function updateSequence(array $arSequence) {
