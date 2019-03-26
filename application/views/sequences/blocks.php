@@ -10,7 +10,7 @@ use Bbdgnc\TransportObjects\SequenceTO;
 ?>
 
 <div id="div-blocks">
-    <h2 id="h-results">Building blocks</h2>
+    <h2>Building blocks</h2>
 
     <div id="div-sequence">
         <div id="div-top-sequence">
@@ -35,23 +35,23 @@ use Bbdgnc\TransportObjects\SequenceTO;
             <div id="div-n-modification">
                 <label for="txt-n-modification">Name</label>
                 <input type="text" id="txt-n-modification" name="nModification"
-                       value="<?= set_value('nModification', $nModification['name']) ?>"/>
+                       value="<?= set_value('nModification', $nModification['name']) ?>" disabled />
 
                 <label for="txt-n-formula">Formula</label>
                 <input type="text" id="txt-n-formula" name="nFormula"
-                       value="<?= set_value('nFormula', $nModification[ModificationTO::FORMULA]) ?>"/>
+                       value="<?= set_value('nFormula', $nModification[ModificationTO::FORMULA]) ?>" disabled />
 
                 <label for="txt-n-mass">Monoisotopic Mass</label>
                 <input type="text" id="txt-n-mass" name="nMass"
-                       value="<?= set_value('nMass', $nModification[ModificationTO::MASS]) ?>"/>
+                       value="<?= set_value('nMass', $nModification[ModificationTO::MASS]) ?>" disabled />
 
                 <label for="chk-n-nterminal" class="chk">N-terminal</label>
                 <input type="checkbox" id="chk-n-nterminal"
-                       name="nnTerminal" <?= Front::checked(set_value('nnTerminal', $nModification[ModificationTO::NTERMINAL])) ?> />
+                       name="nnTerminal" <?= Front::checked(set_value('nnTerminal', $nModification[ModificationTO::NTERMINAL])) ?> disabled />
 
                 <label for="chk-n-cterminal" class="chk">C-terminal</label>
                 <input type="checkbox" id="chk-n-cterminal"
-                       name="ncTerminal" <?= Front::checked(set_value('ncTerminal', $nModification[ModificationTO::CTERMINAL])) ?> />
+                       name="ncTerminal" <?= Front::checked(set_value('ncTerminal', $nModification[ModificationTO::CTERMINAL])) ?> disabled />
             </div>
         </div>
 
@@ -65,23 +65,23 @@ use Bbdgnc\TransportObjects\SequenceTO;
             <div id="div-c-modification">
                 <label for="txt-c-modification">Name</label>
                 <input type="text" id="txt-c-modification" name="cModification"
-                       value="<?= set_value('cModification', $cModification[ModificationTO::NAME]) ?>"/>
+                       value="<?= set_value('cModification', $cModification[ModificationTO::NAME]) ?>" disabled />
 
                 <label for="txt-c-formula">Formula</label>
                 <input type="text" id="txt-c-formula" name="cFormula"
-                       value="<?= set_value('cFormula', $cModification[ModificationTO::FORMULA]) ?>"/>
+                       value="<?= set_value('cFormula', $cModification[ModificationTO::FORMULA]) ?>" disabled />
 
                 <label for="txt-c-mass">Monoisotopic Mass</label>
                 <input type="text" id="txt-c-mass" name="cMass"
-                       value="<?= set_value('cMass', $cModification[ModificationTO::MASS]) ?>"/>
+                       value="<?= set_value('cMass', $cModification[ModificationTO::MASS]) ?>" disabled />
 
                 <label for="chk-c-nterminal" class="chk">N-terminal</label>
                 <input type="checkbox" id="chk-c-nterminal"
-                       name="cnTerminal" <?= Front::checked(set_value('cnTerminal', $cModification[ModificationTO::NTERMINAL])) ?>/>
+                       name="cnTerminal" <?= Front::checked(set_value('cnTerminal', $cModification[ModificationTO::NTERMINAL])) ?> disabled />
 
                 <label for="chk-c-cterminal" class="chk">C-terminal</label>
                 <input type="checkbox" id="chk-c-cterminal"
-                       name="ccTerminal" <?= Front::checked(set_value('ccTerminal', $cModification[ModificationTO::CTERMINAL])) ?> />
+                       name="ccTerminal" <?= Front::checked(set_value('ccTerminal', $cModification[ModificationTO::CTERMINAL])) ?> disabled />
             </div>
         </div>
 

@@ -88,7 +88,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     if (document.getElementById(SEQUENCE_TYPE)) {
-        if (!document.getElementById('form-sequence-edit')) {
+        if (document.getElementById('h-results')) {
             window.addEventListener('load', sequenceTypeChanged);
         }
     }

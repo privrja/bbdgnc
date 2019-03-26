@@ -67,13 +67,6 @@ class Sequence extends CI_Controller {
     }
 
     public function detail($id = 1) {
-        $data = $this->database->findSequenceDetail($id);
-        $this->load->view(Front::TEMPLATES_HEADER);
-        $this->load->view('sequences/detail', $data);
-        $this->load->view(Front::TEMPLATES_FOOTER);
-    }
-
-    public function blocks($id = 1) {
         $modificationDatabase = new ModificationDatabase($this);
         $data = $this->database->findSequenceDetail($id);
         $data['modifications'] = $modificationDatabase->findAllSelect();
@@ -134,7 +127,7 @@ class Sequence extends CI_Controller {
         $this->renderEdit($data);
     }
 
-    public function modifications($modificationId = 1) {
+    public function modifications() {
         $modificationDatabase = new ModificationDatabase($this);
         // TODO validate sequenceId and modification id
         $id = $this->input->post(self::SEQUENCE_ID);
