@@ -339,7 +339,9 @@ function enableOrDisableModificationBranch(disable) {
 }
 
 function disableOrEnableElement(elementId, disable) {
-    document.getElementById(elementId).disabled = disable;
+    if (document.getElementById(elementId)) {
+        document.getElementById(elementId).disabled = disable;
+    }
 }
 
 /**
