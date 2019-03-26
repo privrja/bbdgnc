@@ -3,7 +3,6 @@
 use Bbdgnc\Enum\Front;
 use Bbdgnc\Enum\SequenceTypeEnum;
 use Bbdgnc\Finder\Enum\ServerEnum;
-use Bbdgnc\TransportObjects\ModificationTO;
 
 ?>
 
@@ -93,28 +92,6 @@ use Bbdgnc\TransportObjects\ModificationTO;
                 <label for="sel-n-modification">Select Modification</label>
                 <?= form_dropdown(Front::N_MODIFICATION_SELECT, $modifications, set_value(Front::N_MODIFICATION_SELECT, $nModification['id']),
                     'id="sel-n-modification" class="select" title="Modification"'); ?>
-
-                <div id="div-n-modification">
-                    <label for="txt-n-modification">Name</label>
-                    <input type="text" id="txt-n-modification" name="nModification"
-                           value="<?= set_value('nModification', $nModification['name']) ?>"/>
-
-                    <label for="txt-n-formula">Formula</label>
-                    <input type="text" id="txt-n-formula" name="nFormula"
-                           value="<?= set_value('nFormula', $nModification[ModificationTO::FORMULA]) ?>"/>
-
-                    <label for="txt-n-mass">Monoisotopic Mass</label>
-                    <input type="text" id="txt-n-mass" name="nMass"
-                           value="<?= set_value('nMass', $nModification[ModificationTO::MASS]) ?>"/>
-
-                    <label for="chk-n-nterminal" class="chk">N-terminal</label>
-                    <input type="checkbox" id="chk-n-nterminal"
-                           name="nnTerminal" <?= Front::checked(set_value('nnTerminal', $nModification[ModificationTO::NTERMINAL])) ?> />
-
-                    <label for="chk-n-cterminal" class="chk">C-terminal</label>
-                    <input type="checkbox" id="chk-n-cterminal"
-                           name="ncTerminal" <?= Front::checked(set_value('ncTerminal', $nModification[ModificationTO::CTERMINAL])) ?> />
-                </div>
             </div>
 
             <div class="div-modification">
@@ -123,60 +100,14 @@ use Bbdgnc\TransportObjects\ModificationTO;
                 <label for="sel-c-modification">Select Modification</label>
                 <?= form_dropdown(Front::C_MODIFICATION_SELECT, $modifications, set_value(Front::C_MODIFICATION_SELECT, $cModification['id']),
                     'id="sel-c-modification" class="select" title="Modification"'); ?>
-
-                <div id="div-c-modification">
-                    <label for="txt-c-modification">Name</label>
-                    <input type="text" id="txt-c-modification" name="cModification"
-                           value="<?= set_value('cModification', $cModification[ModificationTO::NAME]) ?>"/>
-
-                    <label for="txt-c-formula">Formula</label>
-                    <input type="text" id="txt-c-formula" name="cFormula"
-                           value="<?= set_value('cFormula', $cModification[ModificationTO::FORMULA]) ?>"/>
-
-                    <label for="txt-c-mass">Monoisotopic Mass</label>
-                    <input type="text" id="txt-c-mass" name="cMass"
-                           value="<?= set_value('cMass', $cModification[ModificationTO::MASS]) ?>"/>
-
-                    <label for="chk-c-nterminal" class="chk">N-terminal</label>
-                    <input type="checkbox" id="chk-c-nterminal"
-                           name="cnTerminal" <?= Front::checked(set_value('cnTerminal', $cModification[ModificationTO::NTERMINAL])) ?>/>
-
-                    <label for="chk-c-cterminal" class="chk">C-terminal</label>
-                    <input type="checkbox" id="chk-c-cterminal"
-                           name="ccTerminal" <?= Front::checked(set_value('ccTerminal', $cModification[ModificationTO::CTERMINAL])) ?> />
-                </div>
             </div>
 
             <div class="div-modification">
                 <h4>Branch Modification</h4>
 
-                <div id="div-b-modification">
                     <label for="sel-b-modification">Select Modification</label>
                     <?= form_dropdown(Front::B_MODIFICATION_SELECT, $modifications, set_value(Front::B_MODIFICATION_SELECT, $bModification['id']),
                         'id="sel-b-modification" class="select" title="Modification"'); ?>
-
-                    <label for="txt-b-modification">Name</label>
-                    <input type="text" id="txt-b-modification" name="bModification"
-                           value="<?= set_value('bModification', $bModification[ModificationTO::NAME]) ?>" disabled/>
-
-                    <label for="txt-b-formula">Formula</label>
-                    <input type="text" id="txt-b-formula" name="bFormula"
-                           value="<?= set_value('bFormula', $bModification[ModificationTO::FORMULA]) ?>" disabled/>
-
-                    <label for="txt-b-mass">Monoisotopic Mass</label>
-                    <input type="text" id="txt-b-mass" name="bMass"
-                           value="<?= set_value('bMass', $bModification[ModificationTO::MASS]) ?>" disabled/>
-
-                    <label for="chk-b-nterminal" class="chk">N-terminal</label>
-                    <input type="checkbox" id="chk-b-nterminal"
-                           name="bnTerminal" <?= Front::checked(set_value('bnTerminal', $bModification[ModificationTO::NTERMINAL])) ?>
-                           disabled/>
-
-                    <label for="chk-b-cterminal" class="chk">C-terminal</label>
-                    <input type="checkbox" id="chk-b-cterminal"
-                           name="bcTerminal" <?= Front::checked(set_value('bcTerminal', $bModification[ModificationTO::CTERMINAL])) ?>
-                           disabled/>
-                </div>
             </div>
             <input type="hidden" name="sequenceId" value="<?= $sequence['id'] ?>" />
             <input type="submit" value="Save modifications" />

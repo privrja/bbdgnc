@@ -12,8 +12,6 @@ use Bbdgnc\Database\SequenceDatabase;
 use Bbdgnc\Enum\Front;
 use Bbdgnc\Enum\LoggerEnum;
 use Bbdgnc\Enum\ModificationHelperTypeEnum;
-use Bbdgnc\Exception\UniqueConstraintException;
-use Bbdgnc\TransportObjects\ModificationTO;
 use Bbdgnc\TransportObjects\SequenceTO;
 
 class Sequence extends CI_Controller {
@@ -136,7 +134,7 @@ class Sequence extends CI_Controller {
         $this->renderEdit($data);
     }
 
-    public function modifications() {
+    public function modifications($modificationId = 1) {
         $modificationDatabase = new ModificationDatabase($this);
         // TODO validate sequenceId and modification id
         $id = $this->input->post(self::SEQUENCE_ID);
@@ -160,25 +158,7 @@ class Sequence extends CI_Controller {
     }
 
     private function saveModification($terminal, string $terminalValue, $sequenceId, ModificationDatabase $modificationDatabase) {
-        if ($terminal == 0) {
-            $name = $this->input->post($terminalValue . Front::MODIFICATION_NAME);
-            $formula = $this->input->post($terminalValue . Front::MODIFICATION_FORMULA);
-            $mass = $this->input->post($terminalValue . Front::MODIFICATION_MASS);
-            $terminalN = Front::setupTerminal($this->input->post($terminalValue . Front::MODIFICATION_TERMINAL_N));
-            $terminalC = Front::setupTerminal($this->input->post($terminalValue . Front::MODIFICATION_TERMINAL_C));
-            if (Front::isEmpty($name) && Front::isEmpty($formula)) {
-                $modification = new ModificationTO($name, $formula, $mass, $terminalC, $terminalN);
-                try {
-                    $this->database->insertNewModification($this->input->post(self::SEQUENCE_ID), $modification, $terminalValue . self::MODIFICATION_ID);
-                } catch (UniqueConstraintException $e) {
-                    $this->errors = "Modification " . $name  . " already in database";
-                }
-            } else {
-                $this->database->updateModification($this->input->post(self::SEQUENCE_ID), $this->input->post($terminalValue . Front::MODIFICATION_SELECT), $terminalValue . self::MODIFICATION_ID);
-            }
-        } else {
-            $this->database->updateModification($this->input->post(self::SEQUENCE_ID), $this->input->post($terminalValue . Front::MODIFICATION_SELECT), $terminalValue . self::MODIFICATION_ID);
-        }
+        $this->database->updateModification($sequenceId, $this->input->post($terminalValue . Front::MODIFICATION_SELECT), $terminalValue . self::MODIFICATION_ID);
     }
 
     private function updateSequence(array $arSequence) {
@@ -192,6 +172,9 @@ class Sequence extends CI_Controller {
             $arSequence['sequence'],
             $arSequence['type']
         );
+        $sequenceTO->nModification = $arSequence[SequenceTO::N_MODIFICATION_ID];
+        $sequenceTO->cModification = $arSequence[SequenceTO::C_MODIFICATION_ID];
+        $sequenceTO->bModification = $arSequence[SequenceTO::B_MODIFICATION_ID];
         $sequenceTO->name = $this->input->post(Front::CANVAS_INPUT_NAME);
         $sequenceTO->database = $this->input->post(Front::CANVAS_INPUT_DATABASE);
         $sequenceTO->smiles = $this->input->post(Front::CANVAS_INPUT_SMILE);

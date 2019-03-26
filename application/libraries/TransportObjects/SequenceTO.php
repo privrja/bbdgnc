@@ -15,6 +15,9 @@ class SequenceTO implements IEntity {
     const SMILES = 'smiles';
     const DATABASE = 'database';
     const IDENTIFIER = 'identifier';
+    const C_MODIFICATION_ID = 'c_modification_id';
+    const N_MODIFICATION_ID = 'n_modification_id';
+    const B_MODIFICATION_ID = 'b_modification_id';
 
     public $database = ServerEnum::PUBCHEM;
 
@@ -85,9 +88,9 @@ class SequenceTO implements IEntity {
             self::SMILES => $this->smiles,
             self::DATABASE => $this->database,
             self::IDENTIFIER => $this->identifier,
-            'c_modification_id' => $this->cModification,
-            'n_modification_id' => $this->nModification,
-            'b_modification_id' => $this->bModification,
+            self::C_MODIFICATION_ID => $this->cModification,
+            self::N_MODIFICATION_ID => $this->nModification,
+            self::B_MODIFICATION_ID => $this->bModification,
         ];
     }
 
