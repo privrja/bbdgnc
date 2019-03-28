@@ -376,6 +376,7 @@ class Land extends CI_Controller {
                     $data[Front::CANVAS_HIDDEN_SHOW_NEXT_RESULTS] = false;
                     log_message('debug', "Last page of results");
                 }
+                unset($_POST[Front::DECAYS]);
                 $this->renderSelect($data, $this->getLastData());
                 break;
         }
