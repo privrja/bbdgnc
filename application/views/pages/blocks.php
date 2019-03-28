@@ -26,7 +26,7 @@ use Bbdgnc\Finder\Enum\ServerEnum;
             <h4>N-terminal Modification</h4>
 
             <label for="sel-n-modification">Select Modification</label>
-            <?= form_dropdown(Front::N_MODIFICATION_SELECT, $modifications, '0',
+            <?= form_dropdown(Front::N_MODIFICATION_SELECT, $modifications, set_value(Front::N_MODIFICATION_SELECT, '0'),
                 'id="sel-n-modification" class="select" title="Modification"'); ?>
 
             <div id="div-n-modification">
@@ -51,7 +51,7 @@ use Bbdgnc\Finder\Enum\ServerEnum;
             <h4>C-terminal Modification</h4>
 
             <label for="sel-c-modification">Select Modification</label>
-            <?= form_dropdown(Front::C_MODIFICATION_SELECT, $modifications, '0',
+            <?= form_dropdown(Front::C_MODIFICATION_SELECT, $modifications, set_value(Front::C_MODIFICATION_SELECT, '0'),
                 'id="sel-c-modification" class="select" title="Modification"'); ?>
 
             <div id="div-c-modification">
@@ -76,7 +76,7 @@ use Bbdgnc\Finder\Enum\ServerEnum;
             <h4>Branch Modification</h4>
 
             <label for="sel-b-modification">Select Modification</label>
-            <?= form_dropdown(Front::B_MODIFICATION_SELECT, $modifications, '0',
+            <?= form_dropdown(Front::B_MODIFICATION_SELECT, $modifications, set_value(Front::B_MODIFICATION_SELECT, '0'),
                 'id="sel-b-modification" class="select" title="Modification"'); ?>
 
             <div id="div-b-modification">

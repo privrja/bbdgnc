@@ -14,6 +14,7 @@ use Bbdgnc\Enum\ComputeEnum;
 use Bbdgnc\Enum\Front;
 use Bbdgnc\Enum\LoggerEnum;
 use Bbdgnc\Enum\ModificationHelperTypeEnum;
+use Bbdgnc\Enum\ModificationTypeEnum;
 use Bbdgnc\Exception\IllegalArgumentException;
 use Bbdgnc\Exception\SequenceInDatabaseException;
 use Bbdgnc\Finder\Enum\FindByEnum;
@@ -167,11 +168,24 @@ class Land extends CI_Controller {
         $data[Front::SEQUENCE] = $sequence;
         $data[Front::SEQUENCE_TYPE] = $sequenceType;
         $data[Front::DECAYS] = $decays;
+        $data = $this->lastModifications(ModificationTypeEnum::N_MODIFICATION, $data);
+        $data = $this->lastModifications(ModificationTypeEnum::C_MODIFICATION, $data);
+        $data = $this->lastModifications(ModificationTypeEnum::BRANCH_MODIFICATION, $data);
         $data['blocks'] = $this->blockDatabase->findAllSelect();
         $data = $this->getModificationData($data);
         $this->load->view(Front::TEMPLATES_HEADER);
         $this->load->view('editor/index', $data);
         $this->load->view(Front::TEMPLATES_FOOTER);
+    }
+
+    private function lastModifications($branchChar, $data) {
+        $data[$branchChar. Front::MODIFICATION_SELECT] = $this->input->post($branchChar . Front::MODIFICATION_SELECT);
+        $data[$branchChar. Front::MODIFICATION_NAME] = $this->input->post($branchChar . Front::MODIFICATION_NAME);
+        $data[$branchChar. Front::MODIFICATION_FORMULA] = $this->input->post($branchChar . Front::MODIFICATION_FORMULA);
+        $data[$branchChar. Front::MODIFICATION_MASS] = $this->input->post($branchChar . Front::MODIFICATION_MASS);
+        $data[$branchChar. Front::MODIFICATION_TERMINAL_N] = $this->input->post($branchChar . Front::MODIFICATION_TERMINAL_N);
+        $data[$branchChar. Front::MODIFICATION_TERMINAL_C] = $this->input->post($branchChar . Front::MODIFICATION_TERMINAL_C);
+        return $data;
     }
 
     private function toBlockTO(int $blockIdentifier, array $arBlock) {
