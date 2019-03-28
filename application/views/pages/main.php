@@ -52,6 +52,7 @@ use Bbdgnc\Finder\Enum\ServerEnum;
     </button>
     <button type="submit" id="btn-canvas-load" class="btn-same" name="load" value="Load">Unique SMILES</button>
     <button type="button" id="btn-canvas-save" class="btn-same" onclick="save()">Save</button>
+    <input type="hidden" id="hdn-decays" name="<?= Front::DECAYS ?>" value="<?= set_value(Front::DECAYS, "") ?>"/>
 
     </form>
 

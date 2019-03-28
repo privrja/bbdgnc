@@ -36,7 +36,7 @@ class SequenceTO implements IEntity {
 
     public $sequenceType = SequenceTypeEnum::LINEAR;
 
-    public $decays = "[]";
+    public $decays = "";
 
     public $nModification;
 
@@ -91,7 +91,7 @@ class SequenceTO implements IEntity {
             self::SMILES => $this->smiles,
             self::DATABASE => $this->database,
             self::IDENTIFIER => $this->identifier,
-            self::DECAYS => "[" . $this->decays . "]",
+            self::DECAYS => $this->decays,
             self::C_MODIFICATION_ID => $this->cModification,
             self::N_MODIFICATION_ID => $this->nModification,
             self::B_MODIFICATION_ID => $this->bModification,

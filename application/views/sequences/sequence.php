@@ -54,6 +54,7 @@ use Bbdgnc\TransportObjects\SequenceTO;
         <button id="btn-canvas-edit" class="btn-same"
                 onclick="window.location.href = '<?= site_url('sequence/edit/' . $sequence['id']) ?>'">Edit
         </button>
+        <input type="hidden" id="hdn-decays" name="<?= Front::DECAYS ?>" value="<?= set_value(Front::DECAYS, $sequence[SequenceTO::DECAYS]) ?>"/>
     </div>
 
 </div>

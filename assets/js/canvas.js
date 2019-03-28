@@ -35,11 +35,6 @@ const CANVAS_SMALL_SQUARE = 300;
 const PIXEL_TWO = 2;
 const PROCENT_SIXTY = 0.6;
 
-const ASC = 'asc';
-const DESC = 'desc';
-
-let sortDirection = ASC;
-
 /** constants mode */
 const MODE_LIGHT = "light";
 const MODE_DARK = "dark";
@@ -73,11 +68,26 @@ if (canvasRef) {
     var offsetY = canvasRef.offsetTop;
 }
 
+function setupDecaySource() {
+    let source = JSON.parse('[' + document.getElementById('hdn-decays').value + ']');
+    if (typeof source !== 'undefined' && source.length > 0) {
+        options.drawDecayPoints = 2;
+        options.decaySource = source;
+        updateOptions();
+    }
+}
+
+function updateOptions() {
+    smilesDrawer = new SmilesDrawer.Drawer(options);
+    drawSmile();
+}
+
 /** events */
 document.addEventListener('DOMContentLoaded', function () {
     window.addEventListener('resize', resize);
     window.addEventListener('load', finder);
     if (document.getElementById(TXT_SMILE_ID)) {
+        window.addEventListener('load', setupDecaySource);
         document.getElementById(TXT_SMILE_ID).addEventListener('input', drawSmile);
     }
 

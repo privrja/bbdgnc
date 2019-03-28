@@ -176,6 +176,7 @@ class Sequence extends CI_Controller {
         $sequenceTO->identifier = $this->input->post(Front::CANVAS_INPUT_IDENTIFIER);
         $sequenceTO->sequence = $this->input->post(Front::SEQUENCE);
         $sequenceTO->sequenceType = $this->input->post(Front::SEQUENCE_TYPE);
+        $sequenceTO->decays = $this->input->post(Front::DECAYS);
         return $sequenceTO;
     }
 

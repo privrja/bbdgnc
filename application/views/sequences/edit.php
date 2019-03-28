@@ -7,35 +7,6 @@ use Bbdgnc\Finder\Enum\ServerEnum;
 ?>
 
 <script src="<?= AssetHelper::jsJsme() ?>"></script>
-<script>
-
-    document.addEventListener('input', readSmiles);
-
-    /**
-     * This function will be called after the JavaScriptApplet code has been loaded.
-     */
-    function jsmeOnLoad() {
-        jsmeApplet = new JSApplet.JSME("jsme_container", "500px", "500px");
-        readSmiles();
-    }
-
-    function readSmiles() {
-        jsmeApplet.readGenericMolecularInput(document.getElementById('txt-block-smiles').value);
-    }
-
-    /**
-     * This function is called after Acept button is clicked
-     * Get SMILES from editor and submit form
-     */
-    function getSmiles() {
-        let smile = jsmeApplet.nonisomericSmiles();
-        if (smile) {
-            document.getElementById('txt-block-smiles').value = smile;
-        }
-    }
-
-</script>
-
 
 <div id="div-full">
     <?= form_open('sequence/edit/' . $sequence['id'], array('id' => 'form-sequence-edit')); ?>
@@ -76,7 +47,7 @@ use Bbdgnc\Finder\Enum\ServerEnum;
             <input type="text" id="txt-block-reference" name="<?= Front::CANVAS_INPUT_IDENTIFIER ?>"
                    value="<?= set_value(Front::CANVAS_INPUT_IDENTIFIER, $sequence['identifier']) ?>"/>
 
-            <button onclick="getSmiles()">Save</button>
+            <button>Save</button>
 
             <?= validation_errors(); ?>
             <?php if (isset($errors)) echo $errors; ?>
@@ -105,13 +76,52 @@ use Bbdgnc\Finder\Enum\ServerEnum;
             <div class="div-modification">
                 <h4>Branch Modification</h4>
 
-                    <label for="sel-b-modification">Select Modification</label>
-                    <?= form_dropdown(Front::B_MODIFICATION_SELECT, $modifications, set_value(Front::B_MODIFICATION_SELECT, $bModification['id']),
-                        'id="sel-b-modification" class="select" title="Modification"'); ?>
+                <label for="sel-b-modification">Select Modification</label>
+                <?= form_dropdown(Front::B_MODIFICATION_SELECT, $modifications, set_value(Front::B_MODIFICATION_SELECT, $bModification['id']),
+                    'id="sel-b-modification" class="select" title="Modification"'); ?>
             </div>
-            <input type="hidden" name="sequenceId" value="<?= $sequence['id'] ?>" />
-            <input type="submit" value="Save modifications" />
+            <input type="hidden" name="sequenceId" value="<?= $sequence['id'] ?>"/>
+            <input type="submit" value="Save modifications"/>
         </div>
 
     </div>
 </div>
+
+<script>
+
+    let structureChanged = false;
+    document.getElementById('txt-block-smiles').addEventListener('input', readSmiles);
+
+    /**
+     * This function will be called after the JavaScriptApplet code has been loaded.
+     */
+    function jsmeOnLoad() {
+        jsmeApplet = new JSApplet.JSME("jsme_container", "500px", "500px", {
+            options: "nocanonize"
+        });
+        readSmiles();
+        jsmeApplet.setCallBack("AfterStructureModified", getSmiles);
+    }
+
+    function readSmiles() {
+        jsmeApplet.readGenericMolecularInput(document.getElementById('txt-block-smiles').value);
+    }
+
+    /**
+     * This function is called after Acept button is clicked
+     * Get SMILES from editor and submit form
+     */
+    function getSmiles() {
+        if (!structureChanged) {
+            structureChanged = true;
+            return;
+        }
+        let smile = jsmeApplet.nonisomericSmiles();
+        if (smile) {
+            console.log('smiles changed');
+            document.getElementById('txt-block-smiles').value = smile;
+            document.getElementById('hdn-decays').value = '';
+        }
+    }
+
+</script>
