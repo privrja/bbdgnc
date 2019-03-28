@@ -99,7 +99,6 @@ use Bbdgnc\Finder\Enum\ServerEnum;
     function blockFromDatabase() {
         let blocks = <?= json_encode($blocks); ?>;
         let id = document.getElementById('sel-block').value;
-        // document.getElementById('txt-block-acronym').value = blocks[id];
         disable(id != 0);
     }
 
@@ -126,7 +125,12 @@ use Bbdgnc\Finder\Enum\ServerEnum;
         console.log(smile);
         let blockId = '<?= $block->id ?>';
         let lastAcronym = '<?= $block->acronym ?>';
-        let acronym = document.getElementById('txt-block-acronym').value;
+        let acronym;
+        if (document.getElementById('txt-block-acronym').disabled) {
+            acronym = document.getElementById('sel-block').options[document.getElementById('sel-block').selectedIndex].text;
+        } else {
+            acronym = document.getElementById('txt-block-acronym').value;
+        }
         let sequence = document.getElementById('hdn-sequence').value;
         if ("" === lastAcronym || !sequence.includes(`[${lastAcronym}]`)) {
             sequence = sequenceReplace(blockId, acronym, sequence);
