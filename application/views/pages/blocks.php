@@ -189,7 +189,7 @@ use Bbdgnc\Finder\Enum\ServerEnum;
                 <input type="hidden" name="<?= Front::CANVAS_INPUT_IDENTIFIER ?>" value="<?= $identifier ?>"/>
                 <input type="hidden" name="<?= Front::SEQUENCE ?>" value="<?= $sequence ?>"/>
                 <input type="hidden" name="<?= Front::SEQUENCE_TYPE ?>" value="<?= $sequenceType ?>"/>
-                <input type="hidden" id="hdn-decays" name="<?= Front::DECAYS ?>" value="<?= set_value(Front::DECAYS, $decays) ?>"/>
+                <input type="hidden" id="hdn-block-decays" name="<?= Front::DECAYS ?>" value="<?= set_value(Front::DECAYS, $decays) ?>"/>
 
                 <?= form_close(); ?>
             <?php endforeach; ?>

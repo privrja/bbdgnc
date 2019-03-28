@@ -49,6 +49,8 @@ let mobile = false;
 /** int last show last preview of SMILES */
 let lastLargeSmilesId;
 
+let decaysNoRedraw = false;
+
 /** default options for main drawer */
 let options = {
     width: getCanvasWidth(),
@@ -477,6 +479,11 @@ function lightMode() {
 
 /** draw smiles to main canvas */
 function drawSmile() {
+    if(!decaysNoRedraw) {
+        decaysNoRedraw = true;
+    } else {
+        document.getElementById('hdn-decays').value = '';
+    }
     // Clean the input (remove unrecognized characters, such as spaces and tabs) and parse it
     let strSmiles = document.getElementById(TXT_SMILE_ID).value;
     strSmiles = strSmiles.replace(/\r?\n|\r/g, '');
@@ -542,7 +549,7 @@ function save() {
     let data = {sequence: sequence, save: 'Save'};
     data.sequenceType = document.getElementById("sel-sequence-type").value;
     data.blockCount = document.getElementsByClassName("block-count")[0].value;
-    data.decays = document.getElementById("hdn-decays").value;
+    data.decays = document.getElementById("hdn-block-decays").value;
     data.nSelect = document.getElementById("sel-n-modification").value;
     data.nModification = document.getElementById("txt-n-modification").value;
     data.nFormula = document.getElementById("txt-n-formula").value;
@@ -576,7 +583,7 @@ function editorBlock(identifier) {
     data.identifier = document.getElementById("txt-canvas-identifier").value;
     data.sequence = document.getElementById("txt-sequence").value;
     data.sequenceType = document.getElementById("sel-sequence-type").value;
-    data.decays = document.getElementById("hdn-decays").value;
+    data.decays = document.getElementById("hdn-block-decays").value;
     data.nSelect = document.getElementById("sel-n-modification").value;
     data.nModification = document.getElementById("txt-n-modification").value;
     data.nFormula = document.getElementById("txt-n-formula").value;

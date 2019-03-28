@@ -446,6 +446,7 @@ class Land extends CI_Controller {
         $arViewData[Front::CANVAS_INPUT_MASS] = $this->input->post(Front::CANVAS_INPUT_MASS);
         $arViewData[Front::CANVAS_INPUT_DEFLECTION] = $this->input->post(Front::CANVAS_INPUT_DEFLECTION);
         $arViewData[Front::CANVAS_INPUT_IDENTIFIER] = $this->input->post(Front::CANVAS_INPUT_IDENTIFIER);
+        $arViewData[Front::DECAYS] = $this->input->post(Front::DECAYS);
         $arViewData[Front::ERRORS] = $this->errors;
         return $arViewData;
     }
