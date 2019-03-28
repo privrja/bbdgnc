@@ -15,7 +15,7 @@ use Bbdgnc\TransportObjects\SequenceTO;
     <div id="div-sequence">
         <div id="div-top-sequence">
             <h3>Sequence</h3>
-            <p>Number of blocks: <?= sizeof($sequence) ?></p>
+            <p>Number of blocks: <?= sizeof($blocks) ?></p>
 
             <label for="sel-sequence-type">Type</label>
             <?= form_dropdown(Front::SEQUENCE_TYPE, SequenceTypeEnum::$values, $sequence[SequenceTO::TYPE],
