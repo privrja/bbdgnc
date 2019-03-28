@@ -136,8 +136,7 @@ class Sequence extends CI_Controller {
         $modificationDatabase->startTransaction();
         $branchChar = ModificationHelperTypeEnum::startModification($data[SequenceTO::TABLE_NAME][SequenceTO::TYPE]);
         for ($index = 0; $index < 3; ++$index) {
-            $modificationNameSel = $this->input->post($branchChar . Front::MODIFICATION_SELECT);
-            $this->saveModification($modificationNameSel, $branchChar, $id, $modificationDatabase);
+            $this->saveModification($branchChar, $id);
             $branchChar = ModificationHelperTypeEnum::changeBranchChar($branchChar, $data[SequenceTO::TABLE_NAME][SequenceTO::TYPE]);
             if (ModificationHelperTypeEnum::isEnd($branchChar)) {
                 break;
@@ -150,7 +149,7 @@ class Sequence extends CI_Controller {
         $this->renderEdit($data);
     }
 
-    private function saveModification($terminal, string $terminalValue, $sequenceId, ModificationDatabase $modificationDatabase) {
+    private function saveModification(string $terminalValue, $sequenceId) {
         $this->database->updateModification($sequenceId, $this->input->post($terminalValue . Front::MODIFICATION_SELECT), $terminalValue . self::MODIFICATION_ID);
     }
 
@@ -165,6 +164,7 @@ class Sequence extends CI_Controller {
             $arSequence['sequence'],
             $arSequence['type']
         );
+        $sequenceTO->decays = $arSequence[SequenceTO::DECAYS];
         $sequenceTO->nModification = $arSequence[SequenceTO::N_MODIFICATION_ID];
         $sequenceTO->cModification = $arSequence[SequenceTO::C_MODIFICATION_ID];
         $sequenceTO->bModification = $arSequence[SequenceTO::B_MODIFICATION_ID];

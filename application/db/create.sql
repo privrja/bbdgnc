@@ -23,6 +23,7 @@ CREATE TABLE sequence (
     smiles              TEXT,
     database            INTEGER,
     identifier          TEXT,
+    decays              TEXT,
     n_modification_id   INTEGER,
     c_modification_id   INTEGER,
     b_modification_id   INTEGER,

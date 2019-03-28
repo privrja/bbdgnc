@@ -153,6 +153,7 @@ class Land extends CI_Controller {
         $blockCount = $this->input->post(Front::BLOCK_COUNT);
         $sequence = $this->input->post(Front::SEQUENCE);
         $sequenceType = $this->input->post(Front::SEQUENCE_TYPE);
+        $decays = $this->input->post(Front::DECAYS);
         $block = new BlockTO($blockIdentifier, $blockName, $blockAcronym, $blockSmile, ComputeEnum::NO);
         $block->databaseId = $this->input->post(Front::BLOCK_DATABASE_ID);
         $block->formula = $this->input->post(Front::BLOCK_FORMULA);
@@ -165,6 +166,7 @@ class Land extends CI_Controller {
         $data[Front::BLOCK_COUNT] = $blockCount;
         $data[Front::SEQUENCE] = $sequence;
         $data[Front::SEQUENCE_TYPE] = $sequenceType;
+        $data[Front::DECAYS] = $decays;
         $data['blocks'] = $this->blockDatabase->findAllSelect();
         $data = $this->getModificationData($data);
         $this->load->view(Front::TEMPLATES_HEADER);
@@ -257,6 +259,7 @@ class Land extends CI_Controller {
             $data[Front::BLOCK_COUNT] = $intCounter;
             $data = $this->getModificationEmptyData($data);
         }
+        $data[Front::DECAYS] = $this->input->post(Front::DECAYS);
         $data[Front::BLOCKS] = $blocks;
         $this->saveCookies($blocks);
         $this->renderBlocks($data);
@@ -601,6 +604,7 @@ class Land extends CI_Controller {
         }
         $data[Front::SEQUENCE] = $this->input->post(Front::SEQUENCE);
         $data[Front::SEQUENCE_TYPE] = $this->input->post(Front::SEQUENCE_TYPE);
+        $data[Front::DECAYS] = $this->input->post(Front::DECAYS);
         return $data;
     }
 
@@ -676,6 +680,7 @@ class Land extends CI_Controller {
         $sequenceTO = new SequenceTO($sequenceDatabase, $sequenceName, $sequenceSmiles, $sequenceFormula, $sequenceMass, $sequenceIdentifier, $sequence, $sequenceType);
         $sequenceTO->identifier = $sequenceIdentifier;
         $sequenceTO->database = $sequenceDatabase;
+        $sequenceTO->decays = $this->input->post(Front::DECAYS);
         $sequenceDatabase = new SequenceDatabase($this);
 
         try {

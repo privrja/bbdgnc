@@ -59,6 +59,7 @@ use Bbdgnc\Finder\Enum\ServerEnum;
 <input type="hidden" name="<?= Front::BLOCK_COUNT ?>" value="<?= $blockCount ?>"/>
 <input type="hidden" name="<?= Front::SEQUENCE ?>" value="<?= $sequence ?>" id="hdn-sequence"/>
 <input type="hidden" name="<?= Front::SEQUENCE_TYPE ?>" value="<?= $sequenceType ?>"/>
+<input type="hidden" id="hdn-decays" name="<?= Front::DECAYS ?>" value="<?= $decays ?>"/>
 <input type="hidden" name="<?= Front::N_MODIFICATION_NAME ?>" value="<?= $nModification ?>"/>
 <input type="hidden" name="<?= Front::N_MODIFICATION_FORMULA ?>" value="<?= $nFormula ?>"/>
 <input type="hidden" name="<?= Front::N_MODIFICATION_MASS ?>" value="<?= $nMass ?>"/>

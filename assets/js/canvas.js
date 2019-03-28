@@ -59,7 +59,7 @@ let options = {
     width: getCanvasWidth(),
     height: getCanvasHeight(),
     themes: {light: {O: '#e67e22', DECAY: '#ff0000'}},
-    drawDecayPoints: true,
+    drawDecayPoints: 1,
     compactDrawing: false
 };
 
@@ -164,7 +164,8 @@ function disintegrate() {
         blocks: 'Blocks',
         first: true,
         sequence: smilesAndSequence[1],
-        sequenceType: sequenceTypeNumber(smilesAndSequence[2])
+        sequenceType: sequenceTypeNumber(smilesAndSequence[2]),
+        decays: smilesAndSequence[3]
     };
     redirectWithData(FORM_MAIN, data);
 }
@@ -531,6 +532,7 @@ function save() {
     let data = {sequence: sequence, save: 'Save'};
     data.sequenceType = document.getElementById("sel-sequence-type").value;
     data.blockCount = document.getElementsByClassName("block-count")[0].value;
+    data.decays = document.getElementById("hdn-decays").value;
     data.nSelect = document.getElementById("sel-n-modification").value;
     data.nModification = document.getElementById("txt-n-modification").value;
     data.nFormula = document.getElementById("txt-n-formula").value;
@@ -564,6 +566,7 @@ function editorBlock(identifier) {
     data.identifier = document.getElementById("txt-canvas-identifier").value;
     data.sequence = document.getElementById("txt-sequence").value;
     data.sequenceType = document.getElementById("sel-sequence-type").value;
+    data.decays = document.getElementById("hdn-decays").value;
     data.nSelect = document.getElementById("sel-n-modification").value;
     data.nModification = document.getElementById("txt-n-modification").value;
     data.nFormula = document.getElementById("txt-n-formula").value;

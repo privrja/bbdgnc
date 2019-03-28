@@ -78,6 +78,7 @@ abstract class Front {
     const MAX_LENGTH_TEXT = 20;
     const STRING_TREE_DOTS = "...";
     const REQUIRED = "required";
+    const DECAYS = "decays";
 
     public static function formula($strFormula) {
         return preg_replace('/(\d+)/', '<sub>$1</sub>', $strFormula);
