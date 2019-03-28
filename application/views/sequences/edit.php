@@ -3,6 +3,7 @@
 use Bbdgnc\Enum\Front;
 use Bbdgnc\Enum\SequenceTypeEnum;
 use Bbdgnc\Finder\Enum\ServerEnum;
+use Bbdgnc\TransportObjects\SequenceTO;
 
 ?>
 
@@ -47,6 +48,7 @@ use Bbdgnc\Finder\Enum\ServerEnum;
             <input type="text" id="txt-block-reference" name="<?= Front::CANVAS_INPUT_IDENTIFIER ?>"
                    value="<?= set_value(Front::CANVAS_INPUT_IDENTIFIER, $sequence['identifier']) ?>"/>
 
+            <input type="hidden" id="hdn-decays" name="<?= Front::DECAYS ?>" value="<?= $sequence[SequenceTO::DECAYS] ?>" />
             <button>Save</button>
 
             <?= validation_errors(); ?>
@@ -118,7 +120,6 @@ use Bbdgnc\Finder\Enum\ServerEnum;
         }
         let smile = jsmeApplet.nonisomericSmiles();
         if (smile) {
-            console.log('smiles changed');
             document.getElementById('txt-block-smiles').value = smile;
             document.getElementById('hdn-decays').value = '';
         }

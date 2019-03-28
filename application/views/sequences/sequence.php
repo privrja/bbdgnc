@@ -55,7 +55,7 @@ use Bbdgnc\TransportObjects\SequenceTO;
             onclick="disintegrate()">Building Blocks
     </button>
     <button type="submit" id="btn-canvas-load" class="btn-same" name="load" value="Load">Unique SMILES</button>
-    <button id="btn-canvas-edit" class="btn-same"
+    <button type="button" id="btn-canvas-edit" class="btn-same"
             onclick="window.location.href = '<?= site_url('sequence/edit/' . $sequence['id']) ?>'">Edit
     </button>
     <input type="hidden" id="hdn-decays" name="<?= Front::DECAYS ?>"
