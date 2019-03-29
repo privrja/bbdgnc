@@ -2,7 +2,6 @@
 
 namespace Bbdgnc\Smiles\Parser;
 
-use Bbdgnc\Finder\Enum\ServerEnum;
 use Bbdgnc\TransportObjects\ReferenceTO;
 
 class SmilesReferenceParser implements IParser {
@@ -19,14 +18,15 @@ class SmilesReferenceParser implements IParser {
             return self::reject();
         }
 
+        $reference = new ReferenceTO();
+        $reference->database = "SMILES";
         if (preg_match('/^\S+/', $result->getRemainder(), $matches)) {
             $length = strlen($matches[0]);
-            $reference = new ReferenceTO();
-            $reference->database = "SMILES";
             $reference->identifier = $matches[0];
             return new Accept($reference, substr($result->getRemainder(), $length));
         }
-        return self::reject();
+        $reference->identifier = "";
+        return new Accept($reference, $result->getRemainder());
     }
 
     /**

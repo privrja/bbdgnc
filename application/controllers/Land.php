@@ -657,7 +657,12 @@ class Land extends CI_Controller {
             $blockTO->losses = $blocks[$index]->losses;
             $blockTO->database = $blocks[$index]->database;
             $blockTO->identifier = $blocks[$index]->identifier;
-            $mapBlocks->attach($blockTO);
+            if ($mapBlocks->contains($blockTO)) {
+                $count = $mapBlocks->offsetGet($blockTO);
+                $mapBlocks->offsetSet($blockTO, $count + 1);
+            } else {
+                $mapBlocks->attach($blockTO, 1);
+            }
         }
 
         $modifications = [];

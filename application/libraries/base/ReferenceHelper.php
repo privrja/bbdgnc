@@ -10,7 +10,7 @@ class ReferenceHelper {
 
     public static function reference($database, $reference, $smiles) {
         if ($reference == 0) {
-            self::defaultValue($smiles);
+            return self::defaultValue($smiles);
         }
         switch ($database) {
             case ServerEnum::PUBCHEM:

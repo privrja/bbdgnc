@@ -64,11 +64,16 @@ class SequenceDatabase extends AbstractDatabase {
 
     private function saveBlocks() {
         /** @var BlockTO $blockTO */
-        foreach ($this->blocks as $blockTO) {
+        foreach ($this->blocks as $key => $blockTO) {
             if (isset($blockTO->databaseId) && "" !== $blockTO->databaseId) {
-                $this->blockIds[] = $blockTO->databaseId;
+                for ($index = 0; $index < $this->blocks[$blockTO]; $index++) {
+                    $this->blockIds[] = $blockTO->databaseId;
+                }
             } else {
-                $this->blockIds[] = $this->controller->block_model->insert($blockTO);
+                $id = $this->controller->block_model->insert($blockTO);
+                for ($index = 0; $index < $this->blocks[$blockTO]; $index++) {
+                    $this->blockIds[] = $id;
+                }
             }
         }
     }
