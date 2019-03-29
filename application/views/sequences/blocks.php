@@ -28,68 +28,81 @@ use Bbdgnc\TransportObjects\SequenceTO;
         <div class="div-modification">
             <h4>N-terminal Modification</h4>
 
-            <?php if(isset($nModification['id'])): ?>
-            <button type="button" onclick="window.location.href = '<?= site_url('modification/edit/' . $nModification['id']) ?>'">Edit</button>
+            <?php if (isset($nModification['id'])): ?>
+                <button type="button"
+                        onclick="window.location.href = '<?= site_url('modification/edit/' . $nModification['id']) ?>'">
+                    Edit
+                </button>
             <?php endif; ?>
 
             <div id="div-n-modification">
                 <label for="txt-n-modification">Name</label>
                 <input type="text" id="txt-n-modification" name="nModification"
-                       value="<?= set_value('nModification', $nModification['name']) ?>" disabled />
+                       value="<?= set_value('nModification', $nModification['name']) ?>" disabled/>
 
                 <label for="txt-n-formula">Formula</label>
                 <input type="text" id="txt-n-formula" name="nFormula"
-                       value="<?= set_value('nFormula', $nModification[ModificationTO::FORMULA]) ?>" disabled />
+                       value="<?= set_value('nFormula', $nModification[ModificationTO::FORMULA]) ?>" disabled/>
 
                 <label for="txt-n-mass">Monoisotopic Mass</label>
                 <input type="text" id="txt-n-mass" name="nMass"
-                       value="<?= set_value('nMass', $nModification[ModificationTO::MASS]) ?>" disabled />
+                       value="<?= set_value('nMass', $nModification[ModificationTO::MASS]) ?>" disabled/>
 
                 <label for="chk-n-nterminal" class="chk">N-terminal</label>
                 <input type="checkbox" id="chk-n-nterminal"
-                       name="nnTerminal" <?= Front::checked(set_value('nnTerminal', $nModification[ModificationTO::NTERMINAL])) ?> disabled />
+                       name="nnTerminal" <?= Front::checked(set_value('nnTerminal', $nModification[ModificationTO::NTERMINAL])) ?>
+                       disabled/>
 
                 <label for="chk-n-cterminal" class="chk">C-terminal</label>
                 <input type="checkbox" id="chk-n-cterminal"
-                       name="ncTerminal" <?= Front::checked(set_value('ncTerminal', $nModification[ModificationTO::CTERMINAL])) ?> disabled />
+                       name="ncTerminal" <?= Front::checked(set_value('ncTerminal', $nModification[ModificationTO::CTERMINAL])) ?>
+                       disabled/>
             </div>
         </div>
 
         <div class="div-modification">
             <h4>C-terminal Modification</h4>
 
-            <?php if(isset($cModification['id'])): ?>
-            <button type="button" onclick="window.location.href = '<?= site_url('modification/edit/' . $cModification['id']) ?>'">Edit</button>
+            <?php if (isset($cModification['id'])): ?>
+                <button type="button"
+                        onclick="window.location.href = '<?= site_url('modification/edit/' . $cModification['id']) ?>'">
+                    Edit
+                </button>
             <?php endif; ?>
 
             <div id="div-c-modification">
                 <label for="txt-c-modification">Name</label>
                 <input type="text" id="txt-c-modification" name="cModification"
-                       value="<?= set_value('cModification', $cModification[ModificationTO::NAME]) ?>" disabled />
+                       value="<?= set_value('cModification', $cModification[ModificationTO::NAME]) ?>" disabled/>
 
                 <label for="txt-c-formula">Formula</label>
                 <input type="text" id="txt-c-formula" name="cFormula"
-                       value="<?= set_value('cFormula', $cModification[ModificationTO::FORMULA]) ?>" disabled />
+                       value="<?= set_value('cFormula', $cModification[ModificationTO::FORMULA]) ?>" disabled/>
 
                 <label for="txt-c-mass">Monoisotopic Mass</label>
                 <input type="text" id="txt-c-mass" name="cMass"
-                       value="<?= set_value('cMass', $cModification[ModificationTO::MASS]) ?>" disabled />
+                       value="<?= set_value('cMass', $cModification[ModificationTO::MASS]) ?>" disabled/>
 
                 <label for="chk-c-nterminal" class="chk">N-terminal</label>
                 <input type="checkbox" id="chk-c-nterminal"
-                       name="cnTerminal" <?= Front::checked(set_value('cnTerminal', $cModification[ModificationTO::NTERMINAL])) ?> disabled />
+                       name="cnTerminal" <?= Front::checked(set_value('cnTerminal', $cModification[ModificationTO::NTERMINAL])) ?>
+                       disabled/>
 
                 <label for="chk-c-cterminal" class="chk">C-terminal</label>
                 <input type="checkbox" id="chk-c-cterminal"
-                       name="ccTerminal" <?= Front::checked(set_value('ccTerminal', $cModification[ModificationTO::CTERMINAL])) ?> disabled />
+                       name="ccTerminal" <?= Front::checked(set_value('ccTerminal', $cModification[ModificationTO::CTERMINAL])) ?>
+                       disabled/>
             </div>
         </div>
 
         <div class="div-modification">
             <h4>Branch Modification</h4>
 
-            <?php if(isset($bModification['id'])): ?>
-            <button type="button" onclick="window.location.href = '<?= site_url('modification/edit/' . $bModification['id']) ?>'">Edit</button>
+            <?php if (isset($bModification['id'])): ?>
+                <button type="button"
+                        onclick="window.location.href = '<?= site_url('modification/edit/' . $bModification['id']) ?>'">
+                    Edit
+                </button>
             <?php endif; ?>
 
             <div id="div-b-modification">
@@ -133,14 +146,15 @@ use Bbdgnc\TransportObjects\SequenceTO;
             </div>
         </div>
         <div class="tbody">
+            <?php $counter = 0; ?>
             <?php foreach ($blocks as $block): ?>
 
-                <div class="tr" id="<?= 'form-block-edit' . $block['id'] ?>">
+                <div class="tr" id="<?= 'form-block-edit' . $counter ?>">
                     <div class="td">
-                        <canvas id="canvas-small-<?= $block['id']; ?>"
-                                data-canvas-small-id="<?= $block['id'] ?>"
+                        <canvas id="canvas-small-<?= $counter; ?>"
+                                data-canvas-small-id="<?= $counter ?>"
                                 class="canvas-small"
-                                onclick="drawOrClearLargeSmile(<?= $block['id'] ?>)"
+                                onclick="drawOrClearLargeSmile(<?= $counter ?>)"
                                 title="<?= $block[BlockTO::SMILES] ?>">
                         </canvas>
                     </div>
@@ -178,14 +192,16 @@ use Bbdgnc\TransportObjects\SequenceTO;
                     </div>
 
                     <input type="hidden" name="<?= Front::BLOCK_SMILE ?>"
-                           id="hidden-canvas-small-<?= $block['id'] ?>"
+                           id="hidden-canvas-small-<?= $counter ?>"
                            value="<?= $block[BlockTO::SMILES] ?>"/>
 
                     <div class="td">
-                        <button type="button" onclick="window.location.href = '<?= site_url('block/edit/' . $block['id']) ?>'">Edit
+                        <button type="button"
+                                onclick="window.location.href = '<?= site_url('block/edit/' . $block['id']) ?>'">Edit
                         </button>
                     </div>
                 </div>
+                <?php $counter++; ?>
             <?php endforeach; ?>
         </div>
     </div>
