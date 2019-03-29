@@ -82,6 +82,10 @@ class SequenceTO implements IEntity {
             $this->bModification = null;
         }
 
+        if ($this->decays === "undefined" || $this->decays === "null") {
+            $this->decays = "";
+        }
+
         return [
             self::TYPE => $this->sequenceType,
             self::NAME => $this->name,
