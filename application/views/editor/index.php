@@ -44,7 +44,7 @@ use Bbdgnc\Finder\Enum\ServerEnum;
         <input type="text" id="txt-block-reference" name="<?= Front::BLOCK_REFERENCE ?>"
                value="<?= $block->identifier ?>"/>
 
-        <button onclick="getSmiles()">Accept changes</button>
+        <button type="button" onclick="saveBb()">Accept changes</button>
     </div>
 </div>
 
@@ -84,15 +84,19 @@ use Bbdgnc\Finder\Enum\ServerEnum;
 <script src="<?= AssetHelper::jsJsme() ?>"></script>
 <script>
 
-    document.addEventListener('input', readSmiles);
+    let structureChanged = false;
     document.getElementById('sel-block').addEventListener('change', blockFromDatabase);
+    document.getElementById('txt-block-smiles').addEventListener('input', readSmiles);
 
     /**
      * This function will be called after the JavaScriptApplet code has been loaded.
      */
     function jsmeOnLoad() {
-        jsmeApplet = new JSApplet.JSME("jsme_container", "500px", "500px");
-        jsmeApplet.readGenericMolecularInput('<?= $block->smiles ?>');
+        jsmeApplet = new JSApplet.JSME("jsme_container", "500px", "500px", {
+            options: "nocanonize"
+        });
+        readSmiles();
+        jsmeApplet.setCallBack("AfterStructureModified", getSmiles);
     }
 
     function readSmiles() {
@@ -116,16 +120,22 @@ use Bbdgnc\Finder\Enum\ServerEnum;
         document.getElementById('txt-block-reference').disabled = disable;
     }
 
-    /**
-     * This function is called after Acept button is clicked
-     * Get SMILES from editor and submit form
-     */
     function getSmiles() {
+        if (!structureChanged) {
+            structureChanged = true;
+            return;
+        }
         let smile = jsmeApplet.nonisomericSmiles();
         if (smile) {
             document.getElementById('txt-block-smiles').value = smile;
         }
-        console.log(smile);
+    }
+
+    /**
+     * This function is called after Accept button is clicked
+     * Get SMILES from editor and submit form
+     */
+    function saveBb() {
         let blockId = '<?= $block->id ?>';
         let lastAcronym = '<?= $block->acronym ?>';
         let acronym;
