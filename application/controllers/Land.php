@@ -179,12 +179,12 @@ class Land extends CI_Controller {
     }
 
     private function lastModifications($branchChar, $data) {
-        $data[$branchChar. Front::MODIFICATION_SELECT] = $this->input->post($branchChar . Front::MODIFICATION_SELECT);
-        $data[$branchChar. Front::MODIFICATION_NAME] = $this->input->post($branchChar . Front::MODIFICATION_NAME);
-        $data[$branchChar. Front::MODIFICATION_FORMULA] = $this->input->post($branchChar . Front::MODIFICATION_FORMULA);
-        $data[$branchChar. Front::MODIFICATION_MASS] = $this->input->post($branchChar . Front::MODIFICATION_MASS);
-        $data[$branchChar. Front::MODIFICATION_TERMINAL_N] = $this->input->post($branchChar . Front::MODIFICATION_TERMINAL_N);
-        $data[$branchChar. Front::MODIFICATION_TERMINAL_C] = $this->input->post($branchChar . Front::MODIFICATION_TERMINAL_C);
+        $data[$branchChar . Front::MODIFICATION_SELECT] = $this->input->post($branchChar . Front::MODIFICATION_SELECT);
+        $data[$branchChar . Front::MODIFICATION_NAME] = $this->input->post($branchChar . Front::MODIFICATION_NAME);
+        $data[$branchChar . Front::MODIFICATION_FORMULA] = $this->input->post($branchChar . Front::MODIFICATION_FORMULA);
+        $data[$branchChar . Front::MODIFICATION_MASS] = $this->input->post($branchChar . Front::MODIFICATION_MASS);
+        $data[$branchChar . Front::MODIFICATION_TERMINAL_N] = $this->input->post($branchChar . Front::MODIFICATION_TERMINAL_N);
+        $data[$branchChar . Front::MODIFICATION_TERMINAL_C] = $this->input->post($branchChar . Front::MODIFICATION_TERMINAL_C);
         return $data;
     }
 
@@ -208,7 +208,8 @@ class Land extends CI_Controller {
         $first = $this->input->post('first');
         $data = $this->getLastData();
         $cookieVal = get_cookie(self::COOKIE_BLOCKS . CommonConstants::ZERO);
-        $data[Front::SEQUENCE] = $this->input->post(Front::SEQUENCE);
+        $sequence = $this->input->post(Front::SEQUENCE);
+        $data[Front::SEQUENCE] = $sequence;
         $data[Front::SEQUENCE_TYPE] = $this->input->post(Front::SEQUENCE_TYPE);
         $data['modifications'] = $this->modifications();
         if (!isset($first) && $cookieVal !== null) {
@@ -236,8 +237,10 @@ class Land extends CI_Controller {
             $intCounter = 0;
             $inputSmiles = $this->input->post(Front::BLOCK_SMILES);
             $smiles = explode(",", $inputSmiles);
+            $arSequence = SequenceHelper::getBlockAcronyms($sequence);
             foreach ($smiles as $smile) {
                 $arResult = $this->blockDatabase->findBlockByUniqueSmiles($smile);
+                $key = array_search($intCounter, $arSequence);
 
                 if (!empty($arResult)) {
                     $blockTO = new BlockTO($intCounter, $arResult['name'], $arResult['acronym'], $arResult['smiles'], ComputeEnum::NO);
@@ -267,9 +270,12 @@ class Land extends CI_Controller {
                         $blockTO = new BlockTO($intCounter, "", "", $smile);
                     }
                 }
+                $blockTO->order = $key;
                 $blocks[] = $blockTO;
                 $intCounter++;
             }
+
+            usort($blocks, ["Land", "orderCmp"]);
             $data[Front::BLOCK_COUNT] = $intCounter;
             $data = $this->getModificationEmptyData($data);
         }
@@ -277,6 +283,10 @@ class Land extends CI_Controller {
         $data[Front::BLOCKS] = $blocks;
         $this->saveCookies($blocks);
         $this->renderBlocks($data);
+    }
+
+    public function orderCmp($a, $b) {
+        return $a->order - $b->order;
     }
 
     /**

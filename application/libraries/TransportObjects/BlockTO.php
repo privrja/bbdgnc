@@ -25,6 +25,8 @@ class BlockTO implements IEntity {
 
     public $id = 0;
 
+    public $order;
+
     public $databaseId;
 
     public $name = "";

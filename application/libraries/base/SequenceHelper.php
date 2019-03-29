@@ -72,4 +72,30 @@ class SequenceHelper {
         return $blocks;
     }
 
+    private function arraySequence(string $sequence) {
+        if ($sequence == "") {
+            return "";
+        }
+        $arOut = [];
+        $arSequenceInput = explode('', $sequence);
+        $char = array_pop($arSequenceInput);
+        while (empty($arSequenceInput)) {
+            switch ($char) {
+                case '\\':
+                case '[':
+                case ']':
+                case '(':
+                case ')':
+                case '-':
+                    break;
+                default:
+                    $arOut[] = $char;
+                    break;
+            }
+            $char = array_pop($arSequenceInput);
+        }
+        return$arOut;
+    }
+
+
 }
