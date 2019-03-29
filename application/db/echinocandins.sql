@@ -61,9 +61,9 @@ INSERT INTO block VALUES(32,'4-(4-(4-pentoxyphenyl)phenyl)benzoic acid','AniBr',
 --     FOREIGN KEY (c_modification_id) REFERENCES modification(id),
 --     FOREIGN KEY (b_modification_id) REFERENCES modification(id)
 -- );
-INSERT INTO sequence VALUES(1,'3','Caspofungin','C52H88N10O15',1092.6430000000000291,'\([4OH-5(Eth-(1.2)NH2)-Orn]-[C14:0-(10.12)Me]\)[3OH-Pro]-[3OH-Orn]-[(3.4)OH-hTyr]-[4OH-Pro]-[Thr]','CCC(C)CC(C)CCCCCCCCC(=O)NC1CC(C(NC(=O)C2C(CCN2C(=O)C(NC(=O)C(NC(=O)C3CC(CN3C(=O)C(NC1=O)C(C)O)O)C(C(C4=CC=C(C=C4)O)O)O)C(CCN)O)O)NCCN)O',0,'16119814',NULL,NULL,NULL);
-INSERT INTO sequence VALUES(2,'3','Micafungin','C56H71N9O23S',1269.4380000000001018,'\([(4.5)OH-Orn]-[MiBr]\)[3OH-4Me-Pro]-[3OH-Gln]-[(3.4)OH-(7)SO4-hTyr]-[4OH-Pro]-[Thr]','CCCCCOc7ccc(c6cc(c5ccc(C(=O)NC4CC(O)C(O)NC(=O)C1C(O)C(C)CN1C(=O)C(C(O)CC(N)=O)NC(=O)C(C(O)C(O)c2ccc(O)c(OS(=O)(=O)O)c2)NC(=O)C3CC(O)CN3C(=O)C(C(C)O)NC4=O)cc5)no6)cc7',0,'477468',NULL,NULL,NULL);
-INSERT INTO sequence VALUES(3,'3','Anidulafungin','C58H73N7O17',1139.5060000000000854,'\([(4.5)OH-Orn]-[AniBr]\)[3OH-4Me-Pro]-[Thr]-[(3.4)OH-hTyr]-[4OH-Pro]-[Thr]','CCCCCOC1=CC=C(C=C1)C2=CC=C(C=C2)C3=CC=C(C=C3)C(=O)NC4CC(C(NC(=O)C5C(C(CN5C(=O)C(NC(=O)C(NC(=O)C6CC(CN6C(=O)C(NC4=O)C(C)O)O)C(C(C7=CC=C(C=C7)O)O)O)C(C)O)C)O)O)O',0,'166548',NULL,NULL,NULL);
+INSERT INTO sequence VALUES(1,'3','Caspofungin','C52H88N10O15',1092.6430000000000291,'\([4OH-5(Eth-(1.2)NH2)-Orn]-[C14:0-(10.12)Me]\)[3OH-Pro]-[3OH-Orn]-[(3.4)OH-hTyr]-[4OH-Pro]-[Thr]','CCC(C)CC(C)CCCCCCCCC(=O)NC1CC(C(NC(=O)C2C(CCN2C(=O)C(NC(=O)C(NC(=O)C3CC(CN3C(=O)C(NC1=O)C(C)O)O)C(C(C4=CC=C(C=C4)O)O)O)C(CCN)O)O)NCCN)O',0,'16119814',NULL,NULL,NULL,NULL);
+INSERT INTO sequence VALUES(2,'3','Micafungin','C56H71N9O23S',1269.4380000000001018,'\([(4.5)OH-Orn]-[MiBr]\)[3OH-4Me-Pro]-[3OH-Gln]-[(3.4)OH-(7)SO4-hTyr]-[4OH-Pro]-[Thr]','CCCCCOc7ccc(c6cc(c5ccc(C(=O)NC4CC(O)C(O)NC(=O)C1C(O)C(C)CN1C(=O)C(C(O)CC(N)=O)NC(=O)C(C(O)C(O)c2ccc(O)c(OS(=O)(=O)O)c2)NC(=O)C3CC(O)CN3C(=O)C(C(C)O)NC4=O)cc5)no6)cc7',0,'477468',NULL,NULL,NULL,NULL);
+INSERT INTO sequence VALUES(3,'3','Anidulafungin','C58H73N7O17',1139.5060000000000854,'\([(4.5)OH-Orn]-[AniBr]\)[3OH-4Me-Pro]-[Thr]-[(3.4)OH-hTyr]-[4OH-Pro]-[Thr]','CCCCCOC1=CC=C(C=C1)C2=CC=C(C=C2)C3=CC=C(C=C3)C(=O)NC4CC(C(NC(=O)C5C(C(CN5C(=O)C(NC(=O)C(NC(=O)C6CC(CN6C(=O)C(NC4=O)C(C)O)O)C(C(C7=CC=C(C=C7)O)O)O)C(C)O)C)O)O)O',0,'166548',NULL,NULL,NULL,NULL);
 -- CREATE TABLE modification (
 --     id                  INTEGER      PRIMARY KEY,
 --     name                TEXT         NOT NULL       CHECK(length(name) > 0),
