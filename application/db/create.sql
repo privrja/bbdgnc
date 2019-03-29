@@ -52,6 +52,7 @@ CREATE TABLE modification (
 CREATE TABLE b2s (
     block_id            INTEGER,
     sequence_id         INTEGER,
+    sort               INTEGER,
 --     PRIMARY KEY (block_id, sequence_id),
     FOREIGN KEY (block_id) REFERENCES block(id),
     FOREIGN KEY (sequence_id) REFERENCES sequence(id)

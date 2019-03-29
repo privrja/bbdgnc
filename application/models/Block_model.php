@@ -50,7 +50,8 @@ class Block_model extends CrudModel {
         $this->db
             ->from($this->getTableName())
             ->join('b2s', 'b2s.block_id = block.id')
-            ->where('b2s.sequence_id', $id);
+            ->where('b2s.sequence_id', $id)
+            ->order_by('b2s.sort', 'asc');
         $query = $this->db->get();
         return $query->result_array();
     }

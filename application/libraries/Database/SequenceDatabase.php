@@ -13,6 +13,7 @@ use Bbdgnc\Exception\SequenceInDatabaseException;
 use Bbdgnc\Exception\UniqueConstraintException;
 use Bbdgnc\TransportObjects\BlockTO;
 use Bbdgnc\TransportObjects\BlockToSequenceTO;
+use Bbdgnc\TransportObjects\IdOrder;
 use Bbdgnc\TransportObjects\ModificationTO;
 use Bbdgnc\TransportObjects\SequenceTO;
 use SplObjectStorage;
@@ -30,6 +31,9 @@ class SequenceDatabase extends AbstractDatabase {
 
     /** @var int[] */
     private $blockIds = [];
+
+    /** @var IdOrder[] $blockIdsAndSort */
+    private $blockIdsAndSort = [];
 
     private $sequenceId;
 
@@ -66,14 +70,10 @@ class SequenceDatabase extends AbstractDatabase {
         /** @var BlockTO $blockTO */
         foreach ($this->blocks as $key => $blockTO) {
             if (isset($blockTO->databaseId) && "" !== $blockTO->databaseId) {
-                for ($index = 0; $index < $this->blocks[$blockTO]; $index++) {
-                    $this->blockIds[] = $blockTO->databaseId;
-                }
+                $this->blockIdsAndSort[] = new IdOrder($blockTO->databaseId, $this->blocks[$blockTO]);
             } else {
                 $id = $this->controller->block_model->insert($blockTO);
-                for ($index = 0; $index < $this->blocks[$blockTO]; $index++) {
-                    $this->blockIds[] = $id;
-                }
+                $this->blockIdsAndSort[] = new IdOrder($id, $this->blocks[$blockTO]);
             }
         }
     }
@@ -106,13 +106,16 @@ class SequenceDatabase extends AbstractDatabase {
      */
     private function saveBlocksToSequence(): void {
         $exThrown = false;
-        foreach ($this->blockIds as $blockId) {
-            $blockToSequence = new BlockToSequenceTO($blockId, $this->sequenceId);
-            try {
-                $this->controller->blockToSequence_model->insert($blockToSequence);
-            } catch (UniqueConstraintException $e) {
-                Logger::log(LoggerEnum::WARNING, "Block to sequence already in database. Sequence id: " . $this->sequenceId . " block id: " . $blockId);
-                $exThrown = true;
+        foreach ($this->blockIdsAndSort as $idOrder) {
+            foreach ($idOrder->order as $order) {
+                $blockToSequence = new BlockToSequenceTO($idOrder->id, $this->sequenceId);
+                $blockToSequence->sort = $order;
+                try {
+                    $this->controller->blockToSequence_model->insert($blockToSequence);
+                } catch (UniqueConstraintException $e) {
+                    Logger::log(LoggerEnum::WARNING, "Block to sequence already in database. Sequence id: " . $this->sequenceId . " block id: " . $idOrder->id);
+                    $exThrown = true;
+                }
             }
         }
         if ($exThrown) {

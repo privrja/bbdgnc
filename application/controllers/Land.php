@@ -155,6 +155,7 @@ class Land extends CI_Controller {
         $sequence = $this->input->post(Front::SEQUENCE);
         $sequenceType = $this->input->post(Front::SEQUENCE_TYPE);
         $decays = $this->input->post(Front::DECAYS);
+        $sort = $this->input->post(Front::SORT);
         $block = new BlockTO($blockIdentifier, $blockName, $blockAcronym, $blockSmile, ComputeEnum::NO);
         $block->databaseId = $this->input->post(Front::BLOCK_DATABASE_ID);
         $block->formula = $this->input->post(Front::BLOCK_FORMULA);
@@ -168,6 +169,7 @@ class Land extends CI_Controller {
         $data[Front::SEQUENCE] = $sequence;
         $data[Front::SEQUENCE_TYPE] = $sequenceType;
         $data[Front::DECAYS] = $decays;
+        $data[Front::SORT] = $sort;
         $data = $this->lastModifications(ModificationTypeEnum::N_MODIFICATION, $data);
         $data = $this->lastModifications(ModificationTypeEnum::C_MODIFICATION, $data);
         $data = $this->lastModifications(ModificationTypeEnum::BRANCH_MODIFICATION, $data);
@@ -229,6 +231,7 @@ class Land extends CI_Controller {
                 $blockTO->identifier = $this->input->post(Front::BLOCK_REFERENCE);
                 $blockTO->database = $this->input->post(Front::BLOCK_REFERENCE_SERVER);
             }
+            $blockTO->sort = $this->input->post(Front::SORT);
             $blockTO->databaseId = empty($databaseId) ? "" : $databaseId;
             $blocks[$blockIdentifier] = $blockTO;
             $data = $this->getModificationData($data);
@@ -270,15 +273,15 @@ class Land extends CI_Controller {
                         $blockTO = new BlockTO($intCounter, "", "", $smile);
                     }
                 }
-                $blockTO->order = $key;
+                $blockTO->sort = $key;
                 $blocks[] = $blockTO;
                 $intCounter++;
             }
 
-            usort($blocks, ["Land", "orderCmp"]);
             $data[Front::BLOCK_COUNT] = $intCounter;
             $data = $this->getModificationEmptyData($data);
         }
+        usort($blocks, ["Land", "orderCmp"]);
         $data[Front::DECAYS] = $this->input->post(Front::DECAYS);
         $data[Front::BLOCKS] = $blocks;
         $this->saveCookies($blocks);
@@ -286,7 +289,7 @@ class Land extends CI_Controller {
     }
 
     public function orderCmp($a, $b) {
-        return $a->order - $b->order;
+        return $a->sort - $b->sort;
     }
 
     /**
@@ -667,11 +670,13 @@ class Land extends CI_Controller {
             $blockTO->losses = $blocks[$index]->losses;
             $blockTO->database = $blocks[$index]->database;
             $blockTO->identifier = $blocks[$index]->identifier;
+            $blockTO->sort = $blocks[$index]->sort;
             if ($mapBlocks->contains($blockTO)) {
-                $count = $mapBlocks->offsetGet($blockTO);
-                $mapBlocks->offsetSet($blockTO, $count + 1);
+                $sorts = $mapBlocks->offsetGet($blockTO);
+                $sorts[] = $blockTO->sort;
+                $mapBlocks->offsetSet($blockTO, $sorts);
             } else {
-                $mapBlocks->attach($blockTO, 1);
+                $mapBlocks->attach($blockTO, [$blockTO->sort]);
             }
         }
 

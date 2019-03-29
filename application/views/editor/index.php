@@ -60,6 +60,7 @@ use Bbdgnc\Finder\Enum\ServerEnum;
 <input type="hidden" name="<?= Front::SEQUENCE ?>" value="<?= $sequence ?>" id="hdn-sequence"/>
 <input type="hidden" name="<?= Front::SEQUENCE_TYPE ?>" value="<?= $sequenceType ?>"/>
 <input type="hidden" id="hdn-block-decays" name="<?= Front::DECAYS ?>" value="<?= $decays ?>"/>
+<input type="hidden" id="hdn-sort" name="<?= Front::SORT ?>" value="<?= $sort ?>"/>
 <input type="hidden" name="<?= Front::N_MODIFICATION_SELECT ?>" value="<?= $nSelect ?>"/>
 <input type="hidden" name="<?= Front::N_MODIFICATION_NAME ?>" value="<?= $nModification ?>"/>
 <input type="hidden" name="<?= Front::N_MODIFICATION_FORMULA ?>" value="<?= $nFormula ?>"/>
