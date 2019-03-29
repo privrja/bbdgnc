@@ -29,7 +29,7 @@ use Bbdgnc\TransportObjects\SequenceTO;
             <h4>N-terminal Modification</h4>
 
             <?php if(isset($nModification['id'])): ?>
-            <button onclick="window.location.href = '<?= site_url('modification/edit/' . $nModification['id']) ?>'">Edit</button>
+            <button type="button" onclick="window.location.href = '<?= site_url('modification/edit/' . $nModification['id']) ?>'">Edit</button>
             <?php endif; ?>
 
             <div id="div-n-modification">
@@ -59,7 +59,7 @@ use Bbdgnc\TransportObjects\SequenceTO;
             <h4>C-terminal Modification</h4>
 
             <?php if(isset($cModification['id'])): ?>
-            <button onclick="window.location.href = '<?= site_url('modification/edit/' . $cModification['id']) ?>'">Edit</button>
+            <button type="button" onclick="window.location.href = '<?= site_url('modification/edit/' . $cModification['id']) ?>'">Edit</button>
             <?php endif; ?>
 
             <div id="div-c-modification">
@@ -89,7 +89,7 @@ use Bbdgnc\TransportObjects\SequenceTO;
             <h4>Branch Modification</h4>
 
             <?php if(isset($bModification['id'])): ?>
-            <button onclick="window.location.href = '<?= site_url('modification/edit/' . $bModification['id']) ?>'">Edit</button>
+            <button type="button" onclick="window.location.href = '<?= site_url('modification/edit/' . $bModification['id']) ?>'">Edit</button>
             <?php endif; ?>
 
             <div id="div-b-modification">
@@ -182,7 +182,7 @@ use Bbdgnc\TransportObjects\SequenceTO;
                            value="<?= $block[BlockTO::SMILES] ?>"/>
 
                     <div class="td">
-                        <button onclick="window.location.href = '<?= site_url('block/edit/' . $block['id']) ?>'">Edit
+                        <button type="button" onclick="window.location.href = '<?= site_url('block/edit/' . $block['id']) ?>'">Edit
                         </button>
                     </div>
                 </div>
