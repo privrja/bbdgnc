@@ -35,7 +35,7 @@ class Land extends CI_Controller {
     const COOKIE_NEXT_RESULTS = 'find-next-results';
 
     /** @var int expire time of cookie 1 hour */
-    const COOKIE_EXPIRE_HOUR = 360000;
+    const COOKIE_EXPIRE_HOUR = 3600;
 
     const COOKIE_BLOCKS = "cookie_blocks";
 
