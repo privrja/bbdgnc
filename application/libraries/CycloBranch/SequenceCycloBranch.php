@@ -189,7 +189,7 @@ class SequenceCycloBranch extends AbstractCycloBranch {
                 $strData .= $sequence['nname'] . "\t";
                 $strData .= $sequence['cname'] . "\t";
                 $strData .= $sequence['bname'] . "\t";
-                $strData .= ReferenceHelper::reference($sequence['database'], $sequence['identifier'], $sequence['smiles']);
+                $strData .= ReferenceHelper::reference($sequence['database'], $sequence['identifier'], $sequence[SequenceTO::SMILES]);
                 $strData .= PHP_EOL;
                 file_put_contents(self::FILE_NAME, $strData, FILE_APPEND);
             }
