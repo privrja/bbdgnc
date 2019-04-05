@@ -1,6 +1,7 @@
 <?php
 
 use Bbdgnc\Base\CommonConstants;
+use Bbdgnc\Base\FormulaHelper;
 use Bbdgnc\Base\HelperEnum;
 use Bbdgnc\Base\LibraryEnum;
 use Bbdgnc\Base\Logger;
@@ -12,6 +13,7 @@ use Bbdgnc\Database\SequenceDatabase;
 use Bbdgnc\Enum\Front;
 use Bbdgnc\Enum\LoggerEnum;
 use Bbdgnc\Enum\ModificationHelperTypeEnum;
+use Bbdgnc\Exception\IllegalArgumentException;
 use Bbdgnc\Exception\UniqueConstraintException;
 use Bbdgnc\TransportObjects\SequenceTO;
 
@@ -82,16 +84,23 @@ class Sequence extends CI_Controller {
         $data = [];
         $this->form_validation->set_rules(Front::SEQUENCE_TYPE, 'Type', Front::REQUIRED);
         $this->form_validation->set_rules(Front::CANVAS_INPUT_NAME, 'Name', Front::REQUIRED);
-        $this->form_validation->set_rules(Front::CANVAS_INPUT_FORMULA, 'Formula', Front::REQUIRED);
+        $smiles = $this->input->post(Front::CANVAS_INPUT_SMILE);
+        if (!isset($smiles) || $smiles === "") {
+            $this->form_validation->set_rules(Front::CANVAS_INPUT_FORMULA, 'Formula', Front::REQUIRED);
+        }
         if ($this->form_validation->run() === false) {
             $data[Front::ERRORS] = $this->errors;
             $this->renderNew($data);
             return;
         }
-        $sequenceTO = $this->createSequence();
+
         $data[Front::ERRORS] = 'Sequence properly saved';
         try {
+            $sequenceTO = $this->createSequence();
             $this->database->insert($sequenceTO);
+        } catch (IllegalArgumentException $exception) {
+            $data[Front::ERRORS] = $exception->getMessage();
+            Logger::log(LoggerEnum::WARNING, $exception->getTraceAsString());
         } catch (UniqueConstraintException $exception) {
             $data[Front::ERRORS] = 'Sequence with that name already in database!';
             Logger::log(LoggerEnum::WARNING, $exception->getTraceAsString());
@@ -105,11 +114,10 @@ class Sequence extends CI_Controller {
 
     public function edit($id = 1) {
         $arSequence = $this->database->findById($id);
-        $data['sequence'] = $arSequence;
+        $data[SequenceTO::TABLE_NAME] = $arSequence;
         $modificationDatabase = new ModificationDatabase($this);
         $data = $this->database->findSequenceDetail($id);
         $data['modifications'] = $modificationDatabase->findAllSelect();
-
         $this->form_validation->set_rules(Front::SEQUENCE_TYPE, 'Type', Front::REQUIRED);
         $this->form_validation->set_rules(Front::CANVAS_INPUT_NAME, 'Name', Front::REQUIRED);
         $this->form_validation->set_rules(Front::CANVAS_INPUT_FORMULA, 'Formula', Front::REQUIRED);
@@ -118,16 +126,24 @@ class Sequence extends CI_Controller {
             $this->renderEdit($data);
             return;
         }
-        $sequenceTO = $this->updateSequence($arSequence);
+
+        $data[Front::ERRORS] = 'Sequence properly edited';
         try {
+            $sequenceTO = $this->updateSequence($arSequence);
             $this->database->update($id, $sequenceTO);
+        } catch (IllegalArgumentException $exception) {
+            $data[Front::ERRORS] = $exception->getMessage();
+            Logger::log(LoggerEnum::WARNING, $exception->getTraceAsString());
+        } catch (UniqueConstraintException $exception) {
+            $data[Front::ERRORS] = 'Sequence with that name already in database!';
+            Logger::log(LoggerEnum::WARNING, $exception->getTraceAsString());
         } catch (Exception $exception) {
             $data[Front::ERRORS] = $exception->getMessage();
             Logger::log(LoggerEnum::ERROR, $exception->getTraceAsString());
+        } finally {
+            Front::errorsCheck($data);
             $this->renderEdit($data);
-            return;
         }
-        $this->renderEdit($data);
     }
 
     public function modifications() {
@@ -174,12 +190,17 @@ class Sequence extends CI_Controller {
         $sequenceTO->name = $this->input->post(Front::CANVAS_INPUT_NAME);
         $sequenceTO->database = $this->input->post(Front::CANVAS_INPUT_DATABASE);
         $sequenceTO->smiles = $this->input->post(Front::CANVAS_INPUT_SMILE);
-        $sequenceTO->formula = $this->input->post(Front::CANVAS_INPUT_FORMULA);
-        $sequenceTO->mass = $this->input->post(Front::CANVAS_INPUT_MASS);
+        $formula = $this->input->post(Front::CANVAS_INPUT_FORMULA);
+        $mass = $this->input->post(Front::CANVAS_INPUT_MASS);
+        $sequenceTO->formula = $formula;
+        $sequenceTO->mass = $mass;
         $sequenceTO->identifier = $this->input->post(Front::CANVAS_INPUT_IDENTIFIER);
         $sequenceTO->sequence = $this->input->post(Front::SEQUENCE);
         $sequenceTO->sequenceType = $this->input->post(Front::SEQUENCE_TYPE);
         $sequenceTO->decays = $this->input->post(Front::DECAYS);
+        if (isset($formula) && $formula !== '' && (!isset($mass) || $mass === '')) {
+            $sequenceTO->mass = FormulaHelper::computeMass($formula);
+        }
         return $sequenceTO;
     }
 

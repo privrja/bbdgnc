@@ -2,6 +2,7 @@
 
 namespace Bbdgnc\TransportObjects;
 
+use Bbdgnc\Base\FormulaHelper;
 use Bbdgnc\Enum\SequenceTypeEnum;
 use Bbdgnc\Finder\Enum\ServerEnum;
 
@@ -62,8 +63,30 @@ class SequenceTO implements IEntity {
         }
         $this->name = $name;
         $this->smiles = $smiles;
-        $this->formula = $formula;
-        $this->mass = $mass;
+        if ($smiles === "") {
+            $this->formula = $formula;
+            if ($mass === "") {
+                $this->mass = FormulaHelper::computeMass($this->formula);
+            } else {
+                $this->mass = $mass;
+            }
+        } else {
+            if ($formula === "") {
+                $this->formula = FormulaHelper::formulaFromSmiles($smiles);
+                if ($mass === "") {
+                    $this->mass = FormulaHelper::computeMass($this->formula);
+                } else {
+                    $this->mass = $mass;
+                }
+            } else {
+                $this->formula = $formula;
+                if ($mass === "") {
+                    $this->mass = FormulaHelper::computeMass($this->formula);
+                } else {
+                    $this->mass = $mass;
+                }
+            }
+        }
         $this->sequence = $sequence;
         $this->sequenceType = $sequenceType;
     }
