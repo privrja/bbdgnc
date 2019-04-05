@@ -33,14 +33,14 @@ class Modification extends CI_Controller {
         Front::addLikeFilter(ModificationTO::NAME, ModificationTO::TABLE_NAME, $query, $this);
         Front::addLikeFilter(ModificationTO::FORMULA, ModificationTO::TABLE_NAME, $query, $this);
         Front::addLikeFilter(ModificationTO::LOSSES, ModificationTO::TABLE_NAME, $query, $this);
-        Front::addSameFilter(ModificationTO::NTERMINAL,ModificationTO::TABLE_NAME, $query, $this);
-        Front::addSameFilter(ModificationTO::CTERMINAL,ModificationTO::TABLE_NAME, $query, $this);
+        Front::addSameFilter(ModificationTO::NTERMINAL, ModificationTO::TABLE_NAME, $query, $this);
+        Front::addSameFilter(ModificationTO::CTERMINAL, ModificationTO::TABLE_NAME, $query, $this);
         Front::addBetweenFilter(ModificationTO::MASS, ModificationTO::TABLE_NAME, $query, $this);
         $sort = [];
         $sort[] = Front::addSortable(ModificationTO::NAME, ModificationTO::TABLE_NAME, $query, $this);
-        $sort[] = Front::addSortable(ModificationTO::FORMULA,ModificationTO::TABLE_NAME, $query, $this);
+        $sort[] = Front::addSortable(ModificationTO::FORMULA, ModificationTO::TABLE_NAME, $query, $this);
         $sort[] = Front::addSortable(ModificationTO::LOSSES, ModificationTO::TABLE_NAME, $query, $this);
-        $sort[] = Front::addSortable(ModificationTO::MASS,ModificationTO::TABLE_NAME, $query, $this);
+        $sort[] = Front::addSortable(ModificationTO::MASS, ModificationTO::TABLE_NAME, $query, $this);
         $sort[] = Front::addSortable(ModificationTO::NTERMINAL, ModificationTO::TABLE_NAME, $query, $this);
         $sort[] = Front::addSortable(ModificationTO::CTERMINAL, ModificationTO::TABLE_NAME, $query, $this);
         return Front::getSortDirection($sort);
@@ -83,28 +83,29 @@ class Modification extends CI_Controller {
         $cTerminal = $this->setupTerminal($this->input->post(Front::MODIFICATION_TERMINAL_C));
         $nTerminal = $this->setupTerminal($this->input->post(Front::MODIFICATION_TERMINAL_N));
 
-        $modificationTO = new ModificationTO(
-            $this->input->post(Front::MODIFICATION_NAME),
-            $this->input->post(Front::MODIFICATION_FORMULA),
-            $this->input->post(Front::MODIFICATION_MASS),
-            $cTerminal, $nTerminal
-        );
 
         try {
+            $data[Front::ERRORS] = 'Modification properly saved';
+            $modificationTO = new ModificationTO(
+                $this->input->post(Front::MODIFICATION_NAME),
+                $this->input->post(Front::MODIFICATION_FORMULA),
+                $this->input->post(Front::MODIFICATION_MASS),
+                $cTerminal, $nTerminal
+            );
             $this->database->insert($modificationTO);
+        } catch (IllegalArgumentException $exception) {
+            $data[Front::ERRORS] = $exception->getMessage();
+            Logger::log(LoggerEnum::WARNING, $exception->getTraceAsString());
         } catch (UniqueConstraintException $exception) {
             $data[Front::ERRORS] = 'Modification with that name already in database!';
-            $this->renderNew($data);
-            return;
+            Logger::log(LoggerEnum::WARNING, $exception->getTraceAsString());
         } catch (Exception $exception) {
             $data[Front::ERRORS] = $exception->getMessage();
             Logger::log(LoggerEnum::ERROR, $exception->getTraceAsString());
+        } finally {
+            Front::errorsCheck($data);
             $this->renderNew($data);
-            return;
         }
-
-        $data[Front::ERRORS] = 'Modification properly saved';
-        $this->renderNew($data);
     }
 
     private function renderNew($data = []) {
@@ -126,6 +127,7 @@ class Modification extends CI_Controller {
         $cTerminal = $this->setupTerminal($this->input->post(Front::MODIFICATION_TERMINAL_C));
         $nTerminal = $this->setupTerminal($this->input->post(Front::MODIFICATION_TERMINAL_N));
 
+        $data[Front::ERRORS] = 'Modification properly edited';
         try {
             $modificationTO = new ModificationTO(
                 $this->input->post(Front::MODIFICATION_NAME),
@@ -133,25 +135,19 @@ class Modification extends CI_Controller {
                 $this->input->post(Front::MODIFICATION_MASS),
                 $cTerminal, $nTerminal
             );
+            $this->database->update($id, $modificationTO);
+            $data[ModificationTO::TABLE_NAME] = $modificationTO->asEntity();
+            $data[ModificationTO::TABLE_NAME]['id'] = $id;
         } catch (IllegalArgumentException $exception) {
             $data[Front::ERRORS] = $exception->getMessage();
             Logger::log(LoggerEnum::ERROR, $exception->getTraceAsString());
-            $this->renderEdit($data);
-            return;
-        }
-
-        try {
-            $this->database->update($id, $modificationTO);
         } catch (Exception $exception) {
             $data[Front::ERRORS] = $exception->getMessage();
             Logger::log(LoggerEnum::ERROR, $exception->getTraceAsString());
+        } finally {
+            Front::errorsCheck($data);
             $this->renderEdit($data);
-            return;
         }
-        $data[ModificationTO::TABLE_NAME] = $modificationTO->asEntity();
-        $data[ModificationTO::TABLE_NAME]['id'] = $id;
-        $data[Front::ERRORS] = 'Modification properly edited';
-        $this->renderEdit($data);
     }
 
     private function renderEdit($data) {

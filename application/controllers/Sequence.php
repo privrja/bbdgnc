@@ -89,20 +89,18 @@ class Sequence extends CI_Controller {
             return;
         }
         $sequenceTO = $this->createSequence();
+        $data[Front::ERRORS] = 'Sequence properly saved';
         try {
             $this->database->insert($sequenceTO);
         } catch (UniqueConstraintException $exception) {
             $data[Front::ERRORS] = 'Sequence with that name already in database!';
-            $this->renderNew($data);
-            return;
+            Logger::log(LoggerEnum::WARNING, $exception->getTraceAsString());
         } catch (Exception $exception) {
             $data[Front::ERRORS] = $exception->getMessage();
             Logger::log(LoggerEnum::ERROR, $exception->getTraceAsString());
+        } finally {
             $this->renderNew($data);
-            return;
         }
-        $data[Front::ERRORS] = 'Sequence properly saved';
-        $this->renderNew($data);
     }
 
     public function edit($id = 1) {

@@ -66,7 +66,6 @@ class Block extends CI_Controller {
         $data['blocks'] = $this->database->findAllPaging($start, $query);
         $data[PagingEnum::LINKS] = $this->pagination->create_links();
 
-
         $this->load->view(Front::TEMPLATES_HEADER);
         $this->load->view('blocks/index', $data);
         $this->load->view(Front::TEMPLATES_FOOTER);
@@ -91,7 +90,7 @@ class Block extends CI_Controller {
             $this->database->insert($blockTO);
         } catch (IllegalArgumentException $exception) {
             $data[Front::ERRORS] = $exception->getMessage();
-            Logger::log(LoggerEnum::ERROR, $exception->getTraceAsString());
+            Logger::log(LoggerEnum::WARNING, $exception->getTraceAsString());
         } catch (UniqueConstraintException $exception) {
             $data[Front::ERRORS] = self::BLOCK_WITH_THIS_ACRONYM_ALREADY_IN_DATABASE;
             Logger::log(LoggerEnum::WARNING, $exception->getMessage());
@@ -99,6 +98,7 @@ class Block extends CI_Controller {
             $data[Front::ERRORS] = $exception->getMessage();
             Logger::log(LoggerEnum::ERROR, $exception->getTraceAsString());
         } finally {
+            Front::errorsCheck($data);
             $this->renderNew($data);
         }
     }
@@ -133,12 +133,15 @@ class Block extends CI_Controller {
             $this->database->update($id, $blockTO);
         } catch (UniqueConstraintException $exception) {
             $data[Front::ERRORS] = self::BLOCK_WITH_THIS_ACRONYM_ALREADY_IN_DATABASE;
+            Logger::log(LoggerEnum::WARNING, $exception->getTraceAsString());
         } catch (IllegalArgumentException $exception) {
             $data[Front::ERRORS] = $exception->getMessage();
+            Logger::log(LoggerEnum::WARNING, $exception->getTraceAsString());
         } catch (Exception $exception) {
             $data[Front::ERRORS] = $exception->getMessage();
             Logger::log(LoggerEnum::ERROR, $exception->getTraceAsString());
         } finally {
+            Front::errorsCheck($data);
             $this->renderEditForm($data);
         }
     }

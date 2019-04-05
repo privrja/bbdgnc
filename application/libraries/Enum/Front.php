@@ -177,4 +177,11 @@ abstract class Front {
     public static function setupTerminal($terminal) {
         return isset($terminal);
     }
+
+    public static function errorsCheck(&$data) {
+        if (empty($data[Front::ERRORS])) {
+            $data[Front::ERRORS] = 'Something goes wrong!';
+        }
+    }
+
 }
