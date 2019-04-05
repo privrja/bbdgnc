@@ -98,6 +98,7 @@ class Modification extends CI_Controller {
             return;
         }
 
+        $data[Front::ERRORS] = 'Modification properly saved';
         $this->renderNew();
     }
 

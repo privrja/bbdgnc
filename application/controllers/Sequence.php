@@ -96,7 +96,7 @@ class Sequence extends CI_Controller {
             $this->renderEdit($data);
             return;
         }
-
+        $data[Front::ERRORS] = 'Sequence properly saved';
         $this->renderNew($data);
     }
 
