@@ -187,8 +187,8 @@ class Block extends CI_Controller {
             $blockTO->computeUniqueSmiles();
         }
         $blockTO->losses = $this->input->post(Front::BLOCK_NEUTRAL_LOSSES);
-        $blockTO->database = $this->input->post(Front::BLOCK_IDENTIFIER);
-        $blockTO->identifier = $this->input->post(Front::BLOCK_REFERENCE_SERVER);
+        $blockTO->database = $this->input->post(Front::BLOCK_REFERENCE_SERVER);
+        $blockTO->identifier = $this->input->post(Front::BLOCK_REFERENCE);
         return $blockTO;
     }
 
