@@ -25,6 +25,9 @@ class FormulaHelper {
         while (!empty($strFormula)) {
             $atomCount = self::getAtomCount($strFormula);
             try {
+                if (!isset(PeriodicTableSingleton::getInstance()->getAtoms()[$atomCount->getAtom()])) {
+                    throw new IllegalArgumentException('Wrong atom name ' . $atomCount->getAtom() . ' in formula!');
+                }
                 $mass += (PeriodicTableSingleton::getInstance()->getAtoms())[$atomCount->getAtom()]->getMass() * $atomCount->getCount();
             } catch (\Exception $exception) {
                 throw new IllegalArgumentException();

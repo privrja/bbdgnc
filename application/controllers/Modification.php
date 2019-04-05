@@ -10,6 +10,7 @@ use Bbdgnc\Base\Query;
 use Bbdgnc\Database\ModificationDatabase;
 use Bbdgnc\Enum\Front;
 use Bbdgnc\Enum\LoggerEnum;
+use Bbdgnc\Exception\IllegalArgumentException;
 use Bbdgnc\Exception\UniqueConstraintException;
 use Bbdgnc\TransportObjects\ModificationTO;
 
@@ -125,12 +126,19 @@ class Modification extends CI_Controller {
         $cTerminal = $this->setupTerminal($this->input->post(Front::MODIFICATION_TERMINAL_C));
         $nTerminal = $this->setupTerminal($this->input->post(Front::MODIFICATION_TERMINAL_N));
 
-        $modificationTO = new ModificationTO(
-            $this->input->post(Front::MODIFICATION_NAME),
-            $this->input->post(Front::MODIFICATION_FORMULA),
-            $this->input->post(Front::MODIFICATION_MASS),
-            $cTerminal, $nTerminal
-        );
+        try {
+            $modificationTO = new ModificationTO(
+                $this->input->post(Front::MODIFICATION_NAME),
+                $this->input->post(Front::MODIFICATION_FORMULA),
+                $this->input->post(Front::MODIFICATION_MASS),
+                $cTerminal, $nTerminal
+            );
+        } catch (IllegalArgumentException $exception) {
+            $data[Front::ERRORS] = $exception->getMessage();
+            Logger::log(LoggerEnum::ERROR, $exception->getTraceAsString());
+            $this->renderEdit($data);
+            return;
+        }
 
         try {
             $this->database->update($id, $modificationTO);
@@ -142,6 +150,7 @@ class Modification extends CI_Controller {
         }
         $data[ModificationTO::TABLE_NAME] = $modificationTO->asEntity();
         $data[ModificationTO::TABLE_NAME]['id'] = $id;
+        $data[Front::ERRORS] = 'Modification properly edited';
         $this->renderEdit($data);
     }
 
