@@ -44,9 +44,9 @@ use Bbdgnc\Enum\Front; ?>
                            value="<?= Front::setValue('formula') ?>"/>
                 </div>
                 <div class="td">
-                    <input type="text" placeholder="Filter by Mass From" accesskey="m" id="filter-mass-from"
+                    <input type="number" step="any" placeholder="Filter by Mass From" accesskey="m" id="filter-mass-from"
                            value="<?= Front::setValue('massFrom') ?>"/>
-                    <input type="text" placeholder="Filter by Mass To" id="filter-mass-to"
+                    <input type="number" step="any" placeholder="Filter by Mass To" id="filter-mass-to"
                            value="<?= Front::setValue('massTo') ?>"/>
                 </div>
                 <div class="td">

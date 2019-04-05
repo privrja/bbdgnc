@@ -43,8 +43,8 @@ use Bbdgnc\Finder\Enum\ServerEnum;
                         <input type="text" placeholder="Filter by Neutral Losses" accesskey="l" id="filter-losses" value="<?= Front::setValue('losses') ?>"/>
                     </div>
                     <div class="td">
-                        <input type="text" placeholder="Filter by Mass From" accesskey="m" id="filter-mass-from" value="<?= Front::setValue('massFrom') ?>"/>
-                        <input type="text" placeholder="Filter by Mass To" id="filter-mass-to" value="<?= Front::setValue('massTo') ?>"/>
+                        <input type="number" step="any" placeholder="Filter by Mass From" accesskey="m" id="filter-mass-from" value="<?= Front::setValue('massFrom') ?>"/>
+                        <input type="number" step="any" placeholder="Filter by Mass To" id="filter-mass-to" value="<?= Front::setValue('massTo') ?>"/>
                     </div>
                     <div class="td">
                         <input type="text" placeholder="Filter by SMILES" accesskey="s" id="filter-smiles" value="<?= Front::setValue('smiles') ?>"/>

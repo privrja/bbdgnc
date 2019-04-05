@@ -55,7 +55,7 @@ use Bbdgnc\Finder\Enum\ServerEnum;
                    value="<?= set_value(Front::BLOCK_FORMULA, $block['residue']) ?>"/>
 
             <label for="txt-block-mass">Monoisotopic Residue Mass</label>
-            <input type="text" id="txt-block-mass" name="<?= Front::BLOCK_MASS ?>"
+            <input type="number" step="any" id="txt-block-mass" name="<?= Front::BLOCK_MASS ?>"
                    value="<?= set_value(Front::BLOCK_MASS, $block['mass']) ?>"/>
 
             <label for="txt-block-smiles">SMILES</label>

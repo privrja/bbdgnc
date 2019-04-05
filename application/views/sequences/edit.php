@@ -29,7 +29,7 @@ use Bbdgnc\TransportObjects\SequenceTO;
                    value="<?= set_value(Front::CANVAS_INPUT_FORMULA, $sequence['formula']) ?>"/>
 
             <label for="txt-mass">Monoisotopic Mass</label>
-            <input type="text" id="txt-mass" name="<?= Front::CANVAS_INPUT_MASS ?>"
+            <input type="number" step="any" id="txt-mass" name="<?= Front::CANVAS_INPUT_MASS ?>"
                    value="<?= set_value(Front::CANVAS_INPUT_MASS, $sequence['mass']) ?>"/>
 
             <label for="txt-sequence">Sequence</label>

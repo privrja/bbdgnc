@@ -26,7 +26,7 @@ use Bbdgnc\Finder\Enum\ServerEnum;
         <input type="text" id="txt-block-formula" name="<?= Front::BLOCK_FORMULA ?>" value="<?= $block->formula ?>"/>
 
         <label for="txt-block-mass">Monoisotopic Residue Mass</label>
-        <input type="text" id="txt-block-mass" name="<?= Front::BLOCK_MASS ?>" value="<?= $block->mass ?>"/>
+        <input type="number" step="any" id="txt-block-mass" name="<?= Front::BLOCK_MASS ?>" value="<?= $block->mass ?>"/>
 
         <label for="txt-block-smiles">SMILES</label>
         <input type="text" id="txt-block-smiles" name="<?= Front::BLOCK_SMILE ?>"

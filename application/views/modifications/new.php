@@ -19,7 +19,7 @@ use Bbdgnc\Enum\Front;
                    value="<?= set_value(Front::MODIFICATION_FORMULA) ?>"/>
 
             <label for="txt-mass">Monoisotopic Mass</label>
-            <input type="text" id="txt-mass" name="<?= Front::MODIFICATION_MASS ?>"
+            <input type="number" step="any" id="txt-mass" name="<?= Front::MODIFICATION_MASS ?>"
                    value="<?= set_value(Front::MODIFICATION_MASS) ?>"/>
 
             <label for="chk-nterminal" class="chk">N-terminal</label>
