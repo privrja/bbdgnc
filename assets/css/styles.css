@@ -252,6 +252,10 @@ input[type=number] {
     vertical-align: middle;
 }
 
+.sort {
+    cursor: pointer;
+}
+
 .txt-area {
     height: 16vh;
 }

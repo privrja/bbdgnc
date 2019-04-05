@@ -14,11 +14,11 @@ use Bbdgnc\Finder\Enum\ServerEnum;
         <div class="table t">
             <div class="thead t">
                 <div class="tr t">
-                    <div class="td" onclick="<?= "sort('" . site_url('sequence') . "', 'type', '" . $sort . "')" ?>">Type</div>
-                    <div class="td" onclick="<?= "sort('" . site_url('sequence') . "', 'name', '" . $sort . "')" ?>">Name</div>
-                    <div class="td" onclick="<?= "sort('" . site_url('sequence') . "', 'formula', '" . $sort . "')" ?>">Summary Formula</div>
-                    <div class="td" onclick="<?= "sort('" . site_url('sequence') . "', 'mass', '" . $sort . "')" ?>">Monoisotopic Mass</div>
-                    <div class="td" onclick="<?= "sort('" . site_url('sequence') . "', 'sequence', '" . $sort . "')" ?>">Sequence</div>
+                    <div class="td sort" title="Sort" onclick="<?= "sort('" . site_url('sequence') . "', 'type', '" . $sort . "')" ?>">Type</div>
+                    <div class="td sort" title="Sort" onclick="<?= "sort('" . site_url('sequence') . "', 'name', '" . $sort . "')" ?>">Name</div>
+                    <div class="td sort" title="Sort" onclick="<?= "sort('" . site_url('sequence') . "', 'formula', '" . $sort . "')" ?>">Summary Formula</div>
+                    <div class="td sort" title="Sort" onclick="<?= "sort('" . site_url('sequence') . "', 'mass', '" . $sort . "')" ?>">Monoisotopic Mass</div>
+                    <div class="td sort" title="Sort" onclick="<?= "sort('" . site_url('sequence') . "', 'sequence', '" . $sort . "')" ?>">Sequence</div>
                     <div class="td">N-terminal</div>
                     <div class="td">C-terminal</div>
                     <div class="td">Branch</div>
