@@ -36,9 +36,6 @@ use Bbdgnc\Finder\Enum\ServerEnum;
     <label for="txt-canvas-mass">Monoisotopic Mass</label>
     <input type="number" step="any" id="txt-canvas-mass" class="txt-def" name="<?= Front::CANVAS_INPUT_MASS ?>"
            title="Monoisotopic Mass" value="<?= $mass ?>"/>
-    <label for="txt-canvas-mass-deflection" class="lbl-block">+/-</label>
-    <input type="number" step="any" id="txt-canvas-mass-deflection" class="txt-def" name="<?= Front::CANVAS_INPUT_DEFLECTION ?>"
-           title="Deflection" value="<?= $deflection ?>"/>
 
     <label for="txt-canvas-identifier">Identifier</label>
     <input type=text id="txt-canvas-identifier" class="txt-def" name="<?= Front::CANVAS_INPUT_IDENTIFIER ?>" title="Id"

@@ -249,7 +249,6 @@ input[type=text], .txt-area, select, input[type=number] {
 }
 
 input[type=number] {
-    width: 30%;
     vertical-align: middle;
 }
 
