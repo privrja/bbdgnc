@@ -96,6 +96,7 @@ class Block extends CI_Controller {
             $this->renderNew($data);
             return;
         }
+        $data[Front::ERRORS] = 'Block correctly saved';
         $this->renderNew($data);
     }
 
