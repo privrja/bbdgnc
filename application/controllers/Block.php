@@ -127,25 +127,20 @@ class Block extends CI_Controller {
             return;
         }
 
+        $data[Front::ERRORS] = 'Block properly edited';
         try {
             $blockTO = $this->setupBlock();
             $this->database->update($id, $blockTO);
         } catch (UniqueConstraintException $exception) {
             $data[Front::ERRORS] = self::BLOCK_WITH_THIS_ACRONYM_ALREADY_IN_DATABASE;
-            $this->renderEditForm($data);
-            return;
         } catch (IllegalArgumentException $exception) {
             $data[Front::ERRORS] = $exception->getMessage();
-            $this->renderEditForm($data);
-            return;
         } catch (Exception $exception) {
             $data[Front::ERRORS] = $exception->getMessage();
             Logger::log(LoggerEnum::ERROR, $exception->getTraceAsString());
+        } finally {
             $this->renderEditForm($data);
-            return;
         }
-        $data[Front::ERRORS] = 'Block properly edited';
-        $this->renderEditForm($data);
     }
 
     private function renderEditForm($data) {
