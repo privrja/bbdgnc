@@ -85,22 +85,22 @@ class Block extends CI_Controller {
             $this->renderNew($data);
             return;
         }
-        $blockTO = $this->setupNewBlock($smiles);
+        $data[Front::ERRORS] = 'Block correctly saved';
         try {
+            $blockTO = $this->setupNewBlock($smiles);
             $this->database->insert($blockTO);
+        } catch (IllegalArgumentException $exception) {
+            $data[Front::ERRORS] = $exception->getMessage();
+            Logger::log(LoggerEnum::ERROR, $exception->getTraceAsString());
         } catch (UniqueConstraintException $exception) {
             $data[Front::ERRORS] = self::BLOCK_WITH_THIS_ACRONYM_ALREADY_IN_DATABASE;
             Logger::log(LoggerEnum::WARNING, $exception->getMessage());
-            $this->renderNew($data);
-            return;
         } catch (Exception $exception) {
             $data[Front::ERRORS] = $exception->getMessage();
             Logger::log(LoggerEnum::ERROR, $exception->getTraceAsString());
+        } finally {
             $this->renderNew($data);
-            return;
         }
-        $data[Front::ERRORS] = 'Block correctly saved';
-        $this->renderNew($data);
     }
 
     public function renderNew($data) {
@@ -178,7 +178,7 @@ class Block extends CI_Controller {
         if ($smiles === "") {
             $blockTO->formula = $formula;
             if ($mass === "") {
-                $blockTO->computeMass();
+                $blockTO->mass = FormulaHelper::computeMass($blockTO->formula);
             } else {
                 $blockTO->mass = $mass;
             }
@@ -186,14 +186,14 @@ class Block extends CI_Controller {
             if ($formula === "") {
                 $blockTO->computeFormula();
                 if ($mass === "") {
-                    $blockTO->computeMass();
+                    $blockTO->mass = FormulaHelper::computeMass($blockTO->formula);
                 } else {
                     $blockTO->mass = $mass;
                 }
             } else {
                 $blockTO->formula = $formula;
                 if ($mass === "") {
-                    $blockTO->computeMass();
+                    $blockTO->mass = FormulaHelper::computeMass($blockTO->formula);
                 } else {
                     $blockTO->mass = $mass;
                 }
