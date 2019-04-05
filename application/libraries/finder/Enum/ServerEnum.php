@@ -57,6 +57,8 @@ abstract class ServerEnum {
                 return "https://www.ebi.ac.uk/chebi/searchId.do?chebiId=" . $strIdentifier;
             case self::PDB:
                 return "http://www.rcsb.org/ligand/" . $strIdentifier;
+            case self::NORINE:
+                return "https://bioinfo.lifl.fr/norine/result.jsp?ID=" . $strIdentifier;
         }
     }
 
