@@ -1,6 +1,7 @@
 <?php
 
 use Bbdgnc\Base\CommonConstants;
+use Bbdgnc\Base\FormulaHelper;
 use Bbdgnc\Base\HelperEnum;
 use Bbdgnc\Base\LibraryEnum;
 use Bbdgnc\Base\Logger;
@@ -11,11 +12,13 @@ use Bbdgnc\Database\BlockDatabase;
 use Bbdgnc\Enum\ComputeEnum;
 use Bbdgnc\Enum\Front;
 use Bbdgnc\Enum\LoggerEnum;
+use Bbdgnc\Exception\IllegalArgumentException;
 use Bbdgnc\Exception\UniqueConstraintException;
 use Bbdgnc\TransportObjects\BlockTO;
 
 class Block extends CI_Controller {
 
+    const BLOCK_WITH_THIS_ACRONYM_ALREADY_IN_DATABASE = "Block with this acronym already in database";
     private $errors = "";
 
     private $database;
@@ -38,7 +41,7 @@ class Block extends CI_Controller {
         Front::addLikeFilter(BlockTO::RESIDUE, BlockTO::TABLE_NAME, $query, $this);
         Front::addLikeFilter(BlockTO::LOSSES, BlockTO::TABLE_NAME, $query, $this);
         Front::addLikeFilter(BlockTO::SMILES, BlockTO::TABLE_NAME, $query, $this);
-        Front::addBetweenFilter(BlockTO::MASS,BlockTO::TABLE_NAME, $query, $this);
+        Front::addBetweenFilter(BlockTO::MASS, BlockTO::TABLE_NAME, $query, $this);
         $sort = [];
         $sort[] = Front::addSortable(BlockTO::NAME, BlockTO::TABLE_NAME, $query, $this);
         $sort[] = Front::addSortable(BlockTO::ACRONYM, BlockTO::TABLE_NAME, $query, $this);
@@ -71,7 +74,7 @@ class Block extends CI_Controller {
 
     public function new() {
         $data = [];
-        $this->form_validation->set_rules(Front::BLOCK_NAME ,'Name', Front::REQUIRED);
+        $this->form_validation->set_rules(Front::BLOCK_NAME, 'Name', Front::REQUIRED);
         $this->form_validation->set_rules(Front::BLOCK_ACRONYM, 'Acronym', Front::REQUIRED);
         $smiles = $this->input->post(Front::BLOCK_SMILES);
         if (!isset($smiles) || $smiles === "") {
@@ -86,7 +89,7 @@ class Block extends CI_Controller {
         try {
             $this->database->insert($blockTO);
         } catch (UniqueConstraintException $exception) {
-            $data[Front::ERRORS] = "Block with this acronym already in database";
+            $data[Front::ERRORS] = self::BLOCK_WITH_THIS_ACRONYM_ALREADY_IN_DATABASE;
             Logger::log(LoggerEnum::WARNING, $exception->getMessage());
             $this->renderNew($data);
             return;
@@ -123,15 +126,25 @@ class Block extends CI_Controller {
             $this->renderEditForm($data);
             return;
         }
-        $blockTO = $this->setupBlock();
+
         try {
+            $blockTO = $this->setupBlock();
             $this->database->update($id, $blockTO);
+        } catch (UniqueConstraintException $exception) {
+            $data[Front::ERRORS] = self::BLOCK_WITH_THIS_ACRONYM_ALREADY_IN_DATABASE;
+            $this->renderEditForm($data);
+            return;
+        } catch (IllegalArgumentException $exception) {
+            $data[Front::ERRORS] = $exception->getMessage();
+            $this->renderEditForm($data);
+            return;
         } catch (Exception $exception) {
             $data[Front::ERRORS] = $exception->getMessage();
             Logger::log(LoggerEnum::ERROR, $exception->getTraceAsString());
             $this->renderEditForm($data);
             return;
         }
+        $data[Front::ERRORS] = 'Block properly edited';
         $this->renderEditForm($data);
     }
 
@@ -147,11 +160,16 @@ class Block extends CI_Controller {
             $this->input->post(Front::BLOCK_ACRONYM),
             $this->input->post(Front::BLOCK_SMILES),
             ComputeEnum::UNIQUE_SMILES);
-        $blockTO->formula = $this->input->post(Front::BLOCK_FORMULA);
-        $blockTO->mass = $this->input->post(Front::BLOCK_MASS);
+        $formula = $this->input->post(Front::BLOCK_FORMULA);
+        $mass = $this->input->post(Front::BLOCK_MASS);
+        $blockTO->formula = $formula;
         $blockTO->losses = $this->input->post(Front::BLOCK_NEUTRAL_LOSSES);
+        $blockTO->mass = $mass;
         $blockTO->database = $this->input->post(Front::BLOCK_REFERENCE_SERVER);
         $blockTO->identifier = $this->input->post(Front::BLOCK_IDENTIFIER);
+        if (isset($formula) && $formula !== '' && (!isset($mass) || $mass === '')) {
+            $blockTO->mass = FormulaHelper::computeMass($formula);
+        }
         return $blockTO;
     }
 
