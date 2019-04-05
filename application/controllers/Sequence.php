@@ -12,6 +12,7 @@ use Bbdgnc\Database\SequenceDatabase;
 use Bbdgnc\Enum\Front;
 use Bbdgnc\Enum\LoggerEnum;
 use Bbdgnc\Enum\ModificationHelperTypeEnum;
+use Bbdgnc\Exception\UniqueConstraintException;
 use Bbdgnc\TransportObjects\SequenceTO;
 
 class Sequence extends CI_Controller {
@@ -90,10 +91,14 @@ class Sequence extends CI_Controller {
         $sequenceTO = $this->createSequence();
         try {
             $this->database->insert($sequenceTO);
+        } catch (UniqueConstraintException $exception) {
+            $data[Front::ERRORS] = 'Sequence with that name already in database!';
+            $this->renderNew($data);
+            return;
         } catch (Exception $exception) {
             $data[Front::ERRORS] = $exception->getMessage();
             Logger::log(LoggerEnum::ERROR, $exception->getTraceAsString());
-            $this->renderEdit($data);
+            $this->renderNew($data);
             return;
         }
         $data[Front::ERRORS] = 'Sequence properly saved';

@@ -10,6 +10,7 @@ use Bbdgnc\Base\Query;
 use Bbdgnc\Database\ModificationDatabase;
 use Bbdgnc\Enum\Front;
 use Bbdgnc\Enum\LoggerEnum;
+use Bbdgnc\Exception\UniqueConstraintException;
 use Bbdgnc\TransportObjects\ModificationTO;
 
 class Modification extends CI_Controller {
@@ -70,12 +71,11 @@ class Modification extends CI_Controller {
     }
 
     public function new() {
-        $data = [];
         $this->form_validation->set_rules(Front::MODIFICATION_NAME, 'Name', Front::REQUIRED);
         $this->form_validation->set_rules(Front::MODIFICATION_FORMULA, 'Formula', Front::REQUIRED);
         if ($this->form_validation->run() === false) {
             $data[Front::ERRORS] = $this->errors;
-            $this->renderNew();
+            $this->renderNew($data);
             return;
         }
 
@@ -91,20 +91,24 @@ class Modification extends CI_Controller {
 
         try {
             $this->database->insert($modificationTO);
+        } catch (UniqueConstraintException $exception) {
+            $data[Front::ERRORS] = 'Modification with that name already in database!';
+            $this->renderNew($data);
+            return;
         } catch (Exception $exception) {
             $data[Front::ERRORS] = $exception->getMessage();
             Logger::log(LoggerEnum::ERROR, $exception->getTraceAsString());
-            $this->renderNew();
+            $this->renderNew($data);
             return;
         }
 
         $data[Front::ERRORS] = 'Modification properly saved';
-        $this->renderNew();
+        $this->renderNew($data);
     }
 
-    private function renderNew() {
+    private function renderNew($data = []) {
         $this->load->view(Front::TEMPLATES_HEADER);
-        $this->load->view('modifications/new');
+        $this->load->view('modifications/new', $data);
         $this->load->view(Front::TEMPLATES_FOOTER);
     }
 
