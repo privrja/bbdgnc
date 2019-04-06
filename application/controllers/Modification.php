@@ -1,6 +1,7 @@
 <?php
 
 use Bbdgnc\Base\CommonConstants;
+use Bbdgnc\Base\FormulaHelper;
 use Bbdgnc\Base\HelperEnum;
 use Bbdgnc\Base\LibraryEnum;
 use Bbdgnc\Base\Logger;
@@ -84,13 +85,17 @@ class Modification extends CI_Controller {
         $nTerminal = $this->setupTerminal($this->input->post(Front::MODIFICATION_TERMINAL_N));
 
 
+        $data[Front::ERRORS] = 'Modification properly saved';
         try {
-            $data[Front::ERRORS] = 'Modification properly saved';
+            $formula = $this->input->post(Front::MODIFICATION_FORMULA);
+            $tmpMass = FormulaHelper::computeMass($formula);
+            $mass = $this->input->post(Front::MODIFICATION_MASS);
+            if (!isset($mass) || $mass === "") {
+                $mass = $tmpMass;
+            }
             $modificationTO = new ModificationTO(
                 $this->input->post(Front::MODIFICATION_NAME),
-                $this->input->post(Front::MODIFICATION_FORMULA),
-                $this->input->post(Front::MODIFICATION_MASS),
-                $cTerminal, $nTerminal
+                $formula, $mass, $cTerminal, $nTerminal
             );
             $this->database->insert($modificationTO);
         } catch (IllegalArgumentException $exception) {
@@ -129,11 +134,15 @@ class Modification extends CI_Controller {
 
         $data[Front::ERRORS] = 'Modification properly edited';
         try {
+            $formula = $this->input->post(Front::MODIFICATION_FORMULA);
+            $tmpMass = FormulaHelper::computeMass($formula);
+            $mass = $this->input->post(Front::MODIFICATION_MASS);
+            if (!isset($mass) || $mass === "") {
+                $mass = $tmpMass;
+            }
             $modificationTO = new ModificationTO(
                 $this->input->post(Front::MODIFICATION_NAME),
-                $this->input->post(Front::MODIFICATION_FORMULA),
-                $this->input->post(Front::MODIFICATION_MASS),
-                $cTerminal, $nTerminal
+                $formula, $mass, $cTerminal, $nTerminal
             );
             $this->database->update($id, $modificationTO);
             $data[ModificationTO::TABLE_NAME] = $modificationTO->asEntity();
