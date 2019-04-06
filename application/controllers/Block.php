@@ -14,6 +14,7 @@ use Bbdgnc\Enum\Front;
 use Bbdgnc\Enum\LoggerEnum;
 use Bbdgnc\Exception\IllegalArgumentException;
 use Bbdgnc\Exception\UniqueConstraintException;
+use Bbdgnc\Smiles\Enum\LossesEnum;
 use Bbdgnc\TransportObjects\BlockTO;
 
 class Block extends CI_Controller {
@@ -180,26 +181,14 @@ class Block extends CI_Controller {
 
         if ($smiles === "") {
             $blockTO->formula = $formula;
-            if ($mass === "") {
-                $blockTO->mass = FormulaHelper::computeMass($blockTO->formula);
-            } else {
-                $blockTO->mass = $mass;
-            }
+            $this->setupMass($blockTO, $mass);
         } else {
             if ($formula === "") {
-                $blockTO->computeFormula();
-                if ($mass === "") {
-                    $blockTO->mass = FormulaHelper::computeMass($blockTO->formula);
-                } else {
-                    $blockTO->mass = $mass;
-                }
+                $blockTO->computeFormula('', LossesEnum::NONE);
+                $this->setupMass($blockTO, $mass);
             } else {
                 $blockTO->formula = $formula;
-                if ($mass === "") {
-                    $blockTO->mass = FormulaHelper::computeMass($blockTO->formula);
-                } else {
-                    $blockTO->mass = $mass;
-                }
+                $this->setupMass($blockTO, $mass);
             }
             $blockTO->computeUniqueSmiles();
         }
@@ -207,6 +196,15 @@ class Block extends CI_Controller {
         $blockTO->database = $this->input->post(Front::BLOCK_REFERENCE_SERVER);
         $blockTO->identifier = $this->input->post(Front::BLOCK_REFERENCE);
         return $blockTO;
+    }
+
+    private function setupMass($blockTO, $mass) {
+        $tmpMass = FormulaHelper::computeMass($blockTO->formula);
+        if ($mass === "") {
+            $blockTO->mass = $tmpMass;
+        } else {
+            $blockTO->mass = $mass;
+        }
     }
 
     public function merge($page = 0) {

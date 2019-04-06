@@ -93,11 +93,11 @@ class BlockTO implements IEntity {
         $this->computeMass();
     }
 
-    public function computeFormula($strFormula = '') {
+    public function computeFormula($strFormula = '', $losses = LossesEnum::H2O) {
         try {
-            $this->formula = FormulaHelper::formulaFromSmiles($this->smiles, LossesEnum::H2O);
+            $this->formula = FormulaHelper::formulaFromSmiles($this->smiles, $losses);
         } catch (IllegalArgumentException $e) {
-            $this->formula = FormulaHelper::formulaWithLosses($strFormula, LossesEnum::H2O);
+            $this->formula = FormulaHelper::formulaWithLosses($strFormula, $losses);
         }
     }
 
