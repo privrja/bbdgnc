@@ -152,18 +152,21 @@ class Sequence extends CI_Controller {
         $id = $this->input->post(self::SEQUENCE_ID);
         $data[SequenceTO::TABLE_NAME] = $this->database->findById($id);
 
+        $savedModifications = false;
         $modificationDatabase->startTransaction();
         $branchChar = ModificationHelperTypeEnum::startModification($data[SequenceTO::TABLE_NAME][SequenceTO::TYPE]);
-        for ($index = 0; $index < 3; ++$index) {
+        while (!ModificationHelperTypeEnum::isEnd($branchChar)) {
+            $savedModifications = true;
             $this->saveModification($branchChar, $id);
             $branchChar = ModificationHelperTypeEnum::changeBranchChar($branchChar, $data[SequenceTO::TABLE_NAME][SequenceTO::TYPE]);
-            if (ModificationHelperTypeEnum::isEnd($branchChar)) {
-                break;
-            }
         }
         $modificationDatabase->endTransaction();
         $data = $this->database->findSequenceDetail($id);
-        $data[Front::ERRORS] = $this->errors;
+        if ($savedModifications) {
+            $data[Front::ERRORS] = 'Modification saved';
+        } else {
+            $data[Front::ERRORS] = 'Nothing to save!';
+        }
         $data['modifications'] = $modificationDatabase->findAllSelect();
         $this->renderEdit($data);
     }
