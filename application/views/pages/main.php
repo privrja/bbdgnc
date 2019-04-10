@@ -42,7 +42,7 @@ use Bbdgnc\Finder\Enum\ServerEnum;
            value="<?= $identifier ?>"/>
 
     <input type="submit" id="btn-canvas-find" class="btn-same" name="find" value="Find"/>
-    <button type="button" id="btn-canvas-edit" class="btn-same" onclick="editSequenceSmiles()">Edit</button>
+    <button type="button" id="btn-canvas-edit" class="btn-same" onclick="editSequenceSmiles('<?= site_url('land/smiles') ?>')">Edit</button>
     <button type="button" id="button-canvas-easy-smile" class="btn-same" onclick="easy()">Generic SMILES</button>
     <button type="button" id="btn-canvas-disintegrate" class="btn-same" name="blocks" value="Blocks"
             onclick="disintegrate()">Building Blocks

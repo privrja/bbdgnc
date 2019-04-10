@@ -21,7 +21,6 @@ use Bbdgnc\Enum\Front;
 <input type="hidden" name="<?= Front::CANVAS_INPUT_FORMULA ?>" value="<?= $formula ?>"/>
 <input type="hidden" name="<?= Front::CANVAS_INPUT_MASS ?>" value="<?= $mass ?>"/>
 <input type="hidden" name="<?= Front::CANVAS_INPUT_IDENTIFIER ?>" value="<?= $identifier ?>"/>
-<input type="hidden" name="<?= Front::DECAYS ?>" value="<?= $decays ?>"/>
 
 </form>
 

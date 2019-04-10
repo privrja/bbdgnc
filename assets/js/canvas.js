@@ -72,6 +72,7 @@ if (canvasRef) {
 
 function setupDecaySource() {
     let source = JSON.parse('[' + document.getElementById('hdn-decays').value + ']');
+    console.log(source);
     if (typeof source !== 'undefined' && source.length > 0) {
         options.drawDecayPoints = 2;
         options.decaySource = source;
@@ -81,6 +82,8 @@ function setupDecaySource() {
 
 function updateOptions() {
     smilesDrawer = new SmilesDrawer.Drawer(options);
+    console.log("OIPTIONS");
+    console.log(options);
     drawSmile();
 }
 
@@ -192,6 +195,7 @@ function getSmilesDrawer() {
     try {
         return new SmilesDrawer.Drawer(options);
     } catch (e) {
+        console.log(e);
     }
 }
 
@@ -204,6 +208,7 @@ function getSmallSmilesDrawer() {
             compactDrawing: false
         });
     } catch (e) {
+        console.log(e);
     }
 }
 
@@ -216,6 +221,7 @@ function getLargeSmilesDrawer() {
             compactDrawing: false
         });
     } catch (e) {
+        console.log(e);
     }
 }
 
@@ -485,7 +491,8 @@ function lightMode() {
 
 /** draw smiles to main canvas */
 function drawSmile() {
-    if(!decaysNoRedraw) {
+    console.log("DRAW SMILES");
+    if (!decaysNoRedraw) {
         decaysNoRedraw = true;
     } else {
         document.getElementById('hdn-decays').value = '';
@@ -497,11 +504,14 @@ function drawSmile() {
     SmilesDrawer.parse(strSmiles, function (tree) {
         // Draw to the canvas
         activateScreenMode();
+        console.log("XXX");
         smilesDrawer.draw(tree, CANVAS_ID, DEFAULT_SCREEN_MODE, false);
+        console.log("YYY");
         // document.getElementById(TXT_CANVAS_FLE).value = smilesDrawer.getMolecularFormula();
         canvasRef.style.width = '100%';
         canvasRef.style.height = '100%';
     });
+    console.log("ZZZ");
 }
 
 /**
@@ -610,8 +620,8 @@ function editorBlock(identifier) {
     redirectWithData("form-block-edit" + identifier, data);
 }
 
-function editSequenceSmiles() {
-    let data = {edit: 'Sequence'};
+function editSequenceSmiles(url) {
+    let data = {};
     try {
         data.database = document.getElementById("sel-canvas-database").value;
         data.search = document.getElementById("sel-canvas-search").value;
@@ -620,33 +630,11 @@ function editSequenceSmiles() {
         data.formula = document.getElementById("txt-canvas-fle").value;
         data.mass = document.getElementById("txt-canvas-mass").value;
         data.identifier = document.getElementById("txt-canvas-identifier").value;
-        data.sequence = document.getElementById("txt-sequence").value;
-        data.sequenceType = document.getElementById("sel-sequence-type").value;
-        data.decays = document.getElementById("hdn-block-decays").value;
-        data.nSelect = document.getElementById("sel-n-modification").value;
-        data.nModification = document.getElementById("txt-n-modification").value;
-        data.nFormula = document.getElementById("txt-n-formula").value;
-        data.nMass = document.getElementById("txt-n-mass").value;
-        data.nTerminalN = document.getElementById("chk-n-nterminal").checked;
-        data.nTerminalC = document.getElementById("chk-n-cterminal").checked;
-        data.cSelect = document.getElementById("sel-c-modification").value;
-        data.cModification = document.getElementById("txt-c-modification").value;
-        data.cFormula = document.getElementById("txt-c-formula").value;
-        data.cMass = document.getElementById("txt-c-mass").value;
-        data.cTerminalN = document.getElementById("chk-c-nterminal").checked;
-        data.cTerminalC = document.getElementById("chk-c-cterminal").checked;
-        data.bSelect = document.getElementById("sel-b-modification").value;
-        data.bModification = document.getElementById("txt-b-modification").value;
-        data.bFormula = document.getElementById("txt-b-formula").value;
-        data.bMass = document.getElementById("txt-b-mass").value;
-        data.bTerminalN = document.getElementById("chk-b-nterminal").checked;
-        data.bTerminalC = document.getElementById("chk-b-cterminal").checked
     } catch (e) {
-
+        console.log(e);
     } finally {
-        redirectOnlyWithData(data);
+        redirectOnlyWithData(url, data);
     }
-
 }
 
 function modificationSelect(event) {
@@ -692,11 +680,10 @@ function redirectWithData(formId, data) {
     form.submit();
 }
 
-function redirectOnlyWithData(data) {
+function redirectOnlyWithData(url, data) {
     let form = document.createElement('form');
-    form.method='post';
-    form.action='land/smiles';
-    console.log(document.getElementsByTagName("BODY")[0]);
+    form.method = 'post';
+    form.action = url;
     document.getElementsByTagName('BODY')[0].appendChild(form);
     for (let name in data) {
         let input = document.createElement('input');
