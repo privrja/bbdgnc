@@ -46,10 +46,6 @@ use Bbdgnc\TransportObjects\SequenceTO;
            value="<?= set_value(Front::CANVAS_INPUT_IDENTIFIER, $sequence[SequenceTO::IDENTIFIER]) ?>"/>
 
     <input type="submit" id="btn-canvas-find" class="btn-same" name="find" value="Find"/>
-    <button type="button" id="btn-canvas-update" class="btn-same"
-            onclick="window.location.href='<?= ServerEnum::getLink($sequence[SequenceTO::DATABASE], $sequence[SequenceTO::IDENTIFIER]) ?>'">
-        Reference
-    </button>
     <button type="button" id="button-canvas-easy-smile" class="btn-same" onclick="easy()">Generic SMILES</button>
     <button type="button" id="btn-canvas-disintegrate" class="btn-same" name="blocks" value="Blocks"
             onclick="disintegrate()">Building Blocks
@@ -57,6 +53,10 @@ use Bbdgnc\TransportObjects\SequenceTO;
     <button type="submit" id="btn-canvas-load" class="btn-same" name="load" value="Load">Unique SMILES</button>
     <button type="button" id="btn-canvas-edit" class="btn-same"
             onclick="window.location.href = '<?= site_url('sequence/edit/' . $sequence['id']) ?>'">Edit
+    </button>
+    <button type="button" id="btn-canvas-update" class="btn-same"
+            onclick="window.location.href='<?= ServerEnum::getLink($sequence[SequenceTO::DATABASE], $sequence[SequenceTO::IDENTIFIER]) ?>'">
+        Reference
     </button>
     <input type="hidden" id="hdn-decays" name="<?= Front::DECAYS ?>"
            value="<?= set_value(Front::DECAYS, $sequence[SequenceTO::DECAYS]) ?>"/>
