@@ -58,8 +58,10 @@ class Land extends CI_Controller {
     }
 
     private function getData() {
+        $smiles = $this->input->post(Front::CANVAS_INPUT_SMILE);
+        $smiles = isset($smiles) && $smiles != '' ?  $smiles : '';
         return array(
-            Front::CANVAS_INPUT_NAME => "", Front::CANVAS_INPUT_SMILE => "",
+            Front::CANVAS_INPUT_NAME => "", Front::CANVAS_INPUT_SMILE => $smiles,
             Front::CANVAS_INPUT_FORMULA => "", Front::CANVAS_INPUT_MASS => "",
             Front::CANVAS_INPUT_DEFLECTION => "", Front::CANVAS_INPUT_IDENTIFIER => "",
             Front::ERRORS => ""
@@ -478,7 +480,7 @@ class Land extends CI_Controller {
         return $arViewData;
     }
 
-    public function sequenceEdit() {
+    public function smiles() {
         $data = $this->getLastData();
         $this->load->view(Front::TEMPLATES_HEADER);
         $this->load->view('editor/editor', $data);

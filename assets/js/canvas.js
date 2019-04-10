@@ -612,34 +612,40 @@ function editorBlock(identifier) {
 
 function editSequenceSmiles() {
     let data = {edit: 'Sequence'};
-    data.database = document.getElementById("sel-canvas-database").value;
-    data.search = document.getElementById("sel-canvas-search").value;
-    data.name = document.getElementById("txt-canvas-name").value;
-    data.smile = document.getElementById("txt-canvas-smile").value;
-    data.formula = document.getElementById("txt-canvas-fle").value;
-    data.mass = document.getElementById("txt-canvas-mass").value;
-    data.identifier = document.getElementById("txt-canvas-identifier").value;
-    data.sequence = document.getElementById("txt-sequence").value;
-    data.sequenceType = document.getElementById("sel-sequence-type").value;
-    data.decays = document.getElementById("hdn-block-decays").value;
-    data.nSelect = document.getElementById("sel-n-modification").value;
-    data.nModification = document.getElementById("txt-n-modification").value;
-    data.nFormula = document.getElementById("txt-n-formula").value;
-    data.nMass = document.getElementById("txt-n-mass").value;
-    data.nTerminalN = document.getElementById("chk-n-nterminal").checked;
-    data.nTerminalC = document.getElementById("chk-n-cterminal").checked;
-    data.cSelect = document.getElementById("sel-c-modification").value;
-    data.cModification = document.getElementById("txt-c-modification").value;
-    data.cFormula = document.getElementById("txt-c-formula").value;
-    data.cMass = document.getElementById("txt-c-mass").value;
-    data.cTerminalN = document.getElementById("chk-c-nterminal").checked;
-    data.cTerminalC = document.getElementById("chk-c-cterminal").checked;
-    data.bSelect = document.getElementById("sel-b-modification").value;
-    data.bModification = document.getElementById("txt-b-modification").value;
-    data.bFormula = document.getElementById("txt-b-formula").value;
-    data.bMass = document.getElementById("txt-b-mass").value;
-    data.bTerminalN = document.getElementById("chk-b-nterminal").checked;
-    data.bTerminalC = document.getElementById("chk-b-cterminal").checked;
+    try {
+        data.database = document.getElementById("sel-canvas-database").value;
+        data.search = document.getElementById("sel-canvas-search").value;
+        data.name = document.getElementById("txt-canvas-name").value;
+        data.smile = document.getElementById("txt-canvas-smile").value;
+        data.formula = document.getElementById("txt-canvas-fle").value;
+        data.mass = document.getElementById("txt-canvas-mass").value;
+        data.identifier = document.getElementById("txt-canvas-identifier").value;
+        data.sequence = document.getElementById("txt-sequence").value;
+        data.sequenceType = document.getElementById("sel-sequence-type").value;
+        data.decays = document.getElementById("hdn-block-decays").value;
+        data.nSelect = document.getElementById("sel-n-modification").value;
+        data.nModification = document.getElementById("txt-n-modification").value;
+        data.nFormula = document.getElementById("txt-n-formula").value;
+        data.nMass = document.getElementById("txt-n-mass").value;
+        data.nTerminalN = document.getElementById("chk-n-nterminal").checked;
+        data.nTerminalC = document.getElementById("chk-n-cterminal").checked;
+        data.cSelect = document.getElementById("sel-c-modification").value;
+        data.cModification = document.getElementById("txt-c-modification").value;
+        data.cFormula = document.getElementById("txt-c-formula").value;
+        data.cMass = document.getElementById("txt-c-mass").value;
+        data.cTerminalN = document.getElementById("chk-c-nterminal").checked;
+        data.cTerminalC = document.getElementById("chk-c-cterminal").checked;
+        data.bSelect = document.getElementById("sel-b-modification").value;
+        data.bModification = document.getElementById("txt-b-modification").value;
+        data.bFormula = document.getElementById("txt-b-formula").value;
+        data.bMass = document.getElementById("txt-b-mass").value;
+        data.bTerminalN = document.getElementById("chk-b-nterminal").checked;
+        data.bTerminalC = document.getElementById("chk-b-cterminal").checked
+    } catch (e) {
+
+    } finally {
+        redirectOnlyWithData(data);
+    }
 
 }
 
@@ -676,6 +682,22 @@ function displayModification(id, display) {
 function redirectWithData(formId, data) {
     let form = document.getElementById(formId);
     form.method = 'post';
+    for (let name in data) {
+        let input = document.createElement('input');
+        input.type = 'hidden';
+        input.name = name;
+        input.value = data[name];
+        form.appendChild(input);
+    }
+    form.submit();
+}
+
+function redirectOnlyWithData(data) {
+    let form = document.createElement('form');
+    form.method='post';
+    form.action='land/smiles';
+    console.log(document.getElementsByTagName("BODY")[0]);
+    document.getElementsByTagName('BODY')[0].appendChild(form);
     for (let name in data) {
         let input = document.createElement('input');
         input.type = 'hidden';
