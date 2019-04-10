@@ -478,6 +478,13 @@ class Land extends CI_Controller {
         return $arViewData;
     }
 
+    public function sequenceEdit() {
+        $data = $this->getLastData();
+        $this->load->view(Front::TEMPLATES_HEADER);
+        $this->load->view('editor/editor', $data);
+        $this->load->view(Front::TEMPLATES_FOOTER);
+    }
+
     /**
      * Find by - specific param
      * @param int $intDatabase where to search
