@@ -24,6 +24,7 @@ const TXT_BRANCH_FORMULA = "txt-b-formula";
 const TXT_BRANCH_MASS = "txt-b-mass";
 const CHK_BRANCH_NTERMINAL = "chk-b-nterminal";
 const CHK_BRANCH_CTERMINAL = "chk-b-cterminal";
+const TXT_CANVAS_FLE_ID = 'txt-canvas-fle';
 const AMPERSAND = '&';
 
 const CAPTION_RESULTS = "#h-results";
@@ -72,7 +73,6 @@ if (canvasRef) {
 
 function setupDecaySource() {
     let source = JSON.parse('[' + document.getElementById('hdn-decays').value + ']');
-    console.log(source);
     if (typeof source !== 'undefined' && source.length > 0) {
         options.drawDecayPoints = 2;
         options.decaySource = source;
@@ -82,8 +82,6 @@ function setupDecaySource() {
 
 function updateOptions() {
     smilesDrawer = new SmilesDrawer.Drawer(options);
-    console.log("OIPTIONS");
-    console.log(options);
     drawSmile();
 }
 
@@ -491,7 +489,6 @@ function lightMode() {
 
 /** draw smiles to main canvas */
 function drawSmile() {
-    console.log("DRAW SMILES");
     if (!decaysNoRedraw) {
         decaysNoRedraw = true;
     } else {
@@ -504,14 +501,12 @@ function drawSmile() {
     SmilesDrawer.parse(strSmiles, function (tree) {
         // Draw to the canvas
         activateScreenMode();
-        console.log("XXX");
         smilesDrawer.draw(tree, CANVAS_ID, DEFAULT_SCREEN_MODE, false);
         console.log("YYY");
-        // document.getElementById(TXT_CANVAS_FLE).value = smilesDrawer.getMolecularFormula();
+        document.getElementById(TXT_CANVAS_FLE_ID).value = smilesDrawer.getMolecularFormula();
         canvasRef.style.width = '100%';
         canvasRef.style.height = '100%';
     });
-    console.log("ZZZ");
 }
 
 /**
