@@ -585,7 +585,6 @@ function editorBlock(identifier) {
     data.smile = document.getElementById("txt-canvas-smile").value;
     data.formula = document.getElementById("txt-canvas-fle").value;
     data.mass = document.getElementById("txt-canvas-mass").value;
-    data.deflection = document.getElementById("txt-canvas-mass-deflection").value;
     data.identifier = document.getElementById("txt-canvas-identifier").value;
     data.sequence = document.getElementById("txt-sequence").value;
     data.sequenceType = document.getElementById("sel-sequence-type").value;
@@ -608,7 +607,7 @@ function editorBlock(identifier) {
     data.bMass = document.getElementById("txt-b-mass").value;
     data.bTerminalN = document.getElementById("chk-b-nterminal").checked;
     data.bTerminalC = document.getElementById("chk-b-cterminal").checked;
-    redirectWithData("form-block-edit" + identifier, data);
+    // redirectWithData("form-block-edit" + identifier, data);
 }
 
 function modificationSelect(event) {
