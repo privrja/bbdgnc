@@ -91,7 +91,7 @@ document.addEventListener('DOMContentLoaded', function () {
     window.addEventListener('load', finder);
     if (document.getElementById(TXT_SMILE_ID)) {
         window.addEventListener('load', setupDecaySource);
-        document.getElementById(TXT_SMILE_ID).addEventListener('input', drawSmile);
+        document.getElementById(TXT_SMILE_ID).addEventListener('input', changeSmilesInput);
     }
 
     if (canvasRef) {
@@ -487,6 +487,12 @@ function lightMode() {
     document.getElementById(CANVAS_ID).style.backgroundColor = COLOR_WHITE;
 }
 
+function changeSmilesInput() {
+    options.drawDecayPoints = 1;
+    options.decaySource = [];
+    updateOptions();
+}
+
 /** draw smiles to main canvas */
 function drawSmile() {
     if (!decaysNoRedraw) {
@@ -502,7 +508,6 @@ function drawSmile() {
         // Draw to the canvas
         activateScreenMode();
         smilesDrawer.draw(tree, CANVAS_ID, DEFAULT_SCREEN_MODE, false);
-        console.log("YYY");
         document.getElementById(TXT_CANVAS_FLE_ID).value = smilesDrawer.getMolecularFormula();
         canvasRef.style.width = '100%';
         canvasRef.style.height = '100%';
