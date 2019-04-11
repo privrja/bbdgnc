@@ -33,6 +33,11 @@
                 &copy;2018 - <?= date("Y") ?> Jan Přívratský
             </li>
         </ul>
+        <ul class="footer footer-right">
+            <li class="footer">
+                By using this site you aggre with using cookies
+            </li>
+        </ul>
     </nav>
 </footer>
 <script src="<?= AssetHelper::jsUrl() . "canvas.js" ?>"></script>
