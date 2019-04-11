@@ -212,9 +212,6 @@ class Sequence extends CI_Controller {
         $sequenceTO->sequence = $this->input->post(Front::SEQUENCE);
         $sequenceTO->sequenceType = $this->input->post(Front::SEQUENCE_TYPE);
         $sequenceTO->decays = $this->input->post(Front::DECAYS);
-//        if (isset($formula) && $formula !== '' && (!isset($mass) || $mass === '')) {
-//            $sequenceTO->mass = FormulaHelper::computeMass($formula);
-//        }
         return $sequenceTO;
     }
 
