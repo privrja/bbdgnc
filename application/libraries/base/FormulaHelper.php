@@ -151,4 +151,14 @@ class FormulaHelper {
         return array_merge($stack, $text);
     }
 
+
+    public static function computeMassIfMassNotSet($mass, $formula, $TO) {
+        if ($mass === "") {
+            $TO->mass = FormulaHelper::computeMass($formula);
+        } else {
+            $TO->mass = $mass;
+        }
+    }
+
+
 }

@@ -199,28 +199,18 @@ class Sequence extends CI_Controller {
         $sequenceTO->smiles = $smiles;
         $formula = $this->input->post(Front::CANVAS_INPUT_FORMULA);
         $mass = $this->input->post(Front::CANVAS_INPUT_MASS);
-        $sequenceTO->formula = $formula;
-        $sequenceTO->mass = $mass;
         if ($formula === "") {
             $sequenceTO->formula = FormulaHelper::formulaFromSmiles($smiles);
-            $this->computeMassIfMassNotSet($mass, $sequenceTO->formula, $sequenceTO);
+            FormulaHelper::computeMassIfMassNotSet($mass, $sequenceTO->formula, $sequenceTO);
         } else {
             $sequenceTO->formula = $formula;
-            $this->computeMassIfMassNotSet($mass, $sequenceTO->formula, $sequenceTO);
+            FormulaHelper::computeMassIfMassNotSet($mass, $sequenceTO->formula, $sequenceTO);
         }
         $sequenceTO->identifier = $this->input->post(Front::CANVAS_INPUT_IDENTIFIER);
         $sequenceTO->sequence = $this->input->post(Front::SEQUENCE);
         $sequenceTO->sequenceType = $this->input->post(Front::SEQUENCE_TYPE);
         $sequenceTO->decays = $this->input->post(Front::DECAYS);
         return $sequenceTO;
-    }
-
-    private function computeMassIfMassNotSet($mass, $formula, $sequenceTO) {
-        if ($mass === "") {
-            $sequenceTO->mass = FormulaHelper::computeMass($formula);
-        } else {
-            $sequenceTO->mass = $mass;
-        }
     }
 
     private function createSequence() {

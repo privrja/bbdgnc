@@ -121,7 +121,10 @@ class Block extends CI_Controller {
         $data[BlockTO::TABLE_NAME] = $this->database->findById($id);
         $this->form_validation->set_rules(Front::BLOCK_NAME, 'Name', Front::REQUIRED);
         $this->form_validation->set_rules(Front::BLOCK_ACRONYM, 'Acronym', Front::REQUIRED);
-        $this->form_validation->set_rules(Front::BLOCK_FORMULA, 'Formula', Front::REQUIRED);
+        $smiles = $this->input->post(Front::BLOCK_SMILES);
+        if (!isset($smiles) || $smiles === "") {
+            $this->form_validation->set_rules(Front::BLOCK_FORMULA, 'Formula', Front::REQUIRED);
+        }
         if ($this->form_validation->run() === false) {
             $data[Front::ERRORS] = $this->errors;
             $this->renderEditForm($data);
@@ -154,21 +157,24 @@ class Block extends CI_Controller {
     }
 
     private function setupBlock() {
+        $formula = $this->input->post(Front::BLOCK_FORMULA);
+        $mass = $this->input->post(Front::BLOCK_MASS);
+        $smiles = $this->input->post(Front::BLOCK_SMILES);
         $blockTO = new BlockTO(0,
             $this->input->post(Front::BLOCK_NAME),
             $this->input->post(Front::BLOCK_ACRONYM),
-            $this->input->post(Front::BLOCK_SMILES),
+            $smiles,
             ComputeEnum::UNIQUE_SMILES);
-        $formula = $this->input->post(Front::BLOCK_FORMULA);
-        $mass = $this->input->post(Front::BLOCK_MASS);
-        $blockTO->formula = $formula;
+        if ($formula === "") {
+            $blockTO->formula = FormulaHelper::formulaFromSmiles($smiles);
+            FormulaHelper::computeMassIfMassNotSet($mass, $blockTO->formula, $blockTO);
+        } else {
+            $blockTO->formula = $formula;
+            FormulaHelper::computeMassIfMassNotSet($mass, $blockTO->formula, $blockTO);
+        }
         $blockTO->losses = $this->input->post(Front::BLOCK_NEUTRAL_LOSSES);
-        $blockTO->mass = $mass;
         $blockTO->database = $this->input->post(Front::BLOCK_REFERENCE_SERVER);
         $blockTO->identifier = $this->input->post(Front::BLOCK_IDENTIFIER);
-        if (isset($formula) && $formula !== '' && (!isset($mass) || $mass === '')) {
-            $blockTO->mass = FormulaHelper::computeMass($formula);
-        }
         return $blockTO;
     }
 
