@@ -120,7 +120,10 @@ class Sequence extends CI_Controller {
         $data['modifications'] = $modificationDatabase->findAllSelect();
         $this->form_validation->set_rules(Front::SEQUENCE_TYPE, 'Type', Front::REQUIRED);
         $this->form_validation->set_rules(Front::CANVAS_INPUT_NAME, 'Name', Front::REQUIRED);
-        $this->form_validation->set_rules(Front::CANVAS_INPUT_FORMULA, 'Formula', Front::REQUIRED);
+        $smiles = $this->input->post(Front::CANVAS_INPUT_SMILE);
+        if (!isset($smiles) || $smiles === "") {
+            $this->form_validation->set_rules(Front::CANVAS_INPUT_FORMULA, 'Formula', Front::REQUIRED);
+        }
         if ($this->form_validation->run() === false) {
             $data[Front::ERRORS] = $this->errors;
             $this->renderEdit($data);
@@ -192,19 +195,35 @@ class Sequence extends CI_Controller {
         $sequenceTO->bModification = $arSequence[SequenceTO::B_MODIFICATION_ID];
         $sequenceTO->name = $this->input->post(Front::CANVAS_INPUT_NAME);
         $sequenceTO->database = $this->input->post(Front::CANVAS_INPUT_DATABASE);
-        $sequenceTO->smiles = $this->input->post(Front::CANVAS_INPUT_SMILE);
+        $smiles = $this->input->post(Front::CANVAS_INPUT_SMILE);
+        $sequenceTO->smiles = $smiles;
         $formula = $this->input->post(Front::CANVAS_INPUT_FORMULA);
         $mass = $this->input->post(Front::CANVAS_INPUT_MASS);
         $sequenceTO->formula = $formula;
         $sequenceTO->mass = $mass;
+        if ($formula === "") {
+            $sequenceTO->formula = FormulaHelper::formulaFromSmiles($smiles);
+            $this->computeMassIfMassNotSet($mass, $sequenceTO->formula, $sequenceTO);
+        } else {
+            $sequenceTO->formula = $formula;
+            $this->computeMassIfMassNotSet($mass, $sequenceTO->formula, $sequenceTO);
+        }
         $sequenceTO->identifier = $this->input->post(Front::CANVAS_INPUT_IDENTIFIER);
         $sequenceTO->sequence = $this->input->post(Front::SEQUENCE);
         $sequenceTO->sequenceType = $this->input->post(Front::SEQUENCE_TYPE);
         $sequenceTO->decays = $this->input->post(Front::DECAYS);
-        if (isset($formula) && $formula !== '' && (!isset($mass) || $mass === '')) {
-            $sequenceTO->mass = FormulaHelper::computeMass($formula);
-        }
+//        if (isset($formula) && $formula !== '' && (!isset($mass) || $mass === '')) {
+//            $sequenceTO->mass = FormulaHelper::computeMass($formula);
+//        }
         return $sequenceTO;
+    }
+
+    private function computeMassIfMassNotSet($mass, $formula, $sequenceTO) {
+        if ($mass === "") {
+            $sequenceTO->mass = FormulaHelper::computeMass($formula);
+        } else {
+            $sequenceTO->mass = $mass;
+        }
     }
 
     private function createSequence() {
