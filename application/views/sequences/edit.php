@@ -121,6 +121,8 @@ use Bbdgnc\TransportObjects\SequenceTO;
         let smile = jsmeApplet.nonisomericSmiles();
         if (smile) {
             document.getElementById('txt-block-smiles').value = smile;
+            document.getElementById('txt-formula').value = '';
+            document.getElementById('txt-mass').value = '';
             document.getElementById('hdn-decays').value = '';
         }
     }

@@ -8,6 +8,7 @@ use Bbdgnc\Finder\Enum\ServerEnum;
 <script src="<?= AssetHelper::jsJsme() ?>"></script>
 <script>
 
+    let structureChanged = false;
     document.addEventListener('input', readSmiles);
 
     /**
@@ -16,6 +17,7 @@ use Bbdgnc\Finder\Enum\ServerEnum;
     function jsmeOnLoad() {
         jsmeApplet = new JSApplet.JSME("jsme_container", "500px", "500px");
         readSmiles();
+        jsmeApplet.setCallBack("AfterStructureModified", getSmiles);
     }
 
     function readSmiles() {
@@ -27,9 +29,15 @@ use Bbdgnc\Finder\Enum\ServerEnum;
      * Get SMILES from editor and submit form
      */
     function getSmiles() {
+        if (!structureChanged) {
+            structureChanged = true;
+            return;
+        }
         let smile = jsmeApplet.nonisomericSmiles();
         if (smile) {
             document.getElementById('txt-block-smiles').value = smile;
+            document.getElementById('txt-block-formula').value = '';
+            document.getElementById('txt-block-mass').value = '';
         }
     }
 
