@@ -118,6 +118,9 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById(SEL_B_MODIFICATION).addEventListener('change', modificationSelect);
     }
 
+    if (document.getElementsByTagName('i.fa-sort')[0]) {
+        window.addEventListener('load', changeSortArrows);
+    }
 });
 
 /**
@@ -332,7 +335,7 @@ function enableOrDisableModificationN(disable) {
     disableOrEnableElement(TXT_N_MASS, disable);
     disableOrEnableElement(CHK_N_NTERMINAL, disable);
     disableOrEnableElement(CHK_N_CTERMINAL, disable);
-    if (document.getElementById(SEL_N_MODIFICATION).value != '0' && !disable) {
+    if (document.getElementById(SEL_N_MODIFICATION) && document.getElementById(SEL_N_MODIFICATION).value != '0' && !disable) {
         displayModification(SEL_N_MODIFICATION, true);
     }
 }
@@ -344,7 +347,7 @@ function enableOrDisableModificationC(disable) {
     disableOrEnableElement(TXT_C_MASS, disable);
     disableOrEnableElement(CHK_C_NTERMINAL, disable);
     disableOrEnableElement(CHK_C_CTERMINAL, disable);
-    if (document.getElementById(SEL_C_MODIFICATION).value != '0' && !disable) {
+    if (document.getElementById(SEL_C_MODIFICATION) && document.getElementById(SEL_C_MODIFICATION).value != '0' && !disable) {
         displayModification(SEL_C_MODIFICATION, true);
     }
 }
@@ -356,7 +359,7 @@ function enableOrDisableModificationBranch(disable) {
     disableOrEnableElement(TXT_BRANCH_MASS, disable);
     disableOrEnableElement(CHK_BRANCH_NTERMINAL, disable);
     disableOrEnableElement(CHK_BRANCH_CTERMINAL, disable);
-    if (document.getElementById(SEL_B_MODIFICATION).value != '0' && !disable) {
+    if (document.getElementById(SEL_B_MODIFICATION) && document.getElementById(SEL_B_MODIFICATION).value != '0' && !disable) {
         displayModification(SEL_B_MODIFICATION, true);
     }
 }
@@ -693,6 +696,58 @@ function redirectOnlyWithData(url, data) {
         form.appendChild(input);
     }
     form.submit();
+}
+
+function changeSortArrows() {
+   let sortArrow = getGetValue();
+   if (sortArrow !== {}) {
+       let is2 = document.getElementsByClassName(sortArrow.key)[0];
+       is2.className = "fa fa-sort-" + translateSortOrder(sortArrow.value) + ' ' + sortArrow.key;
+   }
+}
+
+let sortArray = ['type', 'name', 'acronym', 'residue', 'formula', 'losses', 'mass', 'smiles', 'sequence'];
+
+function translateSortOrder(order) {
+    return order === 'desc' ? 'down' : 'up';
+}
+
+function getGetValue() {
+    let parameters = getGetParameters();
+
+    for (let index = 0; index <= sortArray.length; ++index) {
+        let value = findGetParameterValue(sortArray[index] + 'Sort', parameters);
+        if (value != null) {
+            return {key: sortArray[index], value: value};
+        }
+    }
+    return {};
+}
+
+function getGetParameters() {
+    return location.search.substr(1).split("&");
+}
+
+function findGetParameterValue(parameterName, params) {
+    var result = null, tmp = [];
+    params.forEach(function (item) {
+            tmp = item.split("=");
+            if (tmp[0] === parameterName) result = decodeURIComponent(tmp[1]);
+        });
+    return result;
+}
+
+function findGetParameter(parameterName) {
+    var result = null,
+        tmp = [];
+    location.search
+        .substr(1)
+        .split("&")
+        .forEach(function (item) {
+            tmp = item.split("=");
+            if (tmp[0] === parameterName) result = decodeURIComponent(tmp[1]);
+        });
+    return result;
 }
 
 function sort(param, sort, direction = 'asc') {

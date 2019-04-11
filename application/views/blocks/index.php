@@ -18,12 +18,12 @@ use Bbdgnc\Finder\Enum\ServerEnum;
         <div class="table t">
             <div class="thead t">
                 <div class="tr t">
-                    <div class="td sort" title="Sort" onclick="<?= "sort('" . site_url('block') . "', 'name', '" . $sort . "')" ?>">Name</div>
-                    <div class="td sort" title="Sort" onclick="<?= "sort('" . site_url('block') . "', 'acronym', '". $sort . "')" ?>">Acronym</div>
-                    <div class="td sort" title="Sort" onclick="<?= "sort('" . site_url('block') . "', 'residue', '" . $sort . "')" ?>">Residue Formula</div>
-                    <div class="td sort" title="Sort" onclick="<?= "sort('" . site_url('block') . "', 'losses', '" . $sort . "')" ?>">Neutral loss</div>
-                    <div class="td sort" title="Sort" onclick="<?= "sort('" . site_url('block') . "', 'mass', '" . $sort . "')" ?>">Residue Mass</div>
-                    <div class="td sort" title="Sort" onclick="<?= "sort('" . site_url('block') . "', 'smiles', '" . $sort . "')" ?>">SMILES</div>
+                    <div class="td sort" title="Sort" onclick="<?= "sort('" . site_url('block') . "', 'name', '" . $sort . "')" ?>">Name <i class="fa fa-sort name"></i></div>
+                    <div class="td sort" title="Sort" onclick="<?= "sort('" . site_url('block') . "', 'acronym', '". $sort . "')" ?>">Acronym <i class="fa fa-sort acronym"></i></div>
+                    <div class="td sort" title="Sort" onclick="<?= "sort('" . site_url('block') . "', 'residue', '" . $sort . "')" ?>">Residue Formula <i class="fa fa-sort residue"></i></div>
+                    <div class="td sort" title="Sort" onclick="<?= "sort('" . site_url('block') . "', 'losses', '" . $sort . "')" ?>">Neutral loss <i class="fa fa-sort losses"></i></div>
+                    <div class="td sort" title="Sort" onclick="<?= "sort('" . site_url('block') . "', 'mass', '" . $sort . "')" ?>">Residue Mass <i class="fa fa-sort mass"></i></div>
+                    <div class="td sort" title="Sort" onclick="<?= "sort('" . site_url('block') . "', 'smiles', '" . $sort . "')" ?>">SMILES <i class="fa fa-sort smiles"></i></div>
                     <div class="td">Reference</div>
                     <div class="td">Editor</div>
                 </div>
