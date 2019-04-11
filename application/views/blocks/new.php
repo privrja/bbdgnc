@@ -17,6 +17,7 @@ use Bbdgnc\Finder\Enum\ServerEnum;
     function jsmeOnLoad() {
         jsmeApplet = new JSApplet.JSME("jsme_container", "500px", "500px");
         readSmiles();
+        jsmeApplet.setCallBack("AfterStructureModified", getSmiles);
     }
 
     function readSmiles() {
@@ -76,6 +77,8 @@ use Bbdgnc\Finder\Enum\ServerEnum;
                    value="<?= set_value(Front::BLOCK_REFERENCE) ?>"/>
 
             <button onclick="getSmiles()">Add</button>
+
+            <button type="button" onclick="window.location.href = '<?= site_url('block') ?>'">Back to list</button>
 
             <?= validation_errors(); ?>
             <?php if (isset($errors)) echo $errors; ?>

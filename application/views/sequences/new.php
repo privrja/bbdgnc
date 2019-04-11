@@ -78,6 +78,8 @@ use Bbdgnc\Finder\Enum\ServerEnum;
 
             <button onclick="getSmiles()">Add</button>
 
+            <button type="button" onclick="window.location.href = '<?= site_url('block') ?>'">Back to list</button>
+
             <?= validation_errors(); ?>
             <?php if (isset($errors)) echo $errors; ?>
 

@@ -166,7 +166,7 @@ class Block extends CI_Controller {
             $smiles,
             ComputeEnum::UNIQUE_SMILES);
         if ($formula === "") {
-            $blockTO->formula = FormulaHelper::formulaFromSmiles($smiles);
+            $blockTO->formula = FormulaHelper::formulaFromSmiles($smiles, LossesEnum::H2O);
             FormulaHelper::computeMassIfMassNotSet($mass, $blockTO->formula, $blockTO);
         } else {
             $blockTO->formula = $formula;
@@ -190,7 +190,7 @@ class Block extends CI_Controller {
             $this->setupMass($blockTO, $mass);
         } else {
             if ($formula === "") {
-                $blockTO->computeFormula('', LossesEnum::NONE);
+                $blockTO->computeFormula();
                 $this->setupMass($blockTO, $mass);
             } else {
                 $blockTO->formula = $formula;
