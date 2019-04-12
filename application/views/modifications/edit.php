@@ -29,14 +29,22 @@ use Bbdgnc\Enum\Front;
             <label for="chk-cterminal" class="chk">C-terminal</label>
             <input type="checkbox" id="chk-cterminal"
                    name="<?= Front::MODIFICATION_TERMINAL_C ?>" <?= Front::checked(set_value(Front::MODIFICATION_TERMINAL_C, $modification['cterminal'])) ?> />
+
         </div>
+        <div id="div-editor-form-block">
+            <button>Save</button>
+            <button type="button" onclick="window.location.href = '<?= site_url('modification') ?>'">Back to
+                list
+            </button>
+            <button type="button"
+                    onclick="window.location.href = '<?= site_url('modification/delete/' . $modification['id']) ?>'">
+                Delete
+            </button>
 
-        <button>Save</button>
-
-        <button type="button" onclick="window.location.href = '<?= site_url('modification') ?>'">Back to list</button>
-
-        <?= validation_errors(); ?>
-        <?php if (isset($errors)) echo $errors; ?>
+            <div>
+                <?= validation_errors(); ?>
+                <?php if (isset($errors)) echo $errors; ?>
+            </div>
+        </div>
+        <?= form_close(); ?>
     </div>
-    <?= form_close(); ?>
-</div>

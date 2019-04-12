@@ -163,7 +163,6 @@ class Modification extends CI_Controller {
     }
 
     public function delete($id = 0) {
-//        $id = $this->input->post(Front::ID);
         $data[ModificationTO::TABLE_NAME] = $this->database->findById($id);
         try {
             $this->database->delete($id, new SequenceDatabase($this));

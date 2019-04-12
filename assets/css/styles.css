@@ -88,6 +88,13 @@ footer {
     display: inline-block;
 }
 
+#div-editor-form-block {
+    vertical-align: top;
+    padding: 4vh;
+    width: 30%;
+    display: block;
+}
+
 .canvas-small {
     cursor: pointer;
 }
