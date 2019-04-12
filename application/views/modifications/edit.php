@@ -33,6 +33,8 @@ use Bbdgnc\Enum\Front;
 
         <button>Save</button>
 
+        <button type="button" onclick="window.location.href = '<?= site_url('modification') ?>'">Back to list</button>
+
         <?= validation_errors(); ?>
         <?php if (isset($errors)) echo $errors; ?>
     </div>

@@ -51,7 +51,7 @@ use Bbdgnc\TransportObjects\SequenceTO;
             <input type="hidden" id="hdn-decays" name="<?= Front::DECAYS ?>" value="<?= $sequence[SequenceTO::DECAYS] ?>" />
             <button>Save</button>
 
-            <button type="button" onclick="window.location.href = '<?= site_url('block') ?>'">Back to list</button>
+            <button type="button" onclick="window.location.href = '<?= site_url('sequence') ?>'">Back to list</button>
 
             <?= validation_errors(); ?>
             <?php if (isset($errors)) echo $errors; ?>
