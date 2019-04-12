@@ -48,14 +48,24 @@ use Bbdgnc\TransportObjects\SequenceTO;
             <input type="text" id="txt-block-reference" name="<?= Front::CANVAS_INPUT_IDENTIFIER ?>"
                    value="<?= set_value(Front::CANVAS_INPUT_IDENTIFIER, $sequence['identifier']) ?>"/>
 
-            <input type="hidden" id="hdn-decays" name="<?= Front::DECAYS ?>" value="<?= $sequence[SequenceTO::DECAYS] ?>" />
+            <input type="hidden" id="hdn-decays" name="<?= Front::DECAYS ?>"
+                   value="<?= $sequence[SequenceTO::DECAYS] ?>"/>
+        </div>
+        <div id="div-editor-form-block">
             <button>Save</button>
 
             <button type="button" onclick="window.location.href = '<?= site_url('sequence') ?>'">Back to list</button>
 
-            <?= validation_errors(); ?>
-            <?php if (isset($errors)) echo $errors; ?>
+            <button type="button"
+                    onclick="window.location.href = '<?= site_url('sequence/delete/' . $sequence['id']) ?>'">
+                Delete
+            </button>
 
+            <div>
+                <?= validation_errors(); ?>
+                <?php if (isset($errors)) echo $errors; ?>
+
+            </div>
         </div>
         <?= form_close(); ?>
 

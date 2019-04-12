@@ -231,15 +231,12 @@ class SequenceDatabase extends AbstractDatabase {
     }
 
     public function delete($id, $database = null) {
+        $this->controller->blockToSequence_model->deleteWithSequenceId($id);
         $this->controller->sequence_model->delete($id);
     }
 
     public function findSequenceWithModificationUsage($modificationId) {
         return $this->controller->sequence_model->findSequenceWithModificationUsage($modificationId);
-    }
-
-    public function findSequenceWithBlockUsage($blockId) {
-
     }
 
 }

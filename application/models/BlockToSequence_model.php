@@ -21,4 +21,8 @@ class BlockToSequence_model extends CrudModel {
         return $query->result_array();
     }
 
+    public function deleteWithSequenceId($sequenceId) {
+        $this->db->delete($this->getTableName(), array('sequence_id' => $sequenceId));
+    }
+
 }

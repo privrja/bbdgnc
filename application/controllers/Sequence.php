@@ -13,6 +13,7 @@ use Bbdgnc\Database\SequenceDatabase;
 use Bbdgnc\Enum\Front;
 use Bbdgnc\Enum\LoggerEnum;
 use Bbdgnc\Enum\ModificationHelperTypeEnum;
+use Bbdgnc\Exception\DatabaseException;
 use Bbdgnc\Exception\IllegalArgumentException;
 use Bbdgnc\Exception\UniqueConstraintException;
 use Bbdgnc\TransportObjects\SequenceTO;
@@ -30,6 +31,7 @@ class Sequence extends CI_Controller {
         $this->load->model(ModelEnum::SEQUENCE_MODEL);
         $this->load->model(ModelEnum::MODIFICATION_MODEL);
         $this->load->model(ModelEnum::BLOCK_MODEL);
+        $this->load->model(ModelEnum::BLOCK_TO_SEQUENCE_MODEL);
         $this->load->helper([HelperEnum::HELPER_URL, HelperEnum::HELPER_FORM]);
         $this->load->library(LibraryEnum::FORM_VALIDATION);
         $this->load->library(LibraryEnum::PAGINATION);
@@ -147,6 +149,25 @@ class Sequence extends CI_Controller {
             Front::errorsCheck($data);
             $this->renderEdit($data);
         }
+    }
+
+    public function delete($id = 0) {
+        $data[SequenceTO::TABLE_NAME] = $this->database->findById($id);
+        try {
+            $this->database->delete($id, new SequenceDatabase($this));
+        } catch (DatabaseException $e) {
+            $data[Front::ERRORS] = $e->getMessage();
+            Logger::log(LoggerEnum::WARNING, $e->getTraceAsString());
+            $this->renderEdit($data);
+            return;
+        } catch (Exception $e) {
+            $data[Front::ERRORS] = $e->getMessage();
+            Logger::log(LoggerEnum::ERROR, $e->getTraceAsString());
+            Front::errorsCheck($data);
+            $this->renderEdit($data);
+            return;
+        }
+        redirect('sequence');
     }
 
     public function modifications() {
