@@ -23,6 +23,7 @@ use Bbdgnc\Finder\Enum\ServerEnum;
                     <div class="td">SMILES</div>
                     <div class="td">Reference</div>
                     <div class="td">Editor</div>
+                    <div class="td">Delete</div>
                 </div>
             </div>
             <?php foreach ($results as $data): ?>
@@ -62,6 +63,11 @@ use Bbdgnc\Finder\Enum\ServerEnum;
                             <div class="td">
                                 <a href="<?= site_url("block/edit/" . $block['id']) ?>">
                                     Edit
+                                </a>
+                            </div>
+                            <div class="td">
+                                <a href="<?= site_url("block/delete/" . $block['id']) ?>">
+                                    Delete
                                 </a>
                             </div>
                         </div>
