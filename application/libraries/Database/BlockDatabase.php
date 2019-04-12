@@ -4,6 +4,7 @@ namespace Bbdgnc\Database;
 
 use Bbdgnc\Base\Query;
 use Bbdgnc\Base\Sortable;
+use Bbdgnc\Exception\DeleteException;
 use Bbdgnc\Exception\IllegalArgumentException;
 use Bbdgnc\Smiles\Graph;
 
@@ -95,7 +96,12 @@ class BlockDatabase extends AbstractDatabase {
     }
 
     public function delete($id, $database = null) {
-        // TODO: Implement delete() method.
+        $result = $this->controller->blockToSequence_model->findBlockUsage($id);
+        if (empty($result)) {
+            $this->controller->block_model->delete($id);
+        } else {
+            throw new DeleteException("Block is used!");
+        }
     }
 
 }

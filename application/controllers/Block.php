@@ -12,6 +12,7 @@ use Bbdgnc\Database\BlockDatabase;
 use Bbdgnc\Enum\ComputeEnum;
 use Bbdgnc\Enum\Front;
 use Bbdgnc\Enum\LoggerEnum;
+use Bbdgnc\Exception\DatabaseException;
 use Bbdgnc\Exception\IllegalArgumentException;
 use Bbdgnc\Exception\UniqueConstraintException;
 use Bbdgnc\Smiles\Enum\LossesEnum;
@@ -30,6 +31,7 @@ class Block extends CI_Controller {
     public function __construct() {
         parent::__construct();
         $this->load->model(ModelEnum::BLOCK_MODEL);
+        $this->load->model(ModelEnum::BLOCK_TO_SEQUENCE_MODEL);
         $this->load->helper([HelperEnum::HELPER_URL, HelperEnum::HELPER_FORM]);
         $this->load->library(LibraryEnum::FORM_VALIDATION);
         $this->load->library(LibraryEnum::PAGINATION);
@@ -148,6 +150,25 @@ class Block extends CI_Controller {
             Front::errorsCheck($data);
             $this->renderEditForm($data);
         }
+    }
+
+    public function delete($id = 0) {
+        $data[BlockTO::TABLE_NAME] = $this->database->findById($id);
+        try {
+            $this->database->delete($id);
+        } catch (DatabaseException $e) {
+            $data[Front::ERRORS] = $e->getMessage();
+            Logger::log(LoggerEnum::WARNING, $e->getTraceAsString());
+            $this->renderEditForm($data);
+            return;
+        } catch (Exception $e) {
+            $data[Front::ERRORS] = $e->getMessage();
+            Logger::log(LoggerEnum::ERROR, $e->getTraceAsString());
+            Front::errorsCheck($data);
+            $this->renderEditForm($data);
+            return;
+        }
+        redirect('block');
     }
 
     private function renderEditForm($data) {
