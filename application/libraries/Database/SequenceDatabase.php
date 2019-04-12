@@ -230,4 +230,16 @@ class SequenceDatabase extends AbstractDatabase {
         $this->controller->sequence_model->rollback();
     }
 
+    public function delete($id, $database = null) {
+        // TODO: Implement delete() method.
+    }
+
+    public function findSequenceWithModificationUsage($modificationId) {
+        return $this->controller->sequence_model->findSequenceWithModificationUsage($modificationId);
+    }
+
+    public function findSequenceWithBlockUsage() {
+
+    }
+
 }

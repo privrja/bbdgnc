@@ -11,6 +11,7 @@ use Bbdgnc\Base\Query;
 use Bbdgnc\Database\ModificationDatabase;
 use Bbdgnc\Enum\Front;
 use Bbdgnc\Enum\LoggerEnum;
+use Bbdgnc\Exception\DatabaseException;
 use Bbdgnc\Exception\IllegalArgumentException;
 use Bbdgnc\Exception\UniqueConstraintException;
 use Bbdgnc\TransportObjects\ModificationTO;
@@ -23,7 +24,7 @@ class Modification extends CI_Controller {
 
     public function __construct() {
         parent::__construct();
-        $this->load->model(ModelEnum::MODIFICATION_MODEL);
+        $this->load->model(ModelEnum::MODIFICATION_MODEL, ModelEnum::SEQUENCE_MODEL);
         $this->load->helper([HelperEnum::HELPER_URL, HelperEnum::HELPER_FORM]);
         $this->load->library(LibraryEnum::FORM_VALIDATION);
         $this->load->library(LibraryEnum::PAGINATION);
@@ -147,12 +148,29 @@ class Modification extends CI_Controller {
             $this->database->update($id, $modificationTO);
             $data[ModificationTO::TABLE_NAME] = $modificationTO->asEntity();
             $data[ModificationTO::TABLE_NAME]['id'] = $id;
-        } catch (IllegalArgumentException $exception) {
-            $data[Front::ERRORS] = $exception->getMessage();
-            Logger::log(LoggerEnum::ERROR, $exception->getTraceAsString());
-        } catch (Exception $exception) {
-            $data[Front::ERRORS] = $exception->getMessage();
-            Logger::log(LoggerEnum::ERROR, $exception->getTraceAsString());
+        } catch (IllegalArgumentException $e) {
+            $data[Front::ERRORS] = $e->getMessage();
+            Logger::log(LoggerEnum::ERROR, $e->getTraceAsString());
+        } catch (Exception $e) {
+            $data[Front::ERRORS] = $e->getMessage();
+            Logger::log(LoggerEnum::ERROR, $e->getTraceAsString());
+        } finally {
+            Front::errorsCheck($data);
+            $this->renderEdit($data);
+        }
+    }
+
+    public function delete() {
+        $id = $this->input->post(Front::ID);
+        try {
+
+            $this->database->delete($id);
+        } catch (DatabaseException $e) {
+            $data[Front::ERRORS] = $e->getMessage();
+            Logger::log(LoggerEnum::WARNING, $e->getTraceAsString());
+        } catch (Exception $e) {
+            $data[Front::ERRORS] = $e->getMessage();
+            Logger::log(LoggerEnum::ERROR, $e->getTraceAsString());
         } finally {
             Front::errorsCheck($data);
             $this->renderEdit($data);

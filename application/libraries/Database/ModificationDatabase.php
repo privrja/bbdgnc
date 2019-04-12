@@ -4,6 +4,7 @@ namespace Bbdgnc\Database;
 
 use Bbdgnc\Base\Query;
 use Bbdgnc\Base\Sortable;
+use Bbdgnc\Exception\DatabaseException;
 
 class ModificationDatabase extends AbstractDatabase {
 
@@ -33,6 +34,18 @@ class ModificationDatabase extends AbstractDatabase {
 
     public function insert($to) {
         return $this->controller->modification_model->insert($to);
+    }
+
+    public function delete($id, $database = null) {
+//         if modification somewhere used not deleted
+//         select from sequence n, c, b modification
+//        else delete it
+    if ($database === null) {
+        throw new DatabaseException();
+    }
+
+
+
     }
 
     public function insertMore(array $tos) {

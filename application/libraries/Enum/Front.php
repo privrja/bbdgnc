@@ -73,13 +73,13 @@ abstract class Front {
     const TEMPLATES_FOOTER = "templates/footer";
     const TEMPLATES_HEADER = "templates/header";
 
-
     const ERRORS = "errors";
     const MAX_LENGTH_TEXT = 20;
     const STRING_TREE_DOTS = "...";
     const REQUIRED = "required";
     const DECAYS = "decays";
     const SORT = "sort";
+    const ID = "db_id";
 
     public static function formula($strFormula) {
         return preg_replace('/(\d+)/', '<sub>$1</sub>', $strFormula);

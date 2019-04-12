@@ -12,6 +12,8 @@ interface IDatabase {
 
     public function update($id, $to);
 
+    public function delete($id, $database = null);
+
     public function insert($to);
 
     public function insertMore(array $tos);

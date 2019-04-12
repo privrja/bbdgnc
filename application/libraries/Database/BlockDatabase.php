@@ -94,4 +94,8 @@ class BlockDatabase extends AbstractDatabase {
         return $blocks;
     }
 
+    public function delete($id, $database = null) {
+        // TODO: Implement delete() method.
+    }
+
 }
