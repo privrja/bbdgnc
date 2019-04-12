@@ -32,6 +32,7 @@ use Bbdgnc\Enum\Front; ?>
                         C-terminal
                     </div>
                     <div class="td">Editor</div>
+                    <div class="td">Delete</div>
                 </div>
             </div>
             <div class="tbody">
@@ -85,6 +86,11 @@ use Bbdgnc\Enum\Front; ?>
                         <div class="td">
                             <a href="<?= site_url("modification/edit/" . $modification['id']) ?>">
                                 Edit
+                            </a>
+                        </div>
+                        <div class="td">
+                            <a href="<?= site_url("modification/delete/" . $modification['id']) ?>">
+                                Delete
                             </a>
                         </div>
                     </div>

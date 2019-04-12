@@ -26,6 +26,7 @@ use Bbdgnc\Finder\Enum\ServerEnum;
                     <div class="td sort" title="Sort" onclick="<?= "sort('" . site_url('block') . "', 'smiles', '" . $sort . "')" ?>">SMILES <i class="fa fa-sort smiles"></i></div>
                     <div class="td">Reference</div>
                     <div class="td">Editor</div>
+                    <div class="td">Delete</div>
                 </div>
             </div>
             <div class="tbody">
@@ -88,6 +89,11 @@ use Bbdgnc\Finder\Enum\ServerEnum;
                         <div class="td">
                             <a href="<?= site_url("block/edit/" . $block['id']) ?>">
                                 Edit
+                            </a>
+                        </div>
+                        <div class="td">
+                            <a href="<?= site_url("block/delete/" . $block['id']) ?>">
+                                Delete
                             </a>
                         </div>
                     </div>

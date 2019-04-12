@@ -24,6 +24,7 @@ use Bbdgnc\Finder\Enum\ServerEnum;
                     <div class="td">Branch</div>
                     <div class="td">Reference</div>
                     <div class="td">Editor</div>
+                    <div class="td">Delete</div>
                 </div>
             </div>
             <div class="tbody">
@@ -95,6 +96,11 @@ use Bbdgnc\Finder\Enum\ServerEnum;
                         <div class="td">
                             <a href="<?= site_url("sequence/edit/" . $sequence['id']) ?>">
                                 Edit
+                            </a>
+                        </div>
+                        <div class="td">
+                            <a href="<?= site_url("sequence/delete/" . $sequence['id']) ?>">
+                                Delete
                             </a>
                         </div>
                     </div>
