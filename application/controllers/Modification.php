@@ -178,22 +178,7 @@ class Modification extends CI_Controller {
             $this->renderEdit($data);
             return;
         }
-
-        $config = $data = [];
-        $query = new Query();
-        $data['sort'] = $this->setupQuery($query);
-        $config[PagingEnum::REUSE_QUERY_STRING] = true;
-        $config[PagingEnum::BASE_URL] = base_url() . "index.php/modification";
-        $config[PagingEnum::TOTAL_ROWS] = $this->database->findAllPagingCount($query);
-        $config[PagingEnum::PER_PAGE] = CommonConstants::PAGING;
-
-        $this->pagination->initialize($config);
-        $data['modifications'] = $this->database->findAllPaging(0, $query);
-        $data[PagingEnum::LINKS] = $this->pagination->create_links();
-
-        $this->load->view(Front::TEMPLATES_HEADER);
-        $this->load->view('modifications/index', $data);
-        $this->load->view(Front::TEMPLATES_FOOTER);
+        redirect('modification');
     }
 
     private function renderEdit($data) {
