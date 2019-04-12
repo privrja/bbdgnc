@@ -46,10 +46,9 @@ class Sequence_model extends CrudModel {
 
     public function findSequenceWithModificationUsage($modificationId) {
         $this->db->from($this->getTableName());
-        // TODO OR
         $this->db->where("sequence.n_modification_id", $modificationId);
-        $this->db->where("sequence.c_modification_id", $modificationId);
-        $this->db->where("sequence.b_modification_id", $modificationId);
+        $this->db->or_where("sequence.c_modification_id", $modificationId);
+        $this->db->or_where("sequence.b_modification_id", $modificationId);
         $query = $this->db->get();
         return $query->result_array();
     }

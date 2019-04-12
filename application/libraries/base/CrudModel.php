@@ -93,7 +93,7 @@ abstract class CrudModel extends CI_Model {
     }
 
     public function delete($id) {
-        // TODO
+        $this->db->delete($this->getTableName(), array('id' => $id));
     }
 
     /**

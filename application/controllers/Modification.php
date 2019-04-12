@@ -9,6 +9,7 @@ use Bbdgnc\Base\ModelEnum;
 use Bbdgnc\Base\PagingEnum;
 use Bbdgnc\Base\Query;
 use Bbdgnc\Database\ModificationDatabase;
+use Bbdgnc\Database\SequenceDatabase;
 use Bbdgnc\Enum\Front;
 use Bbdgnc\Enum\LoggerEnum;
 use Bbdgnc\Exception\DatabaseException;
@@ -24,7 +25,8 @@ class Modification extends CI_Controller {
 
     public function __construct() {
         parent::__construct();
-        $this->load->model(ModelEnum::MODIFICATION_MODEL, ModelEnum::SEQUENCE_MODEL);
+        $this->load->model(ModelEnum::MODIFICATION_MODEL);
+        $this->load->model(ModelEnum::SEQUENCE_MODEL);
         $this->load->helper([HelperEnum::HELPER_URL, HelperEnum::HELPER_FORM]);
         $this->load->library(LibraryEnum::FORM_VALIDATION);
         $this->load->library(LibraryEnum::PAGINATION);
@@ -160,21 +162,39 @@ class Modification extends CI_Controller {
         }
     }
 
-    public function delete() {
-        $id = $this->input->post(Front::ID);
+    public function delete($id = 0) {
+//        $id = $this->input->post(Front::ID);
+        $data[ModificationTO::TABLE_NAME] = $this->database->findById($id);
         try {
-
-            $this->database->delete($id);
+            $this->database->delete($id, new SequenceDatabase($this));
         } catch (DatabaseException $e) {
             $data[Front::ERRORS] = $e->getMessage();
             Logger::log(LoggerEnum::WARNING, $e->getTraceAsString());
+            $this->renderEdit($data);
+            return;
         } catch (Exception $e) {
             $data[Front::ERRORS] = $e->getMessage();
             Logger::log(LoggerEnum::ERROR, $e->getTraceAsString());
-        } finally {
             Front::errorsCheck($data);
             $this->renderEdit($data);
+            return;
         }
+
+        $config = $data = [];
+        $query = new Query();
+        $data['sort'] = $this->setupQuery($query);
+        $config[PagingEnum::REUSE_QUERY_STRING] = true;
+        $config[PagingEnum::BASE_URL] = base_url() . "index.php/modification";
+        $config[PagingEnum::TOTAL_ROWS] = $this->database->findAllPagingCount($query);
+        $config[PagingEnum::PER_PAGE] = CommonConstants::PAGING;
+
+        $this->pagination->initialize($config);
+        $data['modifications'] = $this->database->findAllPaging(0, $query);
+        $data[PagingEnum::LINKS] = $this->pagination->create_links();
+
+        $this->load->view(Front::TEMPLATES_HEADER);
+        $this->load->view('modifications/index', $data);
+        $this->load->view(Front::TEMPLATES_FOOTER);
     }
 
     private function renderEdit($data) {
