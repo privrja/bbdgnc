@@ -14,7 +14,9 @@ abstract class ServerEnum {
     /** @var array mapping int code to string */
     public static $values = [
         self::PUBCHEM => "PubChem",
-        self::CHEBI => "ChEBI"
+        self::CHEBI => "ChEBI",
+        self::NORINE => "Norine",
+        self::PDB => "PDB"
     ];
 
     /** @var array mapping int code to string */

@@ -17,6 +17,7 @@ abstract class JsonDownloader {
     public static function getJsonFromUri($strUri) {
         $curl = curl_init($strUri);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
         ini_set('max_execution_time', 40);
         $curl_response = curl_exec($curl);
         ini_set('max_execution_time', 30);

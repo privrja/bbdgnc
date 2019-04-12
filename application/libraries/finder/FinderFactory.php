@@ -34,6 +34,10 @@ abstract class FinderFactory {
                 return new PubChemFinder(self::isOptionSet(self::OPTION_EXACT_MATCH, $arOptions));
             case ServerEnum::CHEBI:
                 return new ChebiFinder();
+            case ServerEnum::NORINE:
+                return new NorineFinder();
+            case ServerEnum::PDB:
+                return new PdbFinder();
         }
     }
 
