@@ -88,6 +88,7 @@ use Bbdgnc\Finder\Enum\ServerEnum;
     let structureChanged = false;
     document.getElementById('sel-block').addEventListener('change', blockFromDatabase);
     document.getElementById('txt-block-smiles').addEventListener('input', readSmiles);
+    window.addEventListener('load', blockFromDatabase);
 
     /**
      * This function will be called after the JavaScriptApplet code has been loaded.
