@@ -16,7 +16,7 @@ abstract class ServerEnum {
         self::PUBCHEM => "PubChem",
         self::CHEBI => "ChEBI",
         self::NORINE => "Norine",
-        self::PDB => "PDB"
+//        self::PDB => "PDB"
     ];
 
     /** @var array mapping int code to string */

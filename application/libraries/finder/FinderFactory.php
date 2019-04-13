@@ -36,8 +36,8 @@ abstract class FinderFactory {
                 return new ChebiFinder();
             case ServerEnum::NORINE:
                 return new NorineFinder();
-            case ServerEnum::PDB:
-                return new PdbFinder();
+//            case ServerEnum::PDB:
+//                return new PdbFinder();
         }
     }
 
