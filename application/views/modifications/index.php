@@ -13,23 +13,22 @@ use Bbdgnc\Enum\Front; ?>
                 <div class="tr t">
                     <div class="td sort" title="Sort"
                          onclick="<?= "sort('" . site_url('modification') . "', 'name', '" . $sort . "')" ?>">
-                        Name
-                    </div>
+                        Name <i class="fa fa-sort name"></i></div>
                     <div class="td sort" title="Sort"
                          onclick="<?= "sort('" . site_url('modification') . "', 'formula', '" . $sort . "')" ?>">
-                        Summary Formula
+                        Summary Formula <i class="fa fa-sort formula"></i>
                     </div>
                     <div class="td sort" title="Sort"
                          onclick="<?= "sort('" . site_url('modification') . "', 'mass', '" . $sort . "')" ?>">
-                        Monoisotopic Mass
+                        Monoisotopic Mass <i class="fa fa-sort mass"></i>
                     </div>
                     <div class="td sort" title="Sort"
                          onclick="<?= "sort('" . site_url('modification') . "', 'nterminal', '" . $sort . "')" ?>">
-                        N-terminal
+                        N-terminal <i class="fa fa-sort nterminal"></i>
                     </div>
                     <div class="td sort" title="Sort"
                          onclick="<?= "sort('" . site_url('modification') . "', 'cterminal', '" . $sort . "')" ?>">
-                        C-terminal
+                        C-terminal <i class="fa fa-sort cterminal"></i>
                     </div>
                     <div class="td">Editor</div>
                     <div class="td">Delete</div>

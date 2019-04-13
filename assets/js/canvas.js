@@ -118,7 +118,7 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById(SEL_B_MODIFICATION).addEventListener('change', modificationSelect);
     }
 
-    if (document.getElementsByTagName('i.fa-sort')[0]) {
+    if (document.getElementsByTagName('i.fa-sort')) {
         window.addEventListener('load', changeSortArrows);
     }
 });
@@ -706,7 +706,7 @@ function changeSortArrows() {
    }
 }
 
-let sortArray = ['type', 'name', 'acronym', 'residue', 'formula', 'losses', 'mass', 'smiles', 'sequence'];
+let sortArray = ['type', 'name', 'acronym', 'residue', 'formula', 'losses', 'mass', 'smiles', 'sequence', 'nterminal', 'cterminal'];
 
 function translateSortOrder(order) {
     return order === 'desc' ? 'down' : 'up';
