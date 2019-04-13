@@ -21,7 +21,8 @@ In php.ini only need to uncomment one line:
 
     extension=php_soap.dll
     
-It's recommended to use larger size for cookies. In httpd.conf add following line:
+It's recommended to use larger size for cookies, this problem typically appears with sequences with block count greater than 20.
+To fix this problem add following line in httpd.conf:
 
     LimitRequestFieldSize 16380
 
