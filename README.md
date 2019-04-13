@@ -27,7 +27,7 @@ It's recommended to use larger size for cookies. In httpd.conf add following lin
 
 Clone this repository
     
-    git clone git@github.com:privrja/bbdgnc.git
+    git clone https://github.com/privrja/bbdgnc.git
 
 Install dependencies via composer without dev packages
 
@@ -40,7 +40,11 @@ For install dev packages run
     
 For install javascript dependencies run:
     
-    npm install    
+    npm install --only=prod 
+    
+To install dev dependecies run:
+
+    npm install
     
 Configure base url in application/config/config.php
 Default value is http://localhost/ already set
