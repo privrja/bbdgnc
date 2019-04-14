@@ -118,7 +118,7 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById(SEL_B_MODIFICATION).addEventListener('change', modificationSelect);
     }
 
-    if (document.getElementsByTagName('i.fa-sort')) {
+    if (document.getElementsByTagName('i.fa-sort').length > 0) {
         window.addEventListener('load', changeSortArrows);
     }
 });
