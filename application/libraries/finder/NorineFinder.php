@@ -56,10 +56,10 @@ class NorineFinder implements IFinder {
      * @param string $strSmile
      * @param array $outArResult
      * @param array $outArNextResult id with next results
-     * @return int
+     * @throws \Exception
      */
     public function findBySmile($strSmile, &$outArResult, &$outArNextResult) {
-        // TODO: Implement findBySmile() method.
+        throw new \Exception('Norine does not support SMILES search!');
     }
 
     /**
@@ -72,7 +72,7 @@ class NorineFinder implements IFinder {
      */
     public function findByFormula($strFormula, &$outArResult, &$outArNextResult) {
         // !!! too slow
-        $strUri = self::REST_BASE_URI . self::REPLY_PEPTIDES . IFinder::REST_SLASH . IFinder::REST_FORMAT_JSON  . "/smiles";
+        $strUri = self::REST_BASE_URI . self::REPLY_PEPTIDES . IFinder::REST_SLASH . IFinder::REST_FORMAT_JSON . "/smiles";
         $mixDecoded = JsonDownloader::getJsonFromUri($strUri);
         if ($mixDecoded === false) {
             return ResultEnum::REPLY_NONE;
@@ -81,7 +81,7 @@ class NorineFinder implements IFinder {
         $intCounter = 0;
         foreach ($mixDecoded[self::REPLY_PEPTIDES] as $arPeptide) {
             if (isset($arPeptide[self::REPLY_GENERAL][self::REPLY_FORMULA])
-                    && $arPeptide[self::REPLY_GENERAL][self::REPLY_FORMULA] == $strFormula) {
+                && $arPeptide[self::REPLY_GENERAL][self::REPLY_FORMULA] == $strFormula) {
                 $arMolecule = array();
                 $this->setDataFromReplyToResult($arPeptide, $arMolecule);
                 $outArResult[$intCounter] = $arMolecule;
@@ -98,10 +98,10 @@ class NorineFinder implements IFinder {
      * @param $decTolerance
      * @param array $outArResult
      * @param $outArNextResult
-     * @return void
+     * @throws \Exception
      */
-        public function findByMass($decMass, $decTolerance, &$outArResult, &$outArNextResult) {
-        // TODO: Implement findByMass() method.
+    public function findByMass($decMass, $decTolerance, &$outArResult, &$outArNextResult) {
+        throw new \Exception('Norine does not support mass search!');
     }
 
     /**
@@ -127,7 +127,7 @@ class NorineFinder implements IFinder {
      * @return int
      */
     public function findByIdentifiers($arIds, &$outArResult) {
-        // TODO: Implement findByIdentifiers() method.
+        return ResultEnum::REPLY_NONE;
     }
 
     /**
