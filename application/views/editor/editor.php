@@ -11,6 +11,7 @@ use Bbdgnc\Enum\Front;
     <div class="div-editor-left" id="jsme_container"></div>
     <div id="div-editor-form">
         <button type="button" onclick="returnBack()">Accept to SMILES</button>
+        <button type="button" onclick="cancel()">Cancel</button>
     </div>
 </div>
 
@@ -52,6 +53,10 @@ use Bbdgnc\Enum\Front;
      */
     function returnBack() {
         redirectWithData('form-smiles', {smile: getSmiles()});
+    }
+
+    function cancel() {
+        redirectWithData('form-smiles', {smile: '<?= $smile?>'});
     }
 
 </script>
