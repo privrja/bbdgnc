@@ -124,4 +124,8 @@ abstract class CrudModel extends CI_Model {
         $this->db->trans_rollback();
     }
 
+    public function deleteAll() {
+        $this->db->empty_table($this->getTableName());
+    }
+
 }
