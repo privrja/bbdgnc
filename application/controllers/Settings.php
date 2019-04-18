@@ -1,6 +1,7 @@
 <?php
 
 use Bbdgnc\Base\ModelEnum;
+use Bbdgnc\CycloBranch\Enum\ResetTypeEnum;
 use Bbdgnc\Database\BlockDatabase;
 use Bbdgnc\Enum\Front;
 
@@ -28,7 +29,6 @@ class Settings extends CI_Controller {
 
     public function reset() {
         $delete = $this->input->post('delete');
-
         $this->form_validation->set_rules('delete', 'Delete', Front::REQUIRED);
         if ($this->form_validation->run() === false || $delete !== 'delx') {
             $this->index();
@@ -36,10 +36,18 @@ class Settings extends CI_Controller {
         }
 
         $blockDatabase = new BlockDatabase($this);
-        $blockDatabase->deleteAll();
-
+        $type = $this->input->post('resetType');
+        switch ($type) {
+            case ResetTypeEnum::EMPTY:
+                $blockDatabase->deleteAll();
+                break;
+            case ResetTypeEnum::AMINO_ACIDS:
+                $blockDatabase->resetWithAminoAcids();
+                break;
+            default:
+                break;
+        }
         $this->index();
     }
-
 
 }

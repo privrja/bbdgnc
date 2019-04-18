@@ -2,6 +2,7 @@
 
 namespace Bbdgnc\Database;
 
+use Bbdgnc\Base\AminoAcidsHelper;
 use Bbdgnc\Base\Query;
 use Bbdgnc\Base\Sortable;
 use Bbdgnc\Exception\DeleteException;
@@ -110,6 +111,14 @@ class BlockDatabase extends AbstractDatabase {
         $this->controller->modification_model->deleteAll();
         $this->controller->block_model->deleteAll();
     }
+
+    public function resetWithAminoAcids() {
+       $this->deleteAll();
+       $aminoAcids = AminoAcidsHelper::getAminoAcids();
+       $this->controller->block_model->insertMore($aminoAcids);
+    }
+
+
 
 
 }

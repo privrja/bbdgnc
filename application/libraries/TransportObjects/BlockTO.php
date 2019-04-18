@@ -109,6 +109,18 @@ class BlockTO implements IEntity {
         }
     }
 
+    public static function createBlock(string $name, string $acronym, string $formula, float $mass, string $losses, string $smiles, string $usmiles, int $database, string $identifier) {
+       $block = new BlockTO(0, $name, $acronym, $smiles, ComputeEnum::NO);
+       $block->formula = $formula;
+       $block->mass = $mass;
+       $block->losses = $losses;
+       $block->smiles = $smiles;
+       $block->uniqueSmiles = $usmiles;
+       $block->database = $database;
+       $block->databaseId = $identifier;
+       return $block;
+    }
+
     public function asEntity() {
         return [
             self::NAME => $this->name,
