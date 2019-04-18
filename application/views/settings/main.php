@@ -7,6 +7,7 @@ use Bbdgnc\CycloBranch\Enum\ResetTypeEnum;
 
     <article>
         <h1>Settings</h1>
+        <br/>
 
         <h2>Reset database</h2>
         <?= form_open('settings/reset', array('class' => 'form')); ?>

@@ -9,7 +9,7 @@ use Bbdgnc\Finder\Enum\ServerEnum;
 <div id="div-full">
 
     <article>
-        <h2>Sequences</h2>
+        <h1>Sequences</h1>
         <a href="<?= site_url("sequence/new") ?>">Add New Sequence</a>
         <div class="table t">
             <div class="thead t">

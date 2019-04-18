@@ -9,7 +9,7 @@ use Bbdgnc\Finder\Enum\ServerEnum;
 <div id="div-full">
 
     <article>
-        <h2>Blocks</h2>
+        <h1>Blocks</h1>
 
         <a href="<?= site_url("block/new") ?>">Add New Block</a>
         <br/>

@@ -95,6 +95,11 @@ footer {
     display: block;
 }
 
+.export {
+    font-size: large;
+    padding: 1vh;
+}
+
 .canvas-small {
     cursor: pointer;
 }
@@ -126,8 +131,8 @@ h1, h2, h3 {
 }
 
 h1 {
-    font-size: 4vh;
-    padding: 2vh;
+    font-size: 2vh;
+    padding: 1vh;
 }
 
 h2 {

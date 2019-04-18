@@ -8,7 +8,7 @@ use Bbdgnc\Finder\Enum\ServerEnum;
 <div id="div-full">
 
     <article>
-        <h2>Block Detail</h2>
+        <h1>Block Detail</h1>
 
         <div>
             <a href="<?= site_url("block/edit/" . $block['id']) ?>">Edit</a>

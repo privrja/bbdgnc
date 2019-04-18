@@ -6,7 +6,7 @@ use Bbdgnc\CycloBranch\Enum\ImportTypeEnum;
 
 <div id="div-full">
     <article>
-        <h2>Import</h2>
+        <h1>Import</h1>
 
         <?= $error ?>
 

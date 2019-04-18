@@ -6,7 +6,7 @@ use Bbdgnc\Enum\Front; ?>
 <div id="div-full">
 
     <article>
-        <h2>Modifications</h2>
+        <h1>Modifications</h1>
         <a href="<?= site_url("modification/new") ?>">Add New Modification</a>
         <div class="table t">
             <div class="thead t">
