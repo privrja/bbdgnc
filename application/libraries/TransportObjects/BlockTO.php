@@ -117,7 +117,7 @@ class BlockTO implements IEntity {
        $block->smiles = $smiles;
        $block->uniqueSmiles = $usmiles;
        $block->database = $database;
-       $block->databaseId = $identifier;
+       $block->identifier = $identifier;
        return $block;
     }
 
