@@ -76,12 +76,16 @@ use Bbdgnc\Finder\Enum\ServerEnum;
             <input type="text" id="txt-block-reference" name="<?= Front::BLOCK_REFERENCE ?>"
                    value="<?= set_value(Front::BLOCK_REFERENCE) ?>"/>
 
+        </div>
+        <div id="div-editor-form-block">
             <button onclick="getSmiles()">Add</button>
 
             <button type="button" onclick="window.location.href = '<?= site_url('block') ?>'">Back to list</button>
 
-            <?= validation_errors(); ?>
-            <?php if (isset($errors)) echo $errors; ?>
+            <div>
+                <?= validation_errors(); ?>
+                <?php if (isset($errors)) echo $errors; ?>
+            </div>
         </div>
     </div>
     <?= form_close(); ?>

@@ -31,12 +31,16 @@ use Bbdgnc\Enum\Front;
                    name="<?= Front::MODIFICATION_TERMINAL_C ?>" <?= Front::checked(set_value(Front::MODIFICATION_TERMINAL_C)) ?> />
         </div>
 
+    </div>
+    <div id="div-editor-form-block">
         <button>Add</button>
 
         <button type="button" onclick="window.location.href = '<?= site_url('modification') ?>'">Back to list</button>
 
-        <?= validation_errors(); ?>
-        <?php if (isset($errors)) echo $errors; ?>
+        <div>
+            <?= validation_errors(); ?>
+            <?php if (isset($errors)) echo $errors; ?>
+        </div>
     </div>
     <?= form_close(); ?>
 </div>

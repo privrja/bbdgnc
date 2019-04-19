@@ -76,13 +76,16 @@ use Bbdgnc\Finder\Enum\ServerEnum;
             <input type="text" id="txt-block-reference" name="<?= Front::CANVAS_INPUT_IDENTIFIER ?>"
                    value="<?= set_value(Front::CANVAS_INPUT_IDENTIFIER) ?>"/>
 
+        </div>
+        <div id="div-editor-form-block">
             <button onclick="getSmiles()">Add</button>
 
             <button type="button" onclick="window.location.href = '<?= site_url('sequence') ?>'">Back to list</button>
 
-            <?= validation_errors(); ?>
-            <?php if (isset($errors)) echo $errors; ?>
-
+            <div>
+                <?= validation_errors(); ?>
+                <?php if (isset($errors)) echo $errors; ?>
+            </div>
         </div>
     </div>
     <?= form_close(); ?>

@@ -95,7 +95,6 @@ use Bbdgnc\Finder\Enum\ServerEnum;
                 <?php if (isset($errors)) echo $errors; ?>
             </div>
         </div>
-    </div>
     <?= form_close(); ?>
 </div>
 
