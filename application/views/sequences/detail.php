@@ -6,7 +6,7 @@ use Bbdgnc\Finder\Enum\ServerEnum;
 
 <div id="div-full">
     <article>
-        <h2>Sequence Detail</h2>
+        <h1>Sequence Detail</h1>
 
         <div>
             <a href="<?= site_url("sequence/edit/" . $sequence['id']) ?>">Edit</a>

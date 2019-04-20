@@ -19,7 +19,7 @@ use Bbdgnc\Enum\Front;
                    value="<?= set_value(Front::MODIFICATION_FORMULA, $modification['formula']) ?>"/>
 
             <label for="txt-mass">Monoisotopic Mass</label>
-            <input type="text" id="txt-mass" name="<?= Front::MODIFICATION_MASS ?>"
+            <input type="number" step="any" id="txt-mass" name="<?= Front::MODIFICATION_MASS ?>"
                    value="<?= set_value(Front::MODIFICATION_MASS, $modification['mass']) ?>"/>
 
             <label for="chk-nterminal" class="chk">N-terminal</label>
@@ -29,12 +29,22 @@ use Bbdgnc\Enum\Front;
             <label for="chk-cterminal" class="chk">C-terminal</label>
             <input type="checkbox" id="chk-cterminal"
                    name="<?= Front::MODIFICATION_TERMINAL_C ?>" <?= Front::checked(set_value(Front::MODIFICATION_TERMINAL_C, $modification['cterminal'])) ?> />
+
         </div>
+        <div id="div-editor-form-block">
+            <button>Save</button>
+            <button type="button" onclick="window.location.href = '<?= site_url('modification') ?>'">Back to
+                list
+            </button>
+            <button type="button"
+                    onclick="window.location.href = '<?= site_url('modification/delete/' . $modification['id']) ?>'">
+                Delete
+            </button>
 
-        <button>Save</button>
-
-        <?= validation_errors(); ?>
-        <?php if (isset($errors)) echo $errors; ?>
+            <div>
+                <?= validation_errors(); ?>
+                <?php if (isset($errors)) echo $errors; ?>
+            </div>
+        </div>
+        <?= form_close(); ?>
     </div>
-    <?= form_close(); ?>
-</div>

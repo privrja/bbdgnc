@@ -4,10 +4,15 @@ namespace Bbdgnc\TransportObjects;
 
 class BlockToSequenceTO implements IEntity {
 
+    const BLOCK_ID = "block_id";
+    const SEQUENCE_ID = "sequence_id";
+    const SORT = 'sort';
+
     public $blockId;
 
     public $sequenceId;
 
+    public $sort;
     /**
      * BlockToSequenceTO constructor.
      * @param $blockId
@@ -24,8 +29,9 @@ class BlockToSequenceTO implements IEntity {
      */
     function asEntity() {
         return [
-            "block_id" => $this->blockId,
-            "sequence_id" => $this->sequenceId
+            self::BLOCK_ID => $this->blockId,
+            self::SEQUENCE_ID => $this->sequenceId,
+            self::SORT => $this->sort
         ];
     }
 

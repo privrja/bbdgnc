@@ -26,7 +26,7 @@ use Bbdgnc\Finder\Enum\ServerEnum;
             <h4>N-terminal Modification</h4>
 
             <label for="sel-n-modification">Select Modification</label>
-            <?= form_dropdown(Front::N_MODIFICATION_SELECT, $modifications, '0',
+            <?= form_dropdown(Front::N_MODIFICATION_SELECT, $modifications, set_value(Front::N_MODIFICATION_SELECT, '0'),
                 'id="sel-n-modification" class="select" title="Modification"'); ?>
 
             <div id="div-n-modification">
@@ -51,7 +51,7 @@ use Bbdgnc\Finder\Enum\ServerEnum;
             <h4>C-terminal Modification</h4>
 
             <label for="sel-c-modification">Select Modification</label>
-            <?= form_dropdown(Front::C_MODIFICATION_SELECT, $modifications, '0',
+            <?= form_dropdown(Front::C_MODIFICATION_SELECT, $modifications, set_value(Front::C_MODIFICATION_SELECT, '0'),
                 'id="sel-c-modification" class="select" title="Modification"'); ?>
 
             <div id="div-c-modification">
@@ -76,7 +76,7 @@ use Bbdgnc\Finder\Enum\ServerEnum;
             <h4>Branch Modification</h4>
 
             <label for="sel-b-modification">Select Modification</label>
-            <?= form_dropdown(Front::B_MODIFICATION_SELECT, $modifications, '0',
+            <?= form_dropdown(Front::B_MODIFICATION_SELECT, $modifications, set_value(Front::B_MODIFICATION_SELECT, '0'),
                 'id="sel-b-modification" class="select" title="Modification"'); ?>
 
             <div id="div-b-modification">
@@ -164,7 +164,7 @@ use Bbdgnc\Finder\Enum\ServerEnum;
                        value="<?= $block->smiles ?>"/>
 
                 <div class="td">
-                    <input type="submit" title="SMILES Editor" value="Edit" onclick="editorBlock('<?= $block->id ?>')"/>
+                    <button type="button" title="SMILES Editor" onclick="editorBlock('<?= $block->id ?>')">Edit</button>
                 </div>
 
                 <input type="hidden" name="<?= Front::BLOCK_IDENTIFIER ?>" value="<?= $block->id ?>"/>
@@ -189,6 +189,8 @@ use Bbdgnc\Finder\Enum\ServerEnum;
                 <input type="hidden" name="<?= Front::CANVAS_INPUT_IDENTIFIER ?>" value="<?= $identifier ?>"/>
                 <input type="hidden" name="<?= Front::SEQUENCE ?>" value="<?= $sequence ?>"/>
                 <input type="hidden" name="<?= Front::SEQUENCE_TYPE ?>" value="<?= $sequenceType ?>"/>
+                <input type="hidden" id="hdn-block-decays" name="<?= Front::DECAYS ?>" value="<?= set_value(Front::DECAYS, $decays) ?>"/>
+                <input type="hidden" id="hdn-sort" name="<?= Front::SORT ?>" value="<?= $block->sort ?>" />
 
                 <?= form_close(); ?>
             <?php endforeach; ?>

@@ -8,6 +8,7 @@ use Bbdgnc\Finder\Enum\ServerEnum;
 <script src="<?= AssetHelper::jsJsme() ?>"></script>
 <script>
 
+    let structureChanged = false;
     document.addEventListener('input', readSmiles);
 
     /**
@@ -16,6 +17,7 @@ use Bbdgnc\Finder\Enum\ServerEnum;
     function jsmeOnLoad() {
         jsmeApplet = new JSApplet.JSME("jsme_container", "500px", "500px");
         readSmiles();
+        jsmeApplet.setCallBack("AfterStructureModified", getSmiles);
     }
 
     function readSmiles() {
@@ -27,9 +29,15 @@ use Bbdgnc\Finder\Enum\ServerEnum;
      * Get SMILES from editor and submit form
      */
     function getSmiles() {
+        if (!structureChanged) {
+            structureChanged = true;
+            return;
+        }
         let smile = jsmeApplet.nonisomericSmiles();
         if (smile) {
             document.getElementById('txt-block-smiles').value = smile;
+            document.getElementById('txt-block-formula').value = '';
+            document.getElementById('txt-block-mass').value = '';
         }
     }
 
@@ -55,7 +63,7 @@ use Bbdgnc\Finder\Enum\ServerEnum;
                    value="<?= set_value(Front::BLOCK_FORMULA, $block['residue']) ?>"/>
 
             <label for="txt-block-mass">Monoisotopic Residue Mass</label>
-            <input type="text" id="txt-block-mass" name="<?= Front::BLOCK_MASS ?>"
+            <input type="number" step="any" id="txt-block-mass" name="<?= Front::BLOCK_MASS ?>"
                    value="<?= set_value(Front::BLOCK_MASS, $block['mass']) ?>"/>
 
             <label for="txt-block-smiles">SMILES</label>
@@ -74,12 +82,19 @@ use Bbdgnc\Finder\Enum\ServerEnum;
             <input type="text" id="txt-block-reference" name="<?= Front::BLOCK_IDENTIFIER ?>"
                    value="<?= set_value(Front::BLOCK_IDENTIFIER, $block['identifier']) ?>"/>
 
-            <button onclick="getSmiles()">Save</button>
-
-            <?= validation_errors(); ?>
-            <?php if (isset($errors)) echo $errors; ?>
         </div>
-    </div>
+        <div id="div-editor-form-block">
+            <button onclick="getSmiles()">Save</button>
+            <button type="button" onclick="window.location.href = '<?= site_url('block') ?>'">Back to list</button>
+            <button type="button"
+                    onclick="window.location.href = '<?= site_url('block/delete/' . $block['id']) ?>'">
+                Delete
+            </button>
+            <div>
+                <?= validation_errors(); ?>
+                <?php if (isset($errors)) echo $errors; ?>
+            </div>
+        </div>
     <?= form_close(); ?>
 </div>
 

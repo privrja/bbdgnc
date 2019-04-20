@@ -2,8 +2,10 @@
 
 namespace Bbdgnc\Database;
 
+use Bbdgnc\Base\AminoAcidsHelper;
 use Bbdgnc\Base\Query;
 use Bbdgnc\Base\Sortable;
+use Bbdgnc\Exception\DeleteException;
 use Bbdgnc\Exception\IllegalArgumentException;
 use Bbdgnc\Smiles\Graph;
 
@@ -93,5 +95,30 @@ class BlockDatabase extends AbstractDatabase {
         }
         return $blocks;
     }
+
+    public function delete($id, $database = null) {
+        $result = $this->controller->blockToSequence_model->findBlockUsage($id);
+        if (empty($result)) {
+            $this->controller->block_model->delete($id);
+        } else {
+            throw new DeleteException("Block is used!");
+        }
+    }
+
+    public function deleteAll() {
+        $this->controller->sequence_model->deleteAll();
+        $this->controller->blockToSequence_model->deleteAll();
+        $this->controller->modification_model->deleteAll();
+        $this->controller->block_model->deleteAll();
+    }
+
+    public function resetWithAminoAcids() {
+       $this->deleteAll();
+       $aminoAcids = AminoAcidsHelper::getAminoAcids();
+       $this->controller->block_model->insertMore($aminoAcids);
+    }
+
+
+
 
 }

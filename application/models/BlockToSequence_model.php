@@ -14,4 +14,15 @@ class BlockToSequence_model extends CrudModel {
         return self::TABLE_NAME;
     }
 
+    public function findBlockUsage($blockId) {
+        $this->db->from($this->getTableName());
+        $this->db->where("block_id", $blockId);
+        $query = $this->db->get();
+        return $query->result_array();
+    }
+
+    public function deleteWithSequenceId($sequenceId) {
+        $this->db->delete($this->getTableName(), array('sequence_id' => $sequenceId));
+    }
+
 }

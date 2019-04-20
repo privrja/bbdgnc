@@ -46,10 +46,9 @@
                     <i class="fa fa-download"></i> Export
                 </a>
             </li>
-            <!--            <li class="main-menu">-->
-            <!--                <a href="-->
-            <? //= site_url("settings") ?><!--" class="a-menu"><i class="fa fa-cogs"></i> Settings</a>-->
-            <!--            </li>-->
+            <li class="main-menu">
+                <a href="<?= site_url("settings") ?>" class="a-menu"><i class="fa fa-cogs"></i> Settings</a>
+            </li>
         </ul>
     </nav>
 

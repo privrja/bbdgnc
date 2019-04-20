@@ -6,7 +6,7 @@
 <div id="div-full">
 
     <article>
-        <h2>Modification Detail</h2>
+        <h1>Modification Detail</h1>
 
         <div>
             <a href="<?= site_url("modification/edit/" . $modification['id']) ?>">Edit</a>

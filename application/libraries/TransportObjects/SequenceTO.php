@@ -2,6 +2,7 @@
 
 namespace Bbdgnc\TransportObjects;
 
+use Bbdgnc\Base\FormulaHelper;
 use Bbdgnc\Enum\SequenceTypeEnum;
 use Bbdgnc\Finder\Enum\ServerEnum;
 
@@ -18,6 +19,7 @@ class SequenceTO implements IEntity {
     const C_MODIFICATION_ID = 'c_modification_id';
     const N_MODIFICATION_ID = 'n_modification_id';
     const B_MODIFICATION_ID = 'b_modification_id';
+    const DECAYS = 'decays';
 
     public $database = ServerEnum::PUBCHEM;
 
@@ -34,6 +36,8 @@ class SequenceTO implements IEntity {
     public $sequence = "";
 
     public $sequenceType = SequenceTypeEnum::LINEAR;
+
+    public $decays = "";
 
     public $nModification;
 
@@ -59,8 +63,30 @@ class SequenceTO implements IEntity {
         }
         $this->name = $name;
         $this->smiles = $smiles;
-        $this->formula = $formula;
-        $this->mass = $mass;
+        if ($smiles === "") {
+            $this->formula = $formula;
+            if ($mass === "") {
+                $this->mass = FormulaHelper::computeMass($this->formula);
+            } else {
+                $this->mass = $mass;
+            }
+        } else {
+            if ($formula === "") {
+                $this->formula = FormulaHelper::formulaFromSmiles($smiles);
+                if ($mass === "") {
+                    $this->mass = FormulaHelper::computeMass($this->formula);
+                } else {
+                    $this->mass = $mass;
+                }
+            } else {
+                $this->formula = $formula;
+                if ($mass === "") {
+                    $this->mass = FormulaHelper::computeMass($this->formula);
+                } else {
+                    $this->mass = $mass;
+                }
+            }
+        }
         $this->sequence = $sequence;
         $this->sequenceType = $sequenceType;
     }
@@ -79,6 +105,10 @@ class SequenceTO implements IEntity {
             $this->bModification = null;
         }
 
+        if ($this->decays === "undefined" || $this->decays === "null") {
+            $this->decays = "";
+        }
+
         return [
             self::TYPE => $this->sequenceType,
             self::NAME => $this->name,
@@ -88,6 +118,7 @@ class SequenceTO implements IEntity {
             self::SMILES => $this->smiles,
             self::DATABASE => $this->database,
             self::IDENTIFIER => $this->identifier,
+            self::DECAYS => $this->decays,
             self::C_MODIFICATION_ID => $this->cModification,
             self::N_MODIFICATION_ID => $this->nModification,
             self::B_MODIFICATION_ID => $this->bModification,

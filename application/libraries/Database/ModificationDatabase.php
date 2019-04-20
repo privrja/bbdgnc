@@ -4,6 +4,8 @@ namespace Bbdgnc\Database;
 
 use Bbdgnc\Base\Query;
 use Bbdgnc\Base\Sortable;
+use Bbdgnc\Exception\DeleteException;
+use Bbdgnc\TransportObjects\ModificationTO;
 
 class ModificationDatabase extends AbstractDatabase {
 
@@ -33,6 +35,24 @@ class ModificationDatabase extends AbstractDatabase {
 
     public function insert($to) {
         return $this->controller->modification_model->insert($to);
+    }
+
+    public function delete($id, $database = null) {
+        if ($database === null) {
+            throw new DeleteException();
+        }
+
+        $result = $database->findSequenceWithModificationUsage($id);
+        if (empty($result)) {
+            $this->controller->modification_model->delete($id);
+        } else {
+            $name = $result[0][ModificationTO::NAME];
+            if (!isset($result[1])) {
+                throw new DeleteException("Modification is used in: $name!");
+            } else {
+                throw new DeleteException("Modification is used in: $name and more!");
+            }
+        }
     }
 
     public function insertMore(array $tos) {

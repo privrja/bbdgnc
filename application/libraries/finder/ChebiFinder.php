@@ -113,23 +113,36 @@ class ChebiFinder implements IFinder {
      * @throws BadTransferException
      */
     public function findByFormula($strFormula, &$outArResult, &$outArNextResult) {
-        $result = $this->getLiteEntity($strFormula, ChebiSearchCategoryEnum::FORMULA, $outArResult, $outArNextResult);
-        switch ($result) {
-            case ResultEnum::REPLY_NONE:
-            case ResultEnum::REPLY_OK_ONE:
-                return $result;
-            case ResultEnum::REPLY_OK_MORE;
-                $mass = FormulaHelper::computeMass($strFormula);
-                foreach ($outArResult as $molecule) {
-                    if ($molecule[Front::CANVAS_INPUT_MASS] > $mass + 4
-                        || $molecule[Front::CANVAS_INPUT_MASS] < $mass - 4) {
-                        $this->deleteElement($molecule, $outArResult);
-                    }
-                }
-                return $result;
-            default:
-                throw new IllegalStateException();
-        }
+        return $this->getLiteEntity($strFormula, ChebiSearchCategoryEnum::FORMULA, $outArResult, $outArNextResult);
+//        $result = $this->getLiteEntity($strFormula, ChebiSearchCategoryEnum::FORMULA, $outArResult, $outArNextResult);
+//        switch ($result) {
+//            case ResultEnum::REPLY_NONE:
+//            case ResultEnum::REPLY_OK_ONE:
+//                return $result;
+//            case ResultEnum::REPLY_OK_MORE;
+//                $mass = FormulaHelper::computeMass($strFormula);
+//                foreach ($outArResult as $molecule) {
+//                    if ($molecule[Front::CANVAS_INPUT_MASS] > $mass + 4
+//                        || $molecule[Front::CANVAS_INPUT_MASS] < $mass - 4) {
+//                        $this->deleteElement($molecule, $outArResult);
+//                    }
+//                }
+//                foreach ($outArNextResult as $molecule) {
+//                    if ($molecule[Front::CANVAS_INPUT_MASS] > $mass + 4
+//                        || $molecule[Front::CANVAS_INPUT_MASS] < $mass - 4) {
+//                        $this->deleteElement($molecule, $outArNextResult);
+//                    }
+//                }
+//                $length = sizeof($outArResult);
+//                if ($length < IFinder::FIRST_X_RESULTS) {
+//                    for ($index = 0; $index <= $length; ++$index) {
+//                        $outArResult[] = array_pop($outArNextResult);
+//                    }
+//                }
+//                return $result;
+//            default:
+//                throw new IllegalStateException();
+//        }
     }
 
     function deleteElement($element, &$array){

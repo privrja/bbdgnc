@@ -14,6 +14,7 @@ use Bbdgnc\Enum\ComputeEnum;
 use Bbdgnc\Enum\Front;
 use Bbdgnc\Enum\LoggerEnum;
 use Bbdgnc\Enum\ModificationHelperTypeEnum;
+use Bbdgnc\Enum\ModificationTypeEnum;
 use Bbdgnc\Exception\IllegalArgumentException;
 use Bbdgnc\Exception\SequenceInDatabaseException;
 use Bbdgnc\Finder\Enum\FindByEnum;
@@ -34,7 +35,7 @@ class Land extends CI_Controller {
     const COOKIE_NEXT_RESULTS = 'find-next-results';
 
     /** @var int expire time of cookie 1 hour */
-    const COOKIE_EXPIRE_HOUR = 360000;
+    const COOKIE_EXPIRE_HOUR = 3600;
 
     const COOKIE_BLOCKS = "cookie_blocks";
 
@@ -57,8 +58,10 @@ class Land extends CI_Controller {
     }
 
     private function getData() {
+        $smiles = $this->input->post(Front::CANVAS_INPUT_SMILE);
+        $smiles = isset($smiles) && $smiles != '' ?  $smiles : '';
         return array(
-            Front::CANVAS_INPUT_NAME => "", Front::CANVAS_INPUT_SMILE => "",
+            Front::CANVAS_INPUT_NAME => "", Front::CANVAS_INPUT_SMILE => $smiles,
             Front::CANVAS_INPUT_FORMULA => "", Front::CANVAS_INPUT_MASS => "",
             Front::CANVAS_INPUT_DEFLECTION => "", Front::CANVAS_INPUT_IDENTIFIER => "",
             Front::ERRORS => ""
@@ -153,6 +156,8 @@ class Land extends CI_Controller {
         $blockCount = $this->input->post(Front::BLOCK_COUNT);
         $sequence = $this->input->post(Front::SEQUENCE);
         $sequenceType = $this->input->post(Front::SEQUENCE_TYPE);
+        $decays = $this->input->post(Front::DECAYS);
+        $sort = $this->input->post(Front::SORT);
         $block = new BlockTO($blockIdentifier, $blockName, $blockAcronym, $blockSmile, ComputeEnum::NO);
         $block->databaseId = $this->input->post(Front::BLOCK_DATABASE_ID);
         $block->formula = $this->input->post(Front::BLOCK_FORMULA);
@@ -165,11 +170,26 @@ class Land extends CI_Controller {
         $data[Front::BLOCK_COUNT] = $blockCount;
         $data[Front::SEQUENCE] = $sequence;
         $data[Front::SEQUENCE_TYPE] = $sequenceType;
+        $data[Front::DECAYS] = $decays;
+        $data[Front::SORT] = $sort;
+        $data = $this->lastModifications(ModificationTypeEnum::N_MODIFICATION, $data);
+        $data = $this->lastModifications(ModificationTypeEnum::C_MODIFICATION, $data);
+        $data = $this->lastModifications(ModificationTypeEnum::BRANCH_MODIFICATION, $data);
         $data['blocks'] = $this->blockDatabase->findAllSelect();
         $data = $this->getModificationData($data);
         $this->load->view(Front::TEMPLATES_HEADER);
         $this->load->view('editor/index', $data);
         $this->load->view(Front::TEMPLATES_FOOTER);
+    }
+
+    private function lastModifications($branchChar, $data) {
+        $data[$branchChar . Front::MODIFICATION_SELECT] = $this->input->post($branchChar . Front::MODIFICATION_SELECT);
+        $data[$branchChar . Front::MODIFICATION_NAME] = $this->input->post($branchChar . Front::MODIFICATION_NAME);
+        $data[$branchChar . Front::MODIFICATION_FORMULA] = $this->input->post($branchChar . Front::MODIFICATION_FORMULA);
+        $data[$branchChar . Front::MODIFICATION_MASS] = $this->input->post($branchChar . Front::MODIFICATION_MASS);
+        $data[$branchChar . Front::MODIFICATION_TERMINAL_N] = $this->input->post($branchChar . Front::MODIFICATION_TERMINAL_N);
+        $data[$branchChar . Front::MODIFICATION_TERMINAL_C] = $this->input->post($branchChar . Front::MODIFICATION_TERMINAL_C);
+        return $data;
     }
 
     private function toBlockTO(int $blockIdentifier, array $arBlock) {
@@ -192,7 +212,8 @@ class Land extends CI_Controller {
         $first = $this->input->post('first');
         $data = $this->getLastData();
         $cookieVal = get_cookie(self::COOKIE_BLOCKS . CommonConstants::ZERO);
-        $data[Front::SEQUENCE] = $this->input->post(Front::SEQUENCE);
+        $sequence = $this->input->post(Front::SEQUENCE);
+        $data[Front::SEQUENCE] = $sequence;
         $data[Front::SEQUENCE_TYPE] = $this->input->post(Front::SEQUENCE_TYPE);
         $data['modifications'] = $this->modifications();
         if (!isset($first) && $cookieVal !== null) {
@@ -212,6 +233,7 @@ class Land extends CI_Controller {
                 $blockTO->identifier = $this->input->post(Front::BLOCK_REFERENCE);
                 $blockTO->database = $this->input->post(Front::BLOCK_REFERENCE_SERVER);
             }
+            $blockTO->sort = $this->input->post(Front::SORT);
             $blockTO->databaseId = empty($databaseId) ? "" : $databaseId;
             $blocks[$blockIdentifier] = $blockTO;
             $data = $this->getModificationData($data);
@@ -220,8 +242,10 @@ class Land extends CI_Controller {
             $intCounter = 0;
             $inputSmiles = $this->input->post(Front::BLOCK_SMILES);
             $smiles = explode(",", $inputSmiles);
+            $arSequence = SequenceHelper::getBlockAcronyms($sequence);
             foreach ($smiles as $smile) {
                 $arResult = $this->blockDatabase->findBlockByUniqueSmiles($smile);
+                $key = array_search($intCounter, $arSequence);
 
                 if (!empty($arResult)) {
                     $blockTO = new BlockTO($intCounter, $arResult['name'], $arResult['acronym'], $arResult['smiles'], ComputeEnum::NO);
@@ -251,15 +275,23 @@ class Land extends CI_Controller {
                         $blockTO = new BlockTO($intCounter, "", "", $smile);
                     }
                 }
+                $blockTO->sort = $key;
                 $blocks[] = $blockTO;
                 $intCounter++;
             }
+
             $data[Front::BLOCK_COUNT] = $intCounter;
             $data = $this->getModificationEmptyData($data);
         }
+        usort($blocks, ["Land", "orderCmp"]);
+        $data[Front::DECAYS] = $this->input->post(Front::DECAYS);
         $data[Front::BLOCKS] = $blocks;
         $this->saveCookies($blocks);
         $this->renderBlocks($data);
+    }
+
+    public function orderCmp($a, $b) {
+        return $a->sort - $b->sort;
     }
 
     /**
@@ -373,6 +405,7 @@ class Land extends CI_Controller {
                     $data[Front::CANVAS_HIDDEN_SHOW_NEXT_RESULTS] = false;
                     log_message('debug', "Last page of results");
                 }
+                unset($_POST[Front::DECAYS]);
                 $this->renderSelect($data, $this->getLastData());
                 break;
         }
@@ -442,8 +475,16 @@ class Land extends CI_Controller {
         $arViewData[Front::CANVAS_INPUT_MASS] = $this->input->post(Front::CANVAS_INPUT_MASS);
         $arViewData[Front::CANVAS_INPUT_DEFLECTION] = $this->input->post(Front::CANVAS_INPUT_DEFLECTION);
         $arViewData[Front::CANVAS_INPUT_IDENTIFIER] = $this->input->post(Front::CANVAS_INPUT_IDENTIFIER);
+        $arViewData[Front::DECAYS] = $this->input->post(Front::DECAYS);
         $arViewData[Front::ERRORS] = $this->errors;
         return $arViewData;
+    }
+
+    public function smiles() {
+        $data = $this->getLastData();
+        $this->load->view(Front::TEMPLATES_HEADER);
+        $this->load->view('editor/editor', $data);
+        $this->load->view(Front::TEMPLATES_FOOTER);
     }
 
     /**
@@ -566,8 +607,6 @@ class Land extends CI_Controller {
     private function validateSequence() {
         $this->form_validation->set_rules(Front::SEQUENCE_TYPE, 'Sequence Type', Front::REQUIRED);
         $this->form_validation->set_rules(Front::CANVAS_INPUT_NAME, 'Sequence Name', Front::REQUIRED);
-        $this->form_validation->set_rules(Front::CANVAS_INPUT_FORMULA, 'Sequence Formula', Front::REQUIRED);
-        $this->form_validation->set_rules(Front::CANVAS_INPUT_MASS, 'Sequence Mass', Front::REQUIRED);
         $this->form_validation->set_rules(Front::SEQUENCE, 'Sequence', Front::REQUIRED);
         $this->form_validation->set_rules(Front::CANVAS_INPUT_SMILE, 'Sequence SMILES', Front::REQUIRED);
         if ($this->form_validation->run() === false) {
@@ -601,6 +640,7 @@ class Land extends CI_Controller {
         }
         $data[Front::SEQUENCE] = $this->input->post(Front::SEQUENCE);
         $data[Front::SEQUENCE_TYPE] = $this->input->post(Front::SEQUENCE_TYPE);
+        $data[Front::DECAYS] = $this->input->post(Front::DECAYS);
         return $data;
     }
 
@@ -637,7 +677,14 @@ class Land extends CI_Controller {
             $blockTO->losses = $blocks[$index]->losses;
             $blockTO->database = $blocks[$index]->database;
             $blockTO->identifier = $blocks[$index]->identifier;
-            $mapBlocks->attach($blockTO);
+            $blockTO->sort = $blocks[$index]->sort;
+            if ($mapBlocks->contains($blockTO)) {
+                $sorts = $mapBlocks->offsetGet($blockTO);
+                $sorts[] = $blockTO->sort;
+                $mapBlocks->offsetSet($blockTO, $sorts);
+            } else {
+                $mapBlocks->attach($blockTO, [$blockTO->sort]);
+            }
         }
 
         $modifications = [];
@@ -676,6 +723,7 @@ class Land extends CI_Controller {
         $sequenceTO = new SequenceTO($sequenceDatabase, $sequenceName, $sequenceSmiles, $sequenceFormula, $sequenceMass, $sequenceIdentifier, $sequence, $sequenceType);
         $sequenceTO->identifier = $sequenceIdentifier;
         $sequenceTO->database = $sequenceDatabase;
+        $sequenceTO->decays = $this->input->post(Front::DECAYS);
         $sequenceDatabase = new SequenceDatabase($this);
 
         try {

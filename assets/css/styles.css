@@ -88,6 +88,18 @@ footer {
     display: inline-block;
 }
 
+#div-editor-form-block {
+    vertical-align: top;
+    padding: 4vh;
+    width: 30%;
+    display: block;
+}
+
+.export {
+    font-size: large;
+    padding: 1vh;
+}
+
 .canvas-small {
     cursor: pointer;
 }
@@ -119,8 +131,8 @@ h1, h2, h3 {
 }
 
 h1 {
-    font-size: 4vh;
-    padding: 2vh;
+    font-size: 2vh;
+    padding: 1vh;
 }
 
 h2 {
@@ -249,8 +261,11 @@ input[type=text], .txt-area, select, input[type=number] {
 }
 
 input[type=number] {
-    width: 30%;
     vertical-align: middle;
+}
+
+.sort {
+    cursor: pointer;
 }
 
 .txt-area {

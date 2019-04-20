@@ -14,7 +14,9 @@ abstract class ServerEnum {
     /** @var array mapping int code to string */
     public static $values = [
         self::PUBCHEM => "PubChem",
-        self::CHEBI => "ChEBI"
+        self::CHEBI => "ChEBI",
+        self::NORINE => "Norine",
+//        self::PDB => "PDB"
     ];
 
     /** @var array mapping int code to string */
@@ -57,6 +59,8 @@ abstract class ServerEnum {
                 return "https://www.ebi.ac.uk/chebi/searchId.do?chebiId=" . $strIdentifier;
             case self::PDB:
                 return "http://www.rcsb.org/ligand/" . $strIdentifier;
+            case self::NORINE:
+                return "https://bioinfo.lifl.fr/norine/result.jsp?ID=" . $strIdentifier;
         }
     }
 

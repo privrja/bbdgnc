@@ -6,13 +6,13 @@ use Bbdgnc\CycloBranch\Enum\ImportTypeEnum;
 
 <div id="div-full">
     <article>
-        <h2>Import</h2>
+        <h1>Import</h1>
 
         <?= $error ?>
 
         <?php echo form_open_multipart('import/upload'); ?>
         <label for="sel-import-type">Type</label>
-        <?= form_dropdown('importType', ImportTypeEnum::$values, set_value('importType'),
+        <?= form_dropdown('importType', ImportTypeEnum::$values, '1',
             'id="sel-import-type" class="select" title="Type"'); ?>
         <input type="file" name="userfile" size="20"/>
         <br/><br/>

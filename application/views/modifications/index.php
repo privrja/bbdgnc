@@ -6,32 +6,32 @@ use Bbdgnc\Enum\Front; ?>
 <div id="div-full">
 
     <article>
-        <h2>Modifications</h2>
+        <h1>Modifications</h1>
         <a href="<?= site_url("modification/new") ?>">Add New Modification</a>
         <div class="table t">
             <div class="thead t">
                 <div class="tr t">
-                    <div class="td"
+                    <div class="td sort" title="Sort"
                          onclick="<?= "sort('" . site_url('modification') . "', 'name', '" . $sort . "')" ?>">
-                        Name
-                    </div>
-                    <div class="td"
+                        Name <i class="fa fa-sort name"></i></div>
+                    <div class="td sort" title="Sort"
                          onclick="<?= "sort('" . site_url('modification') . "', 'formula', '" . $sort . "')" ?>">
-                        Summary Formula
+                        Summary Formula <i class="fa fa-sort formula"></i>
                     </div>
-                    <div class="td"
+                    <div class="td sort" title="Sort"
                          onclick="<?= "sort('" . site_url('modification') . "', 'mass', '" . $sort . "')" ?>">
-                        Monoisotopic Mass
+                        Monoisotopic Mass <i class="fa fa-sort mass"></i>
                     </div>
-                    <div class="td"
+                    <div class="td sort" title="Sort"
                          onclick="<?= "sort('" . site_url('modification') . "', 'nterminal', '" . $sort . "')" ?>">
-                        N-terminal
+                        N-terminal <i class="fa fa-sort nterminal"></i>
                     </div>
-                    <div class="td"
+                    <div class="td sort" title="Sort"
                          onclick="<?= "sort('" . site_url('modification') . "', 'cterminal', '" . $sort . "')" ?>">
-                        C-terminal
+                        C-terminal <i class="fa fa-sort cterminal"></i>
                     </div>
                     <div class="td">Editor</div>
+                    <div class="td">Delete</div>
                 </div>
             </div>
             <div class="tbody">
@@ -44,9 +44,9 @@ use Bbdgnc\Enum\Front; ?>
                            value="<?= Front::setValue('formula') ?>"/>
                 </div>
                 <div class="td">
-                    <input type="text" placeholder="Filter by Mass From" accesskey="m" id="filter-mass-from"
+                    <input type="number" step="any" placeholder="Filter by Mass From" accesskey="m" id="filter-mass-from"
                            value="<?= Front::setValue('massFrom') ?>"/>
-                    <input type="text" placeholder="Filter by Mass To" id="filter-mass-to"
+                    <input type="number" step="any" placeholder="Filter by Mass To" id="filter-mass-to"
                            value="<?= Front::setValue('massTo') ?>"/>
                 </div>
                 <div class="td">
@@ -85,6 +85,11 @@ use Bbdgnc\Enum\Front; ?>
                         <div class="td">
                             <a href="<?= site_url("modification/edit/" . $modification['id']) ?>">
                                 Edit
+                            </a>
+                        </div>
+                        <div class="td">
+                            <a href="<?= site_url("modification/delete/" . $modification['id']) ?>">
+                                Delete
                             </a>
                         </div>
                     </div>

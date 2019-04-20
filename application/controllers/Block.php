@@ -1,6 +1,7 @@
 <?php
 
 use Bbdgnc\Base\CommonConstants;
+use Bbdgnc\Base\FormulaHelper;
 use Bbdgnc\Base\HelperEnum;
 use Bbdgnc\Base\LibraryEnum;
 use Bbdgnc\Base\Logger;
@@ -11,11 +12,15 @@ use Bbdgnc\Database\BlockDatabase;
 use Bbdgnc\Enum\ComputeEnum;
 use Bbdgnc\Enum\Front;
 use Bbdgnc\Enum\LoggerEnum;
+use Bbdgnc\Exception\DatabaseException;
+use Bbdgnc\Exception\IllegalArgumentException;
 use Bbdgnc\Exception\UniqueConstraintException;
+use Bbdgnc\Smiles\Enum\LossesEnum;
 use Bbdgnc\TransportObjects\BlockTO;
 
 class Block extends CI_Controller {
 
+    const BLOCK_WITH_THIS_ACRONYM_ALREADY_IN_DATABASE = "Block with this acronym already in database";
     private $errors = "";
 
     private $database;
@@ -26,6 +31,7 @@ class Block extends CI_Controller {
     public function __construct() {
         parent::__construct();
         $this->load->model(ModelEnum::BLOCK_MODEL);
+        $this->load->model(ModelEnum::BLOCK_TO_SEQUENCE_MODEL);
         $this->load->helper([HelperEnum::HELPER_URL, HelperEnum::HELPER_FORM]);
         $this->load->library(LibraryEnum::FORM_VALIDATION);
         $this->load->library(LibraryEnum::PAGINATION);
@@ -38,7 +44,7 @@ class Block extends CI_Controller {
         Front::addLikeFilter(BlockTO::RESIDUE, BlockTO::TABLE_NAME, $query, $this);
         Front::addLikeFilter(BlockTO::LOSSES, BlockTO::TABLE_NAME, $query, $this);
         Front::addLikeFilter(BlockTO::SMILES, BlockTO::TABLE_NAME, $query, $this);
-        Front::addBetweenFilter(BlockTO::MASS,BlockTO::TABLE_NAME, $query, $this);
+        Front::addBetweenFilter(BlockTO::MASS, BlockTO::TABLE_NAME, $query, $this);
         $sort = [];
         $sort[] = Front::addSortable(BlockTO::NAME, BlockTO::TABLE_NAME, $query, $this);
         $sort[] = Front::addSortable(BlockTO::ACRONYM, BlockTO::TABLE_NAME, $query, $this);
@@ -63,7 +69,6 @@ class Block extends CI_Controller {
         $data['blocks'] = $this->database->findAllPaging($start, $query);
         $data[PagingEnum::LINKS] = $this->pagination->create_links();
 
-
         $this->load->view(Front::TEMPLATES_HEADER);
         $this->load->view('blocks/index', $data);
         $this->load->view(Front::TEMPLATES_FOOTER);
@@ -71,7 +76,7 @@ class Block extends CI_Controller {
 
     public function new() {
         $data = [];
-        $this->form_validation->set_rules(Front::BLOCK_NAME ,'Name', Front::REQUIRED);
+        $this->form_validation->set_rules(Front::BLOCK_NAME, 'Name', Front::REQUIRED);
         $this->form_validation->set_rules(Front::BLOCK_ACRONYM, 'Acronym', Front::REQUIRED);
         $smiles = $this->input->post(Front::BLOCK_SMILES);
         if (!isset($smiles) || $smiles === "") {
@@ -82,21 +87,23 @@ class Block extends CI_Controller {
             $this->renderNew($data);
             return;
         }
-        $blockTO = $this->setupNewBlock($smiles);
+        $data[Front::ERRORS] = 'Block correctly saved';
         try {
+            $blockTO = $this->setupNewBlock($smiles);
             $this->database->insert($blockTO);
+        } catch (IllegalArgumentException $exception) {
+            $data[Front::ERRORS] = $exception->getMessage();
+            Logger::log(LoggerEnum::WARNING, $exception->getTraceAsString());
         } catch (UniqueConstraintException $exception) {
-            $data[Front::ERRORS] = "Block with this acronym already in database";
+            $data[Front::ERRORS] = self::BLOCK_WITH_THIS_ACRONYM_ALREADY_IN_DATABASE;
             Logger::log(LoggerEnum::WARNING, $exception->getMessage());
-            $this->renderNew($data);
-            return;
         } catch (Exception $exception) {
             $data[Front::ERRORS] = $exception->getMessage();
             Logger::log(LoggerEnum::ERROR, $exception->getTraceAsString());
+        } finally {
+            Front::errorsCheck($data);
             $this->renderNew($data);
-            return;
         }
-        $this->renderNew($data);
     }
 
     public function renderNew($data) {
@@ -116,22 +123,52 @@ class Block extends CI_Controller {
         $data[BlockTO::TABLE_NAME] = $this->database->findById($id);
         $this->form_validation->set_rules(Front::BLOCK_NAME, 'Name', Front::REQUIRED);
         $this->form_validation->set_rules(Front::BLOCK_ACRONYM, 'Acronym', Front::REQUIRED);
-        $this->form_validation->set_rules(Front::BLOCK_FORMULA, 'Formula', Front::REQUIRED);
+        $smiles = $this->input->post(Front::BLOCK_SMILES);
+        if (!isset($smiles) || $smiles === "") {
+            $this->form_validation->set_rules(Front::BLOCK_FORMULA, 'Formula', Front::REQUIRED);
+        }
         if ($this->form_validation->run() === false) {
             $data[Front::ERRORS] = $this->errors;
             $this->renderEditForm($data);
             return;
         }
-        $blockTO = $this->setupBlock();
+
+        $data[Front::ERRORS] = 'Block properly edited';
         try {
+            $blockTO = $this->setupBlock();
             $this->database->update($id, $blockTO);
+        } catch (UniqueConstraintException $exception) {
+            $data[Front::ERRORS] = self::BLOCK_WITH_THIS_ACRONYM_ALREADY_IN_DATABASE;
+            Logger::log(LoggerEnum::WARNING, $exception->getTraceAsString());
+        } catch (IllegalArgumentException $exception) {
+            $data[Front::ERRORS] = $exception->getMessage();
+            Logger::log(LoggerEnum::WARNING, $exception->getTraceAsString());
         } catch (Exception $exception) {
             $data[Front::ERRORS] = $exception->getMessage();
             Logger::log(LoggerEnum::ERROR, $exception->getTraceAsString());
+        } finally {
+            Front::errorsCheck($data);
+            $this->renderEditForm($data);
+        }
+    }
+
+    public function delete($id = 0) {
+        $data[BlockTO::TABLE_NAME] = $this->database->findById($id);
+        try {
+            $this->database->delete($id);
+        } catch (DatabaseException $e) {
+            $data[Front::ERRORS] = $e->getMessage();
+            Logger::log(LoggerEnum::WARNING, $e->getTraceAsString());
+            $this->renderEditForm($data);
+            return;
+        } catch (Exception $e) {
+            $data[Front::ERRORS] = $e->getMessage();
+            Logger::log(LoggerEnum::ERROR, $e->getTraceAsString());
+            Front::errorsCheck($data);
             $this->renderEditForm($data);
             return;
         }
-        $this->renderEditForm($data);
+        redirect('block');
     }
 
     private function renderEditForm($data) {
@@ -141,13 +178,21 @@ class Block extends CI_Controller {
     }
 
     private function setupBlock() {
+        $formula = $this->input->post(Front::BLOCK_FORMULA);
+        $mass = $this->input->post(Front::BLOCK_MASS);
+        $smiles = $this->input->post(Front::BLOCK_SMILES);
         $blockTO = new BlockTO(0,
             $this->input->post(Front::BLOCK_NAME),
             $this->input->post(Front::BLOCK_ACRONYM),
-            $this->input->post(Front::BLOCK_SMILES),
+            $smiles,
             ComputeEnum::UNIQUE_SMILES);
-        $blockTO->formula = $this->input->post(Front::BLOCK_FORMULA);
-        $blockTO->mass = $this->input->post(Front::BLOCK_MASS);
+        if ($formula === "") {
+            $blockTO->formula = FormulaHelper::formulaFromSmiles($smiles, LossesEnum::H2O);
+            FormulaHelper::computeMassIfMassNotSet($mass, $blockTO->formula, $blockTO);
+        } else {
+            $blockTO->formula = $formula;
+            FormulaHelper::computeMassIfMassNotSet($mass, $blockTO->formula, $blockTO);
+        }
         $blockTO->losses = $this->input->post(Front::BLOCK_NEUTRAL_LOSSES);
         $blockTO->database = $this->input->post(Front::BLOCK_REFERENCE_SERVER);
         $blockTO->identifier = $this->input->post(Front::BLOCK_IDENTIFIER);
@@ -163,33 +208,30 @@ class Block extends CI_Controller {
 
         if ($smiles === "") {
             $blockTO->formula = $formula;
-            if ($mass === "") {
-                $blockTO->computeMass();
-            } else {
-                $blockTO->mass = $mass;
-            }
+            $this->setupMass($blockTO, $mass);
         } else {
             if ($formula === "") {
                 $blockTO->computeFormula();
-                if ($mass === "") {
-                    $blockTO->computeMass();
-                } else {
-                    $blockTO->mass = $mass;
-                }
+                $this->setupMass($blockTO, $mass);
             } else {
                 $blockTO->formula = $formula;
-                if ($mass === "") {
-                    $blockTO->computeMass();
-                } else {
-                    $blockTO->mass = $mass;
-                }
+                $this->setupMass($blockTO, $mass);
             }
             $blockTO->computeUniqueSmiles();
         }
         $blockTO->losses = $this->input->post(Front::BLOCK_NEUTRAL_LOSSES);
-        $blockTO->database = $this->input->post(Front::BLOCK_IDENTIFIER);
-        $blockTO->identifier = $this->input->post(Front::BLOCK_REFERENCE_SERVER);
+        $blockTO->database = $this->input->post(Front::BLOCK_REFERENCE_SERVER);
+        $blockTO->identifier = $this->input->post(Front::BLOCK_REFERENCE);
         return $blockTO;
+    }
+
+    private function setupMass($blockTO, $mass) {
+        $tmpMass = FormulaHelper::computeMass($blockTO->formula);
+        if ($mass === "") {
+            $blockTO->mass = $tmpMass;
+        } else {
+            $blockTO->mass = $mass;
+        }
     }
 
     public function merge($page = 0) {

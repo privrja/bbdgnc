@@ -77,13 +77,23 @@ abstract class CrudModel extends CI_Model {
         return $this->db->insert_id();
     }
 
+    /**
+     * @param $id
+     * @param IEntity $entity
+     * @throws UniqueConstraintException
+     */
     public function update($id, IEntity $entity) {
         $this->db->where(self::ID, $id);
-        $this->db->update($this->getTableName(), $entity->asEntity());
+        if (!$this->db->update($this->getTableName(), $entity->asEntity())) {
+            $error = $this->db->error(); // Has keys 'code' and 'message'
+            if ($error['code'] === "23000/19") {
+                throw new UniqueConstraintException("On entity: " . implode(" ", $entity->asEntity()));
+            }
+        }
     }
 
     public function delete($id) {
-        // TODO
+        $this->db->delete($this->getTableName(), array('id' => $id));
     }
 
     /**
@@ -112,6 +122,10 @@ abstract class CrudModel extends CI_Model {
      */
     public function rollback() {
         $this->db->trans_rollback();
+    }
+
+    public function deleteAll() {
+        $this->db->empty_table($this->getTableName());
     }
 
 }

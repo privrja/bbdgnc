@@ -23,6 +23,7 @@ CREATE TABLE sequence (
     smiles              TEXT,
     database            INTEGER,
     identifier          TEXT,
+    decays              TEXT,
     n_modification_id   INTEGER,
     c_modification_id   INTEGER,
     b_modification_id   INTEGER,
@@ -51,7 +52,8 @@ CREATE TABLE modification (
 CREATE TABLE b2s (
     block_id            INTEGER,
     sequence_id         INTEGER,
-    PRIMARY KEY (block_id, sequence_id),
+    sort               INTEGER,
+--     PRIMARY KEY (block_id, sequence_id),
     FOREIGN KEY (block_id) REFERENCES block(id),
     FOREIGN KEY (sequence_id) REFERENCES sequence(id)
 );

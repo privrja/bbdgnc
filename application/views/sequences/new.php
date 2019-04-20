@@ -57,7 +57,7 @@ use Bbdgnc\Finder\Enum\ServerEnum;
                    value="<?= set_value(Front::CANVAS_INPUT_FORMULA) ?>"/>
 
             <label for="txt-mass">Monoisotopic Mass</label>
-            <input type="text" id="txt-mass" name="<?= Front::CANVAS_INPUT_MASS ?>"
+            <input type="number" step="any" id="txt-mass" name="<?= Front::CANVAS_INPUT_MASS ?>"
                    value="<?= set_value(Front::CANVAS_INPUT_MASS) ?>"/>
 
             <label for="txt-sequence">Sequence</label>
@@ -76,11 +76,16 @@ use Bbdgnc\Finder\Enum\ServerEnum;
             <input type="text" id="txt-block-reference" name="<?= Front::CANVAS_INPUT_IDENTIFIER ?>"
                    value="<?= set_value(Front::CANVAS_INPUT_IDENTIFIER) ?>"/>
 
+        </div>
+        <div id="div-editor-form-block">
             <button onclick="getSmiles()">Add</button>
 
-            <?= validation_errors(); ?>
-            <?php if (isset($errors)) echo $errors; ?>
+            <button type="button" onclick="window.location.href = '<?= site_url('sequence') ?>'">Back to list</button>
 
+            <div>
+                <?= validation_errors(); ?>
+                <?php if (isset($errors)) echo $errors; ?>
+            </div>
         </div>
     </div>
     <?= form_close(); ?>

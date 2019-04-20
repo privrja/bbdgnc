@@ -17,6 +17,7 @@ use Bbdgnc\Finder\Enum\ServerEnum;
     function jsmeOnLoad() {
         jsmeApplet = new JSApplet.JSME("jsme_container", "500px", "500px");
         readSmiles();
+        jsmeApplet.setCallBack("AfterStructureModified", getSmiles);
     }
 
     function readSmiles() {
@@ -56,7 +57,7 @@ use Bbdgnc\Finder\Enum\ServerEnum;
                    value="<?= set_value(Front::BLOCK_FORMULA) ?>"/>
 
             <label for="txt-block-mass">Monoisotopic Residue Mass</label>
-            <input type="text" id="txt-block-mass" name="<?= Front::BLOCK_MASS ?>"
+            <input type="number" step="any" id="txt-block-mass" name="<?= Front::BLOCK_MASS ?>"
                    value="<?= set_value(Front::BLOCK_MASS) ?>"/>
 
             <label for="txt-block-mass">SMILES</label>
@@ -75,10 +76,16 @@ use Bbdgnc\Finder\Enum\ServerEnum;
             <input type="text" id="txt-block-reference" name="<?= Front::BLOCK_REFERENCE ?>"
                    value="<?= set_value(Front::BLOCK_REFERENCE) ?>"/>
 
+        </div>
+        <div id="div-editor-form-block">
             <button onclick="getSmiles()">Add</button>
 
-            <?= validation_errors(); ?>
-            <?php if (isset($errors)) echo $errors; ?>
+            <button type="button" onclick="window.location.href = '<?= site_url('block') ?>'">Back to list</button>
+
+            <div>
+                <?= validation_errors(); ?>
+                <?php if (isset($errors)) echo $errors; ?>
+            </div>
         </div>
     </div>
     <?= form_close(); ?>

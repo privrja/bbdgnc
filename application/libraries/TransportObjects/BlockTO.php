@@ -25,6 +25,8 @@ class BlockTO implements IEntity {
 
     public $id = 0;
 
+    public $sort;
+
     public $databaseId;
 
     public $name = "";
@@ -91,11 +93,11 @@ class BlockTO implements IEntity {
         $this->computeMass();
     }
 
-    public function computeFormula($strFormula = '') {
+    public function computeFormula($strFormula = '', $losses = LossesEnum::H2O) {
         try {
-            $this->formula = FormulaHelper::formulaFromSmiles($this->smiles, LossesEnum::H2O);
+            $this->formula = FormulaHelper::formulaFromSmiles($this->smiles, $losses);
         } catch (IllegalArgumentException $e) {
-            $this->formula = FormulaHelper::formulaWithLosses($strFormula, LossesEnum::H2O);
+            $this->formula = FormulaHelper::formulaWithLosses($strFormula, $losses);
         }
     }
 
@@ -105,6 +107,18 @@ class BlockTO implements IEntity {
         } catch (IllegalArgumentException $exception) {
             Logger::log(LoggerEnum::ERROR, $exception->getMessage() . " " . $exception->getTraceAsString());
         }
+    }
+
+    public static function createBlock(string $name, string $acronym, string $formula, float $mass, string $losses, string $smiles, string $usmiles, int $database, string $identifier) {
+       $block = new BlockTO(0, $name, $acronym, $smiles, ComputeEnum::NO);
+       $block->formula = $formula;
+       $block->mass = $mass;
+       $block->losses = $losses;
+       $block->smiles = $smiles;
+       $block->uniqueSmiles = $usmiles;
+       $block->database = $database;
+       $block->identifier = $identifier;
+       return $block;
     }
 
     public function asEntity() {

@@ -3,39 +3,11 @@
 use Bbdgnc\Enum\Front;
 use Bbdgnc\Enum\SequenceTypeEnum;
 use Bbdgnc\Finder\Enum\ServerEnum;
+use Bbdgnc\TransportObjects\SequenceTO;
 
 ?>
 
 <script src="<?= AssetHelper::jsJsme() ?>"></script>
-<script>
-
-    document.addEventListener('input', readSmiles);
-
-    /**
-     * This function will be called after the JavaScriptApplet code has been loaded.
-     */
-    function jsmeOnLoad() {
-        jsmeApplet = new JSApplet.JSME("jsme_container", "500px", "500px");
-        readSmiles();
-    }
-
-    function readSmiles() {
-        jsmeApplet.readGenericMolecularInput(document.getElementById('txt-block-smiles').value);
-    }
-
-    /**
-     * This function is called after Acept button is clicked
-     * Get SMILES from editor and submit form
-     */
-    function getSmiles() {
-        let smile = jsmeApplet.nonisomericSmiles();
-        if (smile) {
-            document.getElementById('txt-block-smiles').value = smile;
-        }
-    }
-
-</script>
-
 
 <div id="div-full">
     <?= form_open('sequence/edit/' . $sequence['id'], array('id' => 'form-sequence-edit')); ?>
@@ -57,7 +29,7 @@ use Bbdgnc\Finder\Enum\ServerEnum;
                    value="<?= set_value(Front::CANVAS_INPUT_FORMULA, $sequence['formula']) ?>"/>
 
             <label for="txt-mass">Monoisotopic Mass</label>
-            <input type="text" id="txt-mass" name="<?= Front::CANVAS_INPUT_MASS ?>"
+            <input type="number" step="any" id="txt-mass" name="<?= Front::CANVAS_INPUT_MASS ?>"
                    value="<?= set_value(Front::CANVAS_INPUT_MASS, $sequence['mass']) ?>"/>
 
             <label for="txt-sequence">Sequence</label>
@@ -76,16 +48,8 @@ use Bbdgnc\Finder\Enum\ServerEnum;
             <input type="text" id="txt-block-reference" name="<?= Front::CANVAS_INPUT_IDENTIFIER ?>"
                    value="<?= set_value(Front::CANVAS_INPUT_IDENTIFIER, $sequence['identifier']) ?>"/>
 
-            <button onclick="getSmiles()">Save</button>
-
-            <?= validation_errors(); ?>
-            <?php if (isset($errors)) echo $errors; ?>
-
-        </div>
-        <?= form_close(); ?>
-
-        <div id="div-sequence">
-            <?= form_open('sequence/modifications/'); ?>
+            <input type="hidden" id="hdn-decays" name="<?= Front::DECAYS ?>"
+                   value="<?= $sequence[SequenceTO::DECAYS] ?>"/>
             <div class="div-modification">
                 <h4>N-terminal Modification</h4>
 
@@ -105,13 +69,66 @@ use Bbdgnc\Finder\Enum\ServerEnum;
             <div class="div-modification">
                 <h4>Branch Modification</h4>
 
-                    <label for="sel-b-modification">Select Modification</label>
-                    <?= form_dropdown(Front::B_MODIFICATION_SELECT, $modifications, set_value(Front::B_MODIFICATION_SELECT, $bModification['id']),
-                        'id="sel-b-modification" class="select" title="Modification"'); ?>
+                <label for="sel-b-modification">Select Modification</label>
+                <?= form_dropdown(Front::B_MODIFICATION_SELECT, $modifications, set_value(Front::B_MODIFICATION_SELECT, $bModification['id']),
+                    'id="sel-b-modification" class="select" title="Modification"'); ?>
             </div>
-            <input type="hidden" name="sequenceId" value="<?= $sequence['id'] ?>" />
-            <input type="submit" value="Save modifications" />
         </div>
+        <div id="div-editor-form-block">
+            <button>Save</button>
 
+            <button type="button" onclick="window.location.href = '<?= site_url('sequence') ?>'">Back to list</button>
+
+            <button type="button"
+                    onclick="window.location.href = '<?= site_url('sequence/delete/' . $sequence['id']) ?>'">
+                Delete
+            </button>
+
+            <div>
+                <?= validation_errors(); ?>
+                <?php if (isset($errors)) echo $errors; ?>
+
+            </div>
+        </div>
+        <?= form_close(); ?>
     </div>
 </div>
+
+<script>
+    let structureChanged = false;
+    document.getElementById('txt-block-smiles').addEventListener('input', readSmiles);
+
+    /**
+     * This function will be called after the JavaScriptApplet code has been loaded.
+     */
+    function jsmeOnLoad() {
+        jsmeApplet = new JSApplet.JSME("jsme_container", "500px", "500px", {
+            options: "nocanonize"
+        });
+        readSmiles();
+        jsmeApplet.setCallBack("AfterStructureModified", getSmiles);
+    }
+
+    function readSmiles() {
+        jsmeApplet.readGenericMolecularInput(document.getElementById('txt-block-smiles').value);
+    }
+
+    /**
+     * This function is called after Acept button is clicked
+     * Get SMILES from editor and submit form
+     */
+    function getSmiles() {
+        if (!structureChanged) {
+            structureChanged = true;
+            return;
+        }
+        let smile = jsmeApplet.nonisomericSmiles();
+        if (smile) {
+            document.getElementById('txt-block-smiles').value = smile;
+            document.getElementById('txt-formula').value = '';
+            document.getElementById('txt-mass').value = '';
+            document.getElementById('hdn-decays').value = '';
+        }
+    }
+
+</script>

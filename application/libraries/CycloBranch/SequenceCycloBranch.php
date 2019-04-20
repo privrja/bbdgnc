@@ -13,6 +13,10 @@ use Bbdgnc\Database\SequenceDatabase;
 use Bbdgnc\Enum\LoggerEnum;
 use Bbdgnc\Enum\SequenceTypeEnum;
 use Bbdgnc\Exception\UniqueConstraintException;
+use Bbdgnc\Finder\Enum\ResultEnum;
+use Bbdgnc\Finder\Enum\ServerEnum;
+use Bbdgnc\Finder\Exception\BadTransferException;
+use Bbdgnc\Finder\FinderFactory;
 use Bbdgnc\Smiles\Parser\Accept;
 use Bbdgnc\Smiles\Parser\ReferenceParser;
 use Bbdgnc\Smiles\Parser\Reject;
@@ -118,6 +122,20 @@ class SequenceCycloBranch extends AbstractCycloBranch {
     }
 
     protected function save(array $arTos) {
+        $referenceDatabase = $arTos[SequenceTO::TABLE_NAME]->database;
+        if ($referenceDatabase === ServerEnum::PUBCHEM || $referenceDatabase === ServerEnum::CHEBI) {
+            $finder = FinderFactory::getFinder($referenceDatabase);
+            $findResult = null;
+            $outArResult = [];
+            try {
+                $findResult = $finder->findByIdentifier($arTos[SequenceTO::TABLE_NAME]->identifier, $outArResult);
+            } catch (BadTransferException $e) {
+                Logger::log(LoggerEnum::WARNING, "Block not found");
+            }
+            if ($findResult === ResultEnum::REPLY_OK_ONE) {
+                $arTos[SequenceTO::TABLE_NAME]->smiles = $outArResult['smile'];
+            }
+        }
         $exThrown = $exThrownSequence = true;
         $this->database->startTransaction();
         $sequenceId = null;
@@ -131,7 +149,7 @@ class SequenceCycloBranch extends AbstractCycloBranch {
         foreach ($blockIds as $blockId) {
             $blockToSequence = new BlockToSequenceTO($blockId, $sequenceId);
             try {
-            $this->controller->blockToSequence_model->insert($blockToSequence);
+                $this->controller->blockToSequence_model->insert($blockToSequence);
             } catch (UniqueConstraintException $e) {
                 Logger::log(LoggerEnum::WARNING, "Block to sequence already in database. Sequence id: " . $sequenceId . " block id: " . $blockId);
                 $exThrown = true;
@@ -171,7 +189,7 @@ class SequenceCycloBranch extends AbstractCycloBranch {
                 $strData .= $sequence['nname'] . "\t";
                 $strData .= $sequence['cname'] . "\t";
                 $strData .= $sequence['bname'] . "\t";
-                $strData .= ReferenceHelper::reference($sequence['database'], $sequence['identifier'], $sequence['smiles']);
+                $strData .= ReferenceHelper::reference($sequence['database'], $sequence['identifier'], $sequence[SequenceTO::SMILES]);
                 $strData .= PHP_EOL;
                 file_put_contents(self::FILE_NAME, $strData, FILE_APPEND);
             }

@@ -9,7 +9,7 @@ use Bbdgnc\Finder\Enum\ServerEnum;
 <div id="div-full">
 
     <article>
-        <h2>Blocks</h2>
+        <h1>Blocks</h1>
 
         <a href="<?= site_url("block/new") ?>">Add New Block</a>
         <br/>
@@ -18,14 +18,15 @@ use Bbdgnc\Finder\Enum\ServerEnum;
         <div class="table t">
             <div class="thead t">
                 <div class="tr t">
-                    <div class="td" onclick="<?= "sort('" . site_url('block') . "', 'name', '" . $sort . "')" ?>">Name</div>
-                    <div class="td" onclick="<?= "sort('" . site_url('block') . "', 'acronym', '". $sort . "')" ?>">Acronym</div>
-                    <div class="td" onclick="<?= "sort('" . site_url('block') . "', 'residue', '" . $sort . "')" ?>">Residue Formula</div>
-                    <div class="td" onclick="<?= "sort('" . site_url('block') . "', 'losses', '" . $sort . "')" ?>">Neutral loss</div>
-                    <div class="td" onclick="<?= "sort('" . site_url('block') . "', 'mass', '" . $sort . "')" ?>">Residue Mass</div>
-                    <div class="td" onclick="<?= "sort('" . site_url('block') . "', 'smiles', '" . $sort . "')" ?>">SMILES</div>
+                    <div class="td sort" title="Sort" onclick="<?= "sort('" . site_url('block') . "', 'name', '" . $sort . "')" ?>">Name <i class="fa fa-sort name"></i></div>
+                    <div class="td sort" title="Sort" onclick="<?= "sort('" . site_url('block') . "', 'acronym', '". $sort . "')" ?>">Acronym <i class="fa fa-sort acronym"></i></div>
+                    <div class="td sort" title="Sort" onclick="<?= "sort('" . site_url('block') . "', 'residue', '" . $sort . "')" ?>">Residue Formula <i class="fa fa-sort residue"></i></div>
+                    <div class="td sort" title="Sort" onclick="<?= "sort('" . site_url('block') . "', 'losses', '" . $sort . "')" ?>">Neutral loss <i class="fa fa-sort losses"></i></div>
+                    <div class="td sort" title="Sort" onclick="<?= "sort('" . site_url('block') . "', 'mass', '" . $sort . "')" ?>">Residue Mass <i class="fa fa-sort mass"></i></div>
+                    <div class="td sort" title="Sort" onclick="<?= "sort('" . site_url('block') . "', 'smiles', '" . $sort . "')" ?>">SMILES <i class="fa fa-sort smiles"></i></div>
                     <div class="td">Reference</div>
                     <div class="td">Editor</div>
+                    <div class="td">Delete</div>
                 </div>
             </div>
             <div class="tbody">
@@ -43,8 +44,8 @@ use Bbdgnc\Finder\Enum\ServerEnum;
                         <input type="text" placeholder="Filter by Neutral Losses" accesskey="l" id="filter-losses" value="<?= Front::setValue('losses') ?>"/>
                     </div>
                     <div class="td">
-                        <input type="text" placeholder="Filter by Mass From" accesskey="m" id="filter-mass-from" value="<?= Front::setValue('massFrom') ?>"/>
-                        <input type="text" placeholder="Filter by Mass To" id="filter-mass-to" value="<?= Front::setValue('massTo') ?>"/>
+                        <input type="number" step="any" placeholder="Filter by Mass From" accesskey="m" id="filter-mass-from" value="<?= Front::setValue('massFrom') ?>"/>
+                        <input type="number" step="any" placeholder="Filter by Mass To" id="filter-mass-to" value="<?= Front::setValue('massTo') ?>"/>
                     </div>
                     <div class="td">
                         <input type="text" placeholder="Filter by SMILES" accesskey="s" id="filter-smiles" value="<?= Front::setValue('smiles') ?>"/>
@@ -88,6 +89,11 @@ use Bbdgnc\Finder\Enum\ServerEnum;
                         <div class="td">
                             <a href="<?= site_url("block/edit/" . $block['id']) ?>">
                                 Edit
+                            </a>
+                        </div>
+                        <div class="td">
+                            <a href="<?= site_url("block/delete/" . $block['id']) ?>">
+                                Delete
                             </a>
                         </div>
                     </div>

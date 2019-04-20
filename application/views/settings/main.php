@@ -1,26 +1,25 @@
+<?php
+
+use Bbdgnc\CycloBranch\Enum\ResetTypeEnum;
+
+?>
 <div id="div-full">
 
     <article>
         <h1>Settings</h1>
+        <br/>
 
-        <h2>Source</h2>
+        <h2>Reset database</h2>
+        <?= form_open('settings/reset', array('class' => 'form')); ?>
+        <input type="hidden" value="delx" name="delete"/>
+        <div id="">
+            <?= form_dropdown('resetType', ResetTypeEnum::$values, '1') ?>
+        </div>
+        <div>
+            <input type="submit" value="Reset" name="btnReset"/>
+        </div>
+        <?= form_close(); ?>
 
-        <?= validation_errors(); ?>
-        <?= form_open('settings/colors', array('class' => 'form')); ?>
-
-
-        <label for="source">Default source</label>
-        <select name="source" class="select" title="Default source to search">
-            <option value="pubchem">PubChem</option>
-            <option value="chemspider">ChemSpider</option>
-            <option value="norine">Norine</option>
-            <option value="pdb">PDB</option>
-        </select>
-
-        <input type="submit" name="btnSource" value="Change source" />
-        </form>
     </article>
 
 </div>
-
-

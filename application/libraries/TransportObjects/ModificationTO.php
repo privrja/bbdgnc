@@ -14,6 +14,8 @@ class ModificationTO implements IEntity {
     const NTERMINAL = 'nterminal';
     const CTERMINAL = 'cterminal';
 
+    public $databaseId;
+
     public $name;
 
     public $formula;

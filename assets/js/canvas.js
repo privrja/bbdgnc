@@ -24,6 +24,7 @@ const TXT_BRANCH_FORMULA = "txt-b-formula";
 const TXT_BRANCH_MASS = "txt-b-mass";
 const CHK_BRANCH_NTERMINAL = "chk-b-nterminal";
 const CHK_BRANCH_CTERMINAL = "chk-b-cterminal";
+const TXT_CANVAS_FLE_ID = 'txt-canvas-fle';
 const AMPERSAND = '&';
 
 const CAPTION_RESULTS = "#h-results";
@@ -34,11 +35,6 @@ const CANVAS_SMALL_SQUARE = 300;
 
 const PIXEL_TWO = 2;
 const PROCENT_SIXTY = 0.6;
-
-const ASC = 'asc';
-const DESC = 'desc';
-
-let sortDirection = ASC;
 
 /** constants mode */
 const MODE_LIGHT = "light";
@@ -54,12 +50,14 @@ let mobile = false;
 /** int last show last preview of SMILES */
 let lastLargeSmilesId;
 
+let decaysNoRedraw = false;
+
 /** default options for main drawer */
 let options = {
     width: getCanvasWidth(),
     height: getCanvasHeight(),
     themes: {light: {O: '#e67e22', DECAY: '#ff0000'}},
-    drawDecayPoints: true,
+    drawDecayPoints: 1,
     compactDrawing: false
 };
 
@@ -73,12 +71,27 @@ if (canvasRef) {
     var offsetY = canvasRef.offsetTop;
 }
 
+function setupDecaySource() {
+    let source = JSON.parse('[' + document.getElementById('hdn-decays').value + ']');
+    if (typeof source !== 'undefined' && source.length > 0) {
+        options.drawDecayPoints = 2;
+        options.decaySource = source;
+        updateOptions();
+    }
+}
+
+function updateOptions() {
+    smilesDrawer = new SmilesDrawer.Drawer(options);
+    drawSmile();
+}
+
 /** events */
 document.addEventListener('DOMContentLoaded', function () {
     window.addEventListener('resize', resize);
     window.addEventListener('load', finder);
     if (document.getElementById(TXT_SMILE_ID)) {
-        document.getElementById(TXT_SMILE_ID).addEventListener('input', drawSmile);
+        window.addEventListener('load', setupDecaySource);
+        document.getElementById(TXT_SMILE_ID).addEventListener('input', changeSmilesInput);
     }
 
     if (canvasRef) {
@@ -88,7 +101,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     if (document.getElementById(SEQUENCE_TYPE)) {
-        if (document.getElementById('h-results')) {
+        if (document.getElementById('h-results') || document.getElementById('sel-n-modification')) {
             window.addEventListener('load', sequenceTypeChanged);
         }
     }
@@ -105,6 +118,9 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById(SEL_B_MODIFICATION).addEventListener('change', modificationSelect);
     }
 
+    if (document.getElementsByTagName('i.fa-sort').length > 0) {
+        window.addEventListener('load', changeSortArrows);
+    }
 });
 
 /**
@@ -164,7 +180,8 @@ function disintegrate() {
         blocks: 'Blocks',
         first: true,
         sequence: smilesAndSequence[1],
-        sequenceType: sequenceTypeNumber(smilesAndSequence[2])
+        sequenceType: sequenceTypeNumber(smilesAndSequence[2]),
+        decays: smilesAndSequence[3]
     };
     redirectWithData(FORM_MAIN, data);
 }
@@ -179,6 +196,7 @@ function getSmilesDrawer() {
     try {
         return new SmilesDrawer.Drawer(options);
     } catch (e) {
+        console.log(e);
     }
 }
 
@@ -191,6 +209,7 @@ function getSmallSmilesDrawer() {
             compactDrawing: false
         });
     } catch (e) {
+        console.log(e);
     }
 }
 
@@ -203,6 +222,7 @@ function getLargeSmilesDrawer() {
             compactDrawing: false
         });
     } catch (e) {
+        console.log(e);
     }
 }
 
@@ -315,7 +335,9 @@ function enableOrDisableModificationN(disable) {
     disableOrEnableElement(TXT_N_MASS, disable);
     disableOrEnableElement(CHK_N_NTERMINAL, disable);
     disableOrEnableElement(CHK_N_CTERMINAL, disable);
-    document.getElementById(SEL_N_MODIFICATION).value = '0';
+    if (document.getElementById(SEL_N_MODIFICATION) && document.getElementById(SEL_N_MODIFICATION).value != '0' && !disable) {
+        displayModification(SEL_N_MODIFICATION, true);
+    }
 }
 
 function enableOrDisableModificationC(disable) {
@@ -325,7 +347,9 @@ function enableOrDisableModificationC(disable) {
     disableOrEnableElement(TXT_C_MASS, disable);
     disableOrEnableElement(CHK_C_NTERMINAL, disable);
     disableOrEnableElement(CHK_C_CTERMINAL, disable);
-    document.getElementById(SEL_C_MODIFICATION).value = '0';
+    if (document.getElementById(SEL_C_MODIFICATION) && document.getElementById(SEL_C_MODIFICATION).value != '0' && !disable) {
+        displayModification(SEL_C_MODIFICATION, true);
+    }
 }
 
 function enableOrDisableModificationBranch(disable) {
@@ -335,7 +359,9 @@ function enableOrDisableModificationBranch(disable) {
     disableOrEnableElement(TXT_BRANCH_MASS, disable);
     disableOrEnableElement(CHK_BRANCH_NTERMINAL, disable);
     disableOrEnableElement(CHK_BRANCH_CTERMINAL, disable);
-    document.getElementById(SEL_B_MODIFICATION).value = '0';
+    if (document.getElementById(SEL_B_MODIFICATION) && document.getElementById(SEL_B_MODIFICATION).value != '0' && !disable) {
+        displayModification(SEL_B_MODIFICATION, true);
+    }
 }
 
 function disableOrEnableElement(elementId, disable) {
@@ -464,8 +490,19 @@ function lightMode() {
     document.getElementById(CANVAS_ID).style.backgroundColor = COLOR_WHITE;
 }
 
+function changeSmilesInput() {
+    options.drawDecayPoints = 1;
+    options.decaySource = [];
+    updateOptions();
+}
+
 /** draw smiles to main canvas */
 function drawSmile() {
+    if (!decaysNoRedraw) {
+        decaysNoRedraw = true;
+    } else {
+        document.getElementById('hdn-decays').value = '';
+    }
     // Clean the input (remove unrecognized characters, such as spaces and tabs) and parse it
     let strSmiles = document.getElementById(TXT_SMILE_ID).value;
     strSmiles = strSmiles.replace(/\r?\n|\r/g, '');
@@ -474,7 +511,7 @@ function drawSmile() {
         // Draw to the canvas
         activateScreenMode();
         smilesDrawer.draw(tree, CANVAS_ID, DEFAULT_SCREEN_MODE, false);
-        // document.getElementById(TXT_CANVAS_FLE).value = smilesDrawer.getMolecularFormula();
+        document.getElementById(TXT_CANVAS_FLE_ID).value = smilesDrawer.getMolecularFormula();
         canvasRef.style.width = '100%';
         canvasRef.style.height = '100%';
     });
@@ -531,6 +568,7 @@ function save() {
     let data = {sequence: sequence, save: 'Save'};
     data.sequenceType = document.getElementById("sel-sequence-type").value;
     data.blockCount = document.getElementsByClassName("block-count")[0].value;
+    data.decays = document.getElementById("hdn-block-decays").value;
     data.nSelect = document.getElementById("sel-n-modification").value;
     data.nModification = document.getElementById("txt-n-modification").value;
     data.nFormula = document.getElementById("txt-n-formula").value;
@@ -560,10 +598,10 @@ function editorBlock(identifier) {
     data.smile = document.getElementById("txt-canvas-smile").value;
     data.formula = document.getElementById("txt-canvas-fle").value;
     data.mass = document.getElementById("txt-canvas-mass").value;
-    data.deflection = document.getElementById("txt-canvas-mass-deflection").value;
     data.identifier = document.getElementById("txt-canvas-identifier").value;
     data.sequence = document.getElementById("txt-sequence").value;
     data.sequenceType = document.getElementById("sel-sequence-type").value;
+    data.decays = document.getElementById("hdn-block-decays").value;
     data.nSelect = document.getElementById("sel-n-modification").value;
     data.nModification = document.getElementById("txt-n-modification").value;
     data.nFormula = document.getElementById("txt-n-formula").value;
@@ -585,6 +623,23 @@ function editorBlock(identifier) {
     redirectWithData("form-block-edit" + identifier, data);
 }
 
+function editSequenceSmiles(url) {
+    let data = {};
+    try {
+        data.database = document.getElementById("sel-canvas-database").value;
+        data.search = document.getElementById("sel-canvas-search").value;
+        data.name = document.getElementById("txt-canvas-name").value;
+        data.smile = document.getElementById("txt-canvas-smile").value;
+        data.formula = document.getElementById("txt-canvas-fle").value;
+        data.mass = document.getElementById("txt-canvas-mass").value;
+        data.identifier = document.getElementById("txt-canvas-identifier").value;
+    } catch (e) {
+        console.log(e);
+    } finally {
+        redirectOnlyWithData(url, data);
+    }
+}
+
 function modificationSelect(event) {
     displayModification(event.target.id, event.target.value != 0);
 }
@@ -592,25 +647,31 @@ function modificationSelect(event) {
 function displayModification(id, display) {
     switch (id) {
         case SEL_N_MODIFICATION:
-            document.getElementById('txt-n-modification').disabled = display;
-            document.getElementById('txt-n-formula').disabled = display;
-            document.getElementById('txt-n-mass').disabled = display;
-            document.getElementById('chk-n-nterminal').disabled = display;
-            document.getElementById('chk-n-cterminal').disabled = display;
+            if (document.getElementById('txt-n-formula')) {
+                document.getElementById('txt-n-modification').disabled = display;
+                document.getElementById('txt-n-formula').disabled = display;
+                document.getElementById('txt-n-mass').disabled = display;
+                document.getElementById('chk-n-nterminal').disabled = display;
+                document.getElementById('chk-n-cterminal').disabled = display;
+            }
             break;
         case SEL_C_MODIFICATION:
-            document.getElementById('txt-c-modification').disabled = display;
-            document.getElementById('txt-c-formula').disabled = display;
-            document.getElementById('txt-c-mass').disabled = display;
-            document.getElementById('chk-c-nterminal').disabled = display;
-            document.getElementById('chk-c-cterminal').disabled = display;
+            if (document.getElementById('txt-c-formula')) {
+                document.getElementById('txt-c-modification').disabled = display;
+                document.getElementById('txt-c-formula').disabled = display;
+                document.getElementById('txt-c-mass').disabled = display;
+                document.getElementById('chk-c-nterminal').disabled = display;
+                document.getElementById('chk-c-cterminal').disabled = display;
+            }
             break;
         case SEL_B_MODIFICATION:
-            document.getElementById('txt-b-modification').disabled = display;
-            document.getElementById('txt-b-formula').disabled = display;
-            document.getElementById('txt-b-mass').disabled = display;
-            document.getElementById('chk-b-nterminal').disabled = display;
-            document.getElementById('chk-b-cterminal').disabled = display;
+            if (document.getElementById('txt-b-formula')) {
+                document.getElementById('txt-b-modification').disabled = display;
+                document.getElementById('txt-b-formula').disabled = display;
+                document.getElementById('txt-b-mass').disabled = display;
+                document.getElementById('chk-b-nterminal').disabled = display;
+                document.getElementById('chk-b-cterminal').disabled = display;
+            }
             break;
     }
 }
@@ -626,6 +687,73 @@ function redirectWithData(formId, data) {
         form.appendChild(input);
     }
     form.submit();
+}
+
+function redirectOnlyWithData(url, data) {
+    let form = document.createElement('form');
+    form.method = 'post';
+    form.action = url;
+    document.getElementsByTagName('BODY')[0].appendChild(form);
+    for (let name in data) {
+        let input = document.createElement('input');
+        input.type = 'hidden';
+        input.name = name;
+        input.value = data[name];
+        form.appendChild(input);
+    }
+    form.submit();
+}
+
+function changeSortArrows() {
+    let sortArrow = getGetValue();
+    if (sortArrow !== {}) {
+        let is2 = document.getElementsByClassName(sortArrow.key)[0];
+        is2.className = "fa fa-sort-" + translateSortOrder(sortArrow.value) + ' ' + sortArrow.key;
+    }
+}
+
+let sortArray = ['type', 'name', 'acronym', 'residue', 'formula', 'losses', 'mass', 'smiles', 'sequence', 'nterminal', 'cterminal'];
+
+function translateSortOrder(order) {
+    return order === 'desc' ? 'down' : 'up';
+}
+
+function getGetValue() {
+    let parameters = getGetParameters();
+
+    for (let index = 0; index <= sortArray.length; ++index) {
+        let value = findGetParameterValue(sortArray[index] + 'Sort', parameters);
+        if (value != null) {
+            return {key: sortArray[index], value: value};
+        }
+    }
+    return {};
+}
+
+function getGetParameters() {
+    return location.search.substr(1).split("&");
+}
+
+function findGetParameterValue(parameterName, params) {
+    var result = null, tmp = [];
+    params.forEach(function (item) {
+        tmp = item.split("=");
+        if (tmp[0] === parameterName) result = decodeURIComponent(tmp[1]);
+    });
+    return result;
+}
+
+function findGetParameter(parameterName) {
+    var result = null,
+        tmp = [];
+    location.search
+        .substr(1)
+        .split("&")
+        .forEach(function (item) {
+            tmp = item.split("=");
+            if (tmp[0] === parameterName) result = decodeURIComponent(tmp[1]);
+        });
+    return result;
 }
 
 function sort(param, sort, direction = 'asc') {

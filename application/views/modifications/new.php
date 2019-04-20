@@ -19,7 +19,7 @@ use Bbdgnc\Enum\Front;
                    value="<?= set_value(Front::MODIFICATION_FORMULA) ?>"/>
 
             <label for="txt-mass">Monoisotopic Mass</label>
-            <input type="text" id="txt-mass" name="<?= Front::MODIFICATION_MASS ?>"
+            <input type="number" step="any" id="txt-mass" name="<?= Front::MODIFICATION_MASS ?>"
                    value="<?= set_value(Front::MODIFICATION_MASS) ?>"/>
 
             <label for="chk-nterminal" class="chk">N-terminal</label>
@@ -31,10 +31,16 @@ use Bbdgnc\Enum\Front;
                    name="<?= Front::MODIFICATION_TERMINAL_C ?>" <?= Front::checked(set_value(Front::MODIFICATION_TERMINAL_C)) ?> />
         </div>
 
+    </div>
+    <div id="div-editor-form-block">
         <button>Add</button>
 
-        <?= validation_errors(); ?>
-        <?php if (isset($errors)) echo $errors; ?>
+        <button type="button" onclick="window.location.href = '<?= site_url('modification') ?>'">Back to list</button>
+
+        <div>
+            <?= validation_errors(); ?>
+            <?php if (isset($errors)) echo $errors; ?>
+        </div>
     </div>
     <?= form_close(); ?>
 </div>

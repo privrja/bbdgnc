@@ -27,6 +27,14 @@ class SmilesReferenceParserTest extends TestCase {
         $this->assertEquals(new Accept($reference, ''), $smilesReferenceParser->parse('SMILES: CCC'));
     }
 
+    public function testWithRightData2() {
+        $smilesReferenceParser = new SmilesReferenceParser();
+        $reference = new ReferenceTO();
+        $reference->database = 'SMILES';
+        $reference->identifier = '';
+        $this->assertEquals(new Accept($reference, ''), $smilesReferenceParser->parse('SMILES: '));
+    }
+
     public function testWithWrongData() {
         $smilesReferenceParser = new SmilesReferenceParser();
         $this->assertEquals(SmilesReferenceParser::reject(), $smilesReferenceParser->parse(' C'));

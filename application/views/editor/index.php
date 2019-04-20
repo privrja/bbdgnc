@@ -26,7 +26,7 @@ use Bbdgnc\Finder\Enum\ServerEnum;
         <input type="text" id="txt-block-formula" name="<?= Front::BLOCK_FORMULA ?>" value="<?= $block->formula ?>"/>
 
         <label for="txt-block-mass">Monoisotopic Residue Mass</label>
-        <input type="text" id="txt-block-mass" name="<?= Front::BLOCK_MASS ?>" value="<?= $block->mass ?>"/>
+        <input type="number" step="any" id="txt-block-mass" name="<?= Front::BLOCK_MASS ?>" value="<?= $block->mass ?>"/>
 
         <label for="txt-block-smiles">SMILES</label>
         <input type="text" id="txt-block-smiles" name="<?= Front::BLOCK_SMILE ?>"
@@ -44,7 +44,7 @@ use Bbdgnc\Finder\Enum\ServerEnum;
         <input type="text" id="txt-block-reference" name="<?= Front::BLOCK_REFERENCE ?>"
                value="<?= $block->identifier ?>"/>
 
-        <button onclick="getSmiles()">Accept changes</button>
+        <button type="button" onclick="saveBb()">Accept changes</button>
     </div>
 </div>
 
@@ -59,16 +59,21 @@ use Bbdgnc\Finder\Enum\ServerEnum;
 <input type="hidden" name="<?= Front::BLOCK_COUNT ?>" value="<?= $blockCount ?>"/>
 <input type="hidden" name="<?= Front::SEQUENCE ?>" value="<?= $sequence ?>" id="hdn-sequence"/>
 <input type="hidden" name="<?= Front::SEQUENCE_TYPE ?>" value="<?= $sequenceType ?>"/>
+<input type="hidden" id="hdn-block-decays" name="<?= Front::DECAYS ?>" value="<?= $decays ?>"/>
+<input type="hidden" id="hdn-sort" name="<?= Front::SORT ?>" value="<?= $sort ?>"/>
+<input type="hidden" name="<?= Front::N_MODIFICATION_SELECT ?>" value="<?= $nSelect ?>"/>
 <input type="hidden" name="<?= Front::N_MODIFICATION_NAME ?>" value="<?= $nModification ?>"/>
 <input type="hidden" name="<?= Front::N_MODIFICATION_FORMULA ?>" value="<?= $nFormula ?>"/>
 <input type="hidden" name="<?= Front::N_MODIFICATION_MASS ?>" value="<?= $nMass ?>"/>
 <input type="hidden" name="<?= Front::N_MODIFICATION_TERMINAL_N ?>" value="<?= $nTerminalN ?>"/>
 <input type="hidden" name="<?= Front::N_MODIFICATION_TERMINAL_C ?>" value="<?= $nTerminalC ?>"/>
+<input type="hidden" name="<?= Front::C_MODIFICATION_SELECT ?>" value="<?= $cSelect ?>"/>
 <input type="hidden" name="<?= Front::C_MODIFICATION_NAME ?>" value="<?= $cModification ?>"/>
 <input type="hidden" name="<?= Front::C_MODIFICATION_FORMULA ?>" value="<?= $cFormula ?>"/>
 <input type="hidden" name="<?= Front::C_MODIFICATION_MASS ?>" value="<?= $cMass ?>"/>
 <input type="hidden" name="<?= Front::C_MODIFICATION_TERMINAL_N ?>" value="<?= $cTerminalN ?>"/>
 <input type="hidden" name="<?= Front::C_MODIFICATION_TERMINAL_C ?>" value="<?= $cTerminalC ?>"/>
+<input type="hidden" name="<?= Front::B_MODIFICATION_SELECT ?>" value="<?= $bSelect ?>"/>
 <input type="hidden" name="<?= Front::B_MODIFICATION_NAME ?>" value="<?= $bModification ?>"/>
 <input type="hidden" name="<?= Front::B_MODIFICATION_FORMULA ?>" value="<?= $bFormula ?>"/>
 <input type="hidden" name="<?= Front::B_MODIFICATION_MASS ?>" value="<?= $bMass ?>"/>
@@ -80,15 +85,20 @@ use Bbdgnc\Finder\Enum\ServerEnum;
 <script src="<?= AssetHelper::jsJsme() ?>"></script>
 <script>
 
-    document.addEventListener('input', readSmiles);
+    let structureChanged = false;
     document.getElementById('sel-block').addEventListener('change', blockFromDatabase);
+    document.getElementById('txt-block-smiles').addEventListener('input', readSmiles);
+    window.addEventListener('load', blockFromDatabase);
 
     /**
      * This function will be called after the JavaScriptApplet code has been loaded.
      */
     function jsmeOnLoad() {
-        jsmeApplet = new JSApplet.JSME("jsme_container", "500px", "500px");
-        jsmeApplet.readGenericMolecularInput('<?= $block->smiles ?>');
+        jsmeApplet = new JSApplet.JSME("jsme_container", "500px", "500px", {
+            options: "nocanonize"
+        });
+        readSmiles();
+        jsmeApplet.setCallBack("AfterStructureModified", getSmiles);
     }
 
     function readSmiles() {
@@ -98,7 +108,6 @@ use Bbdgnc\Finder\Enum\ServerEnum;
     function blockFromDatabase() {
         let blocks = <?= json_encode($blocks); ?>;
         let id = document.getElementById('sel-block').value;
-        // document.getElementById('txt-block-acronym').value = blocks[id];
         disable(id != 0);
     }
 
@@ -113,19 +122,30 @@ use Bbdgnc\Finder\Enum\ServerEnum;
         document.getElementById('txt-block-reference').disabled = disable;
     }
 
-    /**
-     * This function is called after Acept button is clicked
-     * Get SMILES from editor and submit form
-     */
     function getSmiles() {
+        if (!structureChanged) {
+            structureChanged = true;
+            return;
+        }
         let smile = jsmeApplet.nonisomericSmiles();
         if (smile) {
             document.getElementById('txt-block-smiles').value = smile;
         }
-        console.log(smile);
+    }
+
+    /**
+     * This function is called after Accept button is clicked
+     * Get SMILES from editor and submit form
+     */
+    function saveBb() {
         let blockId = '<?= $block->id ?>';
         let lastAcronym = '<?= $block->acronym ?>';
-        let acronym = document.getElementById('txt-block-acronym').value;
+        let acronym;
+        if (document.getElementById('txt-block-acronym').disabled) {
+            acronym = document.getElementById('sel-block').options[document.getElementById('sel-block').selectedIndex].text;
+        } else {
+            acronym = document.getElementById('txt-block-acronym').value;
+        }
         let sequence = document.getElementById('hdn-sequence').value;
         if ("" === lastAcronym || !sequence.includes(`[${lastAcronym}]`)) {
             sequence = sequenceReplace(blockId, acronym, sequence);
