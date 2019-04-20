@@ -95,7 +95,6 @@ use Bbdgnc\TransportObjects\SequenceTO;
 </div>
 
 <script>
-
     let structureChanged = false;
     document.getElementById('txt-block-smiles').addEventListener('input', readSmiles);
 

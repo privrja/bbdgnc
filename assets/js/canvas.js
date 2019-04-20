@@ -101,7 +101,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     if (document.getElementById(SEQUENCE_TYPE)) {
-        if (document.getElementById('h-results')) {
+        if (document.getElementById('h-results') || document.getElementById('sel-n-modification')) {
             window.addEventListener('load', sequenceTypeChanged);
         }
     }
@@ -647,25 +647,31 @@ function modificationSelect(event) {
 function displayModification(id, display) {
     switch (id) {
         case SEL_N_MODIFICATION:
-            document.getElementById('txt-n-modification').disabled = display;
-            document.getElementById('txt-n-formula').disabled = display;
-            document.getElementById('txt-n-mass').disabled = display;
-            document.getElementById('chk-n-nterminal').disabled = display;
-            document.getElementById('chk-n-cterminal').disabled = display;
+            if (document.getElementById('txt-n-formula')) {
+                document.getElementById('txt-n-modification').disabled = display;
+                document.getElementById('txt-n-formula').disabled = display;
+                document.getElementById('txt-n-mass').disabled = display;
+                document.getElementById('chk-n-nterminal').disabled = display;
+                document.getElementById('chk-n-cterminal').disabled = display;
+            }
             break;
         case SEL_C_MODIFICATION:
-            document.getElementById('txt-c-modification').disabled = display;
-            document.getElementById('txt-c-formula').disabled = display;
-            document.getElementById('txt-c-mass').disabled = display;
-            document.getElementById('chk-c-nterminal').disabled = display;
-            document.getElementById('chk-c-cterminal').disabled = display;
+            if (document.getElementById('txt-c-formula')) {
+                document.getElementById('txt-c-modification').disabled = display;
+                document.getElementById('txt-c-formula').disabled = display;
+                document.getElementById('txt-c-mass').disabled = display;
+                document.getElementById('chk-c-nterminal').disabled = display;
+                document.getElementById('chk-c-cterminal').disabled = display;
+            }
             break;
         case SEL_B_MODIFICATION:
-            document.getElementById('txt-b-modification').disabled = display;
-            document.getElementById('txt-b-formula').disabled = display;
-            document.getElementById('txt-b-mass').disabled = display;
-            document.getElementById('chk-b-nterminal').disabled = display;
-            document.getElementById('chk-b-cterminal').disabled = display;
+            if (document.getElementById('txt-b-formula')) {
+                document.getElementById('txt-b-modification').disabled = display;
+                document.getElementById('txt-b-formula').disabled = display;
+                document.getElementById('txt-b-mass').disabled = display;
+                document.getElementById('chk-b-nterminal').disabled = display;
+                document.getElementById('chk-b-cterminal').disabled = display;
+            }
             break;
     }
 }
@@ -699,11 +705,11 @@ function redirectOnlyWithData(url, data) {
 }
 
 function changeSortArrows() {
-   let sortArrow = getGetValue();
-   if (sortArrow !== {}) {
-       let is2 = document.getElementsByClassName(sortArrow.key)[0];
-       is2.className = "fa fa-sort-" + translateSortOrder(sortArrow.value) + ' ' + sortArrow.key;
-   }
+    let sortArrow = getGetValue();
+    if (sortArrow !== {}) {
+        let is2 = document.getElementsByClassName(sortArrow.key)[0];
+        is2.className = "fa fa-sort-" + translateSortOrder(sortArrow.value) + ' ' + sortArrow.key;
+    }
 }
 
 let sortArray = ['type', 'name', 'acronym', 'residue', 'formula', 'losses', 'mass', 'smiles', 'sequence', 'nterminal', 'cterminal'];
@@ -731,9 +737,9 @@ function getGetParameters() {
 function findGetParameterValue(parameterName, params) {
     var result = null, tmp = [];
     params.forEach(function (item) {
-            tmp = item.split("=");
-            if (tmp[0] === parameterName) result = decodeURIComponent(tmp[1]);
-        });
+        tmp = item.split("=");
+        if (tmp[0] === parameterName) result = decodeURIComponent(tmp[1]);
+    });
     return result;
 }
 
