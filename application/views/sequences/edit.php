@@ -50,27 +50,6 @@ use Bbdgnc\TransportObjects\SequenceTO;
 
             <input type="hidden" id="hdn-decays" name="<?= Front::DECAYS ?>"
                    value="<?= $sequence[SequenceTO::DECAYS] ?>"/>
-        </div>
-        <div id="div-editor-form-block">
-            <button>Save</button>
-
-            <button type="button" onclick="window.location.href = '<?= site_url('sequence') ?>'">Back to list</button>
-
-            <button type="button"
-                    onclick="window.location.href = '<?= site_url('sequence/delete/' . $sequence['id']) ?>'">
-                Delete
-            </button>
-
-            <div>
-                <?= validation_errors(); ?>
-                <?php if (isset($errors)) echo $errors; ?>
-
-            </div>
-        </div>
-        <?= form_close(); ?>
-
-        <div id="div-sequence">
-            <?= form_open('sequence/modifications/'); ?>
             <div class="div-modification">
                 <h4>N-terminal Modification</h4>
 
@@ -94,10 +73,24 @@ use Bbdgnc\TransportObjects\SequenceTO;
                 <?= form_dropdown(Front::B_MODIFICATION_SELECT, $modifications, set_value(Front::B_MODIFICATION_SELECT, $bModification['id']),
                     'id="sel-b-modification" class="select" title="Modification"'); ?>
             </div>
-            <input type="hidden" name="sequenceId" value="<?= $sequence['id'] ?>"/>
-            <input type="submit" value="Save modifications"/>
         </div>
+        <div id="div-editor-form-block">
+            <button>Save</button>
 
+            <button type="button" onclick="window.location.href = '<?= site_url('sequence') ?>'">Back to list</button>
+
+            <button type="button"
+                    onclick="window.location.href = '<?= site_url('sequence/delete/' . $sequence['id']) ?>'">
+                Delete
+            </button>
+
+            <div>
+                <?= validation_errors(); ?>
+                <?php if (isset($errors)) echo $errors; ?>
+
+            </div>
+        </div>
+        <?= form_close(); ?>
     </div>
 </div>
 

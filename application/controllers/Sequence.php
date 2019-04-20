@@ -18,7 +18,8 @@ use Bbdgnc\Exception\IllegalArgumentException;
 use Bbdgnc\Exception\UniqueConstraintException;
 use Bbdgnc\TransportObjects\SequenceTO;
 
-class Sequence extends CI_Controller {
+class Sequence extends CI_Controller
+{
 
     const SEQUENCE_ID = 'sequenceId';
     const MODIFICATION_ID = '_modification_id';
@@ -26,7 +27,8 @@ class Sequence extends CI_Controller {
 
     private $database;
 
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
         $this->load->model(ModelEnum::SEQUENCE_MODEL);
         $this->load->model(ModelEnum::MODIFICATION_MODEL);
@@ -38,7 +40,8 @@ class Sequence extends CI_Controller {
         $this->database = new SequenceDatabase($this);
     }
 
-    private function setupQuery(Query $query) {
+    private function setupQuery(Query $query)
+    {
         Front::addSameFilter(SequenceTO::TYPE, SequenceTO::TABLE_NAME, $query, $this);
         Front::addLikeFilter(SequenceTO::NAME, SequenceTO::TABLE_NAME, $query, $this);
         Front::addLikeFilter(SequenceTO::FORMULA, SequenceTO::TABLE_NAME, $query, $this);
@@ -53,7 +56,8 @@ class Sequence extends CI_Controller {
         return Front::getSortDirection($sort);
     }
 
-    public function index($start = 0) {
+    public function index($start = 0)
+    {
         $config = $data = [];
         $query = new Query();
         $data['sort'] = $this->setupQuery($query);
@@ -71,7 +75,8 @@ class Sequence extends CI_Controller {
         $this->load->view(Front::TEMPLATES_FOOTER);
     }
 
-    public function detail($id = 1) {
+    public function detail($id = 1)
+    {
         $modificationDatabase = new ModificationDatabase($this);
         $data = $this->database->findSequenceDetail($id);
         $data['modifications'] = $modificationDatabase->findAllSelect();
@@ -82,7 +87,8 @@ class Sequence extends CI_Controller {
         $this->load->view(Front::TEMPLATES_FOOTER);
     }
 
-    public function new() {
+    public function new()
+    {
         $data = [];
         $this->form_validation->set_rules(Front::SEQUENCE_TYPE, 'Type', Front::REQUIRED);
         $this->form_validation->set_rules(Front::CANVAS_INPUT_NAME, 'Name', Front::REQUIRED);
@@ -114,7 +120,8 @@ class Sequence extends CI_Controller {
         }
     }
 
-    public function edit($id = 1) {
+    public function edit($id = 1)
+    {
         $arSequence = $this->database->findById($id);
         $data[SequenceTO::TABLE_NAME] = $arSequence;
         $modificationDatabase = new ModificationDatabase($this);
@@ -136,6 +143,16 @@ class Sequence extends CI_Controller {
         try {
             $sequenceTO = $this->updateSequence($arSequence);
             $this->database->update($id, $sequenceTO);
+            $modificationDatabase->startTransaction();
+            $branchChar = ModificationHelperTypeEnum::startModification($data[SequenceTO::TABLE_NAME][SequenceTO::TYPE]);
+            while (!ModificationHelperTypeEnum::isEnd($branchChar)) {
+                $this->saveModification($branchChar, $id);
+                $branchChar = ModificationHelperTypeEnum::changeBranchChar($branchChar, $data[SequenceTO::TABLE_NAME][SequenceTO::TYPE]);
+            }
+            $modificationDatabase->endTransaction();
+            $data = $this->database->findSequenceDetail($id);
+            $data[Front::ERRORS] = 'Sequence properly edited';
+            $data['modifications'] = $modificationDatabase->findAllSelect();
         } catch (IllegalArgumentException $exception) {
             $data[Front::ERRORS] = $exception->getMessage();
             Logger::log(LoggerEnum::WARNING, $exception->getTraceAsString());
@@ -151,7 +168,8 @@ class Sequence extends CI_Controller {
         }
     }
 
-    public function delete($id = 0) {
+    public function delete($id = 0)
+    {
         $data[SequenceTO::TABLE_NAME] = $this->database->findById($id);
         try {
             $this->database->delete($id, new SequenceDatabase($this));
@@ -170,36 +188,13 @@ class Sequence extends CI_Controller {
         redirect('sequence');
     }
 
-    public function modifications() {
-        $modificationDatabase = new ModificationDatabase($this);
-        // TODO validate sequenceId and modification id
-        $id = $this->input->post(self::SEQUENCE_ID);
-        $data[SequenceTO::TABLE_NAME] = $this->database->findById($id);
-
-        $savedModifications = false;
-        $modificationDatabase->startTransaction();
-        $branchChar = ModificationHelperTypeEnum::startModification($data[SequenceTO::TABLE_NAME][SequenceTO::TYPE]);
-        while (!ModificationHelperTypeEnum::isEnd($branchChar)) {
-            $savedModifications = true;
-            $this->saveModification($branchChar, $id);
-            $branchChar = ModificationHelperTypeEnum::changeBranchChar($branchChar, $data[SequenceTO::TABLE_NAME][SequenceTO::TYPE]);
-        }
-        $modificationDatabase->endTransaction();
-        $data = $this->database->findSequenceDetail($id);
-        if ($savedModifications) {
-            $data[Front::ERRORS] = 'Modification saved';
-        } else {
-            $data[Front::ERRORS] = 'Nothing to save!';
-        }
-        $data['modifications'] = $modificationDatabase->findAllSelect();
-        $this->renderEdit($data);
-    }
-
-    private function saveModification(string $terminalValue, $sequenceId) {
+    private function saveModification(string $terminalValue, $sequenceId)
+    {
         $this->database->updateModification($sequenceId, $this->input->post($terminalValue . Front::MODIFICATION_SELECT), $terminalValue . self::MODIFICATION_ID);
     }
 
-    private function updateSequence(array $arSequence) {
+    private function updateSequence(array $arSequence)
+    {
         $sequenceTO = new SequenceTO(
             $arSequence['database'],
             $arSequence['name'],
@@ -234,7 +229,8 @@ class Sequence extends CI_Controller {
         return $sequenceTO;
     }
 
-    private function createSequence() {
+    private function createSequence()
+    {
         return new SequenceTO(
             $this->input->post(Front::CANVAS_INPUT_DATABASE),
             $this->input->post(Front::CANVAS_INPUT_NAME),
@@ -247,13 +243,15 @@ class Sequence extends CI_Controller {
         );
     }
 
-    private function renderEdit($data) {
+    private function renderEdit($data)
+    {
         $this->load->view(Front::TEMPLATES_HEADER);
         $this->load->view('sequences/edit', $data);
         $this->load->view(Front::TEMPLATES_FOOTER);
     }
 
-    private function renderNew($data) {
+    private function renderNew($data)
+    {
         $this->load->view(Front::TEMPLATES_HEADER);
         $this->load->view('sequences/new', $data);
         $this->load->view(Front::TEMPLATES_FOOTER);
