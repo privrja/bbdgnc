@@ -29,9 +29,6 @@ class SequenceDatabase extends AbstractDatabase {
     /** @var ModificationTO[] */
     private $modifications;
 
-    /** @var int[] */
-    private $blockIds = [];
-
     /** @var IdOrder[] $blockIdsAndSort */
     private $blockIdsAndSort = [];
 

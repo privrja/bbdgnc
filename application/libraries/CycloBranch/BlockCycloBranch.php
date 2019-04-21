@@ -19,7 +19,8 @@ use Bbdgnc\Smiles\Parser\Reject;
 use Bbdgnc\TransportObjects\BlockTO;
 use CI_Controller;
 
-class BlockCycloBranch extends AbstractCycloBranch {
+class BlockCycloBranch extends AbstractCycloBranch
+{
 
     const NAME = 0;
     const ACRONYM = 1;
@@ -35,13 +36,15 @@ class BlockCycloBranch extends AbstractCycloBranch {
      * BlockCycloBranch constructor.
      * @param CI_Controller $controller
      */
-    public function __construct($controller) {
+    public function __construct($controller)
+    {
         parent::__construct($controller);
         $this->database = new BlockDatabase($controller);
     }
 
 
-    public function parse($line) {
+    public function parse($line)
+    {
         $arItems = $this->validateLine($line, false);
         if ($arItems === false) {
             return self::reject();
@@ -68,19 +71,17 @@ class BlockCycloBranch extends AbstractCycloBranch {
                     $arSmiles[$index] = "";
                     $arDatabaseReference[] = $referenceResult->getResult();
                 }
-                if ($arSmiles[$index] === "") {
-                    if ($referenceResult->getResult()->database === ServerEnum::PUBCHEM || $referenceResult->getResult()->database === ServerEnum::CHEBI) {
-                        $finder = FinderFactory::getFinder($referenceResult->getResult()->database);
-                        $findResult = null;
-                        $outArResult = [];
-                        try {
-                            $findResult = $finder->findByIdentifier($referenceResult->getResult()->identifier, $outArResult);
-                        } catch (BadTransferException $e) {
-                            Logger::log(LoggerEnum::WARNING, "Block not found");
-                        }
-                        if ($findResult === ResultEnum::REPLY_OK_ONE) {
-                            $arSmiles[$index] = $outArResult[Front::CANVAS_INPUT_SMILE];
-                        }
+                if ($arSmiles[$index] === "" && ($referenceResult->getResult()->database === ServerEnum::PUBCHEM || $referenceResult->getResult()->database === ServerEnum::CHEBI)) {
+                    $finder = FinderFactory::getFinder($referenceResult->getResult()->database);
+                    $findResult = null;
+                    $outArResult = [];
+                    try {
+                        $findResult = $finder->findByIdentifier($referenceResult->getResult()->identifier, $outArResult);
+                    } catch (BadTransferException $e) {
+                        Logger::log(LoggerEnum::WARNING, "Block not found");
+                    }
+                    if ($findResult === ResultEnum::REPLY_OK_ONE) {
+                        $arSmiles[$index] = $outArResult[Front::CANVAS_INPUT_SMILE];
                     }
                 }
             } else {
@@ -149,8 +150,7 @@ class BlockCycloBranch extends AbstractCycloBranch {
         for ($index = 1; $index < $blockCount; ++$index) {
             $strData .= '/' . $formula[$index][$type];
         }
-        $strData .= "\t";
-        return $strData;
+        return $strData . "\t";
     }
 
     private function setReferences(string $strData, $formula, int $blockCount) {
@@ -159,8 +159,7 @@ class BlockCycloBranch extends AbstractCycloBranch {
         for ($index = 1; $index < $blockCount; ++$index) {
             $strData .= '/' . ReferenceHelper::reference($formula[$index]['database'], $formula[$index]['identifier'], $formula[$index]['smiles']);
         }
-        $strData .= PHP_EOL;
-        return $strData;
+        return $strData . PHP_EOL;
     }
 
     protected function getLineLength() {
