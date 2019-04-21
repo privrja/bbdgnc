@@ -44,6 +44,12 @@ class Settings extends CI_Controller {
             case ResetTypeEnum::AMINO_ACIDS:
                 $blockDatabase->resetWithAminoAcids();
                 break;
+            case ResetTypeEnum::AMINO_ACIDS_WITH_MODIFICATION:
+                $blockDatabase->resetAminoAcidsWithModifications();
+                break;
+            case ResetTypeEnum::DEFAULT_MODIFICATIONS:
+                $blockDatabase->resetWithModifications();
+                break;
             default:
                 break;
         }

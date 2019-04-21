@@ -13,7 +13,7 @@ use Bbdgnc\CycloBranch\Enum\ResetTypeEnum;
         <?= form_open('settings/reset', array('class' => 'form')); ?>
         <input type="hidden" value="delx" name="delete"/>
         <div id="">
-            <?= form_dropdown('resetType', ResetTypeEnum::$values, '1') ?>
+            <?= form_dropdown('resetType', ResetTypeEnum::$values, '2') ?>
         </div>
         <div>
             <input type="submit" value="Reset" name="btnReset"/>

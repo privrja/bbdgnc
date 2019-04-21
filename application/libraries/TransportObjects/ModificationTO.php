@@ -60,4 +60,8 @@ class ModificationTO implements IEntity {
         ];
     }
 
+    public static function createModification(string $name, string $formula, float $mass, bool $nTerminal, bool $cTerminal): ModificationTO {
+        return new ModificationTO($name, $formula, $mass, $cTerminal, $nTerminal);
+    }
+
 }

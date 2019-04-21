@@ -4,6 +4,7 @@ namespace Bbdgnc\Base;
 
 use Bbdgnc\Finder\Enum\ServerEnum;
 use Bbdgnc\TransportObjects\BlockTO;
+use Bbdgnc\TransportObjects\ModificationTO;
 
 class AminoAcidsHelper {
 
@@ -32,6 +33,15 @@ class AminoAcidsHelper {
         $blocks[] = BlockTO::createBlock('Tryptophan','Trp','C11H10N2O',186.07931300000001328,'','C1=CC=C2C(=C1)C(=CN2)CC(C(=O)O)N','NC(CC1=CNC2=CC=CC=C12)C(O)=O', self::DATABASE,'6305')->asEntity();
         $blocks[] = BlockTO::createBlock('Tyrosine','Tyr','C9H9NO2',163.06332900000001018,'H2O','C1=CC(=CC=C1CC(C(=O)O)N)O','NC(CC1=CC=C(O)C=C1)C(O)=O', self::DATABASE,'6057')->asEntity();
         return $blocks;
+    }
+
+    public static function getDefaultModifications(): array {
+        $modifications = [];
+        $modifications[] = ModificationTO::createModification('Acetyl', 'H2C2O', 42.0105646863, true, false)->asEntity();
+        $modifications[] = ModificationTO::createModification('Amidated', 'HNO-1', -0.9840155848, false, true)->asEntity();
+        $modifications[] = ModificationTO::createModification('Ethanolamine', 'H5C2N', 43.0421991657, false, true)->asEntity();
+        $modifications[] = ModificationTO::createModification('Formyl', 'CO', 27.9949146221, true, false)->asEntity();
+        return $modifications;
     }
 
 }
