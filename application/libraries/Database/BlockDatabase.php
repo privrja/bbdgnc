@@ -130,7 +130,6 @@ class BlockDatabase extends AbstractDatabase {
         $this->deleteAll();
         $modifications = AminoAcidsHelper::getDefaultModifications();
         $this->controller->modification_model->insertMore($modifications);
-        var_dump("MOD");
     }
 
 }
