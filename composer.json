@@ -1,28 +1,18 @@
 {
-	"description": "The CodeIgniter framework",
-	"name": "codeigniter/framework",
+	"description": "Bbdgnc using CodeIgniter framework",
+	"name": "privrja/bbdgnc",
 	"type": "project",
-	"homepage": "https://codeigniter.com",
 	"license": "MIT",
-	"support": {
-		"forum": "http://forum.codeigniter.com/",
-		"wiki": "https://github.com/bcit-ci/CodeIgniter/wiki",
-		"slack": "https://codeigniterchat.slack.com",
-		"source": "https://github.com/bcit-ci/CodeIgniter"
-	},
 	"require": {
-		"php": ">=5.3.7"
+      "php": ">=7.2.0"
 	},
 	"autoload": {
-		"psr-4": {
-			"Bbdgnc\\Finder\\" : "application/libraries/finder",
-			"Bbdgnc\\Finder\\Enum\\" : "application/libraries/finder/enums",
-			"Bbdgnc\\Finder\\Exception\\" : "application/libraries/finder/exceptions",
-			"Bbdgnc\\Enum\\" : "application/libraries/enums",
-			"Bbdgnc\\Smiles\\" : "application/libraries/smiles"
-		}
+		"classmap": [
+			"application/libraries",
+			"tests"
+        ]
 	},
 	"require-dev": {
-		"phpunit/phpunit": "4.* || 5.*"
+		"phpunit/phpunit": "^7.5"
 	}
 }

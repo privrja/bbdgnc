@@ -2,6 +2,7 @@
 
 namespace Bbdgnc\Finder;
 
+use Bbdgnc\Base\Logger;
 use Bbdgnc\Enum\LoggerEnum;
 use Bbdgnc\Finder\Exception\BadTransferException;
 
@@ -16,12 +17,15 @@ abstract class JsonDownloader {
     public static function getJsonFromUri($strUri) {
         $curl = curl_init($strUri);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
+        ini_set('max_execution_time', 40);
         $curl_response = curl_exec($curl);
+        ini_set('max_execution_time', 30);
         if ($curl_response === false) {
             $error = curl_error($curl);
             curl_close($curl);
-            log_message(LoggerEnum::ERROR, "Error in cURL on URI: " . $strUri);
-            log_message(LoggerEnum::ERROR, "Error in cURL: " . $error);
+            Logger::log(LoggerEnum::ERROR, "Error in cURL on URI: " . $strUri);
+            Logger::log(LoggerEnum::ERROR, "Error in cURL: " . $error);
             throw new BadTransferException("Error during cURL");
         }
         curl_close($curl);
@@ -29,11 +33,11 @@ abstract class JsonDownloader {
 
         /* Bad reply */
         if (isset($decoded[PubChemFinder::REPLY_FAULT])) {
-            log_message(LoggerEnum::ERROR, "REST reply fault. Uri: " . $strUri);
+            Logger::log(LoggerEnum::ERROR, "REST reply fault. Uri: " . $strUri);
             return false;
         }
 
-        log_message(LoggerEnum::INFO, "Response OK to URI: $strUri");
+        Logger::log(LoggerEnum::INFO, "Response OK to URI: $strUri");
         return $decoded;
     }
 

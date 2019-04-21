@@ -52,3 +52,6 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 $route['default_controller'] = "land";
 $route['404_override'] = "";
 $route['translate_uri_dashes'] = FALSE;
+$route['block/(:num)'] = 'block/index/$1';
+$route['sequence/(:num)'] = 'sequence/index/$1';
+$route['modification/(:num)'] = 'modification/index/$1';

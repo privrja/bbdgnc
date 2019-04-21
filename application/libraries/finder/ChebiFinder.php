@@ -2,8 +2,11 @@
 
 namespace Bbdgnc\Finder;
 
+use Bbdgnc\Base\FormulaHelper;
+use Bbdgnc\Base\Logger;
 use Bbdgnc\Enum\Front;
 use Bbdgnc\Enum\LoggerEnum;
+use Bbdgnc\Exception\IllegalStateException;
 use Bbdgnc\Finder\Enum\ChebiSearchCategoryEnum;
 use Bbdgnc\Finder\Enum\ResultEnum;
 use Bbdgnc\Finder\Exception\BadTransferException;
@@ -93,10 +96,10 @@ class ChebiFinder implements IFinder {
             }
             $this->findByIdentifiers($arIds, $outArResult);
         } catch (\Exception $ex) {
-            log_message(LoggerEnum::ERROR, self::ERROR_DURING_SOAP, $ex->getMessage());
+            Logger::log(LoggerEnum::ERROR, self::ERROR_DURING_SOAP . "\n" . $ex->getMessage());
             throw new BadTransferException(self::ERROR_DURING_SOAP);
         }
-        log_message(LoggerEnum::INFO, self::INFO_SOAP_OK);
+        Logger::log(LoggerEnum::INFO, self::INFO_SOAP_OK);
         return ResultEnum::REPLY_OK_MORE;
     }
 
@@ -111,7 +114,44 @@ class ChebiFinder implements IFinder {
      */
     public function findByFormula($strFormula, &$outArResult, &$outArNextResult) {
         return $this->getLiteEntity($strFormula, ChebiSearchCategoryEnum::FORMULA, $outArResult, $outArNextResult);
+//        $result = $this->getLiteEntity($strFormula, ChebiSearchCategoryEnum::FORMULA, $outArResult, $outArNextResult);
+//        switch ($result) {
+//            case ResultEnum::REPLY_NONE:
+//            case ResultEnum::REPLY_OK_ONE:
+//                return $result;
+//            case ResultEnum::REPLY_OK_MORE;
+//                $mass = FormulaHelper::computeMass($strFormula);
+//                foreach ($outArResult as $molecule) {
+//                    if ($molecule[Front::CANVAS_INPUT_MASS] > $mass + 4
+//                        || $molecule[Front::CANVAS_INPUT_MASS] < $mass - 4) {
+//                        $this->deleteElement($molecule, $outArResult);
+//                    }
+//                }
+//                foreach ($outArNextResult as $molecule) {
+//                    if ($molecule[Front::CANVAS_INPUT_MASS] > $mass + 4
+//                        || $molecule[Front::CANVAS_INPUT_MASS] < $mass - 4) {
+//                        $this->deleteElement($molecule, $outArNextResult);
+//                    }
+//                }
+//                $length = sizeof($outArResult);
+//                if ($length < IFinder::FIRST_X_RESULTS) {
+//                    for ($index = 0; $index <= $length; ++$index) {
+//                        $outArResult[] = array_pop($outArNextResult);
+//                    }
+//                }
+//                return $result;
+//            default:
+//                throw new IllegalStateException();
+//        }
     }
+
+    function deleteElement($element, &$array){
+        $index = array_search($element, $array);
+        if($index !== false){
+            unset($array[$index]);
+        }
+    }
+
 
     /**
      * Find data by Monoisotopic Mass
@@ -154,10 +194,10 @@ class ChebiFinder implements IFinder {
                 return ResultEnum::REPLY_NONE;
             }
         } catch (\Exception $ex) {
-            log_message(LoggerEnum::ERROR, self::ERROR_DURING_SOAP, $ex->getMessage());
+            Logger::log(LoggerEnum::ERROR, self::ERROR_DURING_SOAP . "\n" . $ex->getMessage());
             throw new BadTransferException(self::ERROR_DURING_SOAP);
         }
-        log_message(LoggerEnum::INFO, self::INFO_SOAP_OK);
+        Logger::log(LoggerEnum::INFO, self::INFO_SOAP_OK);
         return ResultEnum::REPLY_OK_ONE;
     }
 
@@ -184,10 +224,10 @@ class ChebiFinder implements IFinder {
                 }
             }
         } catch (\Exception $ex) {
-            log_message(LoggerEnum::ERROR, self::ERROR_DURING_SOAP, $ex->getMessage());
+            Logger::log(LoggerEnum::ERROR, self::ERROR_DURING_SOAP . "\n" . $ex->getMessage());
             throw new BadTransferException(self::ERROR_DURING_SOAP);
         }
-        log_message(LoggerEnum::INFO, self::INFO_SOAP_OK);
+        Logger::log(LoggerEnum::INFO, self::INFO_SOAP_OK);
         return ResultEnum::REPLY_OK_MORE;
     }
 
@@ -235,10 +275,10 @@ class ChebiFinder implements IFinder {
             }
             $this->findByIdentifiers($arIds, $outArResult);
         } catch (\Exception $ex) {
-            log_message(LoggerEnum::ERROR, self::ERROR_DURING_SOAP, $ex->getMessage());
+            Logger::log(LoggerEnum::ERROR, self::ERROR_DURING_SOAP . "\n" . $ex->getMessage());
             throw new BadTransferException(self::ERROR_DURING_SOAP);
         }
-        log_message(LoggerEnum::INFO, self::INFO_SOAP_OK);
+        Logger::log(LoggerEnum::INFO, self::INFO_SOAP_OK);
         return ResultEnum::REPLY_OK_MORE;
     }
 
