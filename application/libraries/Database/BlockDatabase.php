@@ -118,7 +118,18 @@ class BlockDatabase extends AbstractDatabase {
        $this->controller->block_model->insertMore($aminoAcids);
     }
 
+    public function resetAminoAcidsWithModifications() {
+        $this->deleteAll();
+        $aminoAcids = AminoAcidsHelper::getAminoAcids();
+        $modifications = AminoAcidsHelper::getDefaultModifications();
+        $this->controller->block_model->insertMore($aminoAcids);
+        $this->controller->modification_model->insertMore($modifications);
+    }
 
-
+    public function resetWithModifications() {
+        $this->deleteAll();
+        $modifications = AminoAcidsHelper::getDefaultModifications();
+        $this->controller->modification_model->insertMore($modifications);
+    }
 
 }
