@@ -23,7 +23,7 @@ class AssetHelper {
     }
 
     public static function jsSmilesDrawer() {
-        return AssetHelper::jsUrl() . 'smiles-drawer.js';
+        return AssetHelper::nodeModulesUrl() . 'smiles-drawer/dist/smiles-drawer.js';
     }
 
     public static function jsJsme() {

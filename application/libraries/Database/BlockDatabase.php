@@ -17,6 +17,9 @@ class BlockDatabase extends AbstractDatabase {
     const INTEGER = 'INTEGER';
     const TEXT = 'TEXT';
     const REAL = 'REAL';
+    const ID_INTEGER_PRIMARY_KEY = "id INTEGER PRIMARY KEY";
+    const MASS_REAL = "mass REAL";
+    const NAME_TEXT_NOT_NULL_CHECK_LENGTH_NAME_0 = "name TEXT NOT NULL CHECK(length(name) > 0)";
 
     public function findMergeBlocks($page) {
         $data = [];
@@ -122,16 +125,11 @@ class BlockDatabase extends AbstractDatabase {
     }
 
     public function resetDatabase() {
-//        $this->controller->dbforge->drop_table(BlockTO::TABLE_NAME, true);
-//        $this->controller->dbforge->drop_table(SequenceTO::TABLE_NAME, true);
-//        $this->controller->dbforge->drop_table(ModificationTO::TABLE_NAME, true);
-//        $this->controller->dbforge->drop_table('b2s', true);
-
-        $this->controller->dbforge->add_field("id INTEGER PRIMARY KEY");
-        $this->controller->dbforge->add_field("name TEXT NOT NULL CHECK(length(name) > 0)");
+        $this->controller->dbforge->add_field(self::ID_INTEGER_PRIMARY_KEY);
+        $this->controller->dbforge->add_field(self::NAME_TEXT_NOT_NULL_CHECK_LENGTH_NAME_0);
         $this->controller->dbforge->add_field("acronym TEXT NOT NULL CHECK(length(acronym) > 0)");
         $this->controller->dbforge->add_field("residue TEXT NOT NULL CHECK(length(residue) > 0)");
-        $this->controller->dbforge->add_field("mass REAL");
+        $this->controller->dbforge->add_field(self::MASS_REAL);
         $this->controller->dbforge->add_field("losses TEXT");
         $this->controller->dbforge->add_field("smiles TEXT");
         $this->controller->dbforge->add_field("usmiles TEXT");
@@ -139,11 +137,11 @@ class BlockDatabase extends AbstractDatabase {
         $this->controller->dbforge->add_field("identifier TEXT");
         $this->controller->dbforge->create_table(BlockTO::TABLE_NAME, true);
 
-        $this->controller->dbforge->add_field("id INTEGER PRIMARY KEY");
+        $this->controller->dbforge->add_field(self::ID_INTEGER_PRIMARY_KEY);
         $this->controller->dbforge->add_field("type TEXT NOT NULL DEFAULT 'other'");
-        $this->controller->dbforge->add_field("name TEXT NOT NULL CHECK(length(name) > 0)");
+        $this->controller->dbforge->add_field(self::NAME_TEXT_NOT_NULL_CHECK_LENGTH_NAME_0);
         $this->controller->dbforge->add_field("formula TEXT NOT NULL CHECK(length(formula) > 0)");
-        $this->controller->dbforge->add_field("mass REAL");
+        $this->controller->dbforge->add_field(self::MASS_REAL);
         $this->controller->dbforge->add_field("sequence TEXT");
         $this->controller->dbforge->add_field("smiles TEXT");
         $this->controller->dbforge->add_field("database INTEGER");
@@ -157,10 +155,10 @@ class BlockDatabase extends AbstractDatabase {
         $this->controller->dbforge->add_field("FOREIGN KEY (b_modification_id) REFERENCES modification(id)");
         $this->controller->dbforge->create_table(SequenceTO::TABLE_NAME, true);
 
-        $this->controller->dbforge->add_field("id INTEGER PRIMARY KEY");
-        $this->controller->dbforge->add_field("name TEXT NOT NULL CHECK(length(name) > 0)");
+        $this->controller->dbforge->add_field(self::ID_INTEGER_PRIMARY_KEY);
+        $this->controller->dbforge->add_field(self::NAME_TEXT_NOT_NULL_CHECK_LENGTH_NAME_0);
         $this->controller->dbforge->add_field("formula TEXT NOT NULL CHECK(length(formula) > 0)");
-        $this->controller->dbforge->add_field("mass REAL");
+        $this->controller->dbforge->add_field(self::MASS_REAL);
         $this->controller->dbforge->add_field("nterminal INTEGER NOT NULL DEFAULT 0");
         $this->controller->dbforge->add_field("cterminal INTEGER NOT NULL DEFAULT 0");
         $this->controller->dbforge->create_table(ModificationTO::TABLE_NAME, true);
@@ -199,6 +197,5 @@ class BlockDatabase extends AbstractDatabase {
         $modifications = AminoAcidsHelper::getDefaultModifications();
         $this->controller->modification_model->insertMore($modifications);
     }
-
 
 }
