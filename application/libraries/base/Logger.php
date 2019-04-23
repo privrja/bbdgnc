@@ -6,7 +6,7 @@ use Bbdgnc\Enum\LoggerEnum;
 
 class Logger {
 
-    const LEVEL = LoggerEnum::INFO;
+    const LEVEL = LoggerEnum::DISABLE;
 
     const FILE = "./application/logs/log-";
 
@@ -18,7 +18,7 @@ class Logger {
      * @see LoggerEnum
      */
     public static function log(int $lvl, string $msg) {
-        if ($lvl === LoggerEnum::DISABLE || $lvl < self::LEVEL) {
+        if (self::LEVEL === LoggerEnum::DISABLE || $lvl < self::LEVEL) {
             return;
         }
         $bt = debug_backtrace();
