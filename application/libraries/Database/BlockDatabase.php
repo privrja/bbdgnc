@@ -122,11 +122,6 @@ class BlockDatabase extends AbstractDatabase {
     }
 
     public function resetDatabase() {
-//        $this->controller->dbforge->drop_table(BlockTO::TABLE_NAME, true);
-//        $this->controller->dbforge->drop_table(SequenceTO::TABLE_NAME, true);
-//        $this->controller->dbforge->drop_table(ModificationTO::TABLE_NAME, true);
-//        $this->controller->dbforge->drop_table('b2s', true);
-
         $this->controller->dbforge->add_field("id INTEGER PRIMARY KEY");
         $this->controller->dbforge->add_field("name TEXT NOT NULL CHECK(length(name) > 0)");
         $this->controller->dbforge->add_field("acronym TEXT NOT NULL CHECK(length(acronym) > 0)");
@@ -199,6 +194,5 @@ class BlockDatabase extends AbstractDatabase {
         $modifications = AminoAcidsHelper::getDefaultModifications();
         $this->controller->modification_model->insertMore($modifications);
     }
-
 
 }
