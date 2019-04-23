@@ -7,6 +7,8 @@ use Bbdgnc\Enum\Front;
 
 class Import extends CI_Controller {
 
+    const UPLOADS_DIR = 'uploads';
+
     /**
      * Import constructor.
      */
@@ -26,6 +28,9 @@ class Import extends CI_Controller {
     }
 
     public function upload() {
+        if (!file_exists(self::UPLOADS_DIR)) {
+            mkdir(self::UPLOADS_DIR, 0755, true);
+        }
         $config['upload_path'] = './uploads/';
         $config['allowed_types'] = 'txt';
         $config['max_size'] = 500;

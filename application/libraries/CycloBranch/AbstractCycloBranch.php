@@ -27,6 +27,7 @@ abstract class AbstractCycloBranch implements ICycloBranch, IParser {
 
     public final function import(string $filePath) {
         ini_set('max_execution_time', 120);
+
         $handle = fopen($filePath, 'r');
         if (!$handle) {
             return;
