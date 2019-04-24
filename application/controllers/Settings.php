@@ -9,6 +9,8 @@ class Settings extends CI_Controller {
     const DB = "application/db";
     const DATA_SQLITE = '/data.sqlite';
     const DATABASE_FILE = self::DB . self::DATA_SQLITE;
+    const UPLOADS_DIR = 'uploads';
+    const PERMISSIONS = 0755;
 
     /**
      * Settings constructor.
@@ -16,11 +18,11 @@ class Settings extends CI_Controller {
     public function __construct() {
         parent::__construct();
         if (!file_exists(self::DB)) {
-            mkdir(self::DB, 0755, true);
+            mkdir(self::DB, self::PERMISSIONS, true);
         }
-
-        $h = fopen(self::DATABASE_FILE, 'w');
-        fclose($h);
+        if (!file_exists(self::UPLOADS_DIR)) {
+            mkdir(self::UPLOADS_DIR, self::PERMISSIONS, true);
+        }
         $this->load->helper("form");
         $this->load->library("form_validation");
         $this->load->helper('url');
