@@ -6,12 +6,16 @@ use Bbdgnc\Database\BlockDatabase;
 use Bbdgnc\Enum\Front;
 
 class Settings extends CI_Controller {
+    const DB = "application/db";
 
     /**
      * Settings constructor.
      */
     public function __construct() {
         parent::__construct();
+        if (!file_exists(self::DB)) {
+            mkdir(self::DB, 0755, true);
+        }
         $this->load->helper("form");
         $this->load->library("form_validation");
         $this->load->helper('url');
