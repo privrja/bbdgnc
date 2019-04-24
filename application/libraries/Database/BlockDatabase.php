@@ -20,6 +20,7 @@ class BlockDatabase extends AbstractDatabase {
     const ID_INTEGER_PRIMARY_KEY = "id INTEGER PRIMARY KEY";
     const MASS_REAL = "mass REAL";
     const NAME_TEXT_NOT_NULL_CHECK_LENGTH_NAME_0 = "name TEXT NOT NULL CHECK(length(name) > 0)";
+    const DB_DATA_SQLITE = 'db/data.sqlite';
 
     public function findMergeBlocks($page) {
         $data = [];
@@ -125,6 +126,8 @@ class BlockDatabase extends AbstractDatabase {
     }
 
     public function resetDatabase() {
+        $this->controller->dbforge->drop_database(self::DB_DATA_SQLITE);
+        $this->controller->dbforge->create_database(self::DB_DATA_SQLITE);
         $this->controller->dbforge->add_field(self::ID_INTEGER_PRIMARY_KEY);
         $this->controller->dbforge->add_field(self::NAME_TEXT_NOT_NULL_CHECK_LENGTH_NAME_0);
         $this->controller->dbforge->add_field("acronym TEXT NOT NULL CHECK(length(acronym) > 0)");
