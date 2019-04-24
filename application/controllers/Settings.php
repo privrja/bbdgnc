@@ -7,6 +7,8 @@ use Bbdgnc\Enum\Front;
 
 class Settings extends CI_Controller {
     const DB = "application/db";
+    const DATA_SQLITE = '/data.sqlite';
+    const DATABASE_FILE = self::DB . self::DATA_SQLITE;
 
     /**
      * Settings constructor.
@@ -16,6 +18,9 @@ class Settings extends CI_Controller {
         if (!file_exists(self::DB)) {
             mkdir(self::DB, 0755, true);
         }
+
+        $h = fopen(self::DATABASE_FILE, 'w');
+        fclose($h);
         $this->load->helper("form");
         $this->load->library("form_validation");
         $this->load->helper('url');
