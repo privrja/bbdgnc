@@ -779,8 +779,7 @@ class Land extends CI_Controller {
     private function createUploadsDir() {
         try {
             if (!file_exists(CommonConstants::UPLOADS_DIR)) {
-                mkdir(CommonConstants::UPLOADS_DIR, CommonConstants::PERMISSIONS, true);
-                return true;
+                return @mkdir(CommonConstants::UPLOADS_DIR, CommonConstants::PERMISSIONS, true);
             }
         } catch (\Exception $exception) {
             return false;
