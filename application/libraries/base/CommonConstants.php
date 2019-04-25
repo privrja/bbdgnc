@@ -9,4 +9,9 @@ class CommonConstants {
     const PAGING = 50;
     const DOT = ".";
 
+    const DB = "application/db";
+    const DATA_SQLITE = '/data.sqlite';
+    const DATABASE_FILE = self::DB . self::DATA_SQLITE;
+    const UPLOADS_DIR = 'uploads';
+    const PERMISSIONS = 0755;
 }
