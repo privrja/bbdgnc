@@ -55,11 +55,12 @@ class Land extends CI_Controller {
         $this->load->model(ModelEnum::BLOCK_TO_SEQUENCE_MODEL);
         $this->load->library(LibraryEnum::FORM_VALIDATION);
         $this->blockDatabase = new BlockDatabase($this);
+        $this->install();
     }
 
     private function getData() {
         $smiles = $this->input->post(Front::CANVAS_INPUT_SMILE);
-        $smiles = isset($smiles) && $smiles != '' ?  $smiles : '';
+        $smiles = isset($smiles) && $smiles != '' ? $smiles : '';
         return array(
             Front::CANVAS_INPUT_NAME => "", Front::CANVAS_INPUT_SMILE => $smiles,
             Front::CANVAS_INPUT_FORMULA => "", Front::CANVAS_INPUT_MASS => "",
@@ -765,6 +766,47 @@ class Land extends CI_Controller {
         }
         $this->load->view(Front::PAGES_MAIN, $data);
         $this->load->view(Front::TEMPLATES_FOOTER);
+    }
+
+    private function install() {
+        $uploadsResult = $this->createUploadsDir();
+        $this->createDatabase();
+
+    }
+
+    private function createUploadsDir() {
+        try {
+            if (!file_exists(CommonConstants::UPLOADS_DIR)) {
+                mkdir(CommonConstants::UPLOADS_DIR, CommonConstants::PERMISSIONS, true);
+                return true;
+            }
+        } catch (\Error $exception) {
+            return false;
+        }
+    }
+
+    private function createDatabase() {
+        if (!$this->isDatabaseSetup()) {
+            try {
+                if (!file_exists(CommonConstants::DB)) {
+                    mkdir(CommonConstants::DB, CommonConstants::PERMISSIONS, true);
+                }
+                $this->load->dbforge();
+                $this->blockDatabase->deleteAll();
+            } catch (\Error $exception) {
+
+            }
+
+        }
+    }
+
+    private function isDatabaseSetup() {
+        try {
+            $this->blockDatabase->findById(1);
+            return true;
+        } catch (\Error $exception) {
+            return false;
+        }
     }
 
 }

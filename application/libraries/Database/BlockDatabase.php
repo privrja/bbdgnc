@@ -118,11 +118,10 @@ class BlockDatabase extends AbstractDatabase {
     }
 
     public function deleteAll() {
-        $this->controller->sequence_model->deleteAll();
-        $this->controller->blockToSequence_model->deleteAll();
-        $this->controller->modification_model->deleteAll();
-        $this->controller->block_model->deleteAll();
-
+//        $this->controller->sequence_model->deleteAll();
+//        $this->controller->blockToSequence_model->deleteAll();
+//        $this->controller->modification_model->deleteAll();
+//        $this->controller->block_model->deleteAll();
         $this->resetDatabase();
     }
 
