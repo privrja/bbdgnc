@@ -765,9 +765,9 @@ class Land extends CI_Controller {
     private function install() {
         $uploadsResult = $this->createUploadsDir();
         $databaseResult = $this->createDatabase();
-
-        var_dump($uploadsResult);
-        var_dump($databaseResult);
+        if (!$uploadsResult || !$databaseResult) {
+            $this->errors = "For first setup you'l need to add permisions to bbdgnc and bbdgnc/application to 777 then load this page again and restore permisions.";
+        }
     }
 
     private function createUploadsDir() {
@@ -778,36 +778,33 @@ class Land extends CI_Controller {
     }
 
     private function createDatabase() {
-	    var_dump($this->isDatabaseSetup());
         if (!$this->isDatabaseSetup()) {
             try {
                 if (!file_exists(CommonConstants::DB)) {
                     $ret = @mkdir(CommonConstants::DB, CommonConstants::PERMISSIONS, true);
-		    if (!$ret) {
-		    	return false;
-		    }
+                    if (!$ret) {
+                        return false;
+                    }
                 }
-        $this->load->model(ModelEnum::BLOCK_MODEL);
-        $this->load->model(ModelEnum::SEQUENCE_MODEL);
-        $this->load->model(ModelEnum::MODIFICATION_MODEL);
-        $this->load->model(ModelEnum::BLOCK_TO_SEQUENCE_MODEL);
-        $this->load->library(LibraryEnum::FORM_VALIDATION);
-        $this->blockDatabase = new BlockDatabase($this);
+                $this->loadModules();
                 $this->load->dbforge();
                 $this->blockDatabase->deleteAll();
                 return true;
             } catch (\Error $exception) {
-                var_dump($exception);
                 return false;
             }
         }
+        $this->loadModules();
+        return true;
+    }
+
+    private function loadModules() {
         $this->load->model(ModelEnum::BLOCK_MODEL);
         $this->load->model(ModelEnum::SEQUENCE_MODEL);
         $this->load->model(ModelEnum::MODIFICATION_MODEL);
         $this->load->model(ModelEnum::BLOCK_TO_SEQUENCE_MODEL);
         $this->load->library(LibraryEnum::FORM_VALIDATION);
         $this->blockDatabase = new BlockDatabase($this);
-        return true;
     }
 
     private function isDatabaseSetup() {
