@@ -782,7 +782,7 @@ class Land extends CI_Controller {
                 mkdir(CommonConstants::UPLOADS_DIR, CommonConstants::PERMISSIONS, true);
                 return true;
             }
-        } catch (\Error $exception) {
+        } catch (\Exception $exception) {
             return false;
         }
     }
@@ -791,7 +791,7 @@ class Land extends CI_Controller {
         if (!$this->isDatabaseSetup()) {
             try {
                 if (!file_exists(CommonConstants::DB)) {
-                    mkdir(CommonConstants::DB, CommonConstants::PERMISSIONS, true);
+                    @mkdir(CommonConstants::DB, CommonConstants::PERMISSIONS, true);
                 }
                 $this->load->dbforge();
                 $this->blockDatabase->deleteAll();
