@@ -59,7 +59,7 @@ class Land extends CI_Controller {
             Front::CANVAS_INPUT_NAME => "", Front::CANVAS_INPUT_SMILE => $smiles,
             Front::CANVAS_INPUT_FORMULA => "", Front::CANVAS_INPUT_MASS => "",
             Front::CANVAS_INPUT_DEFLECTION => "", Front::CANVAS_INPUT_IDENTIFIER => "",
-            Front::ERRORS => ""
+            Front::ERRORS => $this->errors
         );
     }
 
