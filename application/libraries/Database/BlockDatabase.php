@@ -3,6 +3,7 @@
 namespace Bbdgnc\Database;
 
 use Bbdgnc\Base\AminoAcidsHelper;
+use Bbdgnc\Base\CommonConstants;
 use Bbdgnc\Base\Query;
 use Bbdgnc\Base\Sortable;
 use Bbdgnc\Exception\DeleteException;
@@ -11,7 +12,6 @@ use Bbdgnc\Smiles\Graph;
 use Bbdgnc\TransportObjects\BlockTO;
 use Bbdgnc\TransportObjects\ModificationTO;
 use Bbdgnc\TransportObjects\SequenceTO;
-use Settings;
 
 class BlockDatabase extends AbstractDatabase {
 
@@ -128,7 +128,7 @@ class BlockDatabase extends AbstractDatabase {
     public function resetDatabase() {
         $this->controller->dbforge->drop_database(self::DB_DATA_SQLITE);
         $this->controller->dbforge->create_database(self::DB_DATA_SQLITE);
-        chmod(Settings::DATABASE_FILE, 0640);
+        chmod(CommonConstants::DATABASE_FILE, 0640);
         $this->controller->dbforge->add_field(self::ID_INTEGER_PRIMARY_KEY);
         $this->controller->dbforge->add_field(self::NAME_TEXT_NOT_NULL_CHECK_LENGTH_NAME_0);
         $this->controller->dbforge->add_field("acronym TEXT NOT NULL CHECK(length(acronym) > 0)");
