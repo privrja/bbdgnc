@@ -777,12 +777,8 @@ class Land extends CI_Controller {
     }
 
     private function createUploadsDir() {
-        try {
-            if (!file_exists(CommonConstants::UPLOADS_DIR)) {
-                return @mkdir(CommonConstants::UPLOADS_DIR, CommonConstants::PERMISSIONS, true);
-            }
-        } catch (\Exception $exception) {
-            return false;
+        if (!file_exists(CommonConstants::UPLOADS_DIR)) {
+            return @mkdir(CommonConstants::UPLOADS_DIR, CommonConstants::PERMISSIONS, true);
         }
     }
 
@@ -790,7 +786,10 @@ class Land extends CI_Controller {
         if (!$this->isDatabaseSetup()) {
             try {
                 if (!file_exists(CommonConstants::DB)) {
-                    @mkdir(CommonConstants::DB, CommonConstants::PERMISSIONS, true);
+                    $res = @mkdir(CommonConstants::DB, CommonConstants::PERMISSIONS, true);
+                    if (!$res) {
+                        return false;
+                    }
                 }
                 $this->load->dbforge();
                 $this->blockDatabase->deleteAll();
