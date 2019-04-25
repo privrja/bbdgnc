@@ -49,12 +49,6 @@ class Land extends CI_Controller {
     public function __construct() {
         parent::__construct();
         $this->load->helper(array(HelperEnum::HELPER_FORM, HelperEnum::HELPER_URL, HelperEnum::HELPER_COOKIE));
-        $this->load->model(ModelEnum::BLOCK_MODEL);
-        $this->load->model(ModelEnum::SEQUENCE_MODEL);
-        $this->load->model(ModelEnum::MODIFICATION_MODEL);
-        $this->load->model(ModelEnum::BLOCK_TO_SEQUENCE_MODEL);
-        $this->load->library(LibraryEnum::FORM_VALIDATION);
-        $this->blockDatabase = new BlockDatabase($this);
         $this->install();
     }
 
@@ -784,11 +778,21 @@ class Land extends CI_Controller {
     }
 
     private function createDatabase() {
+	    var_dump($this->isDatabaseSetup());
         if (!$this->isDatabaseSetup()) {
             try {
                 if (!file_exists(CommonConstants::DB)) {
-                    @mkdir(CommonConstants::DB, CommonConstants::PERMISSIONS, true);
+                    $ret = @mkdir(CommonConstants::DB, CommonConstants::PERMISSIONS, true);
+		    if (!$ret) {
+		    	return false;
+		    }
                 }
+        $this->load->model(ModelEnum::BLOCK_MODEL);
+        $this->load->model(ModelEnum::SEQUENCE_MODEL);
+        $this->load->model(ModelEnum::MODIFICATION_MODEL);
+        $this->load->model(ModelEnum::BLOCK_TO_SEQUENCE_MODEL);
+        $this->load->library(LibraryEnum::FORM_VALIDATION);
+        $this->blockDatabase = new BlockDatabase($this);
                 $this->load->dbforge();
                 $this->blockDatabase->deleteAll();
                 return true;
@@ -797,6 +801,12 @@ class Land extends CI_Controller {
                 return false;
             }
         }
+        $this->load->model(ModelEnum::BLOCK_MODEL);
+        $this->load->model(ModelEnum::SEQUENCE_MODEL);
+        $this->load->model(ModelEnum::MODIFICATION_MODEL);
+        $this->load->model(ModelEnum::BLOCK_TO_SEQUENCE_MODEL);
+        $this->load->library(LibraryEnum::FORM_VALIDATION);
+        $this->blockDatabase = new BlockDatabase($this);
         return true;
     }
 
