@@ -770,8 +770,10 @@ class Land extends CI_Controller {
 
     private function install() {
         $uploadsResult = $this->createUploadsDir();
-        $this->createDatabase();
+        $databaseResult = $this->createDatabase();
 
+        var_dump($uploadsResult);
+        var_dump($databaseResult);
     }
 
     private function createUploadsDir() {
@@ -793,11 +795,12 @@ class Land extends CI_Controller {
                 }
                 $this->load->dbforge();
                 $this->blockDatabase->deleteAll();
+                return true;
             } catch (\Error $exception) {
-
+                return false;
             }
-
         }
+        return true;
     }
 
     private function isDatabaseSetup() {
