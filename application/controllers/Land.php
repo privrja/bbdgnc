@@ -49,22 +49,17 @@ class Land extends CI_Controller {
     public function __construct() {
         parent::__construct();
         $this->load->helper(array(HelperEnum::HELPER_FORM, HelperEnum::HELPER_URL, HelperEnum::HELPER_COOKIE));
-        $this->load->model(ModelEnum::BLOCK_MODEL);
-        $this->load->model(ModelEnum::SEQUENCE_MODEL);
-        $this->load->model(ModelEnum::MODIFICATION_MODEL);
-        $this->load->model(ModelEnum::BLOCK_TO_SEQUENCE_MODEL);
-        $this->load->library(LibraryEnum::FORM_VALIDATION);
-        $this->blockDatabase = new BlockDatabase($this);
+        $this->install();
     }
 
     private function getData() {
         $smiles = $this->input->post(Front::CANVAS_INPUT_SMILE);
-        $smiles = isset($smiles) && $smiles != '' ?  $smiles : '';
+        $smiles = isset($smiles) && $smiles != '' ? $smiles : '';
         return array(
             Front::CANVAS_INPUT_NAME => "", Front::CANVAS_INPUT_SMILE => $smiles,
             Front::CANVAS_INPUT_FORMULA => "", Front::CANVAS_INPUT_MASS => "",
             Front::CANVAS_INPUT_DEFLECTION => "", Front::CANVAS_INPUT_IDENTIFIER => "",
-            Front::ERRORS => ""
+            Front::ERRORS => $this->errors
         );
     }
 
@@ -765,6 +760,60 @@ class Land extends CI_Controller {
         }
         $this->load->view(Front::PAGES_MAIN, $data);
         $this->load->view(Front::TEMPLATES_FOOTER);
+    }
+
+    private function install() {
+        $uploadsResult = $this->createUploadsDir();
+        $databaseResult = $this->createDatabase();
+        if (!$uploadsResult || !$databaseResult) {
+            $this->errors = "For first setup you'l need to add permisions to bbdgnc and bbdgnc/application to 777 then load this page again and restore permisions.";
+        }
+    }
+
+    private function createUploadsDir() {
+        if (!file_exists(CommonConstants::UPLOADS_DIR)) {
+            @mkdir(CommonConstants::UPLOADS_DIR, CommonConstants::PERMISSIONS, true);
+        }
+        return true;
+    }
+
+    private function createDatabase() {
+        if (!$this->isDatabaseSetup()) {
+            try {
+                if (!file_exists(CommonConstants::DB)) {
+                    $ret = @mkdir(CommonConstants::DB, CommonConstants::PERMISSIONS, true);
+                    if (!$ret) {
+                        return false;
+                    }
+                }
+                $this->loadModules();
+                $this->load->dbforge();
+                $this->blockDatabase->deleteAll();
+                return true;
+            } catch (\Error $exception) {
+                return false;
+            }
+        }
+        $this->loadModules();
+        return true;
+    }
+
+    private function loadModules() {
+        $this->load->model(ModelEnum::BLOCK_MODEL);
+        $this->load->model(ModelEnum::SEQUENCE_MODEL);
+        $this->load->model(ModelEnum::MODIFICATION_MODEL);
+        $this->load->model(ModelEnum::BLOCK_TO_SEQUENCE_MODEL);
+        $this->load->library(LibraryEnum::FORM_VALIDATION);
+        $this->blockDatabase = new BlockDatabase($this);
+    }
+
+    private function isDatabaseSetup() {
+        try {
+            $this->blockDatabase->findById(1);
+            return true;
+        } catch (\Error $exception) {
+            return false;
+        }
     }
 
 }

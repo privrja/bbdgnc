@@ -1,41 +1,42 @@
 <?php
 
+use Bbdgnc\Base\CommonConstants;
 use Bbdgnc\Base\ModelEnum;
 use Bbdgnc\CycloBranch\Enum\ResetTypeEnum;
 use Bbdgnc\Database\BlockDatabase;
 use Bbdgnc\Enum\Front;
 
 class Settings extends CI_Controller {
-    const DB = "application/db";
-    const DATA_SQLITE = '/data.sqlite';
-    const DATABASE_FILE = self::DB . self::DATA_SQLITE;
-    const UPLOADS_DIR = 'uploads';
-    const PERMISSIONS = 0755;
+    private $errors = '';
 
     /**
      * Settings constructor.
      */
     public function __construct() {
         parent::__construct();
-        if (!file_exists(self::DB)) {
-            mkdir(self::DB, self::PERMISSIONS, true);
+        try {
+            if (!file_exists(CommonConstants::DB)) {
+                @mkdir(CommonConstants::DB, CommonConstants::PERMISSIONS, true);
+            }
+            if (!file_exists(CommonConstants::UPLOADS_DIR)) {
+                @mkdir(CommonConstants::UPLOADS_DIR, CommonConstants::PERMISSIONS, true);
+            }
+            $this->load->helper("form");
+            $this->load->library("form_validation");
+            $this->load->helper('url');
+            $this->load->model(ModelEnum::BLOCK_MODEL);
+            $this->load->model(ModelEnum::SEQUENCE_MODEL);
+            $this->load->model(ModelEnum::MODIFICATION_MODEL);
+            $this->load->model(ModelEnum::BLOCK_TO_SEQUENCE_MODEL);
+            $this->load->dbforge();
+        } catch (\Error $exception) {
+            $this->errors = 'You need to set permissions 777 for bbdgnc and application folders for installation process';
         }
-        if (!file_exists(self::UPLOADS_DIR)) {
-            mkdir(self::UPLOADS_DIR, self::PERMISSIONS, true);
-        }
-        $this->load->helper("form");
-        $this->load->library("form_validation");
-        $this->load->helper('url');
-        $this->load->model(ModelEnum::BLOCK_MODEL);
-        $this->load->model(ModelEnum::SEQUENCE_MODEL);
-        $this->load->model(ModelEnum::MODIFICATION_MODEL);
-        $this->load->model(ModelEnum::BLOCK_TO_SEQUENCE_MODEL);
-        $this->load->dbforge();
     }
 
     public function index() {
         $this->load->view('templates/header');
-        $this->load->view('settings/main');
+        $this->load->view('settings/main', [Front::ERRORS => $this->errors]);
         $this->load->view('templates/footer');
     }
 

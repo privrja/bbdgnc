@@ -19,6 +19,7 @@ use Bbdgnc\CycloBranch\Enum\ResetTypeEnum;
             <input type="submit" value="Reset" name="btnReset"/>
         </div>
         <?= form_close(); ?>
+        <?= $errors ?>
 
     </article>
 
