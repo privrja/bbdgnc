@@ -20,10 +20,10 @@ class Settings extends CI_Controller {
         parent::__construct();
         try {
             if (!file_exists(self::DB)) {
-                mkdir(self::DB, self::PERMISSIONS, true);
+                @mkdir(self::DB, self::PERMISSIONS, true);
             }
             if (!file_exists(self::UPLOADS_DIR)) {
-                mkdir(self::UPLOADS_DIR, self::PERMISSIONS, true);
+                @mkdir(self::UPLOADS_DIR, self::PERMISSIONS, true);
             }
             $this->load->helper("form");
             $this->load->library("form_validation");
@@ -33,7 +33,7 @@ class Settings extends CI_Controller {
             $this->load->model(ModelEnum::MODIFICATION_MODEL);
             $this->load->model(ModelEnum::BLOCK_TO_SEQUENCE_MODEL);
             $this->load->dbforge();
-        } catch (\Exception $exception) {
+        } catch (\Error $exception) {
             $this->errors = 'You need to set permissions 777 for bbdgnc and application folders for installation process';
         }
     }
