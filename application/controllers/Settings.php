@@ -108,12 +108,12 @@ class Settings extends CI_Controller {
                 $this->deleteFiles($file);
             }
 
-            $res = rmdir($target);
+            $res = @rmdir($target);
             if (!$res) {
                 throw new IllegalArgumentException();
             }
         } elseif (is_file($target)) {
-            $res = unlink($target);
+            $res = @unlink($target);
             if (!$res) {
                 throw new IllegalArgumentException();
             }
