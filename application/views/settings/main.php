@@ -8,6 +8,7 @@ use Bbdgnc\CycloBranch\Enum\ResetTypeEnum;
     <article>
         <h1>Settings</h1>
         <br/>
+        <?= $errors ?>
 
         <h2>Reset database</h2>
         <?= form_open('settings/reset', array('class' => 'form')); ?>
@@ -19,7 +20,14 @@ use Bbdgnc\CycloBranch\Enum\ResetTypeEnum;
             <input type="submit" value="Reset" name="btnReset"/>
         </div>
         <?= form_close(); ?>
-        <?= $errors ?>
+
+        <h2>Remove uploads & database</h2>
+        <?= form_open('settings/remove', array('class' => 'form')); ?>
+        <input type="hidden" value="remx" name="remove"/>
+        <div>
+            <input type="submit" value="Remove" name="btnRemove"/>
+        </div>
+        <?= form_close(); ?>
 
     </article>
 

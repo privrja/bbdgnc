@@ -14,4 +14,5 @@ class CommonConstants {
     const DATABASE_FILE = self::DB . self::DATA_SQLITE;
     const UPLOADS_DIR = 'uploads';
     const PERMISSIONS = 0755;
+    const SLASH = '/';
 }

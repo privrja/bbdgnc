@@ -1,12 +1,15 @@
 <?php
 
 use Bbdgnc\Base\CommonConstants;
+use Bbdgnc\Base\HelperEnum;
 use Bbdgnc\Base\ModelEnum;
 use Bbdgnc\CycloBranch\Enum\ResetTypeEnum;
 use Bbdgnc\Database\BlockDatabase;
 use Bbdgnc\Enum\Front;
+use Bbdgnc\Exception\IllegalArgumentException;
 
 class Settings extends CI_Controller {
+    const PERMISSIONS_ERROR = 'You need to set permissions 777 for bbdgnc and application folders for installation process';
     private $errors = '';
 
     /**
@@ -21,16 +24,15 @@ class Settings extends CI_Controller {
             if (!file_exists(CommonConstants::UPLOADS_DIR)) {
                 @mkdir(CommonConstants::UPLOADS_DIR, CommonConstants::PERMISSIONS, true);
             }
-            $this->load->helper("form");
+            $this->load->helper([HelperEnum::HELPER_FORM, HelperEnum::HELPER_URL, HelperEnum::FILE]);
             $this->load->library("form_validation");
-            $this->load->helper('url');
             $this->load->model(ModelEnum::BLOCK_MODEL);
             $this->load->model(ModelEnum::SEQUENCE_MODEL);
             $this->load->model(ModelEnum::MODIFICATION_MODEL);
             $this->load->model(ModelEnum::BLOCK_TO_SEQUENCE_MODEL);
             $this->load->dbforge();
         } catch (\Error $exception) {
-            $this->errors = 'You need to set permissions 777 for bbdgnc and application folders for installation process';
+            $this->errors = self::PERMISSIONS_ERROR;
         }
     }
 
@@ -66,6 +68,34 @@ class Settings extends CI_Controller {
             default:
                 break;
         }
+        $this->index();
+    }
+
+    public function remove() {
+        $remove = $this->input->post('remove');
+        $this->form_validation->set_rules('remove', 'Delete', Front::REQUIRED);
+        if ($this->form_validation->run() === false || $remove !== 'remx') {
+            $this->index();
+            return;
+        }
+
+        try {
+            $res = delete_files(CommonConstants::UPLOADS_DIR);
+            if (!$res) {
+                throw new IllegalArgumentException();
+            }
+            $this->dbforge->drop_database(CommonConstants::DB . CommonConstants::DATA_SQLITE);
+            $this->db->close();
+            $res = delete_files(CommonConstants::DB, true);
+            if (!$res) {
+                throw new IllegalArgumentException();
+            }
+        } catch (IllegalArgumentException $exception) {
+            $this->errors = self::PERMISSIONS_ERROR;
+            $this->index();
+            return;
+        }
+        $this->errors = 'Removed OK';
         $this->index();
     }
 
