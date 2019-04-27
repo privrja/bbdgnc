@@ -69,7 +69,6 @@ class Settings extends CI_Controller {
         $this->index();
     }
 
-
     public function remove() {
         $remove = $this->input->post('remove');
         $this->form_validation->set_rules('remove', 'Delete', Front::REQUIRED);
@@ -79,8 +78,10 @@ class Settings extends CI_Controller {
         }
 
         try {
-            $this->delete_files(CommonConstants::UPLOADS_DIR);
-            $this->delete_files(CommonConstants::DB);
+            $this->deleteFiles(CommonConstants::UPLOADS_DIR);
+            $this->dbforge->drop_database(CommonConstants::DB . CommonConstants::DATA_SQLITE);
+            $this->db->close();
+            $this->deleteFiles(CommonConstants::DB);
         } catch (\Error $exception) {
             $this->errors = 'Error';
         }
@@ -88,17 +89,20 @@ class Settings extends CI_Controller {
         $this->index();
     }
 
-    function delete_files($target) {
-        if(is_dir($target)){
-            $files = glob( $target . '*', GLOB_MARK ); //GLOB_MARK adds a slash to directories returned
+    function deleteFiles($target) {
+        if (!file_exists($target)) {
+            return;
+        }
+        if (is_dir($target)) {
+            $files = glob($target . '*', GLOB_MARK); //GLOB_MARK adds a slash to directories returned
 
-            foreach( $files as $file ){
-                delete_files( $file );
+            foreach ($files as $file) {
+                $this->delete_files($file);
             }
 
-            rmdir( $target );
-        } elseif(is_file($target)) {
-            unlink( $target );
+            rmdir($target);
+        } elseif (is_file($target)) {
+            unlink($target);
         }
     }
 
