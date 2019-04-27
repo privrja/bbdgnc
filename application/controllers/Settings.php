@@ -1,6 +1,7 @@
 <?php
 
 use Bbdgnc\Base\CommonConstants;
+use Bbdgnc\Base\HelperEnum;
 use Bbdgnc\Base\ModelEnum;
 use Bbdgnc\CycloBranch\Enum\ResetTypeEnum;
 use Bbdgnc\Database\BlockDatabase;
@@ -23,9 +24,8 @@ class Settings extends CI_Controller {
             if (!file_exists(CommonConstants::UPLOADS_DIR)) {
                 @mkdir(CommonConstants::UPLOADS_DIR, CommonConstants::PERMISSIONS, true);
             }
-            $this->load->helper("form");
+            $this->load->helper([HelperEnum::HELPER_FORM, HelperEnum::HELPER_URL, HelperEnum::FILE]);
             $this->load->library("form_validation");
-            $this->load->helper('url');
             $this->load->model(ModelEnum::BLOCK_MODEL);
             $this->load->model(ModelEnum::SEQUENCE_MODEL);
             $this->load->model(ModelEnum::MODIFICATION_MODEL);
