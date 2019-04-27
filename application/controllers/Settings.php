@@ -69,4 +69,37 @@ class Settings extends CI_Controller {
         $this->index();
     }
 
+
+    public function remove() {
+        $remove = $this->input->post('remove');
+        $this->form_validation->set_rules('remove', 'Delete', Front::REQUIRED);
+        if ($this->form_validation->run() === false || $remove !== 'remx') {
+            $this->index();
+            return;
+        }
+
+        try {
+            $this->delete_files(CommonConstants::UPLOADS_DIR);
+            $this->delete_files(CommonConstants::DB);
+        } catch (\Error $exception) {
+            $this->errors = 'Error';
+        }
+        $this->errors = 'Removed OK';
+        $this->index();
+    }
+
+    function delete_files($target) {
+        if(is_dir($target)){
+            $files = glob( $target . '*', GLOB_MARK ); //GLOB_MARK adds a slash to directories returned
+
+            foreach( $files as $file ){
+                delete_files( $file );
+            }
+
+            rmdir( $target );
+        } elseif(is_file($target)) {
+            unlink( $target );
+        }
+    }
+
 }
