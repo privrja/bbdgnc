@@ -80,10 +80,16 @@ class Settings extends CI_Controller {
         }
 
         try {
-            $this->deleteFiles(CommonConstants::UPLOADS_DIR);
+            $res = delete_files(CommonConstants::UPLOADS_DIR);
+            if (!$res) {
+                throw new IllegalArgumentException();
+            }
             $this->dbforge->drop_database(CommonConstants::DB . CommonConstants::DATA_SQLITE);
             $this->db->close();
-            $this->deleteFiles(CommonConstants::DB);
+            $res = delete_files(CommonConstants::DB, true);
+            if (!$res) {
+                throw new IllegalArgumentException();
+            }
         } catch (IllegalArgumentException $exception) {
             $this->errors = self::PERMISSIONS_ERROR;
             $this->index();
