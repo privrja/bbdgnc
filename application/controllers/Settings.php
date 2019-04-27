@@ -94,36 +94,9 @@ class Settings extends CI_Controller {
             $this->errors = self::PERMISSIONS_ERROR;
             $this->index();
             return;
-        } catch (\Error $exception) {
-            $this->errors = 'Error';
-            $this->index();
-            return;
         }
         $this->errors = 'Removed OK';
         $this->index();
-    }
-
-    function deleteFiles($target) {
-        if (!file_exists($target)) {
-            return;
-        }
-        if (is_dir($target)) {
-            $files = glob($target . '*', GLOB_MARK); //GLOB_MARK adds a slash to directories returned
-
-            foreach ($files as $file) {
-                $this->deleteFiles($file);
-            }
-
-            $res = @rmdir($target);
-            if (!$res) {
-                throw new IllegalArgumentException();
-            }
-        } elseif (is_file($target)) {
-            $res = @unlink($target);
-            if (!$res) {
-                throw new IllegalArgumentException();
-            }
-        }
     }
 
 }
