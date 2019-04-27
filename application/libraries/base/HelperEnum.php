@@ -14,4 +14,6 @@ class HelperEnum {
 
     const HELPER_DOWNLOAD = 'download';
 
+    const FILE = "file";
+
 }
