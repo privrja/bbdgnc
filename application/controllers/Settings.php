@@ -86,8 +86,12 @@ class Settings extends CI_Controller {
             $this->deleteFiles(CommonConstants::DB);
         } catch (IllegalArgumentException $exception) {
             $this->errors = self::PERMISSIONS_ERROR;
+            $this->index();
+            return;
         } catch (\Error $exception) {
             $this->errors = 'Error';
+            $this->index();
+            return;
         }
         $this->errors = 'Removed OK';
         $this->index();
