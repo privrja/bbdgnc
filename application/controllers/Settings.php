@@ -5,8 +5,10 @@ use Bbdgnc\Base\ModelEnum;
 use Bbdgnc\CycloBranch\Enum\ResetTypeEnum;
 use Bbdgnc\Database\BlockDatabase;
 use Bbdgnc\Enum\Front;
+use Bbdgnc\Exception\IllegalArgumentException;
 
 class Settings extends CI_Controller {
+    const PERMISSIONS_ERROR = 'You need to set permissions 777 for bbdgnc and application folders for installation process';
     private $errors = '';
 
     /**
@@ -30,7 +32,7 @@ class Settings extends CI_Controller {
             $this->load->model(ModelEnum::BLOCK_TO_SEQUENCE_MODEL);
             $this->load->dbforge();
         } catch (\Error $exception) {
-            $this->errors = 'You need to set permissions 777 for bbdgnc and application folders for installation process';
+            $this->errors = self::PERMISSIONS_ERROR;
         }
     }
 
@@ -82,6 +84,8 @@ class Settings extends CI_Controller {
             $this->dbforge->drop_database(CommonConstants::DB . CommonConstants::DATA_SQLITE);
             $this->db->close();
             $this->deleteFiles(CommonConstants::DB);
+        } catch (IllegalArgumentException $exception) {
+            $this->errors = self::PERMISSIONS_ERROR;
         } catch (\Error $exception) {
             $this->errors = 'Error';
         }
@@ -97,12 +101,18 @@ class Settings extends CI_Controller {
             $files = glob($target . '*', GLOB_MARK); //GLOB_MARK adds a slash to directories returned
 
             foreach ($files as $file) {
-                $this->delete_files($file);
+                $this->deleteFiles($file);
             }
 
-            rmdir($target);
+            $res = rmdir($target);
+            if (!$res) {
+                throw new IllegalArgumentException();
+            }
         } elseif (is_file($target)) {
-            unlink($target);
+            $res = unlink($target);
+            if (!$res) {
+                throw new IllegalArgumentException();
+            }
         }
     }
 
