@@ -117,6 +117,10 @@ class BlockDatabase extends AbstractDatabase {
     }
 
     public function deleteAll() {
+        $this->controller->sequence_model->deleteAll();
+        $this->controller->blockToSequence_model->deleteAll();
+        $this->controller->modification_model->deleteAll();
+        $this->controller->block_model->deleteAll();
         $this->resetDatabase();
     }
 
@@ -177,13 +181,13 @@ class BlockDatabase extends AbstractDatabase {
     }
 
     public function resetWithAminoAcids() {
-        $this->deleteAll();
+        $this->resetDatabase();
         $aminoAcids = AminoAcidsHelper::getAminoAcids();
         $this->controller->block_model->insertMore($aminoAcids);
     }
 
     public function resetAminoAcidsWithModifications() {
-        $this->deleteAll();
+        $this->resetDatabase();
         $aminoAcids = AminoAcidsHelper::getAminoAcids();
         $modifications = AminoAcidsHelper::getDefaultModifications();
         $this->controller->block_model->insertMore($aminoAcids);
@@ -191,7 +195,7 @@ class BlockDatabase extends AbstractDatabase {
     }
 
     public function resetWithModifications() {
-        $this->deleteAll();
+        $this->resetDatabase();
         $modifications = AminoAcidsHelper::getDefaultModifications();
         $this->controller->modification_model->insertMore($modifications);
     }
