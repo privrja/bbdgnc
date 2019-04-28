@@ -117,15 +117,13 @@ class BlockDatabase extends AbstractDatabase {
     }
 
     public function deleteAll() {
-        $this->controller->sequence_model->deleteAll();
-        $this->controller->blockToSequence_model->deleteAll();
-        $this->controller->modification_model->deleteAll();
-        $this->controller->block_model->deleteAll();
         $this->resetDatabase();
     }
 
     public function resetDatabase() {
         $this->controller->dbforge->drop_database(self::DB_DATA_SQLITE);
+	$this->controller->db->close();
+	unlink('application/' . self::DB_DATA_SQLITE);
         $this->controller->dbforge->create_database(self::DB_DATA_SQLITE);
         $this->controller->dbforge->add_field(self::ID_INTEGER_PRIMARY_KEY);
         $this->controller->dbforge->add_field(self::NAME_TEXT_NOT_NULL_CHECK_LENGTH_NAME_0);
@@ -178,6 +176,7 @@ class BlockDatabase extends AbstractDatabase {
         $this->controller->db->query("CREATE INDEX IX_BLOCK_USMILE ON block(usmiles)");
         $this->controller->db->query("CREATE UNIQUE INDEX UX_SEQUENCE_NAME ON sequence(name)");
         $this->controller->db->query("CREATE UNIQUE INDEX UX_MODIFICATION_NAME ON modification(name)");
+	chmod('application/' . self::DB_DATA_SQLITE, 0640);
     }
 
     public function resetWithAminoAcids() {
