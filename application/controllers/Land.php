@@ -41,6 +41,7 @@ class Land extends CI_Controller {
 
     private $errors = "";
 
+    /** @var BlockDatabase $blockDatabase */
     private $blockDatabase;
 
     /**
@@ -49,6 +50,7 @@ class Land extends CI_Controller {
     public function __construct() {
         parent::__construct();
         $this->load->helper(array(HelperEnum::HELPER_FORM, HelperEnum::HELPER_URL, HelperEnum::HELPER_COOKIE));
+        $this->blockDatabase = new BlockDatabase($this);
         $this->install();
     }
 
@@ -778,6 +780,7 @@ class Land extends CI_Controller {
     }
 
     private function createDatabase() {
+        $this->loadModules();
         if (!$this->isDatabaseSetup()) {
             try {
                 if (!file_exists(CommonConstants::DB)) {
@@ -786,7 +789,6 @@ class Land extends CI_Controller {
                         return false;
                     }
                 }
-                $this->loadModules();
                 $this->load->dbforge();
                 $this->blockDatabase->deleteAll();
                 return true;
@@ -794,7 +796,6 @@ class Land extends CI_Controller {
                 return false;
             }
         }
-        $this->loadModules();
         return true;
     }
 
@@ -804,7 +805,6 @@ class Land extends CI_Controller {
         $this->load->model(ModelEnum::MODIFICATION_MODEL);
         $this->load->model(ModelEnum::BLOCK_TO_SEQUENCE_MODEL);
         $this->load->library(LibraryEnum::FORM_VALIDATION);
-        $this->blockDatabase = new BlockDatabase($this);
     }
 
     private function isDatabaseSetup() {
