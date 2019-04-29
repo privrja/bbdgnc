@@ -75,11 +75,10 @@ You'l need to set 777 permissions to bbgdgc and bbdgnc/application folders.
     chmod 777 ./application 
     
 Then open main page of application in your browser. Create scripts run automatically.
-After that return permission of folder to 755.
+After that restore permission of folder to 755.
 
     chmod 755 .
     chmod 755 ./application/
-
 
 Configuration done!
 
