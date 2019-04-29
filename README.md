@@ -53,15 +53,36 @@ Default value is http://localhost/ already set
     
 
 Application use sqlite3 database.
+For creating database you can use sql scripts or application itself.
+The way using application is recommended for deploying application to server.
+
+####Using scripts
+
 For creating database you'l need to create database file and run create script.
 
-    sqlite3 application/db/data.sqlite
-    .read application/db/create.sql
+    sqlite3 deploy/data.sqlite
+    .read deploy/create.sql
     
 If you would like to have 20 amino acids in database run insert script.    
     
-    .read application/db/blocks.sql
+    .read deploy/blocks.sql
+
+####Using aplication
+
+You'l need to set 777 permissions to bbgdgc and bbdgnc/application folders.
+
+    chmod 777 .
+    chmod 777 ./application 
     
+Then open main page of application in your browser. Create scripts run automatically.
+After that return permission of folder to 755.
+
+    chmod 755 .
+    chmod 755 ./application/
+
+
+Configuration done!
+
 ## Docker
 
 You can install application via [docker](https://www.docker.com/get-started).
