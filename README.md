@@ -56,7 +56,7 @@ Application use sqlite3 database.
 For creating database you can use sql scripts or application itself.
 The way using application is recommended for deploying application to server.
 
-####Using scripts
+#### Using scripts
 
 For creating database you'l need to create database file and run create script.
 
@@ -67,7 +67,7 @@ If you would like to have 20 amino acids in database run insert script.
     
     .read deploy/blocks.sql
 
-####Using aplication
+#### Using aplication
 
 You'l need to set 777 permissions to bbgdgc and bbdgnc/application folders.
 
