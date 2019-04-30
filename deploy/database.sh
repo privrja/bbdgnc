@@ -1,4 +1,4 @@
 
-.read application/db/create.sql
-.read application/db/blocks.sql
+.read deploy/create.sql
+.read deploy/blocks.sql
 .exit

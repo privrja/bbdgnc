@@ -58,7 +58,7 @@ RUN chmod -R u+w /var/www/html/application/db
 
 # install php dependecies
 RUN /var/www/html/composer.phar install --no-dev
-RUN npm install
+RUN npm install --only=prod
 
 # database setup
 RUN sqlite3 /var/www/html/application/db/data.sqlite < /var/www/html/deploy/database.sh
