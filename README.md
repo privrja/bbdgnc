@@ -67,7 +67,7 @@ If you would like to have 20 amino acids in database run insert script.
     
     .read deploy/blocks.sql
 
-#### Using aplication
+#### Using application
 
 You'l need to set 777 permissions to bbgdgc and bbdgnc/application folders.
 
