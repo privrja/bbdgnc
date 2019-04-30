@@ -48,6 +48,9 @@ COPY . /var/www/html
 # replace configuration files
 COPY /deploy/config.php /var/www/html/application/config
 
+RUN mkdir /var/www/html/uploads/
+RUN mkdir /var/www/html/application/db/
+
 # setup permissions
 RUN chmod 777 /var/www/html/application/logs
 RUN rm -f /var/www/html/application/logs/log*.php
@@ -58,7 +61,7 @@ RUN chmod -R u+w /var/www/html/application/db
 
 # install php dependecies
 RUN /var/www/html/composer.phar install --no-dev
-RUN npm install
+RUN npm install --only=prod
 
 # database setup
 RUN sqlite3 /var/www/html/application/db/data.sqlite < /var/www/html/deploy/database.sh
