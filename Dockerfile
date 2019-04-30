@@ -48,8 +48,8 @@ COPY . /var/www/html
 # replace configuration files
 COPY /deploy/config.php /var/www/html/application/config
 
-RUN mkdir /uploads/
-RUN mkdir /application/db/
+RUN mkdir /var/www/html/uploads/
+RUN mkdir /var/www/html/application/db/
 
 # setup permissions
 RUN chmod 777 /var/www/html/application/logs
