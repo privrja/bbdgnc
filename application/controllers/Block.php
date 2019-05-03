@@ -38,6 +38,11 @@ class Block extends CI_Controller {
         $this->database = new BlockDatabase($this);
     }
 
+    /**
+     * Settings for filters and sorting
+     * @param Query $query
+     * @return string
+     */
     private function setupQuery(Query $query) {
         Front::addLikeFilter(BlockTO::ACRONYM, BlockTO::TABLE_NAME, $query, $this);
         Front::addLikeFilter(BlockTO::NAME, BlockTO::TABLE_NAME, $query, $this);
@@ -56,6 +61,11 @@ class Block extends CI_Controller {
         return Front::getSortDirection($sort);
     }
 
+    /**
+     * Page list of blocks
+     * url: /block
+     * @param int $start starting page for results
+     */
     public function index($start = 0) {
         $config = $data = [];
         $query = new Query();
@@ -74,6 +84,10 @@ class Block extends CI_Controller {
         $this->load->view(Front::TEMPLATES_FOOTER);
     }
 
+    /**
+     * Page new block
+     * url: /block/new
+     */
     public function new() {
         $data = [];
         $this->form_validation->set_rules(Front::BLOCK_NAME, 'Name', Front::REQUIRED);
@@ -112,6 +126,11 @@ class Block extends CI_Controller {
         $this->load->view(Front::TEMPLATES_FOOTER);
     }
 
+    /**
+     * Page block detail
+     * url: /block/detail/{id}
+     * @param int $id
+     */
     public function detail($id = 1) {
         $data[BlockTO::TABLE_NAME] = $this->database->findById($id);
         $this->load->view(Front::TEMPLATES_HEADER);
@@ -119,6 +138,11 @@ class Block extends CI_Controller {
         $this->load->view(Front::TEMPLATES_FOOTER);
     }
 
+    /**
+     * Page edit block
+     * url: block/edit/{id}
+     * @param int $id id of block to edit, url param
+     */
     public function edit($id = 1) {
         $data[BlockTO::TABLE_NAME] = $this->database->findById($id);
         $this->form_validation->set_rules(Front::BLOCK_NAME, 'Name', Front::REQUIRED);
@@ -152,6 +176,10 @@ class Block extends CI_Controller {
         }
     }
 
+    /**
+     * Page to delete block
+     * @param int $id
+     */
     public function delete($id = 0) {
         $data[BlockTO::TABLE_NAME] = $this->database->findById($id);
         try {
@@ -234,6 +262,10 @@ class Block extends CI_Controller {
         }
     }
 
+    /**
+     * Page list of block with formula merge
+     * @param int $page starting page for results
+     */
     public function merge($page = 0) {
         $config = [];
         $config[PagingEnum::BASE_URL] = base_url() . "index.php/block/merge";

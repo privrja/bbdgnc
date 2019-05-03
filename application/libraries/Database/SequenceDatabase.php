@@ -2,6 +2,7 @@
 
 namespace Bbdgnc\Database;
 
+use Bbdgnc\Base\IDatabase;
 use Bbdgnc\Base\Logger;
 use Bbdgnc\Base\Query;
 use Bbdgnc\Enum\LoggerEnum;
@@ -18,6 +19,11 @@ use Bbdgnc\TransportObjects\ModificationTO;
 use Bbdgnc\TransportObjects\SequenceTO;
 use SplObjectStorage;
 
+/**
+ * Class SequenceDatabase
+ * @see IDatabase
+ * @package Bbdgnc\Database
+ */
 class SequenceDatabase extends AbstractDatabase {
 
     /** @var SequenceTO $sequenceTO */
@@ -35,6 +41,7 @@ class SequenceDatabase extends AbstractDatabase {
     private $sequenceId;
 
     /**
+     * Save sequence with modifications and building blocks
      * @param SequenceTO $sequenceTO
      * @param SplObjectStorage $blocks
      * @param array $modifications

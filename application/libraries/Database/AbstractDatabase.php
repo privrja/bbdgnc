@@ -5,6 +5,11 @@ namespace Bbdgnc\Database;
 use Bbdgnc\Base\IDatabase;
 use CI_Controller;
 
+/**
+ * Class AbstractDatabase
+ * Abstract database class for complex operation of database
+ * @package Bbdgnc\Database
+ */
 abstract class AbstractDatabase implements IDatabase {
 
     protected $controller;

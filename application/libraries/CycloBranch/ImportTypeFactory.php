@@ -8,7 +8,9 @@ use CI_Controller;
 class ImportTypeFactory {
 
     /**
+     * Get right instance of AbstractCycloBranch for import
      * @param int $type
+     * @see ImportTypeEnum
      * @param CI_Controller $controller
      * @return AbstractCycloBranch
      */

@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * Class AssetHelper
+ * get paths for resources
+ */
 class AssetHelper {
 
     public static function assetUrl() {

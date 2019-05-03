@@ -19,12 +19,19 @@ class Import extends CI_Controller {
         $this->load->model(ModelEnum::BLOCK_TO_SEQUENCE_MODEL);
     }
 
+    /**
+     * Page import
+     * url: /import
+     */
     public function index() {
         $this->load->view(Front::TEMPLATES_HEADER);
         $this->load->view('import/index', ['error' => '']);
         $this->load->view(Front::TEMPLATES_FOOTER);
     }
 
+    /**
+     * Page after import, uploading file
+     */
     public function upload() {
         $config['upload_path'] = './uploads/';
         $config['allowed_types'] = 'txt';
@@ -45,6 +52,12 @@ class Import extends CI_Controller {
         }
     }
 
+    /**
+     * File processing
+     * @param string $filePath path to uploaded file
+     * @param int $type block, modification or sequence?
+     * @see ImportEnum
+     */
     private function imp(string $filePath, int $type) {
         $cycloBranch = new CycloBranch($type, $this);
         $cycloBranch->import($filePath);

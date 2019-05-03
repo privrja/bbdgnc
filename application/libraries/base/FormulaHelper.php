@@ -14,8 +14,8 @@ class FormulaHelper {
 
     /**
      * Compute mass
-     * @param string $strFormula
-     * @return float
+     * @param string $strFormula formula like 'C6H6'
+     * @return float mass
      */
     public static function computeMass($strFormula) {
         if (!isset($strFormula) || empty($strFormula)) {
@@ -40,6 +40,7 @@ class FormulaHelper {
      * Get Formula from SMILES
      * @param string $strSmiles SMILES
      * @param int $losses
+     * @see LossesEnum
      * @return string formula
      */
     public static function formulaFromSmiles(string $strSmiles, int $losses = LossesEnum::NONE) {
@@ -47,6 +48,13 @@ class FormulaHelper {
         return $graph->getFormula($losses);
     }
 
+    /**
+     * Extract losses from formula
+     * @param string $strFormula formula like 'C6H6'
+     * @param int $losses
+     * @see LossesEnum
+     * @return string formula with extracted losses
+     */
     public static function formulaWithLosses(string $strFormula, int $losses = LossesEnum::NONE) {
         if (!isset($strFormula) || empty($strFormula)) {
             throw new IllegalArgumentException();
@@ -77,6 +85,13 @@ class FormulaHelper {
         return new AtomCount($strName, $strCount);
     }
 
+    /**
+     * Extract losses from formula
+     * @param $arMap array map of atom => count key:values
+     * @param $losses
+     * @see LossesEnum
+     * @return string reduced formula
+     */
     public static function formulaExtractLosses($arMap, $losses) {
         $arMap = LossesEnum::subtractLosses($losses, $arMap);
         ksort($arMap);
@@ -91,6 +106,11 @@ class FormulaHelper {
         return $strFormulaResult;
     }
 
+    /**
+     * Translate (Isomeric) SMILES to Generic SMILES
+     * @param string $smiles SMILES
+     * @return string Generic SMILES
+     */
     public static function genericSmiles(string $smiles) {
         $stack = [];
         $smilesNext = str_split($smiles);
@@ -118,6 +138,11 @@ class FormulaHelper {
         return implode('', $stack);
     }
 
+    /**
+     * Work with @@ in SMILES
+     * @param $stack
+     * @return array
+     */
     public static function isoText($stack) {
         $text = [];
         $c = ']';
@@ -151,7 +176,12 @@ class FormulaHelper {
         return array_merge($stack, $text);
     }
 
-
+    /**
+     * Compute mass from formula if mass not set in $mass
+     * @param $mass float
+     * @param $formula string
+     * @param $TO
+     */
     public static function computeMassIfMassNotSet($mass, $formula, $TO) {
         if ($mass === "") {
             $TO->mass = FormulaHelper::computeMass($formula);
@@ -159,6 +189,5 @@ class FormulaHelper {
             $TO->mass = $mass;
         }
     }
-
 
 }

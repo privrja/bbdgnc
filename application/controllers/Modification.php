@@ -33,6 +33,11 @@ class Modification extends CI_Controller {
         $this->database = new ModificationDatabase($this);
     }
 
+    /**
+     * Settings for filters and sorting
+     * @param Query $query
+     * @return string
+     */
     private function setupQuery(Query $query) {
         Front::addLikeFilter(ModificationTO::NAME, ModificationTO::TABLE_NAME, $query, $this);
         Front::addLikeFilter(ModificationTO::FORMULA, ModificationTO::TABLE_NAME, $query, $this);
@@ -50,6 +55,12 @@ class Modification extends CI_Controller {
         return Front::getSortDirection($sort);
     }
 
+
+    /**
+     * Page list of modifications
+     * url: /modification
+     * @param int $start starting page for results
+     */
     public function index($start = 0) {
         $config = $data = [];
         $query = new Query();
@@ -68,6 +79,12 @@ class Modification extends CI_Controller {
         $this->load->view(Front::TEMPLATES_FOOTER);
     }
 
+
+    /**
+     * Page modification detail
+     * url: /modification/detail/{id}
+     * @param int $id
+     */
     public function detail($id = 1) {
         $data[ModificationTO::TABLE_NAME] = $this->database->findById($id);
         $this->load->view(Front::TEMPLATES_HEADER);
@@ -75,6 +92,10 @@ class Modification extends CI_Controller {
         $this->load->view(Front::TEMPLATES_FOOTER);
     }
 
+    /**
+     * Page new modification
+     * url: /modification/new
+     */
     public function new() {
         $this->form_validation->set_rules(Front::MODIFICATION_NAME, 'Name', Front::REQUIRED);
         $this->form_validation->set_rules(Front::MODIFICATION_FORMULA, 'Formula', Front::REQUIRED);
@@ -86,7 +107,6 @@ class Modification extends CI_Controller {
 
         $cTerminal = $this->setupTerminal($this->input->post(Front::MODIFICATION_TERMINAL_C));
         $nTerminal = $this->setupTerminal($this->input->post(Front::MODIFICATION_TERMINAL_N));
-
 
         $data[Front::ERRORS] = 'Modification properly saved';
         try {
@@ -122,6 +142,11 @@ class Modification extends CI_Controller {
         $this->load->view(Front::TEMPLATES_FOOTER);
     }
 
+    /**
+     * Page modification edit
+     * url: /modification/edit/{id}
+     * @param int $id
+     */
     public function edit($id = 1) {
         $data[ModificationTO::TABLE_NAME] = $this->database->findById($id);
         $this->form_validation->set_rules(Front::MODIFICATION_NAME, 'Name', Front::REQUIRED);
@@ -162,6 +187,10 @@ class Modification extends CI_Controller {
         }
     }
 
+    /**
+     * Page for delete modification
+     * @param int $id
+     */
     public function delete($id = 0) {
         $data[ModificationTO::TABLE_NAME] = $this->database->findById($id);
         try {

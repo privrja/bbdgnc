@@ -3,6 +3,7 @@
 namespace Bbdgnc\Database;
 
 use Bbdgnc\Base\AminoAcidsHelper;
+use Bbdgnc\Base\IDatabase;
 use Bbdgnc\Base\Query;
 use Bbdgnc\Base\Sortable;
 use Bbdgnc\Exception\DeleteException;
@@ -12,6 +13,11 @@ use Bbdgnc\TransportObjects\BlockTO;
 use Bbdgnc\TransportObjects\ModificationTO;
 use Bbdgnc\TransportObjects\SequenceTO;
 
+/**
+ * Class BlockDatabase
+ * @see IDatabase
+ * @package Bbdgnc\Database
+ */
 class BlockDatabase extends AbstractDatabase {
 
     const INTEGER = 'INTEGER';
@@ -96,6 +102,10 @@ class BlockDatabase extends AbstractDatabase {
         $this->controller->block_model->rollback();
     }
 
+    /**
+     * Find all for select
+     * @return array
+     */
     public function findAllSelect() {
         $query = new Query();
         $query->addSortable(new Sortable('acronym'));
@@ -116,10 +126,17 @@ class BlockDatabase extends AbstractDatabase {
         }
     }
 
+    /**
+     * Delete all in database, not only Block entity
+     */
     public function deleteAll() {
         $this->resetDatabase();
     }
 
+    /**
+     * Reset database
+     * Drop it and create it again
+     */
     public function resetDatabase() {
         $this->controller->dbforge->drop_database(self::DB_DATA_SQLITE);
 	$this->controller->db->close();

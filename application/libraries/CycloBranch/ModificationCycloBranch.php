@@ -31,7 +31,9 @@ class ModificationCycloBranch extends AbstractCycloBranch {
         $this->database = new ModificationDatabase($controller);
     }
 
-
+    /**
+     * @see AbstractCycloBranch::parse()
+     */
     public function parse($line) {
         $arItems = $this->validateLine($line);
         if ($arItems === false) {
@@ -49,10 +51,16 @@ class ModificationCycloBranch extends AbstractCycloBranch {
         return new Accept([$modification->asEntity()], '');
     }
 
+    /**
+     * @see AbstractCycloBranch::reject()
+     */
     public static function reject() {
         return new Reject('Not match modification in right format');
     }
 
+    /**
+     * @see AbstractCycloBranch::download()
+     */
     public function download() {
         $start = 0;
         $arResult = $this->database->findAllPaging($start, new Query());
@@ -70,10 +78,16 @@ class ModificationCycloBranch extends AbstractCycloBranch {
         }
     }
 
+    /**
+     * @see AbstractCycloBranch::getFileName()
+     */
     protected function getFileName() {
         return self::FILE_NAME;
     }
 
+    /**
+     * @see AbstractCycloBranch::getLineLength()
+     */
     protected function getLineLength() {
         return self::LENGTH;
     }

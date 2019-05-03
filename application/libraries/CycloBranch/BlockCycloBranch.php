@@ -14,13 +14,13 @@ use Bbdgnc\Finder\Enum\ServerEnum;
 use Bbdgnc\Finder\Exception\BadTransferException;
 use Bbdgnc\Finder\FinderFactory;
 use Bbdgnc\Smiles\Parser\Accept;
+use Bbdgnc\Smiles\Parser\IParser;
 use Bbdgnc\Smiles\Parser\ReferenceParser;
 use Bbdgnc\Smiles\Parser\Reject;
 use Bbdgnc\TransportObjects\BlockTO;
 use CI_Controller;
 
-class BlockCycloBranch extends AbstractCycloBranch
-{
+class BlockCycloBranch extends AbstractCycloBranch {
 
     const NAME = 0;
     const ACRONYM = 1;
@@ -36,15 +36,17 @@ class BlockCycloBranch extends AbstractCycloBranch
      * BlockCycloBranch constructor.
      * @param CI_Controller $controller
      */
-    public function __construct($controller)
-    {
+    public function __construct($controller) {
         parent::__construct($controller);
         $this->database = new BlockDatabase($controller);
     }
 
 
-    public function parse($line)
-    {
+    /**
+     * @see IParser::parse()
+     * @see AbstractCycloBranch::parse()
+     */
+    public function parse($line) {
         $arItems = $this->validateLine($line, false);
         if ($arItems === false) {
             return self::reject();
@@ -104,6 +106,9 @@ class BlockCycloBranch extends AbstractCycloBranch
         return new Accept($arBlocks, '');
     }
 
+    /**
+     * @see AbstractCycloBranch::download()
+     */
     public function download() {
         $start = 0;
         $arResult = $this->database->findMergeBlocks($start);
@@ -125,13 +130,15 @@ class BlockCycloBranch extends AbstractCycloBranch
     }
 
     /**
-     * Get instance of Reject
-     * @return Reject
+     * @see IParser::reject()
      */
     public static function reject() {
         return new Reject('Not match blocks in right format');
     }
 
+    /**
+     * @see AbstractCycloBranch::getFileName()
+     */
     protected function getFileName() {
         return self::FILE_NAME;
     }
@@ -162,6 +169,9 @@ class BlockCycloBranch extends AbstractCycloBranch
         return $strData . PHP_EOL;
     }
 
+    /**
+     * @see AbstractCycloBranch::getLineLength()
+     */
     protected function getLineLength() {
         return self::LENGTH;
     }

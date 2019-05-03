@@ -4,6 +4,11 @@ namespace Bbdgnc\Base;
 
 use Bbdgnc\Finder\Enum\ServerEnum;
 
+/**
+ * Class ReferenceHelper
+ * Helper for setup references in right format to exporting files
+ * @package Bbdgnc\Base
+ */
 class ReferenceHelper {
 
     const SMILES = "SMILES: ";

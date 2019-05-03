@@ -8,6 +8,11 @@ use Bbdgnc\Enum\LoggerEnum;
 use Bbdgnc\Smiles\Parser\IParser;
 use CI_Controller;
 
+/**
+ * Class AbstractCycloBranch
+ * Abstract class for import/export data from CycloBranch
+ * @package Bbdgnc\CycloBranch
+ */
 abstract class AbstractCycloBranch implements ICycloBranch, IParser {
     /**
      * @var CI_Controller
@@ -25,6 +30,9 @@ abstract class AbstractCycloBranch implements ICycloBranch, IParser {
         $this->controller = $controller;
     }
 
+    /**
+     * @see ICycloBranch::import()
+     */
     public final function import(string $filePath) {
         ini_set('max_execution_time', 120);
 
@@ -45,12 +53,27 @@ abstract class AbstractCycloBranch implements ICycloBranch, IParser {
         ini_set('max_execution_time', 30);
     }
 
+    /**
+     * Parse one line of an uploaded file
+     * @see IParser::parse()
+     * @param string $strText line of file
+     * @return \Bbdgnc\Smiles\Parser\Accept|\Bbdgnc\Smiles\Parser\Reject
+     */
     public abstract function parse($strText);
 
+    /**
+     * @see IParser::reject()
+     */
     public abstract static function reject();
 
+    /**
+     * Exporting data to a file
+     */
     public abstract function download();
 
+    /**
+     * @see ICycloBranch::export()
+     */
     public final function export() {
         if (file_exists($this->getFileName())) {
             unlink($this->getFileName());
@@ -59,14 +82,26 @@ abstract class AbstractCycloBranch implements ICycloBranch, IParser {
         force_download($this->getFileName(), null);
     }
 
+    /**
+     * Save data to database
+     * @param array $arTos
+     */
     protected function save(array $arTos) {
         $this->database->startTransaction();
         $this->database->insertMore($arTos);
         $this->database->endTransaction();
     }
 
+    /**
+     * Get name of a file to download
+     * @return string
+     */
     protected abstract function getFileName();
 
+    /**
+     * Get count of item on a line
+     * @return int
+     */
     protected abstract function getLineLength();
 
     protected function validateLine($line, $allSet = true) {

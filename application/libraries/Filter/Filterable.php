@@ -16,6 +16,10 @@ abstract class Filterable {
         $this->item = $item;
     }
 
+    /**
+     * Generate the query
+     * @param $model
+     */
     public abstract function query($model);
 
 }

@@ -34,6 +34,6 @@ class Logger {
 
     public static function clearPrefix() {
         self::$prefix = '';
-}
+    }
 
 }

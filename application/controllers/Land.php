@@ -54,6 +54,21 @@ class Land extends CI_Controller {
         $this->install();
     }
 
+    /**
+     * Index - default view
+     * @param array $viewData default null, data for view to print
+     */
+    public function index($viewData = null) {
+        $this->load->view(Front::TEMPLATES_HEADER);
+        $this->load->view(Front::PAGES_CANVAS);
+        if (isset($viewData)) {
+            $this->load->view(Front::PAGES_MAIN, $viewData);
+        } else {
+            $this->load->view(Front::PAGES_MAIN, $this->getData());
+        }
+        $this->load->view(Front::TEMPLATES_FOOTER);
+    }
+
     private function getData() {
         $smiles = $this->input->post(Front::CANVAS_INPUT_SMILE);
         $smiles = isset($smiles) && $smiles != '' ? $smiles : '';
@@ -109,21 +124,6 @@ class Land extends CI_Controller {
         return $data;
     }
 
-    /**
-     * Index - default view
-     * @param array $viewData default null, data for view to print
-     */
-    public function index($viewData = null) {
-        $this->load->view(Front::TEMPLATES_HEADER);
-        $this->load->view(Front::PAGES_CANVAS);
-        if (isset($viewData)) {
-            $this->load->view(Front::PAGES_MAIN, $viewData);
-        } else {
-            $this->load->view(Front::PAGES_MAIN, $this->getData());
-        }
-        $this->load->view(Front::TEMPLATES_FOOTER);
-    }
-
     private function renderSelect($viewSelectData, $viewData) {
         $this->load->view(Front::TEMPLATES_HEADER);
         $this->load->view(Front::PAGES_CANVAS);
@@ -145,6 +145,9 @@ class Land extends CI_Controller {
         }
     }
 
+    /**
+     * Page for SMILES editor
+     */
     public function editor() {
         $blockIdentifier = $this->input->post(Front::BLOCK_IDENTIFIER);
         $blockSmile = $this->input->post(Front::BLOCK_SMILE);
@@ -205,6 +208,11 @@ class Land extends CI_Controller {
         return $blockTO;
     }
 
+    /**
+     * Page with building blocks
+     * For first time find information about blocks on PubChem then store blocks to cookies
+     * User can edit blocks after
+     */
     public function blocks() {
         $first = $this->input->post('first');
         $data = $this->getLastData();
@@ -319,14 +327,16 @@ class Land extends CI_Controller {
     }
 
     /**
-     * Form
-     * Find in specific database by specific param or save data to database
+     * Find data in specific database by specific param
+     * or save data to database
+     * or show building bocks
+     * or create unique SMILES
      */
     public function form() {
         /* get important input data */
         $btnFind = $this->input->post("find");
         $btnSave = $this->input->post("save");
-        $btnLoad = $this->input->post("load");
+        $uniqueSmiles = $this->input->post("load");
         $btnBlocks = $this->input->post("blocks");
         $intDatabase = $this->input->post(Front::CANVAS_INPUT_DATABASE);
         $intFindBy = $this->input->post(Front::CANVAS_INPUT_SEARCH_BY);
@@ -338,8 +348,8 @@ class Land extends CI_Controller {
         } else if (isset($btnSave)) {
             /* Save to database */
             $this->save();
-        } else if (isset($btnLoad)) {
-            /* Load from database */
+        } else if (isset($uniqueSmiles)) {
+            /* Create unique SMILES */
             $this->uniqueSmiles();
         } else if (isset($btnBlocks)) {
             /* Building Blocks */
@@ -641,6 +651,9 @@ class Land extends CI_Controller {
         return $data;
     }
 
+    /**
+     * Save sequence with building blocks and modification to database
+     */
     private function save() {
         try {
             $this->validateSequence();
@@ -749,6 +762,9 @@ class Land extends CI_Controller {
         $this->renderBlocks($data);
     }
 
+    /**
+     * Create unique SMILES from SMILES
+     */
     private function uniqueSmiles() {
         $smiles = $this->input->post(Front::CANVAS_INPUT_SMILE);
         $this->load->view(Front::TEMPLATES_HEADER);
@@ -764,6 +780,9 @@ class Land extends CI_Controller {
         $this->load->view(Front::TEMPLATES_FOOTER);
     }
 
+    /**
+     * Install, create database on server by apache, etc.
+     */
     private function install() {
         $uploadsResult = $this->createUploadsDir();
         $databaseResult = $this->createDatabase();

@@ -56,7 +56,9 @@ class SequenceCycloBranch extends AbstractCycloBranch {
         $this->blockDatabase = new BlockDatabase($controller);
     }
 
-
+    /**
+     * @see AbstractCycloBranch::parse()
+     */
     public function parse($line) {
         $arResult = $this->validateLine($line, false);
         if ($arResult === false) {
@@ -121,6 +123,9 @@ class SequenceCycloBranch extends AbstractCycloBranch {
         ], '');
     }
 
+    /**
+     * @see AbstractCycloBranch::save()
+     */
     protected function save(array $arTos) {
         $referenceDatabase = $arTos[SequenceTO::TABLE_NAME]->database;
         if ($referenceDatabase === ServerEnum::PUBCHEM || $referenceDatabase === ServerEnum::CHEBI) {
@@ -172,10 +177,16 @@ class SequenceCycloBranch extends AbstractCycloBranch {
         return false;
     }
 
+    /**
+     * @see AbstractCycloBranch::reject()
+     */
     public static function reject() {
         return new Reject('Not match sequence in right format');
     }
 
+    /**
+     * @see AbstractCycloBranch::download()
+     */
     public function download() {
         $start = 0;
         $arResult = $this->database->findSequenceWithModificationNamesPaging($start, new Query());
@@ -198,10 +209,16 @@ class SequenceCycloBranch extends AbstractCycloBranch {
         }
     }
 
+    /**
+     * @see AbstractCycloBranch::getFileName()
+     */
     protected function getFileName() {
         return self::FILE_NAME;
     }
 
+    /**
+     * @see AbstractCycloBranch::getLineLength()
+     */
     protected function getLineLength() {
         return self::LENGTH;
     }

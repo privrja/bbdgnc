@@ -10,6 +10,11 @@ use Bbdgnc\Base\SameFilter;
 use Bbdgnc\Base\Sortable;
 use Bbdgnc\Base\SortDirectionEnum;
 
+/**
+ * Class Front
+ * Constants for views and others
+ * @package Bbdgnc\Enum
+ */
 abstract class Front {
 
     /** @var string name of inputs */

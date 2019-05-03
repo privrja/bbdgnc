@@ -2,6 +2,12 @@
 
 namespace Bbdgnc\Base;
 
+
+/**
+ * Class HelperEnum
+ * Helper for CodeIgniter helpers name
+ * @package Bbdgnc\Base
+ */
 class HelperEnum {
 
     const HELPER_FORM = "form";

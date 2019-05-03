@@ -6,7 +6,7 @@ use Bbdgnc\Smiles\Element;
 
 /**
  * Class PeriodicTableEnum
- * Singleton
+ * Singleton with Elements of Periodic table, their names shortcuts and mass
  * @package Bbdgnc\Enum
  */
 class PeriodicTableSingleton {

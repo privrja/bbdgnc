@@ -20,6 +20,10 @@ class CycloBranch {
         $this->controller = $controller;
     }
 
+    /**
+     * Get right Import class and import it
+     * @param string $filePath path to uploaded file
+     */
     public function import(string $filePath) {
         $cycloBranch = ImportTypeFactory::getCycloBranch($this->type, $this->controller);
         $cycloBranch->import($filePath);

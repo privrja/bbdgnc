@@ -2,6 +2,11 @@
 
 namespace Bbdgnc\Enum;
 
+/**
+ * Class ModificationHelperTypeEnum
+ * Modification helper for helping proccesing modification in while cycle
+ * @package Bbdgnc\Enum
+ */
 class ModificationHelperTypeEnum {
 
     const S = 's';

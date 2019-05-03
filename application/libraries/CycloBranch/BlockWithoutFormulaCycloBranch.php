@@ -9,6 +9,9 @@ use Bbdgnc\TransportObjects\BlockTO;
 
 class BlockWithoutFormulaCycloBranch extends BlockCycloBranch {
 
+    /**
+     * @see AbstractCycloBranch::download()
+     */
     public function download() {
         $start = 0;
         $arResult = $this->database->findAllPaging($start, new Query());

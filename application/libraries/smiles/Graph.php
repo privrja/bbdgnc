@@ -97,7 +97,6 @@ class Graph {
      * @return string formula
      */
     public function getFormula(int $losses): string {
-        // TODO can be better by changed flag (count only one time if no changes)
         $arMapNodesAndCount = [];
         foreach ($this->arNodes as $node) {
             if (isset($arMapNodesAndCount[PeriodicTableSingleton::H])) {

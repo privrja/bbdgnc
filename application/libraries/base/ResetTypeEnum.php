@@ -2,6 +2,11 @@
 
 namespace Bbdgnc\CycloBranch\Enum;
 
+/**
+ * Class ResetTypeEnum
+ * Enum options for reseting database
+ * @package Bbdgnc\CycloBranch\Enum
+ */
 class ResetTypeEnum {
 
     const EMPTY = 0;

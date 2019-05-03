@@ -2,8 +2,12 @@
 
 namespace Bbdgnc\Base;
 
+/**
+ * Class Query
+ * class for generating reducing query of filters or sort
+ * @package Bbdgnc\Base
+ */
 class Query {
-
 
     /** @var Sortable[] */
     private $sortables = [];

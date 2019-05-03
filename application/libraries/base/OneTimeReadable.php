@@ -4,6 +4,11 @@ namespace Bbdgnc\Base;
 
 use Bbdgnc\Exception\ReadOnlyOneTimeException;
 
+/**
+ * Class OneTimeReadable
+ * One time readable storage, after first read the value is destroyed
+ * @package Bbdgnc\Base
+ */
 class OneTimeReadable {
 
     /** @var mixed stored object */

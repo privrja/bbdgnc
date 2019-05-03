@@ -4,6 +4,11 @@ namespace Bbdgnc\Base;
 
 use Bbdgnc\Exception\IllegalArgumentException;
 
+/**
+ * Class SequenceHelper
+ * Helper for CycloBranch sequence notation
+ * @package Bbdgnc\Base
+ */
 class SequenceHelper {
 
     const WRONG_SEQUENCE = 'Wrong sequence ';

@@ -2,6 +2,11 @@
 
 namespace Bbdgnc\CycloBranch\Enum;
 
+/**
+ * Class ImportTypeEnum
+ * Enum options for import type
+ * @package Bbdgnc\CycloBranch\Enum
+ */
 class ImportTypeEnum {
 
     const SEQUENCE = 0;

@@ -2,11 +2,17 @@
 
 namespace Bbdgnc\Database;
 
+use Bbdgnc\Base\IDatabase;
 use Bbdgnc\Base\Query;
 use Bbdgnc\Base\Sortable;
 use Bbdgnc\Exception\DeleteException;
 use Bbdgnc\TransportObjects\ModificationTO;
 
+/**
+ * Class ModificationDatabase
+ * @see IDatabase
+ * @package Bbdgnc\Database
+ */
 class ModificationDatabase extends AbstractDatabase {
 
     public function findAllPaging($start, Query $query) {

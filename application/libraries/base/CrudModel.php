@@ -6,6 +6,13 @@ use Bbdgnc\Exception\UniqueConstraintException;
 use Bbdgnc\TransportObjects\IEntity;
 use CI_Model;
 
+
+/**
+ * Class CrudModel
+ * abstract class with default methods to access database
+ * CRUD methods
+ * @package Bbdgnc\Base
+ */
 abstract class CrudModel extends CI_Model {
 
     const ID = 'id';
@@ -31,6 +38,11 @@ abstract class CrudModel extends CI_Model {
         return $query->result_array();
     }
 
+    /**
+     * Get count of entities in database reduced by query, needed for paging
+     * @param Query $query
+     * @return int
+     */
     public function findAllPagingCount(Query $query) {
         $query->applyQuery($this);
         $this->db->from($this->getTableName());
@@ -38,6 +50,11 @@ abstract class CrudModel extends CI_Model {
         return $query->num_rows();
     }
 
+    /**
+     * Get entities in database reduced by query
+     * @param Query $query
+     * @return array
+     */
     public function findAllPaging($start, Query $query) {
         $query->applyQuery($this);
         $this->db->from($this->getTableName());
@@ -46,6 +63,11 @@ abstract class CrudModel extends CI_Model {
         return $query->result_array();
     }
 
+    /**
+     * Find entity in database bu id
+     * @param $id
+     * @return array
+     */
     public function findById($id) {
         $query = $this->db->get_where($this->getTableName(), array(self::ID => $id));
         return $query->row_array();
@@ -70,7 +92,7 @@ abstract class CrudModel extends CI_Model {
     /**
      * Insert blocks to database
      * @param array $arTos
-     * @return
+     * @return int last inserted id
      */
     public function insertMore(array $arTos) {
         $this->db->insert_batch($this->getTableName(), $arTos);
@@ -78,7 +100,8 @@ abstract class CrudModel extends CI_Model {
     }
 
     /**
-     * @param $id
+     * Edit entity with specified id
+     * @param $id int
      * @param IEntity $entity
      * @throws UniqueConstraintException
      */
@@ -92,6 +115,10 @@ abstract class CrudModel extends CI_Model {
         }
     }
 
+    /**
+     * Delete entity with specified id
+     * @param $id
+     */
     public function delete($id) {
         $this->db->delete($this->getTableName(), array('id' => $id));
     }
@@ -111,19 +138,22 @@ abstract class CrudModel extends CI_Model {
     }
 
     /**
-     * Commit
+     * Commit transaction
      */
     public function commit() {
         $this->db->trans_commit();
     }
 
     /**
-     * Rollback
+     * Rollback transaction
      */
     public function rollback() {
         $this->db->trans_rollback();
     }
 
+    /**
+     * Delete all entities from database
+     */
     public function deleteAll() {
         $this->db->empty_table($this->getTableName());
     }
