@@ -13,6 +13,10 @@ PHP components need: libcurl, libxml, soap
 
 [SQLite3](https://www.sqlite.org/download.html)
 
+## Demo
+
+Demo of application runs on [https://ms.biomed.cas.cz/bbdgnc/](https://ms.biomed.cas.cz/bbdgnc/)
+
 ## Install on XAMPP
 You can download XAMPP [here](https://www.apachefriends.org/index.html)
 
