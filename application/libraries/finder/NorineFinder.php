@@ -36,7 +36,7 @@ class NorineFinder implements IFinder {
     public function findByName($strName, &$outArResult, &$outArNextResult) {
         $strUri = self::REST_BASE_URI . "name/" . IFinder::REST_FORMAT_JSON . IFinder::REST_SLASH . $strName;
         $mixDecoded = JsonDownloader::getJsonFromUri($strUri);
-        if ($mixDecoded === false) {
+        if ($mixDecoded === false || $mixDecoded === null) {
             return ResultEnum::REPLY_NONE;
         }
 

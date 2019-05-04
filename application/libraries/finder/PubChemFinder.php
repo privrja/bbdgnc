@@ -214,7 +214,7 @@ class PubChemFinder implements IFinder {
      * @see ResultEnum
      */
     public function findByMass($decMass, $decTolerance, &$outArResult, &$outArNextResult) {
-        return ResultEnum::REPLY_NONE;
+        throw new \Exception('PubChem does not support monoisotopic mass search!');
     }
 
     /**
