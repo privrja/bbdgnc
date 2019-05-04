@@ -273,6 +273,7 @@ class Land extends CI_Controller {
                     } else {
                         $blockTO = new BlockTO($intCounter, $block->name, $block->acronym, $smile, ComputeEnum::NO, $block->formula);
                         $blockTO->mass = $block->mass;
+                        $blockTO->formula = $block->formula;
                         $blockTO->smiles = $block->smiles;
                         $blockTO->uniqueSmiles = $block->uniqueSmiles;
                         $blockTO->database = $block->database;
