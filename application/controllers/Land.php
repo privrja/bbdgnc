@@ -72,12 +72,7 @@ class Land extends CI_Controller {
     private function getData() {
         $smiles = $this->input->post(Front::CANVAS_INPUT_SMILE);
         $smiles = isset($smiles) && $smiles != '' ? $smiles : '';
-        return array(
-            Front::CANVAS_INPUT_NAME => "", Front::CANVAS_INPUT_SMILE => $smiles,
-            Front::CANVAS_INPUT_FORMULA => "", Front::CANVAS_INPUT_MASS => "",
-            Front::CANVAS_INPUT_DEFLECTION => "", Front::CANVAS_INPUT_IDENTIFIER => "",
-            Front::ERRORS => $this->errors
-        );
+        return array(Front::CANVAS_INPUT_NAME => "", Front::CANVAS_INPUT_SMILE => $smiles, Front::CANVAS_INPUT_FORMULA => "", Front::CANVAS_INPUT_MASS => "", Front::CANVAS_INPUT_DEFLECTION => "", Front::CANVAS_INPUT_IDENTIFIER => "", Front::ERRORS => $this->errors);
     }
 
     private function getModificationEmptyData($data) {
@@ -193,13 +188,7 @@ class Land extends CI_Controller {
     }
 
     private function toBlockTO(int $blockIdentifier, array $arBlock) {
-        $blockTO = new BlockTO(
-            $blockIdentifier,
-            $arBlock['name'],
-            $arBlock['acronym'],
-            $arBlock['smiles'],
-            ComputeEnum::NO
-        );
+        $blockTO = new BlockTO($blockIdentifier, $arBlock['name'], $arBlock['acronym'], $arBlock['smiles'], ComputeEnum::NO);
         $blockTO->formula = $arBlock['residue'];
         $blockTO->mass = $arBlock['mass'];
         $blockTO->losses = $arBlock['losses'];
@@ -261,23 +250,33 @@ class Land extends CI_Controller {
                     $blockTO->identifier = $arResult['identifier'];
                     $data[Front::SEQUENCE] = SequenceHelper::replaceSequence($data[Front::SEQUENCE], $blockTO->id, $blockTO->acronym);
                 } else {
-                    $pubchemFinder = new PubChemFinder();
-                    try {
-                        $result = $pubchemFinder->findBySmile($smile, $outArResult, $outArExtResult);
-                        switch ($result) {
-                            case ResultEnum::REPLY_OK_ONE:
-                                $blockTO = new BlockTO($intCounter, $outArResult[Front::CANVAS_INPUT_NAME], "", $smile, ComputeEnum::FORMULA_MASS, $outArResult[Front::CANVAS_INPUT_FORMULA]);
-                                $blockTO->identifier = $outArResult[Front::CANVAS_INPUT_IDENTIFIER];
-                                $blockTO->database = ServerEnum::PUBCHEM;
-                                break;
-                            case ResultEnum::REPLY_OK_MORE:
-                            case ResultEnum::REPLY_NONE:
-                            default:
-                                $blockTO = new BlockTO($intCounter, "", "", $smile);
-                                break;
+                    $block = $this->getSameBlock($smile, $blocks);
+                    if (!$block) {
+                        $pubchemFinder = new PubChemFinder();
+                        try {
+                            $result = $pubchemFinder->findBySmile($smile, $outArResult, $outArExtResult);
+                            switch ($result) {
+                                case ResultEnum::REPLY_OK_ONE:
+                                    $blockTO = new BlockTO($intCounter, $outArResult[Front::CANVAS_INPUT_NAME], "", $smile, ComputeEnum::FORMULA_MASS, $outArResult[Front::CANVAS_INPUT_FORMULA]);
+                                    $blockTO->identifier = $outArResult[Front::CANVAS_INPUT_IDENTIFIER];
+                                    $blockTO->database = ServerEnum::PUBCHEM;
+                                    break;
+                                case ResultEnum::REPLY_OK_MORE:
+                                case ResultEnum::REPLY_NONE:
+                                default:
+                                    $blockTO = new BlockTO($intCounter, "", "", $smile);
+                                    break;
+                            }
+                        } catch (BadTransferException $e) {
+                            $blockTO = new BlockTO($intCounter, "", "", $smile);
                         }
-                    } catch (BadTransferException $e) {
-                        $blockTO = new BlockTO($intCounter, "", "", $smile);
+                    } else {
+                        $blockTO = new BlockTO($intCounter, $block->name, $block->acronym, $smile, ComputeEnum::NO, $block->formula);
+                        $blockTO->mass = $block->mass;
+                        $blockTO->smiles = $block->smiles;
+                        $blockTO->uniqueSmiles = $block->uniqueSmiles;
+                        $blockTO->database = $block->database;
+                        $blockTO->identifier = $block->identifier;
                     }
                 }
                 $blockTO->sort = $key;
@@ -297,6 +296,20 @@ class Land extends CI_Controller {
 
     public function orderCmp($a, $b) {
         return $a->sort - $b->sort;
+    }
+
+    /**
+     * @param string $smiles
+     * @param BlockTO[] $blocks
+     * @return BlockTO|bool|mixed
+     */
+    private function getSameBlock(string $smiles, array $blocks) {
+        foreach ($blocks as $block) {
+            if ($block->smiles === $smiles) {
+                return $block;
+            }
+        }
+        return false;
     }
 
     /**
@@ -402,8 +415,7 @@ class Land extends CI_Controller {
                 $this->index($outArResult);
                 break;
             case ResultEnum::REPLY_OK_MORE:
-                /* form with list view and select the right one, next find by id the right one */
-                $data = $this->getLastData();
+                /* form with list view and select the right one, next find by id the right one */ $data = $this->getLastData();
                 $data['molecules'] = $outArResult;
                 if (!empty($outArNextResult)) {
                     $data[Front::CANVAS_HIDDEN_NEXT_RESULTS] = serialize($outArNextResult);
@@ -527,8 +539,8 @@ class Land extends CI_Controller {
      * @param IFinder $finder
      * @param array $outArResult output param with result
      * @return int result code 0 => find none, 1 => find 1, 2 => find more than 1
-     * @see ResultEnum
      * @throws BadTransferException
+     * @see ResultEnum
      */
     private function validateFormAndSearchByIdentifier($finder, &$outArResult) {
         $this->form_validation->set_rules(Front::CANVAS_INPUT_IDENTIFIER, "Identifier", Front::REQUIRED);
@@ -546,8 +558,8 @@ class Land extends CI_Controller {
      * @param array $outArResult output param with result
      * @param array $outArNextResult output param with integers as identifiers of next results
      * @return int result code 0 => find none, 1 => find 1, 2 => find more than 1
-     * @see ResultEnum
      * @throws BadTransferException
+     * @see ResultEnum
      */
     private function validateFormAndSearchByName($finder, &$outArResult, &$outArNextResult) {
         $this->form_validation->set_rules(Front::CANVAS_INPUT_NAME, "Name", Front::REQUIRED);
@@ -563,8 +575,8 @@ class Land extends CI_Controller {
      * @param array $outArResult output param with result
      * @param array $outArNextResult output param with integers as identifiers of next results
      * @return int result code 0 => find none, 1 => find 1, 2 => find more than 1
-     * @see ResultEnum
      * @throws BadTransferException
+     * @see ResultEnum
      */
     private function validateFormAndSearchByFormula($finder, &$outArResult, &$outArNextResult) {
         $this->form_validation->set_rules(Front::CANVAS_INPUT_FORMULA, "Formula", Front::REQUIRED);
@@ -581,8 +593,8 @@ class Land extends CI_Controller {
      * @param array $outArResult output param with result
      * @param array $outArNextResult output param with integers as identifiers of next results
      * @return int result code 0 => find none, 1 => find 1, 2 => find more than 1
-     * @see ResultEnum
      * @throws BadTransferException
+     * @see ResultEnum
      */
     private function validateFormAndSearchBySmiles($finder, &$outArResult, &$outArNextResult) {
         $this->form_validation->set_rules(Front::CANVAS_INPUT_SMILE, "SMILES", Front::REQUIRED);
@@ -599,8 +611,8 @@ class Land extends CI_Controller {
      * @param array $outArResult output param with result
      * @param array $outArNextResult output param with integers as identifiers of next results
      * @return int result code 0 => find none, 1 => find 1, 2 => find more than 1
-     * @see ResultEnum
      * @throws BadTransferException
+     * @see ResultEnum
      */
     private function validateFormAndSearchByMass($finder, &$outArResult, &$outArNextResult) {
         $this->form_validation->set_rules(Front::CANVAS_INPUT_MASS, "Mass", Front::REQUIRED);
